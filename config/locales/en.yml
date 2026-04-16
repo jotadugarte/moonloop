@@ -38,6 +38,25 @@ en:
       heading: "My Day"
       empty: "No habits scheduled for this day."
       back_home: "Back to home"
+    actions:
+      mark_done: "Done"
+      mark_failed: "Failed"
+      clear: "Clear"
+  habit_completions:
+    status:
+      done: "Done"
+      failed: "Failed"
+    flash:
+      saved: "Completion saved."
+      cleared: "Marked as pending again."
+      inactive: "You cannot mark an inactive habit."
+      future_date: "You cannot mark future days."
+      not_due: "That habit is not scheduled for that day."
+      not_found: "We could not find that habit."
+      invalid_date: "That date is not valid."
+      invalid_status: "That status is not valid."
+      invalid_request: "The form data is incomplete."
+      could_not_save: "Could not save. Please try again."
   sessions:
     new:
       title: "Sign in"

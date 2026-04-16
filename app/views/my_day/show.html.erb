@@ -9,9 +9,40 @@
 <% else %>
   <ul class="my-day-habits">
     <% @due_habits.each do |habit| %>
+      <% completion = @completions_by_habit_id[habit.id] %>
       <li id="<%= dom_id(habit) %>">
         <span class="my-day-habit-name"><%= habit.name %></span>
         <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
+        <% if completion %>
+          <span class="my-day-habit-status"><%= t("habit_completions.status.#{completion.status}") %></span>
+        <% end %>
+        <div class="my-day-actions">
+          <%= button_to t("my_day.actions.mark_done"),
+                habit_completions_path,
+                method: :post,
+                params: {
+                  habit_completion: {
+                    user_habit_id: habit.id,
+                    completed_on: @local_date.iso8601,
+                    status: "done"
+                  }
+                } %>
+          <%= button_to t("my_day.actions.mark_failed"),
+                habit_completions_path,
+                method: :post,
+                params: {
+                  habit_completion: {
+                    user_habit_id: habit.id,
+                    completed_on: @local_date.iso8601,
+                    status: "failed"
+                  }
+                } %>
+          <% if completion %>
+            <%= button_to t("my_day.actions.clear"),
+                  habit_completion_path(completion),
+                  method: :delete %>
+          <% end %>
+        </div>
       </li>
     <% end %>
   </ul>

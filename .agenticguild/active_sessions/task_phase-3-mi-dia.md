@@ -152,7 +152,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Failing integration/request spec before controller implementation.</tdd_note>
   </step>
 
-  <step order="7">
+  <step order="7" status="completed">
     <title>Mark done / failed / clear to pending (REQ-DAY-002)</title>
     <action>Write failing specs (request/system + service): mark today and past dates; reject future; Turbo-safe uniqueness; transitions done ↔ failed ↔ delete row; inactive habit returns error or redirect. Implement until green. `# [REQ-DAY-002]`.</action>
     <tdd_note>Failing tests before actions.</tdd_note>

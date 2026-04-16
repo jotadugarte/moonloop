@@ -9,6 +9,25 @@ es:
       heading: "Mi Día"
       empty: "No hay hábitos previstos para este día."
       back_home: "Volver al inicio"
+    actions:
+      mark_done: "Hecho"
+      mark_failed: "Fallado"
+      clear: "Quitar marca"
+  habit_completions:
+    status:
+      done: "Hecho"
+      failed: "Fallado"
+    flash:
+      saved: "Cumplimiento guardado."
+      cleared: "Volviste a pendiente."
+      inactive: "No puedes marcar un hábito inactivo."
+      future_date: "No puedes marcar días futuros."
+      not_due: "Ese hábito no corresponde a ese día."
+      not_found: "No encontramos ese hábito."
+      invalid_date: "La fecha no es válida."
+      invalid_status: "El estado no es válido."
+      invalid_request: "Faltan datos del formulario."
+      could_not_save: "No se pudo guardar. Reintentá."
   sessions:
     new:
       title: "Iniciar sesión"
