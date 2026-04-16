@@ -175,7 +175,7 @@
     <action>**REFACTOR:** Keep schedule logic encapsulated (pure functions/module) so Phase 3 can reuse it for “Mi Día”.</action>
   </step>
 
-  <step id="3" title="[TDD] Seeding: default templates + per-user provisioning job (idempotent, retrying)" status="pending">
+  <step id="3" title="[TDD] Seeding: default templates + per-user provisioning job (idempotent, retrying)" status="complete">
     <action>**RED:** Write specs for:
       - A stable template identifier (e.g. `code`) and uniqueness.
       - Seeding global templates is idempotent by `code`.
