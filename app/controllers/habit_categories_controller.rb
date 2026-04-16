@@ -47,4 +47,3 @@ class HabitCategoriesController < ApplicationController
     params.require(:habit_category).permit(:name)
   end
 end
-

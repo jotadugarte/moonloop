@@ -3,9 +3,9 @@ Rails.application.routes.draw do
   post "sign_in", to: "sessions#create"
   get  "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
-  resources :sessions, only: [:index, :show, :destroy]
-  resources :habit_categories, only: [:index, :create, :edit, :update, :destroy]
-  resources :user_habits, only: [:index, :create] do
+  resources :sessions, only: [ :index, :show, :destroy ]
+  resources :habit_categories, only: [ :index, :create, :edit, :update, :destroy ]
+  resources :user_habits, only: [ :index, :create ] do
     member do
       patch :activate
       patch :deactivate
@@ -14,12 +14,12 @@ Rails.application.routes.draw do
       post :create_from_template
     end
   end
-  resource  :password, only: [:edit, :update]
-  resource  :profile, only: [:edit, :update]
+  resource  :password, only: [ :edit, :update ]
+  resource  :profile, only: [ :edit, :update ]
   namespace :identity do
-    resource :email,              only: [:edit, :update]
-    resource :email_verification, only: [:show, :create]
-    resource :password_reset,     only: [:new, :edit, :create, :update]
+    resource :email,              only: [ :edit, :update ]
+    resource :email_verification, only: [ :show, :create ]
+    resource :password_reset,     only: [ :new, :edit, :create, :update ]
   end
   root "home#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

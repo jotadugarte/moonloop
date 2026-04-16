@@ -57,4 +57,3 @@ class UserHabit < ApplicationRecord
     errors.add(:name, :taken)
   end
 end
-

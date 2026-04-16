@@ -10,4 +10,3 @@ RSpec.describe GlobalHabitTemplate, type: :model do
     it { should validate_uniqueness_of(:code).ignoring_case_sensitivity }
   end
 end
-

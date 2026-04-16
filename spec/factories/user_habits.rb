@@ -11,4 +11,3 @@ FactoryBot.define do
     activation_date { nil }
   end
 end
-

@@ -9,6 +9,6 @@ class CreateWeightLogs < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :weight_logs, [:user_id, :created_at]
+    add_index :weight_logs, [ :user_id, :created_at ]
   end
 end

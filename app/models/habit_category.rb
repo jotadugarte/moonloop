@@ -25,4 +25,3 @@ class HabitCategory < ApplicationRecord
     throw(:abort)
   end
 end
-

@@ -43,7 +43,7 @@ RSpec.configure do |config|
 
   # FactoryBot helpers: build, create, etc. available without prefix
   config.include FactoryBot::Syntax::Methods
-  
+
   # ActiveSupport time helpers: travel_to, etc.
   config.include ActiveSupport::Testing::TimeHelpers
 end

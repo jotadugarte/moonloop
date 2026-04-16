@@ -8,4 +8,3 @@ class AddFrequencyToUserHabits < ActiveRecord::Migration[8.1]
     add_index :user_habits, :activation_date
   end
 end
-

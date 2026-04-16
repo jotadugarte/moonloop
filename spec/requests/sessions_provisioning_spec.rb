@@ -14,4 +14,3 @@ RSpec.describe "Sessions provisioning", type: :request do
     }.to have_enqueued_job(ProvisionDefaultHabitsJob).with(user_id: user.id)
   end
 end
-

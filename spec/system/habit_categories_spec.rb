@@ -63,4 +63,3 @@ RSpec.describe "Habit categories", type: :system do
     expect(page).not_to have_content("Emocional")
   end
 end
-

@@ -58,4 +58,3 @@ class UserHabitsController < ApplicationController
     params.require(:user_habit).permit(:habit_category_id, :name).merge(active: true)
   end
 end
-

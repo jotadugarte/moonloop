@@ -57,4 +57,3 @@ RSpec.describe ProvisionDefaultHabitsJob, type: :job do
     expect(UserHabit.count).to eq(7)
   end
 end
-
