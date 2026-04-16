@@ -1,11 +1,11 @@
 <agent_state>
   <active_task_pointer>
-    task_phase-2-habits-core.md
+    task_phase-3-mi-dia.md
   </active_task_pointer>
 
   <execution_context>
-    <active_skill>finish-branch</active_skill>
-    <current_phase>3 — Remote / PR (no CI in repo)</current_phase>
-    <current_step>3.x — Push branch `habits-core`, open PR against `main`; local verification only (`bundle exec rspec`, 62 examples). Paste PR body from chat; optional: archive session after merge.</current_step>
+    <active_skill>start-task</active_skill>
+    <current_phase>2 — Execution (Phase 3 Mi Día)</current_phase>
+    <current_step>Explore closed; see implementation_plan block at end of task_phase-3-mi-dia.md. Run start-task and execute steps in order with TDD.</current_step>
   </execution_context>
 </agent_state>
