@@ -43,9 +43,12 @@ RSpec.configure do |config|
 
   # FactoryBot helpers: build, create, etc. available without prefix
   config.include FactoryBot::Syntax::Methods
+  
+  # ActiveSupport time helpers: travel_to, etc.
+  config.include ActiveSupport::Testing::TimeHelpers
 end
 
-ShouldaMatchers.configure do |config|
+Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
     with.library :rails

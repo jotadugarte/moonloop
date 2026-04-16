@@ -122,13 +122,13 @@ end
     <action>Verify `rails server` boots and `rspec` runs with 0 examples, 0 failures.</action>
   </step>
 
-  <step id="2" title="Install authentication-zero" status="pending">
+  <step id="2" title="Install authentication-zero" status="complete">
     <action>Add `authentication-zero` to `Gemfile`. Run `bundle install`.</action>
     <action>Run `rails generate authentication` (no extra flags). Review generated files: `User`, `Session` models, migrations, controllers, views, mailers.</action>
     <action>Do NOT run `rails db:migrate` yet — migration will be amended in Step 3 first.</action>
   </step>
 
-  <step id="3" title="[TDD] Extend User migration and model with profile fields" status="pending">
+  <step id="3" title="[TDD] Extend User migration and model with profile fields" status="in_progress">
     <action>**RED:** Write `spec/models/user_spec.rb` with failing tests covering:
       - Validates presence of `email`, `date_of_birth`, `height_cm`, `timezone`.
       - Validates `height_cm` is in range 50–300.
