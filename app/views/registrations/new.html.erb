@@ -30,6 +30,21 @@
   </div>
 
   <div>
+    <%= form.label :date_of_birth, style: "display: block" %>
+    <%= form.date_field :date_of_birth, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :height_cm, "Height cm", style: "display: block" %>
+    <%= form.number_field :height_cm, required: true, min: 50, max: 300 %>
+  </div>
+
+  <div data-controller="timezone">
+    <%= form.label :timezone, style: "display: block" %>
+    <%= form.text_field :timezone, required: true, data: { timezone_target: "input" } %>
+  </div>
+
+  <div>
     <%= form.submit "Sign up" %>
   </div>
 <% end %>

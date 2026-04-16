@@ -21,7 +21,7 @@ class RegistrationsController < ApplicationController
 
   private
     def user_params
-      params.permit(:email, :password, :password_confirmation)
+      params.permit(:email, :password, :password_confirmation, :date_of_birth, :height_cm, :timezone)
     end
 
     def send_email_verification
