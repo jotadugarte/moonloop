@@ -161,6 +161,10 @@ en:
           attributes:
             base:
               cannot_delete_with_habits: "cannot delete a category that has habits"
+        habit_completion:
+          attributes:
+            base:
+              user_habit_inactive: "cannot record completions while the habit is inactive"
         user_habit:
           attributes:
             frequency_params:

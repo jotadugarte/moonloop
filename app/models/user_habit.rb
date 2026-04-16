@@ -3,6 +3,8 @@ class UserHabit < ApplicationRecord
   belongs_to :habit_category
   belongs_to :global_habit_template, optional: true
 
+  has_many :habit_completions, dependent: :destroy
+
   validates :name, :name_normalized, presence: true
   validates :frequency_type, presence: true
   validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days monthly] }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_203000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_210000) do
   create_table "global_habit_templates", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.string "code", null: false
@@ -27,6 +27,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_203000) do
     t.integer "user_id", null: false
     t.index ["user_id", "name_normalized"], name: "index_habit_categories_on_user_id_and_name_normalized", unique: true
     t.index ["user_id"], name: "index_habit_categories_on_user_id"
+  end
+
+  create_table "habit_completions", force: :cascade do |t|
+    t.date "completed_on", null: false
+    t.datetime "created_at", null: false
+    t.string "status", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_habit_id", null: false
+    t.index ["user_habit_id", "completed_on"], name: "index_habit_completions_on_user_habit_and_completed_on", unique: true
+    t.index ["user_habit_id"], name: "index_habit_completions_on_user_habit_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -84,6 +94,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_203000) do
   end
 
   add_foreign_key "habit_categories", "users"
+  add_foreign_key "habit_completions", "user_habits"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"

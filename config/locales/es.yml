@@ -189,6 +189,10 @@ es:
           attributes:
             base:
               cannot_delete_with_habits: "no se puede eliminar una categoría que tiene hábitos"
+        habit_completion:
+          attributes:
+            base:
+              user_habit_inactive: "no puedes registrar cumplimientos mientras el hábito está inactivo"
         user_habit:
           attributes:
             frequency_params:
