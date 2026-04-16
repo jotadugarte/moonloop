@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_190002) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_192000) do
   create_table "global_habit_templates", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.string "code", null: false
@@ -39,14 +39,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_190002) do
   end
 
   create_table "user_habits", force: :cascade do |t|
+    t.date "activation_date"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
+    t.json "frequency_params", default: {}, null: false
+    t.string "frequency_type", default: "daily", null: false
     t.integer "global_habit_template_id"
     t.integer "habit_category_id", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["activation_date"], name: "index_user_habits_on_activation_date"
+    t.index ["frequency_type"], name: "index_user_habits_on_frequency_type"
     t.index ["global_habit_template_id"], name: "index_user_habits_on_global_habit_template_id"
     t.index ["habit_category_id"], name: "index_user_habits_on_habit_category_id"
     t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "active = 1"

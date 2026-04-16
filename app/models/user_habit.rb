@@ -4,18 +4,67 @@ class UserHabit < ApplicationRecord
   belongs_to :global_habit_template, optional: true
 
   validates :name, :name_normalized, presence: true
+  validates :frequency_type, presence: true
+  validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days weekly monthly] }
 
   normalizes :name, with: -> { _1.strip }
   normalizes :name_normalized, with: -> { _1.strip.downcase }
 
   before_validation :sync_name_normalized
   validate :active_name_must_be_unique_per_user, if: -> { user_id.present? && active? && name_normalized.present? }
+  validate :frequency_params_shape
+  validate :frequency_requirements
+
+  def next_occurrence_after(date)
+    raise ArgumentError, "date must be a Date" unless date.is_a?(Date)
+
+    case frequency_type
+    when "daily"
+      date + 1.day
+    when "monthly"
+      raise ArgumentError, "activation_date required for monthly" if activation_date.blank?
+      anchor_day = activation_date.day
+
+      next_month = date.next_month
+      last_day = Date.new(next_month.year, next_month.month, -1).day
+      day = [anchor_day, last_day].min
+      Date.new(next_month.year, next_month.month, day)
+    else
+      raise NotImplementedError, "next_occurrence_after not implemented for #{frequency_type.inspect}"
+    end
+  end
 
   private
 
   def sync_name_normalized
     return if name.blank?
     self.name_normalized = name.strip.downcase
+  end
+
+  def frequency_params_shape
+    return if frequency_params.is_a?(Hash)
+    errors.add(:frequency_params, "must be a JSON object")
+  end
+
+  def frequency_requirements
+    case frequency_type
+    when "daily"
+      # no-op
+    when "weekdays"
+      weekdays = frequency_params.is_a?(Hash) ? frequency_params["weekdays"] : nil
+      ok = weekdays.is_a?(Array) && weekdays.any? && weekdays.all? { |v| v.is_a?(Integer) && v.between?(0, 6) }
+      errors.add(:frequency_params, "must include weekdays 0..6") unless ok
+    when "every_x_days"
+      interval = frequency_params.is_a?(Hash) ? frequency_params["interval"] : nil
+      errors.add(:frequency_params, "must include interval >= 1") unless interval.is_a?(Integer) && interval >= 1
+      errors.add(:activation_date, "can't be blank") if activation_date.blank?
+    when "weekly"
+      # defined later; Phase 3 needs schedule logic
+    when "monthly"
+      errors.add(:activation_date, "can't be blank") if activation_date.blank?
+    else
+      errors.add(:frequency_type, "is not included in the list")
+    end
   end
 
   def active_name_must_be_unique_per_user

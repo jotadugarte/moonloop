@@ -6,6 +6,9 @@ FactoryBot.define do
     name_normalized { name.strip.downcase }
     active { true }
     global_habit_template { nil }
+    frequency_type { "daily" }
+    frequency_params { {} }
+    activation_date { nil }
   end
 end
 
