@@ -29,3 +29,26 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        date_of_birth: "Date of birth"
+        height_cm: "Height cm"
+        timezone: "Timezone"
+  profiles:
+    update:
+      success: "Profile updated successfully"
+    edit:
+      title: "Edit Profile"
+      submit: "Update Profile"
+      prohibited:
+        one: "1 error prohibited your profile from being saved:"
+        other: "%{count} errors prohibited your profile from being saved:"
+  registrations:
+    new:
+      title: "Sign up"
+      submit: "Sign up"
+      password_hint: "12 characters minimum."
+      prohibited:
+        one: "1 error prohibited this user from being saved:"
+        other: "%{count} errors prohibited this user from being saved:"

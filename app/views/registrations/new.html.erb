@@ -1,11 +1,10 @@
-<h1>Sign up</h1>
+<h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
 
-<%= form_with(url: sign_up_path) do |form| %>
+<%= form_with(url: sign_up_path, class: "space-y-4 max-w-md") do |form| %>
   <% if @user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-      <ul>
+    <div class="text-red-600 mb-4">
+      <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
+      <ul class="list-disc pl-5">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -14,37 +13,37 @@
   <% end %>
 
   <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.email_field :email, value: @user.email, required: true, autofocus: true, autocomplete: "email" %>
+    <%= form.label :email, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.email_field :email, value: @user.email, required: true, autofocus: true, autocomplete: "email", class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
   <div>
-    <%= form.label :password, style: "display: block" %>
-    <%= form.password_field :password, required: true, autocomplete: "new-password" %>
-    <div>12 characters minimum.</div>
+    <%= form.label :password, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.password_field :password, required: true, autocomplete: "new-password", class: "border border-gray-300 rounded p-2 w-full" %>
+    <div class="text-sm text-gray-500 mt-1"><%= t('.password_hint') %></div>
   </div>
 
   <div>
-    <%= form.label :password_confirmation, style: "display: block" %>
-    <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+    <%= form.label :password_confirmation, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
   <div>
-    <%= form.label :date_of_birth, style: "display: block" %>
-    <%= form.date_field :date_of_birth, required: true %>
+    <%= form.label :date_of_birth, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.date_field :date_of_birth, required: true, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
   <div>
-    <%= form.label :height_cm, "Height cm", style: "display: block" %>
-    <%= form.number_field :height_cm, required: true, min: 50, max: 300 %>
+    <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.number_field :height_cm, required: true, min: 50, max: 300, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
   <div data-controller="timezone">
-    <%= form.label :timezone, style: "display: block" %>
-    <%= form.text_field :timezone, required: true, data: { timezone_target: "input" } %>
+    <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.text_field :timezone, required: true, data: { timezone_target: "input" }, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
-  <div>
-    <%= form.submit "Sign up" %>
+  <div class="pt-4">
+    <%= form.submit t('.submit'), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
   </div>
 <% end %>
