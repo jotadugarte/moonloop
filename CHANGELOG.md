@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- Habits: removed `weekly` as a `frequency_type`; “once per week” is stored as `weekdays` with a one-element array. Added data migration from legacy `weekly` rows, resolver `Habits::LegacyWeeklyWeekdayResolver`, and model/spec updates (REQ-HAB-005). `Habits::NextOccurrence` still covers only `daily` and `monthly` until Phase 3.
+- Habits: removed `weekly` as a `frequency_type`; “once per week” is stored as `weekdays` with a one-element array. Data migration copies legacy rows using a **nested frozen resolver** (no dependency on `app/` autoload). `Habits::LegacyWeeklyWeekdayResolver` mirrors that logic for tests and tooling (REQ-HAB-005). `Habits::NextOccurrence` still covers only `daily` and `monthly` until Phase 3.
 
 ### Added
 

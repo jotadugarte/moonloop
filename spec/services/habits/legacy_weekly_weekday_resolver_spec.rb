@@ -1,5 +1,7 @@
 require "rails_helper"
 
+# Covers Habits::LegacyWeeklyWeekdayResolver; migration uses frozen duplicate
+# MigrateWeeklyUserHabitsToWeekdays::WdayResolver — keep behavior aligned.
 RSpec.describe Habits::LegacyWeeklyWeekdayResolver do
   describe ".call" do
     # [REQ-HAB-005]

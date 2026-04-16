@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 module Habits
-  # Maps legacy `frequency_type: "weekly"` rows to a single 0..6 weekday index for
-  # Roadmap #10 / REQ-HAB-005. Used by the data migration and unit-tested here.
+  # Maps legacy `frequency_type: "weekly"` rows to a single 0..6 weekday index (REQ-HAB-005).
+  # Unit-tested; behavior is **duplicated** inside
+  # `db/migrate/20260416203000_migrate_weekly_user_habits_to_weekdays.rb` (nested WdayResolver)
+  # so that migration does not depend on app autoload. If rules change, update both places.
   class LegacyWeeklyWeekdayResolver
     Result = Struct.new(:wday, :used_fallback, keyword_init: true)
 
     def self.call(params, activation_date)
-      new(params, activation_date).resolve
+      new(params, activation_date).send(:resolve)
     end
 
     def initialize(params, activation_date)
@@ -15,20 +17,26 @@ module Habits
       @activation_date = activation_date
     end
 
+    private_class_method :new
+
+    private
+
     def resolve
       wday = wday_from_weekdays_array
-      return Result.new(wday: wday, used_fallback: false) unless wday.nil?
+      return ok(wday) unless wday.nil?
 
       wday = wday_from_weekday_param
-      return Result.new(wday: wday, used_fallback: false) unless wday.nil?
+      return ok(wday) unless wday.nil?
 
       wday = wday_from_activation
-      return Result.new(wday: wday, used_fallback: false) unless wday.nil?
+      return ok(wday) unless wday.nil?
 
       Result.new(wday: 0, used_fallback: true)
     end
 
-    private
+    def ok(wday)
+      Result.new(wday: wday, used_fallback: false)
+    end
 
     def wday_from_weekdays_array
       raw = @params["weekdays"] || @params[:weekdays]
