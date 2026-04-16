@@ -218,7 +218,7 @@
     <action>**REFACTOR:** Extract habit mutation logic into service objects if controllers get complex.</action>
   </step>
 
-  <step id="6" title="Regression: full suite green baseline" status="pending">
+  <step id="6" title="Regression: full suite green baseline" status="complete">
     <action>Run full `rspec` suite; all examples must pass (0 failures).</action>
   </step>
 

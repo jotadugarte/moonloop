@@ -7,6 +7,6 @@
   <execution_context>
     <active_skill>start-task</active_skill>
     <current_phase>3 — Execution (Iterative TDD)</current_phase>
-    <current_step>3.3 — Step 5 complete; ready to run full suite (Step 6)</current_step>
+    <current_step>3.3 — Phase 2 complete; ready for finish-branch</current_step>
   </execution_context>
 </agent_state>
