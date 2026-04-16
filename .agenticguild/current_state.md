@@ -4,8 +4,8 @@
   </active_task_pointer>
 
   <execution_context>
-    <active_skill>start-task</active_skill>
-    <current_phase>2 — Planning approved → Phase 3 execution next</current_phase>
-    <current_step>Roadmap #10 (REQ-HAB-005): weekly → weekdays. Open `task_unify-weekly-weekdays.md` and execute `<implementation_plan>` steps in order with TDD discipline for test-driven steps.</current_step>
+    <active_skill>finish-branch</active_skill>
+    <current_phase>3 — Push (CI skipped by user)</current_phase>
+    <current_step>Commit and push the branch when ready. CI/BugBot loop waived; reply when pushed (or "sigamos") to continue to phase 4 (sync-docs / harvest-rules / PR).</current_step>
   </execution_context>
 </agent_state>
