@@ -33,9 +33,15 @@ en:
     formats:
       long: "%B %d, %Y"
   my_day:
+    flash:
+      invalid_date: "That date is not valid."
+      future_date_not_allowed: "You cannot pick a future day."
     show:
       page_title: "My Day — Moonloop"
       heading: "My Day"
+      date_label: "Day"
+      go_to_date: "Go"
+      view_today: "Back to today"
       empty: "No habits scheduled for this day."
       back_home: "Back to home"
     actions:

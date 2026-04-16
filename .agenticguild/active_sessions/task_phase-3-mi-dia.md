@@ -158,7 +158,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Failing tests before actions.</tdd_note>
   </step>
 
-  <step order="8">
+  <step order="8" status="completed">
     <title>Retro editing (REQ-DAY-003)</title>
     <action>Extend failing specs: unlimited past dates within due rules; no future; UI row remains visible when unchecked (behavioral spec where appropriate). `# [REQ-DAY-003]`.</action>
     <tdd_note>Extend with failing examples before code changes.</tdd_note>

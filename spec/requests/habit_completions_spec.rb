@@ -111,6 +111,24 @@ RSpec.describe "Habit completions", type: :request do
     end
   end
 
+  # [REQ-DAY-003]
+  it "records a completion for a past local date" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      post_completion!(habit, completed_on: "2026-04-10", status: "done")
+
+      expect(response).to redirect_to(my_day_path(fecha: "2026-04-10"))
+      expect(flash[:notice]).to eq(I18n.t("habit_completions.flash.saved"))
+      expect(HabitCompletion.find_by(user_habit: habit, completed_on: Date.new(2026, 4, 10))&.status).to eq("done")
+    end
+  end
+
   # [REQ-DAY-002]
   it "rejects when the habit is inactive" do
     travel_to Time.utc(2026, 4, 16, 12, 0, 0) do

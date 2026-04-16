@@ -4,9 +4,15 @@ es:
     formats:
       long: "%d de %B de %Y"
   my_day:
+    flash:
+      invalid_date: "La fecha no es válida."
+      future_date_not_allowed: "No podés elegir un día futuro."
     show:
       page_title: "Mi Día — Moonloop"
       heading: "Mi Día"
+      date_label: "Día"
+      go_to_date: "Ir"
+      view_today: "Volver a hoy"
       empty: "No hay hábitos previstos para este día."
       back_home: "Volver al inicio"
     actions:

@@ -2,7 +2,17 @@
 
 <h1><%= t("my_day.show.heading") %></h1>
 
+<%= form_with url: my_day_path, method: :get, local: true, class: "my-day-date-picker" do %>
+  <label for="fecha"><%= t("my_day.show.date_label") %></label>
+  <input type="date" id="fecha" name="fecha" value="<%= @local_date %>" max="<%= @max_date %>">
+  <button type="submit"><%= t("my_day.show.go_to_date") %></button>
+<% end %>
+
 <p class="my-day-date"><%= l(@local_date, format: :long) %></p>
+
+<% if @local_date < @max_date %>
+  <p><%= link_to t("my_day.show.view_today"), my_day_path %></p>
+<% end %>
 
 <% if @due_habits.empty? %>
   <p><%= t("my_day.show.empty") %></p>

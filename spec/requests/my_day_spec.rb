@@ -72,6 +72,44 @@ RSpec.describe "Mi Día (My Day)", type: :request do
     end
   end
 
+  # [REQ-DAY-003]
+  it "lists habits for a selected past local date" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user, name: "Salud")
+      create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "Agua diaria",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      get my_day_path, params: { fecha: "2026-04-10" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Agua diaria")
+    end
+  end
+
+  # [REQ-DAY-003]
+  it "rejects a future selected date" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      get my_day_path, params: { fecha: "2026-04-20" }
+
+      expect(response).to redirect_to(my_day_path)
+      expect(flash[:alert]).to eq(I18n.t("my_day.flash.future_date_not_allowed"))
+    end
+  end
+
+  # [REQ-DAY-003]
+  it "rejects an invalid date parameter" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      get my_day_path, params: { fecha: "not-a-date" }
+
+      expect(response).to redirect_to(my_day_path)
+      expect(flash[:alert]).to eq(I18n.t("my_day.flash.invalid_date"))
+    end
+  end
+
   # [REQ-DAY-001]
   it "does not list habits before their activation_date window" do
     travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
