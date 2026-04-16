@@ -171,6 +171,7 @@ es:
         timezone: "Zona horaria"
       user_habit:
         name: "Nombre"
+        activation_date: "Fecha de activación"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -195,6 +196,8 @@ es:
               user_habit_inactive: "no puedes registrar cumplimientos mientras el hábito está inactivo"
         user_habit:
           attributes:
+            activation_date:
+              locked_when_completions_exist: "no se puede cambiar mientras existan cumplimientos registrados"
             frequency_params:
               must_be_object: "debe ser un objeto JSON"
               invalid_weekdays: "debe incluir días de la semana de 0 a 6"

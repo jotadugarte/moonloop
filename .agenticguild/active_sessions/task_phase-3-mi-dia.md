@@ -140,7 +140,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Failing model tests before migration application in dev.</tdd_note>
   </step>
 
-  <step order="5">
+  <step order="5" status="completed">
     <title>`activation_date` conditional immutability</title>
     <action>Write failing specs: `UserHabit` allows `activation_date` change when habit has zero completions; forbids change when at least one completion row exists; re-allows after all completions destroyed. Align with Lote 3. `# [REQ-HAB-005]` or new REQ row if split.</action>
     <tdd_note>Failing model tests first.</tdd_note>

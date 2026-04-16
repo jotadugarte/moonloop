@@ -148,6 +148,9 @@ en:
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
         timezone: "Timezone"
+      user_habit:
+        name: "Name"
+        activation_date: "Activation date"
     errors:
       models:
         user:
@@ -167,6 +170,8 @@ en:
               user_habit_inactive: "cannot record completions while the habit is inactive"
         user_habit:
           attributes:
+            activation_date:
+              locked_when_completions_exist: "cannot be changed while completions exist"
             frequency_params:
               must_be_object: "must be a JSON object"
               invalid_weekdays: "must include weekdays 0..6"
