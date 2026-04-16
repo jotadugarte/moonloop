@@ -5,6 +5,7 @@ RSpec.describe 'User Registration', type: :system do
     driven_by(:rack_test)
   end
 
+  # [REQ-AUTH-001, REQ-I18N-001, REQ-PROF-001]
   it 'allows the user to sign up by providing profile fields' do
     visit sign_up_path
 
@@ -20,8 +21,7 @@ RSpec.describe 'User Registration', type: :system do
 
     click_button 'Registrarse'
 
-    # Depends on what authentication-zero redirects to by default
-    expect(page).to have_content('Bienvenido') # flash after successful sign up
+    expect(page).to have_content(I18n.t("registrations.create.signed_up"))
     
     user = User.last
     expect(user.email).to eq('test@example.com')
@@ -29,6 +29,7 @@ RSpec.describe 'User Registration', type: :system do
     expect(user.timezone).to eq('America/Santiago')
   end
 
+  # [REQ-I18N-001, REQ-PROF-001]
   it 'shows an error when profile fields are missing' do
     visit sign_up_path
     
@@ -37,7 +38,8 @@ RSpec.describe 'User Registration', type: :system do
     fill_in 'Confirmación de contraseña', with: 'Password123!'
     click_button 'Registrarse'
 
-    expect(page).to have_content("Fecha de nacimiento no puede estar en blanco")
-    expect(page).to have_content("Altura (cm) no puede estar en blanco")
+    blank = I18n.t("activerecord.errors.messages.blank")
+    expect(page).to have_content("#{I18n.t('activerecord.attributes.user.date_of_birth')} #{blank}")
+    expect(page).to have_content("#{I18n.t('activerecord.attributes.user.height_cm')} #{blank}")
   end
 end

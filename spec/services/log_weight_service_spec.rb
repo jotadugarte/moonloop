@@ -4,6 +4,7 @@ RSpec.describe LogWeightService do
   let(:user) { create(:user, height_cm: 180) }
 
   describe '#call' do
+    # [REQ-PROF-002, REQ-WGT-001]
     it 'creates a WeightLog and updates User current stats' do
       expect {
         LogWeightService.new(user: user, weight_kg: 80.5).call
@@ -21,12 +22,14 @@ RSpec.describe LogWeightService do
       expect(user.current_bmi).to eq(24.85)
     end
 
+    # [REQ-WGT-001]
     it 'raises an ArgumentError if weight_kg is out of domain bounds' do
       expect {
         LogWeightService.new(user: user, weight_kg: 10.0).call
       }.to raise_error(ArgumentError, /WeightKg must be 20/)
     end
 
+    # [REQ-PROF-002, REQ-WGT-001]
     it 'wraps the creation and update in a database transaction' do
       # If the User update fails, the WeightLog should rollback to maintain integrity.
       allow(user).to receive(:update!).and_raise(ActiveRecord::RecordInvalid)

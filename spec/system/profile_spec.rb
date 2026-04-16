@@ -13,6 +13,7 @@ RSpec.describe 'Profile Editing', type: :system do
     click_button 'Iniciar sesión'
   end
 
+  # [REQ-AUTH-002, REQ-I18N-001, REQ-PROF-001]
   it 'allows users to update profile attributes but not height' do
     # We will build this route during the GREEN phase
     visit edit_profile_path

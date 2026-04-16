@@ -1,6 +1,5 @@
 require "rails_helper"
 
-# REQ-HABITS-005: Default habits are provisioned per user on first login via an idempotent, retrying background job.
 RSpec.describe ProvisionDefaultHabitsJob, type: :job do
   include ActiveJob::TestHelper
 
@@ -27,6 +26,7 @@ RSpec.describe ProvisionDefaultHabitsJob, type: :job do
     )
   end
 
+  # [REQ-HAB-002]
   it "is idempotent by template code (can run multiple times without duplicates)" do
     stub_default_catalog!
 
@@ -38,6 +38,7 @@ RSpec.describe ProvisionDefaultHabitsJob, type: :job do
       .and change(HabitCategory, :count).by(3)
   end
 
+  # [REQ-HAB-002]
   it "retries on transient failures without creating duplicates" do
     stub_default_catalog!
 

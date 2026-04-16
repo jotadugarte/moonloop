@@ -1,6 +1,5 @@
 require "rails_helper"
 
-# REQ-HABITS-008: Habits UI grouped by category + activation + personal/template habits + no deletes.
 RSpec.describe "User habits", type: :system do
   include ActionView::RecordIdentifier
 
@@ -15,6 +14,7 @@ RSpec.describe "User habits", type: :system do
     click_button "Iniciar sesión"
   end
 
+  # [REQ-HAB-008, REQ-I18N-001]
   it "groups habits under their category headings" do
     nutrition = HabitCategory.create!(user: user, name: "Nutrition", name_normalized: "nutrition")
     fitness = HabitCategory.create!(user: user, name: "Fitness", name_normalized: "fitness")
@@ -30,6 +30,7 @@ RSpec.describe "User habits", type: :system do
     expect(page).to have_content("Water")
   end
 
+  # [REQ-HAB-007, REQ-I18N-001]
   it "allows toggling active state" do
     category = HabitCategory.create!(user: user, name: "Fitness", name_normalized: "fitness")
     habit = UserHabit.create!(user: user, habit_category: category, name: "Water", name_normalized: "water", active: true)
@@ -49,6 +50,7 @@ RSpec.describe "User habits", type: :system do
     expect(habit.reload.active).to eq(true)
   end
 
+  # [REQ-HAB-008, REQ-I18N-001]
   it "allows creating a personal habit" do
     category = HabitCategory.create!(user: user, name: "Fitness", name_normalized: "fitness")
 
@@ -62,6 +64,7 @@ RSpec.describe "User habits", type: :system do
     expect(UserHabit.find_by!(user: user, name_normalized: "stretch").global_habit_template_id).to be_nil
   end
 
+  # [REQ-HAB-008, REQ-I18N-001]
   it "allows adding a habit from a global template" do
     category = HabitCategory.create!(user: user, name: "Nutrition", name_normalized: "nutrition")
     template = GlobalHabitTemplate.create!(code: "nutrition_breakfast")
@@ -78,6 +81,7 @@ RSpec.describe "User habits", type: :system do
     expect(page).to have_content("Desayuno")
   end
 
+  # [REQ-HAB-006, REQ-I18N-001]
   it "shows validation errors for duplicate active names (case-insensitive + trim)" do
     category = HabitCategory.create!(user: user, name: "Fitness", name_normalized: "fitness")
     UserHabit.create!(user: user, habit_category: category, name: "Water", name_normalized: "water", active: true)
@@ -91,6 +95,7 @@ RSpec.describe "User habits", type: :system do
     expect(page).to have_content("ya está en uso")
   end
 
+  # [REQ-HAB-008]
   it "does not expose a delete route for habits" do
     expect {
       Rails.application.routes.recognize_path("/user_habits/1", method: :delete)

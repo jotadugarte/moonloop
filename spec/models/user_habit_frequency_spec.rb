@@ -1,6 +1,5 @@
 require "rails_helper"
 
-# REQ-HABITS-004: Habits support frequency types and schedule semantics.
 RSpec.describe UserHabit, type: :model do
   let(:user) { create(:user) }
   let(:category) { create(:habit_category, user: user) }
@@ -18,17 +17,20 @@ RSpec.describe UserHabit, type: :model do
   end
 
   describe "frequency representation" do
+    # [REQ-HAB-005]
     it "accepts daily with empty params" do
       habit = build_habit(frequency_type: "daily", frequency_params: {}, activation_date: nil)
       expect(habit).to be_valid
     end
 
+    # [REQ-HAB-005]
     it "requires weekdays for weekdays frequency" do
       habit = build_habit(frequency_type: "weekdays", frequency_params: {}, activation_date: nil)
       expect(habit).not_to be_valid
       expect(habit.errors[:frequency_params]).not_to be_empty
     end
 
+    # [REQ-HAB-005]
     it "requires interval and activation_date for every_x_days" do
       habit = build_habit(frequency_type: "every_x_days", frequency_params: { "interval" => 0 }, activation_date: nil)
       expect(habit).not_to be_valid
@@ -36,6 +38,7 @@ RSpec.describe UserHabit, type: :model do
       expect(habit.errors[:activation_date]).not_to be_empty
     end
 
+    # [REQ-HAB-005]
     it "requires activation_date for monthly" do
       habit = build_habit(frequency_type: "monthly", frequency_params: {}, activation_date: nil)
       expect(habit).not_to be_valid
@@ -44,6 +47,7 @@ RSpec.describe UserHabit, type: :model do
   end
 
   describe "monthly schedule semantics (end-of-month clamp)" do
+    # [REQ-HAB-009]
     it "clamps to Feb 28 in non-leap years for Jan 31 anchor" do
       habit = build_habit(
         frequency_type: "monthly",

@@ -1,7 +1,6 @@
 require "rails_helper"
 require "action_view/record_identifier"
 
-# REQ-HABITS-007: Users can manage categories (create, rename, delete) with deletion blocked when referenced.
 RSpec.describe "Habit categories", type: :system do
   include ActionView::RecordIdentifier
   let(:user) { create(:user, password: "Password123!") }
@@ -15,6 +14,7 @@ RSpec.describe "Habit categories", type: :system do
     click_button "Iniciar sesión"
   end
 
+  # [REQ-HAB-003, REQ-I18N-001]
   it "allows creating and renaming a category" do
     visit habit_categories_path
 
@@ -30,6 +30,7 @@ RSpec.describe "Habit categories", type: :system do
     expect(page).to have_content("Nutrición")
   end
 
+  # [REQ-HAB-003, REQ-I18N-001]
   it "blocks deletion when category has habits" do
     category = HabitCategory.create!(user: user, name: "Salud Física", name_normalized: "salud física")
     UserHabit.create!(
@@ -46,10 +47,13 @@ RSpec.describe "Habit categories", type: :system do
       click_button "Eliminar"
     end
 
-    expect(page).to have_content("cannot delete")
+    expect(page).to have_content(
+      I18n.t("activerecord.errors.models.habit_category.attributes.base.cannot_delete_with_habits")
+    )
     expect(page).to have_content("Salud Física")
   end
 
+  # [REQ-HAB-003, REQ-I18N-001]
   it "allows deleting an empty category" do
     HabitCategory.create!(user: user, name: "Emocional", name_normalized: "emocional")
 

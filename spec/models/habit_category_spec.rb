@@ -1,20 +1,24 @@
 require 'rails_helper'
 
-# REQ-HABITS-002: Users manage categories; deletion is blocked when referenced by habits.
 RSpec.describe HabitCategory, type: :model do
   describe 'associations' do
+    # [REQ-HAB-003]
     it { should belong_to(:user) }
+    # [REQ-HAB-003]
     it { should have_many(:user_habits) }
   end
 
   describe 'validations' do
     subject { build(:habit_category) }
 
+    # [REQ-HAB-003]
     it { should validate_presence_of(:name) }
+    # [REQ-HAB-003]
     it { should validate_uniqueness_of(:name_normalized).scoped_to(:user_id).ignoring_case_sensitivity }
   end
 
   describe 'normalization' do
+    # [REQ-HAB-003]
     it 'derives name_normalized from name (strip + downcase)' do
       category = build(:habit_category, name: "  Salud Física  ", name_normalized: "")
       expect(category).to be_valid
@@ -23,6 +27,7 @@ RSpec.describe HabitCategory, type: :model do
   end
 
   describe 'deletion rules' do
+    # [REQ-HAB-003]
     it 'cannot be deleted while it has user_habits' do
       user = create(:user)
       category = HabitCategory.create!(user: user, name: 'Alimentación', name_normalized: 'alimentación')

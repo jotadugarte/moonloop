@@ -1,20 +1,24 @@
 require 'rails_helper'
 
-# REQ-HABITS-003: User habits support templates + personal habits, activation, and unique active names.
 RSpec.describe UserHabit, type: :model do
   describe 'associations' do
+    # [REQ-HAB-004]
     it { should belong_to(:user) }
+    # [REQ-HAB-004]
     it { should belong_to(:habit_category) }
+    # [REQ-HAB-004]
     it { should belong_to(:global_habit_template).optional }
   end
 
   describe 'validations' do
     subject { build(:user_habit) }
 
+    # [REQ-HAB-004]
     it { should validate_presence_of(:name) }
   end
 
   describe 'normalization' do
+    # [REQ-HAB-004]
     it 'derives name_normalized from name (strip + downcase)' do
       habit = build(:user_habit, name: "  Agua  ", name_normalized: "")
       expect(habit).to be_valid
@@ -23,6 +27,7 @@ RSpec.describe UserHabit, type: :model do
   end
 
   describe 'name uniqueness among active habits' do
+    # [REQ-HAB-006]
     it 'rejects a second active habit with same name ignoring case and whitespace' do
       user = create(:user)
       category = HabitCategory.create!(user: user, name: 'Salud Física', name_normalized: 'salud física')

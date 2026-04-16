@@ -1,0 +1,12 @@
+---
+description: Al editar SPEC.md, mantener registro REQ-ID alineado con tests
+globs: docs/core/SPEC.md
+alwaysApply: false
+---
+
+# SPEC.md y REQ-IDs
+
+- Cada fila de *Requirement registry* debe usar el formato `REQ-[DOMAIN]-[NNN]` ya definido en el documento.
+- Al **añadir** un requisito implementado: buscá en `spec/**/*_spec.rb` si ya hay cobertura y añadí el comentario `# [REQ-...]` encima del `it` correspondiente.
+- No inventes IDs duplicados; el siguiente número libre en ese dominio.
+- La sección *Traceability in tests* describe el comentario estándar; la convención detallada está en `.cursor/rules/spec-req-traceability.mdc`.
