@@ -1,4 +1,8 @@
 module Habits
+  # Computes the next calendar occurrence after +date+ for preview/tests.
+  # Only +daily+ and +monthly+ are implemented today. +weekdays+ and +every_x_days+
+  # are deferred to Phase 3 (“Mi Día” / schedule resolution); callers receive
+  # NotImplementedError until those paths exist.
   class NextOccurrence
     def self.after(user_habit:, date:)
       raise ArgumentError unless date.is_a?(Date)

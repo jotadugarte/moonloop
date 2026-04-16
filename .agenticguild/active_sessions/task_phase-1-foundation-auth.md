@@ -23,9 +23,9 @@
 
 ### Roadmap Update Required
 
-Update Phase 6 items #22–23 to explicitly mention BMI:
-- #22: Weight log: record entries (date+time, kg, bmi, height snapshot) — **Depends on: Phase 1**
-- #23: Weight + BMI history view — **Depends on: #22**
+Update Phase 6 items #23–24 to explicitly mention BMI (roadmap renumbered after Phase 3 items):
+- #23: Weight log: record entries (date+time, kg, bmi, height snapshot) — **Depends on: Phase 1**
+- #24: Weight + BMI history view — **Depends on: #23**
 
 ---
 
@@ -223,9 +223,9 @@ end
   </step>
 
   <step id="8" title="Update ROADMAP.md" status="complete">
-    <action>Update Phase 6 items #22–23 to mention BMI tracking explicitly:
-      - #22: `Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) — Depends on: Phase 1`
-      - #23: `Weight + BMI history view showing progression over time — Depends on: #22`
+    <action>Update Phase 6 items #23–24 to mention BMI tracking explicitly:
+      - #23: `Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) — Depends on: Phase 1`
+      - #24: `Weight + BMI history view showing progression over time — Depends on: #23`
     </action>
     <action>No test needed for a doc update.</action>
   </step>
@@ -248,7 +248,7 @@ end
   - [ ] `LogWeightService` syncs `current_weight_kg` and `current_bmi` on `User`
   - [ ] Timezone Stimulus controller pre-fills signup form from browser
   - [ ] Profile edit excludes `height_cm`
-  - [ ] ROADMAP.md items #22–23 updated
+  - [ ] ROADMAP.md items #23–24 updated
   - [ ] Full RSpec suite: green, zero failures
 </verification_checklist>
 </implementation_plan>
