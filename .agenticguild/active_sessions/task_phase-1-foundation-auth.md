@@ -128,7 +128,7 @@ end
     <action>Do NOT run `rails db:migrate` yet — migration will be amended in Step 3 first.</action>
   </step>
 
-  <step id="3" title="[TDD] Extend User migration and model with profile fields" status="in_progress">
+  <step id="3" title="[TDD] Extend User migration and model with profile fields" status="complete">
     <action>**RED:** Write `spec/models/user_spec.rb` with failing tests covering:
       - Validates presence of `email`, `date_of_birth`, `height_cm`, `timezone`.
       - Validates `height_cm` is in range 50–300.
@@ -144,7 +144,7 @@ end
     <action>**REFACTOR:** Extract validators if needed. Run `rspec spec/models/user_spec.rb` → all green.</action>
   </step>
 
-  <step id="4" title="[TDD] WeightLog model" status="pending">
+  <step id="4" title="[TDD] WeightLog model" status="complete">
     <action>**RED:** Write `spec/models/weight_log_spec.rb` covering:
       - Belongs to `User`.
       - Validates presence of `weight_kg`, `height_cm`, `bmi`.
@@ -159,7 +159,7 @@ end
     <action>**REFACTOR.** Run `rspec spec/models/weight_log_spec.rb` → all green.</action>
   </step>
 
-  <step id="5" title="[TDD] WeightLog creation syncs User current stats" status="pending">
+  <step id="5" title="[TDD] WeightLog creation syncs User current stats" status="in_progress">
     <action>**RED:** Write `spec/services/log_weight_service_spec.rb` covering:
       - Creates a `WeightLog` record with correct `weight_kg`, `height_cm` (snapshot from user), `bmi`.
       - Updates `user.current_weight_kg` and `user.current_bmi` after creation.

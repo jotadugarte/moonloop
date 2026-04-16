@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_182005) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_183350) do
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -34,5 +34,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_182005) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "weight_logs", force: :cascade do |t|
+    t.decimal "bmi", precision: 4, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.integer "height_cm", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.decimal "weight_kg", precision: 5, scale: 2, null: false
+    t.index ["user_id", "created_at"], name: "index_weight_logs_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_weight_logs_on_user_id"
+  end
+
   add_foreign_key "sessions", "users"
+  add_foreign_key "weight_logs", "users"
 end
