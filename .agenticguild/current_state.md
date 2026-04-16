@@ -5,7 +5,7 @@
 
   <execution_context>
     <active_skill>finish-branch</active_skill>
-    <current_phase>4 — Final spackle & PR</current_phase>
-    <current_step>4.x — Phase 2 habits core complete; docs aligned (SPEC, SYSTEM_ARCHITECTURE, code_review_prompt); RSpec 59/0 green. Push branch and confirm CI, then PR description / archive session if desired.</current_step>
+    <current_phase>3 — Remote / PR (no CI in repo)</current_phase>
+    <current_step>3.x — Push branch `habits-core`, open PR against `main`; local verification only (`bundle exec rspec`, 62 examples). Paste PR body from chat; optional: archive session after merge.</current_step>
   </execution_context>
 </agent_state>
