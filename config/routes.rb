@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get  "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [:index, :show, :destroy]
+  resources :habit_categories, only: [:index, :create, :edit, :update, :destroy]
   resource  :password, only: [:edit, :update]
   resource  :profile, only: [:edit, :update]
   namespace :identity do

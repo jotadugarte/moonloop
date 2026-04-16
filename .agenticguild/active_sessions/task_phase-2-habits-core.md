@@ -190,7 +190,7 @@
     <action>**REFACTOR:** Ensure job is safe to run concurrently (unique constraints where appropriate) and logs failures.</action>
   </step>
 
-  <step id="4" title="[TDD] Categories CRUD (user-managed, deletion blocked when referenced)" status="pending">
+  <step id="4" title="[TDD] Categories CRUD (user-managed, deletion blocked when referenced)" status="complete">
     <action>**RED:** System/request specs for category create/edit/delete flows:
       - Auth required.
       - Users can create and rename categories.

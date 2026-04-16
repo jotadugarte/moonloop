@@ -1,6 +1,6 @@
 class HabitCategory < ApplicationRecord
   belongs_to :user
-  has_many :user_habits, dependent: :restrict_with_error
+  has_many :user_habits
 
   validates :name, :name_normalized, presence: true
   validates :name_normalized, uniqueness: { scope: :user_id }
