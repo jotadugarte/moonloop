@@ -1,7 +1,7 @@
 <agent_state>
   <!-- When multiple task_*.md files exist in active_sessions/, set this to the active session filename (e.g. task_foo.md) for cross-IDE and status-check consistency. -->
   <active_task_pointer>
-    No active session. You can ask me to evaluate the ROADMAP.md or SPEC.md to start a new phase.
+    task_phase-2-habits-core.md
   </active_task_pointer>
 
   <execution_context>
