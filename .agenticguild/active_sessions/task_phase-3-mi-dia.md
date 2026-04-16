@@ -128,7 +128,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Start with failing tests that assert the new allowed set and migration behavior.</tdd_note>
   </step>
 
-  <step order="3">
+  <step order="3" status="completed">
     <title>`Habits::DueOnDate` (calendar rules)</title>
     <action>Write failing unit specs for `due_on?(user_habit, local_date)` covering `daily`, `weekdays` (multi and single element), `every_x_days` with `(date - activation_date) % interval == 0` and no dues before `activation_date`, `monthly` with clamp consistent with REQ-HAB-009, and first occurrence ≥ `activation_date` for weekdays. Use user timezone for civil dates. Implement service until green.</action>
     <tdd_note>Every branch introduced by a failing test before implementation.</tdd_note>
