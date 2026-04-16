@@ -54,6 +54,36 @@
 
 > This section will be iterated as we refine requirements and edge cases. Value Objects / Branded Types should be introduced where raw primitives would be unsafe or ambiguous.
 
+### Value Objects / Branded Types (approved)
+
+- **TemplateCode** (`String`)
+  - Stable, locale-neutral identifier for `GlobalHabitTemplate`.
+  - **Format:** lowercase `snake_case` in English (e.g. `nutrition_breakfast`, `fitness_water`).
+  - Used for idempotent seeding and job retries.
+
+- **HabitName** (`String`)
+  - User-facing name, with a normalized form used for uniqueness checks.
+  - **Normalization for comparison:** `strip` + `downcase`.
+  - Implementation intent: persist `name` (original) and `name_normalized` (comparison key).
+
+- **FrequencyType** (enum / constrained `String`)
+  - One of: `daily`, `weekdays`, `every_x_days`, `weekly`, `monthly`.
+
+- **WeekdaySet** (validated collection)
+  - Used when `FrequencyType=weekdays`.
+  - Representation: array of integers **0–6** (no duplicates).
+
+- **EveryXDays** (`Integer`)
+  - Used when `FrequencyType=every_x_days`.
+  - Invariant: \(x \ge 1\).
+
+- **ActivationDate** (`Date`)
+  - Activation date used as the anchor for schedule semantics (especially `every_x_days` and `monthly`).
+
+- **DayOfMonth** (`Integer`)
+  - Used when `FrequencyType=monthly`.
+  - Invariant: 1–31; derived from `ActivationDate`.
+
 ### GlobalHabitTemplate
 
 - **Responsibility:** Define a reusable habit template (name, description, default frequency, default category semantics) that can be instantiated per user.
