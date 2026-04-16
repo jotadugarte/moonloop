@@ -12,7 +12,6 @@ RSpec.describe UserHabit, type: :model do
     subject { build(:user_habit) }
 
     it { should validate_presence_of(:name) }
-    it { should validate_inclusion_of(:active).in_array([true, false]) }
   end
 
   describe 'normalization' do

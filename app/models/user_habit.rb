@@ -4,7 +4,6 @@ class UserHabit < ApplicationRecord
   belongs_to :global_habit_template, optional: true
 
   validates :name, :name_normalized, presence: true
-  validates :active, inclusion: { in: [true, false] }
 
   normalizes :name, with: -> { _1.strip }
   normalizes :name_normalized, with: -> { _1.strip.downcase }
