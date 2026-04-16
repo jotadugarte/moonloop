@@ -159,7 +159,7 @@ end
     <action>**REFACTOR.** Run `rspec spec/models/weight_log_spec.rb` → all green.</action>
   </step>
 
-  <step id="5" title="[TDD] WeightLog creation syncs User current stats" status="in_progress">
+  <step id="5" title="[TDD] WeightLog creation syncs User current stats" status="complete">
     <action>**RED:** Write `spec/services/log_weight_service_spec.rb` covering:
       - Creates a `WeightLog` record with correct `weight_kg`, `height_cm` (snapshot from user), `bmi`.
       - Updates `user.current_weight_kg` and `user.current_bmi` after creation.
@@ -189,7 +189,7 @@ end
     <action>**REFACTOR.** Run `rspec spec/services/` → all green.</action>
   </step>
 
-  <step id="6" title="[TDD] Signup form with profile fields + timezone Stimulus controller" status="pending">
+  <step id="6" title="[TDD] Signup form with profile fields + timezone Stimulus controller" status="in_progress">
     <action>**RED:** Write `spec/system/registration_spec.rb` (Capybara + RSpec system tests) covering:
       - User can fill out and submit the signup form with all fields.
       - Submitting with missing `height_cm` or `date_of_birth` shows validation errors.
