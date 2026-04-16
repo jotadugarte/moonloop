@@ -22,7 +22,7 @@ Replaces the broader `task_phase-3-mi-dia.md` plan for **this active pointer** o
   <classification>Refactor</classification>
   <description>Remove `weekly` as a `user_habits.frequency_type`. Represent “once per week on day D” exclusively as `weekdays` with `frequency_params["weekdays"]` containing one or more integers 0–6 (single element = weekly cadence). Add a defensive data migration for any existing `weekly` rows; update `UserHabit` validations; align `docs/core/SPEC.md` (glossary + REQ-HAB-005) per `.cursor/rules/spec-md-req-registry.mdc`; sweep templates, seeds, factories, and UI copy that referenced habit `weekly` type.</description>
 
-  <step id="1" status="pending">Run `bundle exec rspec` to establish a green baseline on the branch; do not change application code in this step.</step>
+  <step id="1" status="complete">Run `bundle exec rspec` to establish a green baseline on the branch; do not change application code in this step.</step>
 
   <step id="2" status="complete">Write a failing model spec: a `UserHabit` with `frequency_type: "weekly"` must be invalid once the inclusion list is updated (red: currently valid). Tag with `# [REQ-HAB-005]` per `.cursor/rules/spec-req-traceability.mdc`.</step>
 
