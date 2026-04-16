@@ -116,13 +116,13 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
   <classification>Feature</classification>
   <scope>Roadmap Phase 3 (#10–#14): #10 unify `weekly`→`weekdays` (done elsewhere); `Habits::DueOnDate` (or equivalent) for all frequency types; `habit_completions` persistence; Mi Día UI; mark/retro/streak per `docs/core/SYSTEM_ARCHITECTURE.md` (thin controllers, services under `app/services/habits/`, I18n, REQ traceability in specs).</scope>
 
-  <step order="1">
+  <step order="1" status="completed">
     <title>SPEC and registry alignment</title>
     <action>Update `docs/core/SPEC.md`: extend planned `REQ-DAY-001`–`004` with agreed semantics (TZ actual, inactive hidden, retro unlimited no future, streak closed-days-only, explicit failed == absent for streak); REQ-HAB-005 / `weekly` removal tracked in `task_unify-weekly-weekdays.md`; document `activation_date` edit rule (zero completion rows including after delete-all); `every_x_days` day-0 formula; first `weekdays`/`monthly` occurrence rules. Follow `.cursor/rules/spec-md-req-registry.mdc`.</action>
     <tdd_note>Not code-first; do not skip before writing failing tests for domain code in later steps.</tdd_note>
   </step>
 
-  <step order="2">
+  <step order="2" status="completed">
     <title>Roadmap #10 — Remove `weekly` type</title>
     <action>**Done** in session `task_unify-weekly-weekdays.md`: spec rejects `weekly`, data migration, model + SPEC. Remaining plan steps here skip #10.</action>
     <tdd_note>Start with failing tests that assert the new allowed set and migration behavior.</tdd_note>
