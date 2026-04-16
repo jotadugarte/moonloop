@@ -8,7 +8,6 @@ class CreateHabitCategories < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :habit_categories, [:user_id, :name_normalized], unique: true
+    add_index :habit_categories, [ :user_id, :name_normalized ], unique: true
   end
 end
-

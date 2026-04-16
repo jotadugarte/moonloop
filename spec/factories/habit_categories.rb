@@ -5,4 +5,3 @@ FactoryBot.define do
     name_normalized { name.strip.downcase }
   end
 end
-

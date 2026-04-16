@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_192000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_203000) do
   create_table "global_habit_templates", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.string "code", null: false

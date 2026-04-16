@@ -46,4 +46,3 @@ RSpec.describe HabitCategory, type: :model do
     end
   end
 end
-

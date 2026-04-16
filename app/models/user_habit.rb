@@ -5,7 +5,7 @@ class UserHabit < ApplicationRecord
 
   validates :name, :name_normalized, presence: true
   validates :frequency_type, presence: true
-  validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days weekly monthly] }
+  validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days monthly] }
 
   normalizes :name, with: -> { _1.strip }
   normalizes :name_normalized, with: -> { _1.strip.downcase }
@@ -43,8 +43,6 @@ class UserHabit < ApplicationRecord
       interval = frequency_params.is_a?(Hash) ? frequency_params["interval"] : nil
       errors.add(:frequency_params, :invalid_interval) unless interval.is_a?(Integer) && interval >= 1
       errors.add(:activation_date, :blank) if activation_date.blank?
-    when "weekly"
-      # defined later; Phase 3 needs schedule logic
     when "monthly"
       errors.add(:activation_date, :blank) if activation_date.blank?
     else
@@ -59,4 +57,3 @@ class UserHabit < ApplicationRecord
     errors.add(:name, :taken)
   end
 end
-

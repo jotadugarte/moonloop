@@ -16,14 +16,14 @@
    - Converting personal habits into reusable templates is explicitly **out of scope** for Phase 2 (Backlog candidate).
 
 2. **Frequencies & calendar semantics**
-   - Supported frequency types: **daily**, **specific weekdays**, **every X days**, **weekly**, **monthly** (per ROADMAP).
+   - Supported frequency types: **daily**, **specific weekdays** (including “once per week” as a one-element weekday set), **every X days**, **monthly** (per ROADMAP; legacy `weekly` was unified into `weekdays` in roadmap #10).
    - `every X days` counts from the **activation date** of the habit, not from creation time.
    - `monthly` means: repeat on the **same calendar day-of-month as the activation date**.
      - If the day does not exist in a given month, use the **last valid calendar day of that month** (normal calendar behavior):  
        - Feb: 28 or 29 (leap years)  
        - 30-day months: 30  
        - 31-day months: 31
-   - For **weekly / specific weekdays**, if the user later changes their timezone, the effective weekdays must be **recomputed for the new timezone**, and downstream tracking (Phase 3) must respect this.
+   - For **weekdays** schedules, if the user later changes their timezone, the effective weekdays must be **recomputed for the new timezone**, and downstream tracking (Phase 3) must respect this.
    - Historical interpretation uses only the **user's current timezone**; we are **not** preserving per-habit historical timezone snapshots in Phase 2.
 
 3. **Categories**
@@ -71,7 +71,7 @@
   - Implementation intent: persist `name` (original) and `name_normalized` (comparison key).
 
 - **FrequencyType** (enum / constrained `String`)
-  - One of: `daily`, `weekdays`, `every_x_days`, `weekly`, `monthly`.
+  - One of: `daily`, `weekdays`, `every_x_days`, `monthly`.
 
 - **WeekdaySet** (validated collection)
   - Used when `FrequencyType=weekdays`.
@@ -141,7 +141,7 @@
 
 <scope_mapping>
   <roadmap_items>
-    <item id="5">Habit model with frequency types (daily, weekdays, every X days, weekly, monthly)</item>
+    <item id="5">Habit model with frequency types (daily, weekdays, every X days, monthly; once-a-week = one weekday in params)</item>
     <item id="6">Default habits seeded per user on first login (job retries; idempotent)</item>
     <item id="7">User-managed categories (create, edit, delete w/ blocking)</item>
     <item id="8">Habits displayed grouped by category</item>
@@ -168,7 +168,7 @@
       - daily
       - specific weekdays (store as a set/array of weekdays)
       - every X days (integer X ≥ 1) counted from activation date
-      - weekly
+      - once-a-week via `weekdays` with a single selected day
       - monthly (stores day-of-month derived from activation date; months without that day clamp to the month's last day; e.g. Jan 31 → Feb 28/29 → Mar 31)
     </action>
     <action>**GREEN:** Implement validations + persistence shape for frequency (e.g. `frequency_type` + `frequency_params` JSON). Ensure activation date is persisted and required for schedule-driven frequencies.</action>

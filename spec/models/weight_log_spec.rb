@@ -62,7 +62,7 @@ RSpec.describe WeightLog, type: :model do
       # [REQ-WGT-001]
       it 'computes the BMI rounded to 2 decimals before validation' do
         log = build(:weight_log, weight_kg: 70.0, height_cm: 175, bmi: nil)
-        
+
         # Action
         log.valid?
 

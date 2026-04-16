@@ -24,6 +24,7 @@
 - **Domain rules in models** where they are simple validations and associations; extract when complexity or cross-cutting orchestration grows.
 - **Internationalization:** Default locale `es`; `en` available. User-visible strings go through `I18n` / `t(...)`.
 - **Traceability:** Requirements live in `docs/core/SPEC.md` (`REQ-*` IDs). Specs use `# [REQ-…]` comments per `.cursor/rules/spec-req-traceability.mdc`.
+- **Immutable migration logic:** One-off **data** migrations that rewrite legacy column values (for example normalizing `user_habits.frequency_type`) must **not** call arbitrary `app/services` classes from `db/migrate`, so fresh `db:migrate` runs do not depend on Zeitwerk autoload or on later refactors of application code. Keep a **frozen resolver** colocated with the migration (nested class on the migration, e.g. `MigrateWeeklyUserHabitsToWeekdays::WdayResolver`). When the same rules are needed for **automated tests or tooling**, mirror them in a small, spec-covered service under `app/services/` (e.g. `Habits::LegacyWeeklyWeekdayResolver`) and state in comments on **both** sides that behavior must stay aligned.
 - **Markup in ERB:** Views may use utility-style class names (for example Tailwind-like `text-2xl`, `border-gray-300`) with styles supplied under `app/assets/stylesheets`. The Gemfile does not include `tailwindcss-rails` unless that pipeline is adopted explicitly.
 
 ## 3. Forbidden or discouraged (without ADR)

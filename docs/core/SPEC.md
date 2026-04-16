@@ -35,7 +35,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Habit category | User-owned label grouping habits; names unique per user (case-insensitive) | `HabitCategory` |
 | Global habit template | System-wide template identified by stable `code`; used to provision default habits | `GlobalHabitTemplate` |
 | User habit | A habit instance owned by a user in a category, with frequency and optional link to a template | `UserHabit` |
-| Frequency type | Schedule kind: `daily`, `weekdays`, `every_x_days`, `weekly`, `monthly` | `user_habits.frequency_type` |
+| Frequency type | Schedule kind: `daily`, `weekdays`, `every_x_days`, `monthly`. There is no `weekly` type: “once per week on day D” is stored as `weekdays` with `frequency_params["weekdays"]` containing a single integer 0–6. | `user_habits.frequency_type` |
 | Frequency params | JSON parameters for the frequency (e.g. weekday list, interval) | `user_habits.frequency_params` |
 | Active habit | Habit with `active: true`; inactive habits do not consume the “unique name among active” rule | `user_habits.active` |
 | Provisioning | Idempotent job that ensures default templates/categories/habits exist for a user | `ProvisionDefaultHabitsJob`, sign-in hook |
@@ -92,7 +92,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-HAB-002 | After sign-in, provisioning runs so each user gains default categories and habits from templates **idempotently** (safe to repeat). | Implemented |
 | REQ-HAB-003 | User can create, update, and delete habit categories; names are unique per user ignoring case; category delete is forbidden if habits reference it. | Implemented |
 | REQ-HAB-004 | Each `user_habit` belongs to exactly one user and one category; may reference a global template. | Implemented |
-| REQ-HAB-005 | `frequency_type` must be one of: `daily`, `weekdays`, `every_x_days`, `weekly`, `monthly`. `frequency_params` is validated as a JSON object; per-type rules enforce weekdays array (0–6), interval ≥ 1 for `every_x_days`, and `activation_date` where required. `weekly` scheduling refinement may extend in later phases. | Implemented (partial for `weekly` / advanced scheduling) |
+| REQ-HAB-005 | `frequency_type` must be one of: `daily`, `weekdays`, `every_x_days`, `monthly`. `frequency_params` is validated as a JSON object; for `weekdays`, a non-empty array of integers 0–6 (exactly one element encodes “once per week on that weekday”); interval ≥ 1 for `every_x_days`; `activation_date` required where the model enforces it (including `monthly` and `every_x_days`). Any legacy `weekly` rows are migrated to `weekdays` with a one-element `weekdays` array. | Implemented |
 | REQ-HAB-006 | Among **active** habits, display name uniqueness per user is enforced using normalized name (case-insensitive). | Implemented |
 | REQ-HAB-007 | User can activate and deactivate habits, including defaults; deactivated habits can be reactivated. | Implemented |
 | REQ-HAB-008 | UI lists habits grouped by category; user can create a personal habit and add a habit from a template. | Implemented |
@@ -111,7 +111,7 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 | REQ-DAY-002 | User marks a habit done or failed for the current day. | Phase 3 |
 | REQ-DAY-003 | User can retroactively change completion for past days. | Phase 3 |
 | REQ-DAY-004 | Streak per habit: consecutive completed days without failure. | Phase 3 |
-| REQ-MENU-001 … REQ-MENU-005 | Weekly menu plan, recipes, phase system, alerts, extension — per roadmap Phase 4 (items 14–18). | Phase 4 |
+| REQ-MENU-001 … REQ-MENU-005 | Weekly menu plan, recipes, phase system, alerts, extension — per roadmap Phase 4 (items 15–19). | Phase 4 |
 | REQ-EXR-001 … REQ-EXR-003 | Exercise routines and linkage to “Mi Día” — per roadmap Phase 5. | Phase 5 |
 | REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
 | REQ-WGT-003 | Weight + BMI history view (progression over time). | Phase 6 |
@@ -126,7 +126,7 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 3. **Habit provisioning** — On sign-in, job ensures template-backed default categories and habits exist once per logical template `code`.
 4. **Category lifecycle** — CRUD categories; destroy prevented if habits still reference the category.
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
-6. **Next occurrence (preview)** — For scheduling previews/tests, daily and monthly next dates are computed via service; monthly respects shorter months.
+6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements **daily** and **monthly** only; **weekdays** and **every_x_days** are Phase 3. Monthly respects shorter months.
 
 ---
 

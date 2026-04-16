@@ -20,7 +20,7 @@ class User < ApplicationRecord
 
   validates :date_of_birth, :height_cm, :timezone, presence: true
   validates :height_cm, numericality: { greater_than_or_equal_to: 50, less_than_or_equal_to: 300 }, allow_nil: true
-  
+
   validate :date_of_birth_must_be_in_valid_range
   validate :timezone_must_be_valid
 
@@ -46,7 +46,7 @@ class User < ApplicationRecord
 
   def date_of_birth_must_be_in_valid_range
     return if date_of_birth.blank?
-    
+
     if date_of_birth > 10.years.ago.to_date
       errors.add(:date_of_birth, :too_young)
     elsif date_of_birth < 120.years.ago.to_date

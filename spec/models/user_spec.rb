@@ -85,7 +85,7 @@ RSpec.describe User, type: :model do
     # [REQ-PROF-001]
     it 'prevents changing height_cm after creation (attr_readonly)' do
       user = create(:user, height_cm: 180)
-      
+
       expect {
         user.height_cm = 190
       }.to raise_error(ActiveRecord::ReadonlyAttributeError)
@@ -98,7 +98,7 @@ RSpec.describe User, type: :model do
       travel_to Date.new(2026, 4, 16) do
         user_after_bday = build(:user, date_of_birth: Date.new(1996, 4, 15))
         expect(user_after_bday.age).to eq(30)
-        
+
         user_before_bday = build(:user, date_of_birth: Date.new(1996, 4, 17))
         expect(user_before_bday.age).to eq(29)
       end

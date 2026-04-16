@@ -53,4 +53,3 @@ RSpec.describe UserHabit, type: :model do
     end
   end
 end
-

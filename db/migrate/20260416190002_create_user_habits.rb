@@ -14,10 +14,9 @@ class CreateUserHabits < ActiveRecord::Migration[8.1]
 
     # Enforce "unique among active only" at the DB level.
     add_index :user_habits,
-              [:user_id, :name_normalized],
+              [ :user_id, :name_normalized ],
               unique: true,
               where: "active = 1",
               name: "idx_user_habits_unique_active_name_per_user"
   end
 end
-

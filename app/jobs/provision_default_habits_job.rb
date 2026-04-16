@@ -70,4 +70,3 @@ class ProvisionDefaultHabitsJob < ApplicationJob
     UserHabit.find_by!(user: user, global_habit_template: template)
   end
 end
-

@@ -5,4 +5,3 @@ class GlobalHabitTemplate < ApplicationRecord
 
   normalizes :code, with: -> { _1.strip.downcase }
 end
-

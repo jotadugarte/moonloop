@@ -10,4 +10,3 @@ class CreateGlobalHabitTemplates < ActiveRecord::Migration[8.1]
     add_index :global_habit_templates, :code, unique: true
   end
 end
-

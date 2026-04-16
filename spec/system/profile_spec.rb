@@ -5,7 +5,7 @@ RSpec.describe 'Profile Editing', type: :system do
 
   before do
     driven_by(:rack_test)
-    
+
     # Log in using standard auth-zero forms
     visit sign_in_path
     fill_in 'Correo electrónico', with: user.email
@@ -25,11 +25,11 @@ RSpec.describe 'Profile Editing', type: :system do
     # Date of birth and Timezone are editable
     fill_in 'Fecha de nacimiento', with: '1985-11-20'
     fill_in 'Zona horaria', with: 'Europe/Madrid'
-    
+
     click_button 'Actualizar perfil'
 
     expect(page).to have_content('Perfil actualizado correctamente')
-    
+
     user.reload
     expect(user.date_of_birth.to_s).to eq('1985-11-20')
     expect(user.timezone).to eq('Europe/Madrid')

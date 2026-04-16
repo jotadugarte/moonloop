@@ -44,6 +44,13 @@ RSpec.describe UserHabit, type: :model do
       expect(habit).not_to be_valid
       expect(habit.errors[:activation_date]).not_to be_empty
     end
+
+    # [REQ-HAB-005]
+    it "rejects weekly frequency type (use weekdays with a single day instead)" do
+      habit = build_habit(frequency_type: "weekly", frequency_params: {}, activation_date: nil)
+      expect(habit).not_to be_valid
+      expect(habit.errors[:frequency_type]).not_to be_empty
+    end
   end
 
   describe "monthly schedule semantics (end-of-month clamp)" do
@@ -62,4 +69,3 @@ RSpec.describe UserHabit, type: :model do
     end
   end
 end
-

@@ -14,7 +14,7 @@ RSpec.describe LogWeightService do
       expect(log.user).to eq(user)
       expect(log.weight_kg).to eq(80.5)
       expect(log.height_cm).to eq(180) # Snapshotted
-      
+
       # (80.5 / 1.8**2).round(2)
       expect(log.bmi).to eq(24.85)
 
