@@ -1,0 +1,22 @@
+---
+description: REQ-ID traceability — SPEC.md registry and RSpec comments
+globs: spec/**/*_spec.rb
+alwaysApply: false
+---
+
+# Trazabilidad REQ-ID (Moonloop)
+
+- **Fuente de verdad:** `docs/core/SPEC.md` (tablas *Requirement registry*). Solo uses IDs que existan ahí o en *planned* si el test documenta comportamiento futuro explícito.
+- **En cada ejemplo RSpec:** línea inmediatamente anterior al `it` (o al bloque `specify`):
+
+  ```ruby
+  # [REQ-HAB-006]
+  it "..." do
+  ```
+
+- **Un ID por requisito principal.** Si un solo `it` demuestra dos reglas distintas, usa: `# [REQ-AUTH-002, REQ-HAB-002]` (orden alfabético por dominio).
+- **Ejemplos de una línea (shoulda):** mismo formato: comentario justo encima de cada `it { should ... }`.
+- **Al añadir un requisito nuevo:** primero añade la fila en `SPEC.md` con el `REQ-...` definitivo; luego el test y el comentario.
+- **Al cambiar comportamiento:** actualiza el comentario si el `it` ya no cubre ese REQ-ID.
+
+Para editar **`docs/core/SPEC.md`**, mantén los IDs estables; si renombrás un requisito, actualizá los comentarios en los specs que lo citan.

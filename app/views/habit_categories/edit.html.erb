@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1><%= t("habit_categories.edit.title") %></h1>
+
+<%= form_with model: @habit_category, url: habit_category_path(@habit_category), method: :patch do |f| %>
+  <div>
+    <%= f.label :name, t("habit_categories.edit.name_label") %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.submit t("habit_categories.edit.update_submit") %>
+  </div>
+<% end %>
+

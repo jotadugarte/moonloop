@@ -1,28 +1,28 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Devices & Sessions</h1>
+<h1><%= t("sessions.index.title") %></h1>
 
 <div id="sessions">
   <% @sessions.each do |session| %>
     <div id="<%= dom_id session %>">
       <p>
-        <strong>User Agent:</strong>
+        <strong><%= t("sessions.index.user_agent") %>:</strong>
         <%= session.user_agent %>
       </p>
 
       <p>
-        <strong>Ip Address:</strong>
+        <strong><%= t("sessions.index.ip_address") %>:</strong>
         <%= session.ip_address %>
       </p>
 
       <p>
-        <strong>Created at:</strong>
+        <strong><%= t("sessions.index.created_at") %>:</strong>
         <%= session.created_at %>
       </p>
 
     </div>
     <p>
-      <%= button_to "Log out", session, method: :delete %>
+      <%= button_to t("sessions.index.log_out"), session, method: :delete %>
     </p>
   <% end %>
 </div>
@@ -30,5 +30,5 @@
 <br>
 
 <div>
-  <%= link_to "Back", root_path %>
+  <%= link_to t("shared.back"), root_path %>
 </div>

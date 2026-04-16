@@ -2,64 +2,87 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
+    # [REQ-AUTH-001]
     it { should validate_presence_of(:email) }
+    # [REQ-PROF-001]
     it { should validate_presence_of(:date_of_birth) }
+    # [REQ-PROF-001]
     it { should validate_presence_of(:height_cm) }
+    # [REQ-PROF-001]
     it { should validate_presence_of(:timezone) }
 
     describe 'height_cm validation' do
+      # [REQ-PROF-001]
       it 'is valid between 50 and 300' do
         user = build(:user, height_cm: 150)
         expect(user).to be_valid
       end
 
+      # [REQ-PROF-001]
       it 'is invalid if below 50' do
         user = build(:user, height_cm: 49)
         expect(user).not_to be_valid
-        expect(user.errors[:height_cm]).to include("must be greater than or equal to 50")
+        expect(user.errors[:height_cm]).to include(
+          I18n.t("activerecord.errors.messages.greater_than_or_equal_to", count: 50)
+        )
       end
 
+      # [REQ-PROF-001]
       it 'is invalid if above 300' do
         user = build(:user, height_cm: 301)
         expect(user).not_to be_valid
-        expect(user.errors[:height_cm]).to include("must be less than or equal to 300")
+        expect(user.errors[:height_cm]).to include(
+          I18n.t("activerecord.errors.messages.less_than_or_equal_to", count: 300)
+        )
       end
     end
 
     describe 'date_of_birth validation' do
+      # [REQ-PROF-001]
       it 'is valid if between 10 and 120 years ago' do
         user = build(:user, date_of_birth: 20.years.ago.to_date)
         expect(user).to be_valid
       end
 
+      # [REQ-PROF-001]
       it 'is invalid if less than 10 years ago' do
         user = build(:user, date_of_birth: 9.years.ago.to_date)
         expect(user).not_to be_valid
-        expect(user.errors[:date_of_birth]).to include("must be at least 10 years ago")
+        expect(user.errors[:date_of_birth]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.date_of_birth.too_young")
+        )
       end
 
+      # [REQ-PROF-001]
       it 'is invalid if older than 120 years' do
         user = build(:user, date_of_birth: 121.years.ago.to_date)
         expect(user).not_to be_valid
-        expect(user.errors[:date_of_birth]).to include("must be at most 120 years ago")
+        expect(user.errors[:date_of_birth]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.date_of_birth.too_old")
+        )
       end
     end
 
     describe 'timezone validation' do
+      # [REQ-PROF-001]
       it 'is valid for an IANA timezone' do
         user = build(:user, timezone: 'America/Argentina/Buenos_Aires')
         expect(user).to be_valid
       end
 
+      # [REQ-PROF-001]
       it 'is invalid for a non-IANA string' do
         user = build(:user, timezone: 'Not/A/Timezone')
         expect(user).not_to be_valid
-        expect(user.errors[:timezone]).to include("is not a valid timezone")
+        expect(user.errors[:timezone]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.timezone.invalid")
+        )
       end
     end
   end
 
   describe 'Immutability requirements' do
+    # [REQ-PROF-001]
     it 'prevents changing height_cm after creation (attr_readonly)' do
       user = create(:user, height_cm: 180)
       
@@ -70,6 +93,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#age' do
+    # [REQ-PROF-001]
     it 'calculates the correct age based on today as an integer' do
       travel_to Date.new(2026, 4, 16) do
         user_after_bday = build(:user, date_of_birth: Date.new(1996, 4, 15))

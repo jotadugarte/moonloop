@@ -1,14 +1,14 @@
-**Act as a Principal Software Engineer** specializing in modern Rails 8 architectures, "Clean Code" principles, and Hotwire (Turbo/Stimulus).
+**Act as a Principal Software Engineer** specializing in modern Rails architectures, "Clean Code" principles, and Hotwire (Turbo/Stimulus).
 
-This is a **strict self-review** of my own pull request for the **odonline** application before sharing it with the team.
+This is a **strict self-review** of my own pull request for the **Moonloop** application before sharing it with the team.
 Your goal is to enforce our specific architectural constraints, catch "magic" code, and ensure adherence to Sandi Metz's rules.
 
 **Context & Stack:**
 
-* **Backend:** Rails 8, SQLite (dev/test) / PostgreSQL (production), Solid Queue, **Devise** (adopted).
-* **Frontend:** Hotwire (Turbo/Stimulus), **Tailwind CSS** (adopted), Dartsass, ViewComponents where used.
-* **Adopted:** Tailwind for styling, Devise for authentication. Use them consistently.
-* **Forbidden:** jQuery, CoffeeScript. No hardcoded user-facing strings.
+* **Backend:** Rails ~> 8.1, **SQLite** (primary in this repo), **Solid Queue** / Solid stack adapters where configured, **`authentication-zero`** (session cookies + `Session` model, not Devise).
+* **Frontend:** Hotwire (**Turbo** + **Stimulus**), **importmap-rails**, **Propshaft** for the asset pipeline (no Node/npm frontend toolchain in-repo unless added later).
+* **Styling:** App styles live under `app/assets/stylesheets` (no Tailwind in the default Gemfile). Prefer existing layout/partial patterns and shared CSS over ad-hoc inline styles.
+* **Forbidden:** jQuery, CoffeeScript. No hardcoded user-facing strings (use `I18n` / `t(...)`; default locale may be Spanish).
 
 **Instructions:**
 
@@ -24,31 +24,27 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 **Sandi Metz & Complexity Rules**
 
 * **Method Length:** Flag any method > 5 lines. Suggest extraction to private methods or Service Objects.
-* **Class Length:** Flag any Class/Module > 100 lines (includes Helpers). Suggest splitting by responsibility (e.g. ThemeHelper, IndexSortHelper).
+* **Class Length:** Flag any Class/Module > 100 lines (includes Helpers). Suggest splitting by responsibility.
 * **Conditionals:** Flag nested `if/else` (> 2 levels). Suggest Guard Clauses or Polymorphism.
 * **Variable Naming:** Reject single-letter variables (except `i` in loops). Booleans must ask questions (`active?`, not `active`).
 
 **Service & Query Objects (Strict)**
 
-* **Controller Logic:** Controllers must handle HTTP only. If business logic exists here, demand a **Service Object** (e.g., `AreaReportService`).
+* **Controller Logic:** Controllers must handle HTTP only. If business logic exists here, demand a **Service Object**.
 * **Fat Models:** If a Model has complex scopes or SQL chains, demand a **Query Object** or extracted scopes.
 * **Callbacks:** Flag complex `after_save/update` callbacks. Suggest explicit Service calls instead to avoid side effects.
-* **Concerns:** Do NOT use a Concern for single-model logic. Shared behavior across multiple models (e.g. same association + validation) may use a Concern (e.g. `BelongsToBehaviorLevel`). Single-model logic → Service Object or keep in model.
+* **Concerns:** Do NOT use a Concern for single-model logic. Shared behavior across multiple models may use a Concern. Single-model logic → Service Object or keep in model.
 
-**Authentication & Security**
+**Authentication & Security (`authentication-zero`)**
 
-* **Devise:** Use `current_user`, `authenticate_user!` (or equivalent) consistently. Ensure sensitive data is not exposed in logs/params.
-* **Authorization:** Check for authorization gaps (e.g. before_action, policies).
+* **Sessions:** Ensure session creation/teardown is consistent (`cookies.signed[:session_token]`, `Session` records, `Current.session`).
+* **Gating:** Unauthenticated users should be redirected consistently (`ApplicationController#authenticate` and `skip_before_action :authenticate` only where appropriate).
+* **Sensitive data:** Ensure passwords/tokens are not logged; filter params; avoid leaking verification/reset tokens in URLs in logs.
+* **Authorization:** Check for authorization gaps (e.g. `before_action` scoping resources to `Current.user` / session user).
 
 ---
 
 ### 2. Frontend Architecture (Hotwire & Stimulus)
-
-**ViewComponents (if used)**
-
-* **Logic Leakage:** Flag database queries inside `render` or `initialize`. Components must receive data, not fetch it.
-* **Full sidecar (one folder):** When a component has sidecars, it must live in its own folder (e.g. `navigation/user_menu_component/`). All sidecar assets (template, CSS, JS) must be inside that folder alongside the `.rb` file. See `docs/core/COMPONENT_PATTERNS.md`.
-* **Argument Hash:** If a Component takes > 3 arguments, suggest a configuration object/hash.
 
 **Stimulus Controllers**
 
@@ -57,7 +53,6 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 * **Targeting:** Ensure `static targets` are used instead of `document.querySelector`.
 * **No jQuery:** **STRICTLY** flag any usage of `$()` or jQuery methods.
 * **Debug Logging:** Flag any `console.log` left behind.
-* **ESLint:** JavaScript must pass `npm run lint`. Flag any patterns that would fail ESLint.
 
 **Turbo & HTML**
 
@@ -65,15 +60,15 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 * **Stream vs. Frame:** Prefer **Turbo Streams** (append/prepend/replace) over full **Turbo Frame** reloads whenever possible.
 * **"Div Soup":** Flag unnecessary wrapper `<div>` tags around Turbo Frames unless strictly required for layout.
 
-**CSS (Tailwind — adopted)**
+**CSS**
 
-* **Tailwind is the project standard.** Use Tailwind utility classes for layout and styling.
-* Flag hardcoded hex codes or inline styles where Tailwind utilities (or design tokens) would apply.
+* Prefer shared styles and existing class naming over one-off inline styles.
+* Flag hardcoded colors or inline styles where an existing stylesheet rule or shared utility pattern would keep the UI consistent.
 
 **Helpers**
 
-* **Class length:** Helpers must stay ≤ 100 lines. Flag helpers that grow beyond; suggest splitting by responsibility (e.g. ThemeHelper, IndexSortHelper).
-* **Dead code:** Flag unused helper methods or redundant wrappers (e.g. per-resource `xxx_sort_icon` when a shared `IndexSortHelper#index_sort_icon` exists and views use only the sort link).
+* **Class length:** Helpers must stay ≤ 100 lines. Flag helpers that grow beyond; suggest splitting by responsibility.
+* **Dead code:** Flag unused helper methods or redundant wrappers.
 
 ---
 
@@ -81,10 +76,10 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 
 * **Skip link & main:** Every layout must have a skip link targeting `#main-content`. No removal of skip link or main landmark.
 * **Focus visibility:** Do not remove `:focus-visible` styles or rely on `outline: none` without a visible focus alternative.
-* **Forms:** Every control must have an associated label. Any form that displays validation errors must give the error list an `id` and `role="alert"`, and use `form_field_aria_attributes(model, :attr, errors_list_id)` (or equivalent) so screen readers get `aria-invalid` and `aria-describedby`. **Nested form rows** (e.g. add/remove item): pass `errors_list_id` into the partial and use `form_field_aria_attributes` for nested fields that can have errors; icon-only buttons (e.g. remove row) must have `aria-label` (i18n). All new views must follow a11y patterns. See `docs/core/accessibility.md`.
-* **Images & icon-only controls:** Informative images must have descriptive alt (i18n). Decorative images: `alt=""`. Icon-only links/buttons (including remove-row and similar in nested forms) must have `aria-label`.
+* **Forms:** Every control must have an associated label. Any form that displays validation errors must give the error list an `id` and `role="alert"`, and wire up `aria-invalid` / `aria-describedby` appropriately so screen readers announce errors. Icon-only buttons must have `aria-label` (i18n). See `docs/core/accessibility.md` if present.
+* **Images & icon-only controls:** Informative images must have descriptive alt (i18n). Decorative images: `alt=""`.
 * **Contrast:** Ensure primary CTAs and important text meet WCAG 2.1 AA contrast. Flag any new UI that does not.
-* **Testing:** If you use axe (axe-core-capybara), add new public/auth pages to the accessibility spec. Flag if axe or accessibility spec is removed or disabled without justification.
+* **Testing:** If the project uses axe (axe-core-capybara), ensure new public/auth pages are covered. Flag if accessibility tooling is removed or disabled without justification.
 
 ---
 
@@ -92,8 +87,8 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 
 * **Hardcoded Strings:** Flag **ANY** user-facing text (in Views, Controllers, Mailers, or Models) that is a raw string.
 * **Interpolation:** Ensure `I18n.t` interpolation is used, not string concatenation.
-* **Key Structure:** Verify keys follow a consistent pattern (e.g. `controllers.employees.index.title`).
-* **Defaults:** When adding new keys, provide sensible defaults where appropriate.
+* **Key Structure:** Verify keys follow a consistent pattern (e.g. `user_habits.index.title`).
+* **Locales:** When adding keys, update **both** `config/locales/en.yml` and `config/locales/es.yml` (or explain why one locale is intentionally omitted).
 
 ---
 
@@ -112,8 +107,7 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 * **Factories:** Are new factories created for new models? Are they valid?
 * **Private Method Testing (Anti-Pattern):**
   * **🛑 MUST FLAG:** Any test using `send(:private_method)` or `instance_eval` to access private methods.
-  * **Rationale:** Test the public interface only. See `docs/core/testing_private_methods_in_rails.md`.
-  * **Code Smell:** Complex private logic should be extracted to a Service Object or Value Object.
+  * **Rationale:** Test the public interface only. See `docs/core/testing_private_methods_in_rails.md` if present.
 
 ---
 
@@ -123,10 +117,10 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 * Are there any "ToDo" comments left in the code?
 * Is the migration file reversible where applicable?
 
-### 8. Documentation (Including CHANGELOG)
+### 8. Documentation
 
-* If the PR adds a user-facing change, fix, or notable dependency/config change, has **CHANGELOG.md** been updated? (Add an entry under `[Unreleased]`. See CHANGELOG.md section "When to update this file.")
-* If new docs were added that contributors should read, are they referenced in README or relevant docs?
+* If the PR adds a user-facing change, fix, or notable dependency/config change, has **`docs/ROADMAP.md`** been updated when this work completes a roadmap item?
+* If the project maintains a changelog, update it under `[Unreleased]` when appropriate. (This repo may not have `CHANGELOG.md` yet.)
 
 ---
 
@@ -137,7 +131,7 @@ Organize feedback using these categories:
 1. **🛑 MUST FIX (Architectural/Safety)**: Violations of Sandi Metz, hardcoded strings, security risks.
 2. **⚠️ STRONGLY RECOMMENDED (Clean Code)**: Naming conventions, Service extraction, performance tweaks.
 3. **💡 NICE TO IMPROVE**: Readability, test clarity, CSS/organization.
-4. **📄 CHANGELOG**: Missing updates to CHANGELOG.md when the PR adds a user-facing change, fix, or notable dependency/config change.
+4. **📄 DOCUMENTATION**: Missing updates to roadmap/docs when the PR completes planned work.
 5. **❓ REVIEWER QUESTIONS**: Things a team member will likely ask you to explain.
 
 End with:

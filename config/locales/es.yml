@@ -1,0 +1,197 @@
+es:
+  hello: "Hola mundo"
+  sessions:
+    new:
+      title: "Iniciar sesión"
+      submit: "Iniciar sesión"
+      sign_up: "Registrarse"
+      forgot_password: "¿Olvidaste tu contraseña?"
+    create:
+      signed_in: "Sesión iniciada correctamente"
+      invalid_credentials: "Ese correo o contraseña es incorrecto"
+    destroy:
+      signed_out: "Esa sesión se cerró"
+    index:
+      title: "Dispositivos y sesiones"
+      user_agent: "Agente de usuario"
+      ip_address: "Dirección IP"
+      created_at: "Creada el"
+      log_out: "Cerrar sesión"
+  registrations:
+    create:
+      signed_up: "¡Bienvenido! Te registraste correctamente"
+    new:
+      title: "Registrarse"
+      submit: "Registrarse"
+      password_hint: "Mínimo 12 caracteres."
+      prohibited:
+        one: "1 error impidió guardar este usuario:"
+        other: "%{count} errores impidieron guardar este usuario:"
+  identity:
+    emails:
+      update:
+        email_changed: "Tu correo fue actualizado"
+      edit:
+        change_title: "Cambiar tu correo"
+        verify_title: "Verificar tu correo"
+        verify_instructions: "Enviamos un correo de verificación a la dirección que aparece abajo. Revisa ese correo y sigue las instrucciones para confirmar que es tu dirección."
+        resend_verification: "Reenviar correo de verificación"
+        new_email: "Correo nuevo"
+    email_verifications:
+      invalid_link: "Ese enlace de verificación de correo no es válido"
+      show:
+        verified: "Gracias por verificar tu correo"
+      create:
+        sent: "Enviamos un correo de verificación a tu dirección"
+    password_resets:
+      invalid_link: "Ese enlace de restablecimiento de contraseña no es válido"
+      create:
+        sent: "Revisa tu correo para las instrucciones de restablecimiento"
+        unverified: "No puedes restablecer tu contraseña hasta verificar tu correo"
+      update:
+        success: "Tu contraseña se restableció correctamente. Inicia sesión"
+      new:
+        title: "¿Olvidaste tu contraseña?"
+        submit: "Enviar correo de restablecimiento"
+      edit:
+        title: "Restablecer tu contraseña"
+  passwords:
+    update:
+      success: "Tu contraseña fue actualizada"
+    edit:
+      title: "Cambiar tu contraseña"
+      new_password: "Contraseña nueva"
+      confirm_new_password: "Confirmar contraseña nueva"
+      password_hint: "Mínimo 12 caracteres."
+  profiles:
+    update:
+      success: "Perfil actualizado correctamente"
+    edit:
+      title: "Editar perfil"
+      submit: "Actualizar perfil"
+      prohibited:
+        one: "1 error impidió guardar tu perfil:"
+        other: "%{count} errores impidieron guardar tu perfil:"
+  shared:
+    back: "Volver"
+    save_changes: "Guardar cambios"
+  forms:
+    errors:
+      header:
+        one: "1 error impidió guardar este %{model}:"
+        other: "%{count} errores impidieron guardar este %{model}:"
+  home:
+    index:
+      signed_as: "Sesión iniciada como %{email}"
+      login_section_title: "Inicio de sesión y verificación"
+      change_password: "Cambiar contraseña"
+      change_email: "Cambiar correo electrónico"
+      access_history_title: "Historial de accesos"
+      devices_sessions: "Dispositivos y sesiones"
+      log_out: "Cerrar sesión"
+  mailers:
+    user_mailer:
+      email_verification:
+        greeting: "Hola,"
+        body: "Esto es para confirmar que %{email} es el correo que quieres usar en tu cuenta. Si alguna vez pierdes tu contraseña, ahí te enviaremos el enlace de restablecimiento."
+        must_confirm: "Debes abrir el enlace de abajo para confirmar que recibiste este correo."
+        confirm_link_text: "Sí, usar este correo en mi cuenta"
+        footer: "¿Dudas o necesitas ayuda? Responde a este correo y nuestro equipo de soporte te ayudará."
+      password_reset:
+        greeting: "Hola,"
+        body: "¿No recuerdas tu contraseña de %{email}? No pasa nada. Abre el enlace de abajo para crear una nueva."
+        reset_link_text: "Restablecer mi contraseña"
+        ignore_note: "Si no pediste restablecer la contraseña, puedes ignorar este correo con tranquilidad; expira en 20 minutos. Solo quien tenga acceso a esta cuenta de correo puede restablecer tu contraseña."
+        footer: "¿Dudas o necesitas ayuda? Responde a este correo y nuestro equipo de soporte te ayudará."
+  habit_categories:
+    flash:
+      created: "Categoría creada"
+      updated: "Categoría actualizada"
+      deleted: "Categoría eliminada"
+    index:
+      title: "Categorías de hábitos"
+      name_label: "Nombre"
+      create_submit: "Crear categoría"
+      edit: "Editar"
+      delete: "Eliminar"
+    edit:
+      title: "Editar categoría"
+      name_label: "Nombre"
+      update_submit: "Actualizar categoría"
+  user_habits:
+    flash:
+      created: "Hábito creado"
+      added_from_template: "Hábito agregado"
+      deactivated: "Hábito desactivado"
+      activated: "Hábito activado"
+      not_found: "No se encontró esa plantilla o categoría."
+    index:
+      title: "Hábitos"
+      create_personal_title: "Crear hábito personal"
+      habits_title: "Hábitos"
+      templates_title: "Plantillas"
+      category_label: "Categoría"
+      name_label: "Nombre"
+      create_personal_submit: "Crear hábito personal"
+      add_from_template_submit: "Agregar desde plantilla"
+      deactivate: "Desactivar"
+      activate: "Activar"
+  habits:
+    default_categories:
+      nutrition:
+        name: "Nutrición"
+      fitness:
+        name: "Salud física"
+      emotional:
+        name: "Emocional"
+    templates:
+      nutrition_breakfast:
+        name: "Desayuno"
+      nutrition_lunch:
+        name: "Almuerzo"
+      nutrition_dinner:
+        name: "Cena"
+      nutrition_snack:
+        name: "Merienda"
+      fitness_exercise:
+        name: "Ejercicio"
+      fitness_water:
+        name: "Agua"
+      emotional_pet:
+        name: "Mascota"
+  activerecord:
+    attributes:
+      user:
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+        password_challenge: "Contraseña actual"
+        date_of_birth: "Fecha de nacimiento"
+        height_cm: "Altura (cm)"
+        timezone: "Zona horaria"
+      user_habit:
+        name: "Nombre"
+    errors:
+      messages:
+        blank: "no puede estar en blanco"
+        taken: "ya está en uso"
+        greater_than_or_equal_to: "debe ser mayor que o igual a %{count}"
+        less_than_or_equal_to: "debe ser menor que o igual a %{count}"
+      models:
+        user:
+          attributes:
+            date_of_birth:
+              too_young: "debe ser una fecha de hace al menos 10 años"
+              too_old: "debe ser una fecha de hace como máximo 120 años"
+            timezone:
+              invalid: "no es una zona horaria válida"
+        habit_category:
+          attributes:
+            base:
+              cannot_delete_with_habits: "no se puede eliminar una categoría que tiene hábitos"
+        user_habit:
+          attributes:
+            frequency_params:
+              must_be_object: "debe ser un objeto JSON"
+              invalid_weekdays: "debe incluir días de la semana de 0 a 6"
+              invalid_interval: "debe incluir un intervalo mayor o igual a 1"

@@ -29,12 +29,175 @@
 
 en:
   hello: "Hello world"
+  sessions:
+    new:
+      title: "Sign in"
+      submit: "Sign in"
+      sign_up: "Sign up"
+      forgot_password: "Forgot your password?"
+    create:
+      signed_in: "Signed in successfully"
+      invalid_credentials: "That email or password is incorrect"
+    destroy:
+      signed_out: "That session has been logged out"
+    index:
+      title: "Devices & Sessions"
+      user_agent: "User Agent"
+      ip_address: "Ip Address"
+      created_at: "Created at"
+      log_out: "Log out"
+  identity:
+    emails:
+      update:
+        email_changed: "Your email has been changed"
+      edit:
+        change_title: "Change your email"
+        verify_title: "Verify your email"
+        verify_instructions: "We sent a verification email to the address below. Check that email and follow those instructions to confirm it's your email address."
+        resend_verification: "Re-send verification email"
+        new_email: "New email"
+    email_verifications:
+      invalid_link: "That email verification link is invalid"
+      show:
+        verified: "Thank you for verifying your email address"
+      create:
+        sent: "We sent a verification email to your email address"
+    password_resets:
+      invalid_link: "That password reset link is invalid"
+      create:
+        sent: "Check your email for reset instructions"
+        unverified: "You can't reset your password until you verify your email"
+      update:
+        success: "Your password was reset successfully. Please sign in"
+      new:
+        title: "Forgot your password?"
+        submit: "Send password reset email"
+      edit:
+        title: "Reset your password"
+  passwords:
+    update:
+      success: "Your password has been changed"
+    edit:
+      title: "Change your password"
+      new_password: "New password"
+      confirm_new_password: "Confirm new password"
+      password_hint: "12 characters minimum."
+  habit_categories:
+    flash:
+      created: "Category created"
+      updated: "Category updated"
+      deleted: "Category deleted"
+    index:
+      title: "Habit Categories"
+      name_label: "Name"
+      create_submit: "Create Category"
+      edit: "Edit"
+      delete: "Delete"
+    edit:
+      title: "Edit Category"
+      name_label: "Name"
+      update_submit: "Update Category"
+  user_habits:
+    flash:
+      created: "Habit created"
+      added_from_template: "Habit added"
+      deactivated: "Habit deactivated"
+      activated: "Habit activated"
+      not_found: "That habit template or category could not be found."
+    index:
+      title: "User Habits"
+      create_personal_title: "Create personal habit"
+      habits_title: "Habits"
+      templates_title: "Templates"
+      category_label: "Category"
+      name_label: "Name"
+      create_personal_submit: "Create Personal Habit"
+      add_from_template_submit: "Add from template"
+      deactivate: "Deactivate"
+      activate: "Activate"
+  habits:
+    default_categories:
+      nutrition:
+        name: "Nutrition"
+      fitness:
+        name: "Fitness"
+      emotional:
+        name: "Emotional"
+    templates:
+      nutrition_breakfast:
+        name: "Nutrition breakfast"
+      nutrition_lunch:
+        name: "Nutrition lunch"
+      nutrition_dinner:
+        name: "Nutrition dinner"
+      nutrition_snack:
+        name: "Nutrition snack"
+      fitness_exercise:
+        name: "Fitness exercise"
+      fitness_water:
+        name: "Fitness water"
+      emotional_pet:
+        name: "Emotional pet"
   activerecord:
     attributes:
       user:
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        password_challenge: "Current password"
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
         timezone: "Timezone"
+    errors:
+      models:
+        user:
+          attributes:
+            date_of_birth:
+              too_young: "must be at least 10 years ago"
+              too_old: "must be at most 120 years ago"
+            timezone:
+              invalid: "is not a valid timezone"
+        habit_category:
+          attributes:
+            base:
+              cannot_delete_with_habits: "cannot delete a category that has habits"
+        user_habit:
+          attributes:
+            frequency_params:
+              must_be_object: "must be a JSON object"
+              invalid_weekdays: "must include weekdays 0..6"
+              invalid_interval: "must include interval >= 1"
+  shared:
+    back: "Back"
+    save_changes: "Save changes"
+  forms:
+    errors:
+      header:
+        one: "1 error prohibited this %{model} from being saved:"
+        other: "%{count} errors prohibited this %{model} from being saved:"
+  home:
+    index:
+      signed_as: "Signed as %{email}"
+      login_section_title: "Login and verification"
+      change_password: "Change password"
+      change_email: "Change email address"
+      access_history_title: "Access history"
+      devices_sessions: "Devices & Sessions"
+      log_out: "Log out"
+  mailers:
+    user_mailer:
+      email_verification:
+        greeting: "Hey there,"
+        body: "This is to confirm that %{email} is the email you want to use on your account. If you ever lose your password, that's where we'll email a reset link."
+        must_confirm: "You must hit the link below to confirm that you received this email."
+        confirm_link_text: "Yes, use this email for my account"
+        footer: "Have questions or need help? Just reply to this email and our support team will help you sort it out."
+      password_reset:
+        greeting: "Hey there,"
+        body: "Can't remember your password for %{email}? That's OK, it happens. Just hit the link below to set a new one."
+        reset_link_text: "Reset my password"
+        ignore_note: "If you did not request a password reset you can safely ignore this email, it expires in 20 minutes. Only someone with access to this email account can reset your password."
+        footer: "Have questions or need help? Just reply to this email and our support team will help you sort it out."
   profiles:
     update:
       success: "Profile updated successfully"
@@ -45,6 +208,8 @@ en:
         one: "1 error prohibited your profile from being saved:"
         other: "%{count} errors prohibited your profile from being saved:"
   registrations:
+    create:
+      signed_up: "Welcome! You have signed up successfully"
     new:
       title: "Sign up"
       submit: "Sign up"

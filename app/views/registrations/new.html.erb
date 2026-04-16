@@ -1,6 +1,6 @@
 <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
 
-<%= form_with(url: sign_up_path, class: "space-y-4 max-w-md") do |form| %>
+<%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md" do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
       <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
@@ -14,7 +14,7 @@
 
   <div>
     <%= form.label :email, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.email_field :email, value: @user.email, required: true, autofocus: true, autocomplete: "email", class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
   <div>
