@@ -1,0 +1,56 @@
+<h1>User Habits</h1>
+
+<h2>Create personal habit</h2>
+<% if @user_habit.errors.any? %>
+  <div>
+    <%= @user_habit.errors.full_messages.to_sentence %>
+  </div>
+<% end %>
+<%= form_with model: @user_habit, url: user_habits_path do |f| %>
+  <div>
+    <%= f.label :habit_category_id, "Category" %>
+    <%= f.select :habit_category_id, @categories.map { |c| [c.name, c.id] } %>
+  </div>
+  <div>
+    <%= f.label :name, "Name" %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.submit "Create Personal Habit" %>
+  </div>
+<% end %>
+
+<hr>
+
+<h2>Habits</h2>
+<% @habits_by_category.each do |category, habits| %>
+  <h2><%= category.name %></h2>
+  <% habits.each do |habit| %>
+    <div id="<%= dom_id(habit) %>">
+      <span><%= habit.name %></span>
+      <% if habit.active? %>
+        <%= button_to "Deactivate", deactivate_user_habit_path(habit), method: :patch %>
+      <% else %>
+        <%= button_to "Activate", activate_user_habit_path(habit), method: :patch %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<hr>
+
+<h2>Templates</h2>
+<% @templates.each do |template| %>
+  <div id="<%= dom_id(template) %>">
+    <span><%= template.code %></span>
+    <%= form_with url: create_from_template_user_habits_path, method: :post do |f| %>
+      <%= hidden_field_tag :template_id, template.id %>
+      <div>
+        <%= label_tag :habit_category_id, "Category" %>
+        <%= select_tag :habit_category_id, options_from_collection_for_select(@categories, :id, :name) %>
+      </div>
+      <%= f.submit "Add from template" %>
+    <% end %>
+  </div>
+<% end %>
+

@@ -201,7 +201,7 @@
     <action>**REFACTOR:** Keep authorization and scoping correct (no cross-user access).</action>
   </step>
 
-  <step id="5" title="[TDD] Habits UI grouped by category + activation/deactivation + template selection" status="pending">
+  <step id="5" title="[TDD] Habits UI grouped by category + activation/deactivation + template selection" status="complete">
     <action>**RED:** System specs covering:
       - Habits index renders grouped by category.
       - User can activate/deactivate habits; default ones can be deactivated but not deleted.

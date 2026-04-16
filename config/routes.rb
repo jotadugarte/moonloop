@@ -5,6 +5,15 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [:index, :show, :destroy]
   resources :habit_categories, only: [:index, :create, :edit, :update, :destroy]
+  resources :user_habits, only: [:index, :create] do
+    member do
+      patch :activate
+      patch :deactivate
+    end
+    collection do
+      post :create_from_template
+    end
+  end
   resource  :password, only: [:edit, :update]
   resource  :profile, only: [:edit, :update]
   namespace :identity do
