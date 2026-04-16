@@ -1,0 +1,20 @@
+<% content_for :title, t("my_day.show.page_title") %>
+
+<h1><%= t("my_day.show.heading") %></h1>
+
+<p class="my-day-date"><%= l(@local_date, format: :long) %></p>
+
+<% if @due_habits.empty? %>
+  <p><%= t("my_day.show.empty") %></p>
+<% else %>
+  <ul class="my-day-habits">
+    <% @due_habits.each do |habit| %>
+      <li id="<%= dom_id(habit) %>">
+        <span class="my-day-habit-name"><%= habit.name %></span>
+        <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p><%= link_to t("my_day.show.back_home"), root_path %></p>

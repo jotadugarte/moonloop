@@ -146,7 +146,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Failing model tests first.</tdd_note>
   </step>
 
-  <step order="6">
+  <step order="6" status="completed">
     <title>Mi Día view (REQ-DAY-001)</title>
     <action>Write failing request or system specs: authenticated user sees only **active** habits due today per `DueOnDate` and user timezone; habits inactive omitted; none shown before `activation_date` for selected day. Controller thin; service composes list. I18n strings. Implement until green. `# [REQ-DAY-001]`.</action>
     <tdd_note>Failing integration/request spec before controller implementation.</tdd_note>

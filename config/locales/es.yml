@@ -1,5 +1,14 @@
 es:
   hello: "Hola mundo"
+  date:
+    formats:
+      long: "%d de %B de %Y"
+  my_day:
+    show:
+      page_title: "Mi Día — Moonloop"
+      heading: "Mi Día"
+      empty: "No hay hábitos previstos para este día."
+      back_home: "Volver al inicio"
   sessions:
     new:
       title: "Iniciar sesión"
@@ -82,6 +91,7 @@ es:
         other: "%{count} errores impidieron guardar este %{model}:"
   home:
     index:
+      my_day: "Mi Día"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"

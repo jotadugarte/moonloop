@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
   resource  :password, only: [ :edit, :update ]
   resource  :profile, only: [ :edit, :update ]
+  get "mi_dia", to: "my_day#show", as: :my_day
   namespace :identity do
     resource :email,              only: [ :edit, :update ]
     resource :email_verification, only: [ :show, :create ]

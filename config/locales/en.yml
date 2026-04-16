@@ -29,6 +29,15 @@
 
 en:
   hello: "Hello world"
+  date:
+    formats:
+      long: "%B %d, %Y"
+  my_day:
+    show:
+      page_title: "My Day — Moonloop"
+      heading: "My Day"
+      empty: "No habits scheduled for this day."
+      back_home: "Back to home"
   sessions:
     new:
       title: "Sign in"
@@ -186,6 +195,7 @@ en:
         other: "%{count} errors prohibited this %{model} from being saved:"
   home:
     index:
+      my_day: "My Day"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"
