@@ -48,14 +48,18 @@ RSpec.describe User, type: :model do
       it 'is invalid if less than 10 years ago' do
         user = build(:user, date_of_birth: 9.years.ago.to_date)
         expect(user).not_to be_valid
-        expect(user.errors[:date_of_birth]).to include("must be at least 10 years ago")
+        expect(user.errors[:date_of_birth]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.date_of_birth.too_young")
+        )
       end
 
       # [REQ-PROF-001]
       it 'is invalid if older than 120 years' do
         user = build(:user, date_of_birth: 121.years.ago.to_date)
         expect(user).not_to be_valid
-        expect(user.errors[:date_of_birth]).to include("must be at most 120 years ago")
+        expect(user.errors[:date_of_birth]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.date_of_birth.too_old")
+        )
       end
     end
 
@@ -70,7 +74,9 @@ RSpec.describe User, type: :model do
       it 'is invalid for a non-IANA string' do
         user = build(:user, timezone: 'Not/A/Timezone')
         expect(user).not_to be_valid
-        expect(user.errors[:timezone]).to include("is not a valid timezone")
+        expect(user.errors[:timezone]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.timezone.invalid")
+        )
       end
     end
   end

@@ -103,6 +103,7 @@ en:
       added_from_template: "Habit added"
       deactivated: "Habit deactivated"
       activated: "Habit activated"
+      not_found: "That habit template or category could not be found."
     index:
       title: "User Habits"
       create_personal_title: "Create personal habit"
@@ -149,6 +150,13 @@ en:
         timezone: "Timezone"
     errors:
       models:
+        user:
+          attributes:
+            date_of_birth:
+              too_young: "must be at least 10 years ago"
+              too_old: "must be at most 120 years ago"
+            timezone:
+              invalid: "is not a valid timezone"
         habit_category:
           attributes:
             base:

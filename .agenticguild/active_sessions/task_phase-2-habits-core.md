@@ -225,18 +225,25 @@
 </steps>
 
 <verification_checklist>
-  - [ ] Global templates exist with stable `code` identifiers and i18n-backed labels
-  - [ ] Users can create personal habits (no template)
-  - [ ] Active habit names are unique per user (inactive may reuse)
-  - [ ] Active habit name uniqueness is case-insensitive and trimmed
-  - [ ] Frequency types supported with correct persisted params and validation
-  - [ ] Monthly behavior: missing day-of-month clamps to last valid day (Jan 31 → Feb 28/29 → Mar 31)
-  - [ ] Categories CRUD works; deletion blocked when habits reference the category
-  - [ ] Habits index grouped by category
-  - [ ] Activation/deactivation works; habits are not deletable (only deactivatable); defaults retain history
-  - [ ] Default provisioning runs on first login via a retrying, idempotent background job
-  - [ ] Full RSpec suite green
+  - [x] Global templates exist with stable `code` identifiers and i18n-backed labels
+  - [x] Users can create personal habits (no template)
+  - [x] Active habit names are unique per user (inactive may reuse)
+  - [x] Active habit name uniqueness is case-insensitive and trimmed
+  - [x] Frequency types supported with correct persisted params and validation
+  - [x] Monthly behavior: missing day-of-month clamps to last valid day (Jan 31 → Feb 28/29 → Mar 31)
+  - [x] Categories CRUD works; deletion blocked when habits reference the category
+  - [x] Habits index grouped by category
+  - [x] Activation/deactivation works; habits are not deletable (only deactivatable); defaults retain history
+  - [x] Default provisioning runs on first login via a retrying, idempotent background job
+  - [x] Full RSpec suite green
 </verification_checklist>
 
 </implementation_plan>
+
+---
+
+## Session note — 2026-04-16
+
+Phase 2 (habits core) is **done**: provisioning job, categories, user habits, i18n (`es` default), SPEC + REQ-IDs + spec comments + Cursor rules, registration form scoped to `User`, `docs/core/SYSTEM_ARCHITECTURE.md` filled for Moonloop. **Next:** roadmap Phase 3 (Mi Día) or open PR and archive this session when ready.
+
 

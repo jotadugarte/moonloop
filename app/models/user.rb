@@ -48,15 +48,15 @@ class User < ApplicationRecord
     return if date_of_birth.blank?
     
     if date_of_birth > 10.years.ago.to_date
-      errors.add(:date_of_birth, "must be at least 10 years ago")
+      errors.add(:date_of_birth, :too_young)
     elsif date_of_birth < 120.years.ago.to_date
-      errors.add(:date_of_birth, "must be at most 120 years ago")
+      errors.add(:date_of_birth, :too_old)
     end
   end
 
   def timezone_must_be_valid
     return if timezone.blank?
     valid_zones = ActiveSupport::TimeZone.all.map { |tz| tz.tzinfo.name }.to_set
-    errors.add(:timezone, "is not a valid timezone") unless valid_zones.include?(timezone)
+    errors.add(:timezone, :invalid) unless valid_zones.include?(timezone)
   end
 end

@@ -21,7 +21,7 @@ class ProvisionDefaultHabitsJob < ApplicationJob
     DEFAULT_TEMPLATE_CATALOG.keys
   end
 
-  # REQ-HABITS-005
+  # [REQ-HAB-002]
   def perform(user_id:)
     user = User.find(user_id)
     raise ArgumentError, "user must exist" unless user.persisted?

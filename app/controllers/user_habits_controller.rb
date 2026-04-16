@@ -2,11 +2,8 @@ class UserHabitsController < ApplicationController
   before_action :set_user_habit, only: %i[activate deactivate]
 
   def index
-    @categories = Current.user.habit_categories.order(created_at: :asc)
-    @habits_by_category = Current.user.user_habits.includes(:habit_category).order(created_at: :asc).group_by(&:habit_category)
-
+    load_habits_index_collections
     @user_habit = Current.user.user_habits.new
-    @templates = GlobalHabitTemplate.order(code: :asc)
   end
 
   def create
@@ -15,9 +12,7 @@ class UserHabitsController < ApplicationController
     if @user_habit.save
       redirect_to user_habits_path, notice: t("user_habits.flash.created")
     else
-      @categories = Current.user.habit_categories.order(created_at: :asc)
-      @habits_by_category = Current.user.user_habits.includes(:habit_category).order(created_at: :asc).group_by(&:habit_category)
-      @templates = GlobalHabitTemplate.order(code: :asc)
+      load_habits_index_collections
       render :index, status: :unprocessable_entity
     end
   end
@@ -33,6 +28,8 @@ class UserHabitsController < ApplicationController
     else
       redirect_to user_habits_path, alert: habit.errors.full_messages.to_sentence
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to user_habits_path, alert: t("user_habits.flash.not_found")
   end
 
   def deactivate
@@ -46,6 +43,12 @@ class UserHabitsController < ApplicationController
   end
 
   private
+
+  def load_habits_index_collections
+    @categories = Current.user.habit_categories.order(created_at: :asc)
+    @habits_by_category = Current.user.user_habits.includes(:habit_category).order(created_at: :asc).group_by(&:habit_category)
+    @templates = GlobalHabitTemplate.order(code: :asc)
+  end
 
   def set_user_habit
     @user_habit = Current.user.user_habits.find(params[:id])

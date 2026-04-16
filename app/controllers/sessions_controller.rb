@@ -23,7 +23,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    @session.destroy; redirect_to(sessions_path, notice: t("sessions.destroy.signed_out"))
+    @session.destroy
+    redirect_to sessions_path, notice: t("sessions.destroy.signed_out")
   end
 
   private

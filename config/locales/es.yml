@@ -124,6 +124,7 @@ es:
       added_from_template: "Hábito agregado"
       deactivated: "Hábito desactivado"
       activated: "Hábito activado"
+      not_found: "No se encontró esa plantilla o categoría."
     index:
       title: "Hábitos"
       create_personal_title: "Crear hábito personal"
@@ -177,6 +178,13 @@ es:
         greater_than_or_equal_to: "debe ser mayor que o igual a %{count}"
         less_than_or_equal_to: "debe ser menor que o igual a %{count}"
       models:
+        user:
+          attributes:
+            date_of_birth:
+              too_young: "debe ser una fecha de hace al menos 10 años"
+              too_old: "debe ser una fecha de hace como máximo 120 años"
+            timezone:
+              invalid: "no es una zona horaria válida"
         habit_category:
           attributes:
             base:
