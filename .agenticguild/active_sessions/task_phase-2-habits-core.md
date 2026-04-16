@@ -18,7 +18,11 @@
 2. **Frequencies & calendar semantics**
    - Supported frequency types: **daily**, **specific weekdays**, **every X days**, **weekly**, **monthly** (per ROADMAP).
    - `every X days` counts from the **activation date** of the habit, not from creation time.
-   - `monthly` means: repeat on the **same calendar day-of-month as the activation date**. If the day does not exist in a given month (e.g. 31), the occurrence is **moved to the next occurrence in March** (i.e. skip February rather than clamping to 28).
+   - `monthly` means: repeat on the **same calendar day-of-month as the activation date**.
+     - If the day does not exist in a given month, use the **last valid calendar day of that month** (normal calendar behavior):  
+       - Feb: 28 or 29 (leap years)  
+       - 30-day months: 30  
+       - 31-day months: 31
    - For **weekly / specific weekdays**, if the user later changes their timezone, the effective weekdays must be **recomputed for the new timezone**, and downstream tracking (Phase 3) must respect this.
    - Historical interpretation uses only the **user's current timezone**; we are **not** preserving per-habit historical timezone snapshots in Phase 2.
 
@@ -165,7 +169,7 @@
       - specific weekdays (store as a set/array of weekdays)
       - every X days (integer X ≥ 1) counted from activation date
       - weekly
-      - monthly (stores day-of-month derived from activation date; months without that day are skipped to next valid month; e.g. Jan 31 → next is Mar 31)
+      - monthly (stores day-of-month derived from activation date; months without that day clamp to the month's last day; e.g. Jan 31 → Feb 28/29 → Mar 31)
     </action>
     <action>**GREEN:** Implement validations + persistence shape for frequency (e.g. `frequency_type` + `frequency_params` JSON). Ensure activation date is persisted and required for schedule-driven frequencies.</action>
     <action>**REFACTOR:** Keep schedule logic encapsulated (pure functions/module) so Phase 3 can reuse it for “Mi Día”.</action>
@@ -226,7 +230,7 @@
   - [ ] Active habit names are unique per user (inactive may reuse)
   - [ ] Active habit name uniqueness is case-insensitive and trimmed
   - [ ] Frequency types supported with correct persisted params and validation
-  - [ ] Monthly behavior: missing day-of-month skips to next valid month (Jan 31 → Mar 31)
+  - [ ] Monthly behavior: missing day-of-month clamps to last valid day (Jan 31 → Feb 28/29 → Mar 31)
   - [ ] Categories CRUD works; deletion blocked when habits reference the category
   - [ ] Habits index grouped by category
   - [ ] Activation/deactivation works; habits are not deletable (only deactivatable); defaults retain history
