@@ -7,18 +7,16 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ---
 
 ## Done
-*(No completed items yet)*
+### Phase 1 — Foundation & Auth
+1. [x] Rails + Hotwire + SQLite project setup — 2026-04-16
+2. [x] User authentication (sign up, login, logout, sessions) — 2026-04-16
+3. [x] User profile: age, weight, height, timezone (metric system) — 2026-04-16
+4. [x] BMI auto-calculation from weight and height — 2026-04-16
 
 ## In Progress
 *(No items currently in progress)*
 
 ## Pending (by priority)
-
-### Phase 1 — Foundation & Auth
-1. [ ] Rails + Hotwire + SQLite project setup
-2. [ ] User authentication (sign up, login, logout, sessions)
-3. [ ] User profile: age, weight, height, timezone (metric system)
-4. [ ] BMI auto-calculation from weight and height
 
 ### Phase 2 — Habits Core
 5. [ ] Habit model with frequency types: daily, specific weekdays, every X days, weekly, monthly — Depends on: Phase 1
