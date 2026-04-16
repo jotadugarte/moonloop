@@ -30,7 +30,7 @@ Replaces the broader `task_phase-3-mi-dia.md` plan for **this active pointer** o
 
   <step id="4" status="complete">Update `UserHabit`: remove `weekly` from `frequency_type` inclusion; delete the `when "weekly"` branch in `frequency_requirements`. Re-run model specs until the new example and existing suite pass.</step>
 
-  <step id="5" status="pending">Update `docs/core/SPEC.md`: glossary “Frequency type” row and REQ-HAB-005 text — canonical types `daily`, `weekdays`, `every_x_days`, `monthly` only; document that former `weekly` semantics are expressed as `weekdays` with a one-element array. Adjust status line if needed. Obey spec registry conventions.</step>
+  <step id="5" status="complete">Update `docs/core/SPEC.md`: glossary “Frequency type” row and REQ-HAB-005 text — canonical types `daily`, `weekdays`, `every_x_days`, `monthly` only; document that former `weekly` semantics are expressed as `weekdays` with a one-element array. Adjust status line if needed. Obey spec registry conventions.</step>
 
-  <step id="6" status="pending">Repository sweep: `GlobalHabitTemplate` / seeds / factories / controllers / views / i18n for habit `weekly`; replace with `weekdays` and appropriate params where a weekly-like habit was intended. Run full `bundle exec rspec` again and fix regressions.</step>
+  <step id="6" status="complete">Repository sweep: `GlobalHabitTemplate` / seeds / factories / controllers / views / i18n for habit `weekly`; replace with `weekdays` and appropriate params where a weekly-like habit was intended. Run full `bundle exec rspec` again and fix regressions.</step>
 </implementation_plan>

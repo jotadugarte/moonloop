@@ -26,7 +26,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ## Pending (by priority)
 
 ### Phase 3 — Mi Día (Daily Tracking)
-10. [ ] Unify `weekly` into `weekdays`: remove `weekly` as a `frequency_type`; “once per week on day D” uses `weekdays` with a one-element array; migrate existing `weekly` rows; align validations, seeds, and SPEC (REQ-HAB-005) — Depends on: Phase 2
+10. [x] Unify `weekly` into `weekdays`: remove `weekly` as a `frequency_type`; “once per week on day D” uses `weekdays` with a one-element array; migrate existing `weekly` rows; align validations, seeds, and SPEC (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 2
 11. [ ] "Mi Día" view: show today's active habits resolved by user timezone (REQ-DAY-001) — Depends on: Phase 2, #10
 12. [ ] Mark habit as done or failed for the current day (REQ-DAY-002) — Depends on: #11
 13. [ ] Retroactive editing: mark or edit habits for past days (REQ-DAY-003) — Depends on: #12

@@ -6,7 +6,7 @@
 ## Context from codebase (2026-04-16)
 
 - **No** `habit_completions` (or equivalent) table yet; tracking is net-new.
-- `Habits::NextOccurrence` implements only `daily` and `monthly`; `weekdays`, `every_x_days` raise or are stubbed; roadmap **#10** eliminará `weekly` — **“due on date?”** para Mi Día debe cubrir todos los tipos restantes antes de REQ-DAY-001.
+- `Habits::NextOccurrence` implements only `daily` and `monthly`; `weekdays`, `every_x_days` raise or are stubbed. Roadmap **#10** shipped: `weekly` fue unificado en `weekdays`; **“due on date?”** para Mi Día debe cubrir todos los tipos restantes antes de REQ-DAY-001.
 - Phase 2 memory (`task_phase-2-habits-core.md`): timezone changes recompute weekdays with **current** user TZ; no per-completion historical TZ snapshot.
 
 ---
@@ -16,7 +16,7 @@
 | Entity / concept | Responsibility | Invariants (draft) |
 |------------------|----------------|-------------------|
 | **Calendar day (per user)** | Anchor for “today” and retro edits | Derived from `User#timezone` + civil date; server uses TZ-aware conversion, not `Date.current` alone for UX. |
-| **Habit occurrence / due day** | A given `UserHabit` is “expected” on a date or not | Must match `frequency_type` + `frequency_params` + `activation_date`; inactive habits never due. Tras #10: sin tipo `weekly` (solo `daily`, `weekdays`, `every_x_days`, `monthly`). |
+| **Habit occurrence / due day** | A given `UserHabit` is “expected” on a date or not | Must match `frequency_type` + `frequency_params` + `activation_date`; inactive habits never due. Tipos: `daily`, `weekdays`, `every_x_days`, `monthly` (sin `weekly`; #10 hecho). |
 | **Completion record** | Persist **hecho** / **fallado** por (user_habit, local_date); **pendiente** sin fila o sin estado positivo | Max una fila BD por par; pendiente ⇒ sin registro o se borra registro al “volver a pendiente”. **UI:** el hábito debido **sigue en lista desmarcado** (no se oculta la fila de pantalla al desmarcar). |
 | **Streak (derived)** | Solo días debidos **cerrados** (medianoche local pasada) sin **hecho** cuentan como fallo | **Hoy** abierto: no rompe racha hasta que cierre el día civil. Cadena = debidos consecutivos **hechos**; debido cerrado y no hecho ⇒ rompe. Hábito **inactivo** fuera de UI/racha/edición. |
 
@@ -44,7 +44,7 @@
 
 | Tema | Decisión |
 |------|-----------|
-| “Una vez por semana” | En UI se elige el día; en BD será **`weekdays` con un solo elemento** `[d]` tras roadmap **#10** (se elimina el tipo `weekly`). |
+| “Una vez por semana” | En UI se elige el día; en BD es **`weekdays` con un solo elemento** `[d]` (#10 implementado). |
 | `daily` | **Todos los días** (7/7). Subconjunto de días ⇒ tipo **`weekdays`** en UI/BD. |
 | UI lista / desmarcado | Lo no marcado **no quita la fila de la vista**: el hábito debido **sigue visible desmarcado** (fila de pantalla). |
 | Racha e **“hoy”** | Solo después de **medianoche local** cerrada: durante “hoy”, un debido sin hecho **no rompe** la racha mostrada. |
@@ -64,15 +64,15 @@ Si un día debido **ya cerró** y no hay **hecho**, para la racha es **fallo**. 
 | Mi Día / histórico antes de activación | **No** mostrar el hábito en fechas **anteriores** a `activation_date`. |
 | `failed` explícito vs sin fila | **Misma** semántica para racha (ambos = no hecho en día cerrado). |
 | Reactivar hábito | La racha **continúa** con datos existentes (completados conservados). |
-| Migración `weekly` → `weekdays` | Entorno dev sin datos legacy por ahora; migración defensiva igualmente en #10. |
+| Migración `weekly` → `weekdays` | Migración defensiva aplicada en #10 (REQ-HAB-005). |
 | Completados + hábito inactivo | **Conservar** filas en BD; **ocultar** en Mi Día / no editar mientras inactivo (índice único `(user_habit_id, local_date)` sigue válido). |
 | Rendimiento historial largo | **Roadmap backlog** nuevo: optimización / paginación / caché cuando retro + racha escale (no bloquea Phase 3 inicial). |
 
 ---
 
-## Model note: `daily` vs `weekdays` vs `weekly`
+## Model note: `daily` vs `weekdays` (sin `weekly`)
 
-- **Roadmap:** Unificar `weekly` → `weekdays` es el ítem **#10** en `docs/ROADMAP.md` (Phase 3); “una vez por semana” = `weekdays` con array de un elemento. No ejecutar hasta esa tarea.
+- **Roadmap #10 (hecho):** `weekly` se unificó en `weekdays` en `docs/ROADMAP.md`; “una vez por semana” = `weekdays` con array de un elemento.
 - **Daily vs subset:** Mantener **`daily` = 7/7** y **`weekdays` = uno o más días** (incl. un solo día). Sin unificar `daily`+`weekdays` en un solo tipo salvo decisión futura.
 
 ---
@@ -91,7 +91,7 @@ Si un día debido **ya cerró** y no hay **hecho**, para la racha es **fallo**. 
 - **Streak computation cost** — N habits × scanning history: consider indexed queries or cached `current_streak` / `longest_streak` columns updated on write (Phase 7 wants reports too). **Diferido:** ver ítem backlog en `docs/ROADMAP.md` (optimización historial largo).
 - **Edición del conjunto `weekdays`** — Si el usuario cambia los días, rachas e histórico se recalculan con **reglas actuales** (TZ actual + params actuales).
 - **Racha en vivo** — Tests deben fijar “hora actual” o fecha límite: misma fecha puede ser “hoy” o “ayer” según TZ y `Time.current`.
-- **Migración `weekly` → `weekdays`** — Tras #10 del roadmap, no deben quedar filas `weekly`; tests y seeds alineados.
+- **Migración `weekly` → `weekdays`** — Completada en #10; no deben quedar filas `weekly`; tests y seeds alineados.
 
 ---
 
@@ -114,17 +114,17 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
 
 <implementation_plan>
   <classification>Feature</classification>
-  <scope>Roadmap Phase 3 (#10–#14): unify `weekly` into `weekdays`; `Habits::DueOnDate` (or equivalent) for all frequency types; `habit_completions` persistence; Mi Día UI; mark/retro/streak per `docs/core/SYSTEM_ARCHITECTURE.md` (thin controllers, services under `app/services/habits/`, I18n, REQ traceability in specs).</scope>
+  <scope>Roadmap Phase 3 (#10–#14): #10 unify `weekly`→`weekdays` (done elsewhere); `Habits::DueOnDate` (or equivalent) for all frequency types; `habit_completions` persistence; Mi Día UI; mark/retro/streak per `docs/core/SYSTEM_ARCHITECTURE.md` (thin controllers, services under `app/services/habits/`, I18n, REQ traceability in specs).</scope>
 
   <step order="1">
     <title>SPEC and registry alignment</title>
-    <action>Update `docs/core/SPEC.md`: extend planned `REQ-DAY-001`–`004` with agreed semantics (TZ actual, inactive hidden, retro unlimited no future, streak closed-days-only, explicit failed == absent for streak); update `REQ-HAB-005` for removal of `weekly` and document single-element `weekdays` as “una vez por semana”; document `activation_date` edit rule (zero completion rows including after delete-all); `every_x_days` day-0 formula; first `weekdays`/`monthly` occurrence rules. Follow `.cursor/rules/spec-md-req-registry.mdc`.</action>
+    <action>Update `docs/core/SPEC.md`: extend planned `REQ-DAY-001`–`004` with agreed semantics (TZ actual, inactive hidden, retro unlimited no future, streak closed-days-only, explicit failed == absent for streak); REQ-HAB-005 / `weekly` removal tracked in `task_unify-weekly-weekdays.md`; document `activation_date` edit rule (zero completion rows including after delete-all); `every_x_days` day-0 formula; first `weekdays`/`monthly` occurrence rules. Follow `.cursor/rules/spec-md-req-registry.mdc`.</action>
     <tdd_note>Not code-first; do not skip before writing failing tests for domain code in later steps.</tdd_note>
   </step>
 
   <step order="2">
     <title>Roadmap #10 — Remove `weekly` type</title>
-    <action>Write failing model/spec examples: `UserHabit` rejects `frequency_type: weekly`; migration maps any `weekly` rows to `weekdays` with one-element array; seeds/templates/provisioning use `weekdays` only. Implement until green. Tag with `# [REQ-HAB-005]` (and related) per traceability rules.</action>
+    <action>**Done** in session `task_unify-weekly-weekdays.md`: spec rejects `weekly`, data migration, model + SPEC. Remaining plan steps here skip #10.</action>
     <tdd_note>Start with failing tests that assert the new allowed set and migration behavior.</tdd_note>
   </step>
 
