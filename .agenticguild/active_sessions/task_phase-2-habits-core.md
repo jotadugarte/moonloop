@@ -163,7 +163,7 @@
     <action>**REFACTOR:** Extract shared validators/scopes as needed; keep business rules in models or service objects (avoid controller logic).</action>
   </step>
 
-  <step id="2" title="[TDD] Frequency representation & schedule semantics (Phase 2 only)" status="pending">
+  <step id="2" title="[TDD] Frequency representation & schedule semantics (Phase 2 only)" status="complete">
     <action>**RED:** Add unit tests validating that `UserHabit` can represent and validate:
       - daily
       - specific weekdays (store as a set/array of weekdays)
