@@ -10,7 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_183350) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_190002) do
+  create_table "global_habit_templates", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_global_habit_templates_on_code", unique: true
+  end
+
+  create_table "habit_categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "name_normalized"], name: "index_habit_categories_on_user_id_and_name_normalized", unique: true
+    t.index ["user_id"], name: "index_habit_categories_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -18,6 +36,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_183350) do
     t.string "user_agent"
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "user_habits", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.integer "global_habit_template_id"
+    t.integer "habit_category_id", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["global_habit_template_id"], name: "index_user_habits_on_global_habit_template_id"
+    t.index ["habit_category_id"], name: "index_user_habits_on_habit_category_id"
+    t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "active = 1"
+    t.index ["user_id"], name: "index_user_habits_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -45,6 +78,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_183350) do
     t.index ["user_id"], name: "index_weight_logs_on_user_id"
   end
 
+  add_foreign_key "habit_categories", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_habits", "global_habit_templates"
+  add_foreign_key "user_habits", "habit_categories"
+  add_foreign_key "user_habits", "users"
   add_foreign_key "weight_logs", "users"
 end

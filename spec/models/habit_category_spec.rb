@@ -11,8 +11,15 @@ RSpec.describe HabitCategory, type: :model do
     subject { build(:habit_category) }
 
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:name_normalized) }
-    it { should validate_uniqueness_of(:name_normalized).scoped_to(:user_id) }
+    it { should validate_uniqueness_of(:name_normalized).scoped_to(:user_id).ignoring_case_sensitivity }
+  end
+
+  describe 'normalization' do
+    it 'derives name_normalized from name (strip + downcase)' do
+      category = build(:habit_category, name: "  Salud Física  ", name_normalized: "")
+      expect(category).to be_valid
+      expect(category.name_normalized).to eq("salud física")
+    end
   end
 
   describe 'deletion rules' do

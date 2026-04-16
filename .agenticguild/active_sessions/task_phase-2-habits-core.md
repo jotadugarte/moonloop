@@ -151,7 +151,7 @@
 
 <steps>
 
-  <step id="1" title="[TDD] Introduce core entities (templates, categories, user habits)" status="pending">
+  <step id="1" title="[TDD] Introduce core entities (templates, categories, user habits)" status="complete">
     <action>**RED:** Write model specs for: `GlobalHabitTemplate`, `HabitCategory`, `UserHabit` (names provisional) covering associations and invariants:
       - Each is scoped appropriately (`user_id` for per-user models).
       - Active name uniqueness: a user cannot have two active habits with exactly the same name (case-insensitive, trimmed).

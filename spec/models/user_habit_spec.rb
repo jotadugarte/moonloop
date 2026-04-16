@@ -12,8 +12,15 @@ RSpec.describe UserHabit, type: :model do
     subject { build(:user_habit) }
 
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:name_normalized) }
-    it { should validate_presence_of(:active) }
+    it { should validate_inclusion_of(:active).in_array([true, false]) }
+  end
+
+  describe 'normalization' do
+    it 'derives name_normalized from name (strip + downcase)' do
+      habit = build(:user_habit, name: "  Agua  ", name_normalized: "")
+      expect(habit).to be_valid
+      expect(habit.name_normalized).to eq("agua")
+    end
   end
 
   describe 'name uniqueness among active habits' do

@@ -1,0 +1,11 @@
+FactoryBot.define do
+  factory :user_habit do
+    user
+    habit_category
+    sequence(:name) { |n| "Habit #{n}" }
+    name_normalized { name.strip.downcase }
+    active { true }
+    global_habit_template { nil }
+  end
+end
+
