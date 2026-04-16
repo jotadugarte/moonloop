@@ -5,7 +5,7 @@
 
   <execution_context>
     <active_skill>finish-branch</active_skill>
-    <current_phase>3 — Push (CI skipped by user)</current_phase>
-    <current_step>Commit and push the branch when ready. CI/BugBot loop waived; reply when pushed (or "sigamos") to continue to phase 4 (sync-docs / harvest-rules / PR).</current_step>
+    <current_phase>4 — Final spackle & PR (sync-docs done; next: harvest-rules)</current_phase>
+    <current_step>SYSTEM_ARCHITECTURE updated (immutable migration + mirror resolver). Next: harvest-rules (4.2) when you say continue.</current_step>
   </execution_context>
 </agent_state>
