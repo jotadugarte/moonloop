@@ -107,6 +107,7 @@ end
 <implementation_plan>
 <task_name>phase-1-foundation-auth</task_name>
 <task_type>Feature</task_type>
+<status>complete</status>
 <classification_rules>
   Feature: All steps are test-first (Red → Green → Refactor). No production code written before a failing test.
 </classification_rules>
@@ -206,7 +207,7 @@ end
     <action>**REFACTOR.** Run `rspec spec/system/` → all green.</action>
   </step>
 
-  <step id="7" title="[TDD] Profile edit (all fields except height)" status="in_progress">
+  <step id="7" title="[TDD] Profile edit (all fields except height)" status="complete">
     <action>**RED:** Write `spec/system/profile_spec.rb` covering:
       - Authenticated user can edit `date_of_birth`, `timezone`, `email`.
       - `height_cm` field is NOT present in the edit form.
@@ -221,7 +222,7 @@ end
     <action>**REFACTOR.** Run `rspec spec/system/profile_spec.rb` → all green.</action>
   </step>
 
-  <step id="8" title="Update ROADMAP.md" status="pending">
+  <step id="8" title="Update ROADMAP.md" status="complete">
     <action>Update Phase 6 items #22–23 to mention BMI tracking explicitly:
       - #22: `Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) — Depends on: Phase 1`
       - #23: `Weight + BMI history view showing progression over time — Depends on: #22`
@@ -229,7 +230,7 @@ end
     <action>No test needed for a doc update.</action>
   </step>
 
-  <step id="9" title="Full test suite green baseline" status="pending">
+  <step id="9" title="Full test suite green baseline" status="complete">
     <action>Run `rspec --format documentation`.</action>
     <action>All examples must pass. Zero pending or failing.</action>
     <action>Run `rails db:migrate RAILS_ENV=test` to ensure test schema is current.</action>

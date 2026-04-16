@@ -46,8 +46,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 21. [ ] Surface active routine in "Mi Día" linked to the Ejercicio habit — Depends on: #19, Phase 3 #10
 
 ### Phase 6 — Weight Log
-22. [ ] Weight log: record entries over time (date + kg), independent of habit tracking — Depends on: Phase 1
-23. [ ] Weight history view showing progression over time — Depends on: #22
+22. [ ] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) — Depends on: Phase 1
+23. [ ] Weight + BMI history view showing progression over time — Depends on: #22
 
 ### Phase 7 — Reporting
 24. [ ] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown — Depends on: Phase 3
