@@ -1,23 +1,23 @@
 <p style="color: green"><%= notice %></p>
 
-<p>Signed as <%= Current.user.email %></p>
+<p><%= t("home.index.signed_as", email: Current.user.email) %></p>
 
-<h2>Login and verification</h2>
+<h2><%= t("home.index.login_section_title") %></h2>
 
 <div>
-  <%= link_to "Change password", edit_password_path %>
+  <%= link_to t("home.index.change_password"), edit_password_path %>
 </div>
 
 <div>
-  <%= link_to "Change email address", edit_identity_email_path %>
+  <%= link_to t("home.index.change_email"), edit_identity_email_path %>
 </div>
 
-<h2>Access history</h2>
+<h2><%= t("home.index.access_history_title") %></h2>
 
 <div>
-  <%= link_to "Devices & Sessions", sessions_path %>
+  <%= link_to t("home.index.devices_sessions"), sessions_path %>
 </div>
 
 <br>
 
-<%= button_to "Log out", Current.session, method: :delete %>
+<%= button_to t("home.index.log_out"), Current.session, method: :delete %>

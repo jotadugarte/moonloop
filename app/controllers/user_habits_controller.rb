@@ -13,7 +13,7 @@ class UserHabitsController < ApplicationController
     @user_habit = Current.user.user_habits.new(user_habit_params)
 
     if @user_habit.save
-      redirect_to user_habits_path, notice: "Habit created"
+      redirect_to user_habits_path, notice: t("user_habits.flash.created")
     else
       @categories = Current.user.habit_categories.order(created_at: :asc)
       @habits_by_category = Current.user.user_habits.includes(:habit_category).order(created_at: :asc).group_by(&:habit_category)
@@ -26,13 +26,10 @@ class UserHabitsController < ApplicationController
     template = GlobalHabitTemplate.find(params.require(:template_id))
     category = Current.user.habit_categories.find(params.require(:habit_category_id))
 
-    habit = Current.user.user_habits.find_or_initialize_by(global_habit_template: template)
-    habit.habit_category = category
-    habit.name = template.code.humanize
-    habit.active = true
+    habit = Habits::AddFromTemplateService.new(user: Current.user, template: template, category: category).call
 
-    if habit.save
-      redirect_to user_habits_path, notice: "Habit added"
+    if habit.persisted?
+      redirect_to user_habits_path, notice: t("user_habits.flash.added_from_template")
     else
       redirect_to user_habits_path, alert: habit.errors.full_messages.to_sentence
     end
@@ -40,12 +37,12 @@ class UserHabitsController < ApplicationController
 
   def deactivate
     @user_habit.update!(active: false)
-    redirect_to user_habits_path, notice: "Habit deactivated"
+    redirect_to user_habits_path, notice: t("user_habits.flash.deactivated")
   end
 
   def activate
     @user_habit.update!(active: true)
-    redirect_to user_habits_path, notice: "Habit activated"
+    redirect_to user_habits_path, notice: t("user_habits.flash.activated")
   end
 
   private

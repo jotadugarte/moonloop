@@ -16,22 +16,7 @@ class UserHabit < ApplicationRecord
   validate :frequency_requirements
 
   def next_occurrence_after(date)
-    raise ArgumentError, "date must be a Date" unless date.is_a?(Date)
-
-    case frequency_type
-    when "daily"
-      date + 1.day
-    when "monthly"
-      raise ArgumentError, "activation_date required for monthly" if activation_date.blank?
-      anchor_day = activation_date.day
-
-      next_month = date.next_month
-      last_day = Date.new(next_month.year, next_month.month, -1).day
-      day = [anchor_day, last_day].min
-      Date.new(next_month.year, next_month.month, day)
-    else
-      raise NotImplementedError, "next_occurrence_after not implemented for #{frequency_type.inspect}"
-    end
+    Habits::NextOccurrence.after(user_habit: self, date: date)
   end
 
   private
@@ -43,7 +28,7 @@ class UserHabit < ApplicationRecord
 
   def frequency_params_shape
     return if frequency_params.is_a?(Hash)
-    errors.add(:frequency_params, "must be a JSON object")
+    errors.add(:frequency_params, :must_be_object)
   end
 
   def frequency_requirements
@@ -53,17 +38,17 @@ class UserHabit < ApplicationRecord
     when "weekdays"
       weekdays = frequency_params.is_a?(Hash) ? frequency_params["weekdays"] : nil
       ok = weekdays.is_a?(Array) && weekdays.any? && weekdays.all? { |v| v.is_a?(Integer) && v.between?(0, 6) }
-      errors.add(:frequency_params, "must include weekdays 0..6") unless ok
+      errors.add(:frequency_params, :invalid_weekdays) unless ok
     when "every_x_days"
       interval = frequency_params.is_a?(Hash) ? frequency_params["interval"] : nil
-      errors.add(:frequency_params, "must include interval >= 1") unless interval.is_a?(Integer) && interval >= 1
-      errors.add(:activation_date, "can't be blank") if activation_date.blank?
+      errors.add(:frequency_params, :invalid_interval) unless interval.is_a?(Integer) && interval >= 1
+      errors.add(:activation_date, :blank) if activation_date.blank?
     when "weekly"
       # defined later; Phase 3 needs schedule logic
     when "monthly"
-      errors.add(:activation_date, "can't be blank") if activation_date.blank?
+      errors.add(:activation_date, :blank) if activation_date.blank?
     else
-      errors.add(:frequency_type, "is not included in the list")
+      errors.add(:frequency_type, :inclusion)
     end
   end
 
@@ -71,7 +56,7 @@ class UserHabit < ApplicationRecord
     relation = self.class.where(user_id: user_id, active: true, name_normalized: name_normalized)
     relation = relation.where.not(id: id) if persisted?
     return unless relation.exists?
-    errors.add(:name, "has already been taken")
+    errors.add(:name, :taken)
   end
 end
 

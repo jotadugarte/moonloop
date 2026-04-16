@@ -10,22 +10,22 @@ RSpec.describe "Habit categories", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "Password123!"
-    click_button "Sign in"
+    fill_in "Correo electrónico", with: user.email
+    fill_in "Contraseña", with: "Password123!"
+    click_button "Iniciar sesión"
   end
 
   it "allows creating and renaming a category" do
     visit habit_categories_path
 
-    fill_in "Name", with: "Alimentación"
-    click_button "Create Category"
+    fill_in "Nombre", with: "Alimentación"
+    click_button "Crear categoría"
 
     expect(page).to have_content("Alimentación")
 
-    click_link "Edit", match: :first
-    fill_in "Name", with: "Nutrición"
-    click_button "Update Category"
+    click_link "Editar", match: :first
+    fill_in "Nombre", with: "Nutrición"
+    click_button "Actualizar categoría"
 
     expect(page).to have_content("Nutrición")
   end
@@ -43,7 +43,7 @@ RSpec.describe "Habit categories", type: :system do
     visit habit_categories_path
 
     within("##{dom_id(category)}") do
-      click_button "Delete"
+      click_button "Eliminar"
     end
 
     expect(page).to have_content("cannot delete")
@@ -54,7 +54,7 @@ RSpec.describe "Habit categories", type: :system do
     HabitCategory.create!(user: user, name: "Emocional", name_normalized: "emocional")
 
     visit habit_categories_path
-    click_button "Delete", match: :first
+    click_button "Eliminar", match: :first
 
     expect(page).not_to have_content("Emocional")
   end

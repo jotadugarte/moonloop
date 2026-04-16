@@ -1,17 +1,17 @@
 <p style="color: red"><%= alert %></p>
 
 <% if Current.user.verified? %>
-  <h1>Change your email</h1>
+  <h1><%= t("identity.emails.edit.change_title") %></h1>
 <% else %>
-  <h1>Verify your email</h1>
-  <p>We sent a verification email to the address below. Check that email and follow those instructions to confirm it's your email address.</p>
-  <p><%= button_to "Re-send verification email", identity_email_verification_path %></p>
+  <h1><%= t("identity.emails.edit.verify_title") %></h1>
+  <p><%= t("identity.emails.edit.verify_instructions") %></p>
+  <p><%= button_to t("identity.emails.edit.resend_verification"), identity_email_verification_path %></p>
 <% end %>
 
 <%= form_with(url: identity_email_path, method: :patch) do |form| %>
   <% if @user.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <h2><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
 
       <ul>
         <% @user.errors.each do |error| %>
@@ -22,22 +22,22 @@
   <% end %>
 
   <div>
-    <%= form.label :email, "New email", style: "display: block" %>
+    <%= form.label :email, t("identity.emails.edit.new_email"), style: "display: block" %>
     <%= form.email_field :email, required: true, autofocus: true %>
   </div>
 
   <div>
-    <%= form.label :password_challenge, style: "display: block" %>
+    <%= form.label :password_challenge, t("activerecord.attributes.user.password_challenge"), style: "display: block" %>
     <%= form.password_field :password_challenge, required: true, autocomplete: "current-password" %>
   </div>
 
   <div>
-    <%= form.submit "Save changes" %>
+    <%= form.submit t("shared.save_changes") %>
   </div>
 <% end %>
 
 <br>
 
 <div>
-  <%= link_to "Back", root_path %>
+  <%= link_to t("shared.back"), root_path %>
 </div>

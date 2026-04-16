@@ -21,7 +21,7 @@ class HabitCategory < ApplicationRecord
 
   def prevent_destroy_if_referenced
     return unless user_habits.exists?
-    errors.add(:base, "cannot delete a category that has habits")
+    errors.add(:base, :cannot_delete_with_habits)
     throw(:abort)
   end
 end

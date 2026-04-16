@@ -10,7 +10,7 @@ class HabitCategoriesController < ApplicationController
     @habit_category = Current.user.habit_categories.new(habit_category_params)
 
     if @habit_category.save
-      redirect_to habit_categories_path, notice: "Category created"
+      redirect_to habit_categories_path, notice: t("habit_categories.flash.created")
     else
       @habit_categories = Current.user.habit_categories.order(created_at: :asc)
       render :index, status: :unprocessable_entity
@@ -22,7 +22,7 @@ class HabitCategoriesController < ApplicationController
 
   def update
     if @habit_category.update(habit_category_params)
-      redirect_to habit_categories_path, notice: "Category updated"
+      redirect_to habit_categories_path, notice: t("habit_categories.flash.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -30,7 +30,7 @@ class HabitCategoriesController < ApplicationController
 
   def destroy
     if @habit_category.destroy
-      redirect_to habit_categories_path, notice: "Category deleted"
+      redirect_to habit_categories_path, notice: t("habit_categories.flash.deleted")
     else
       base_message = @habit_category.errors[:base].presence&.to_sentence
       redirect_to habit_categories_path, alert: (base_message || @habit_category.errors.full_messages.to_sentence)

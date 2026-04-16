@@ -14,16 +14,16 @@ class SessionsController < ApplicationController
     if user = User.authenticate_by(email: params[:email], password: params[:password])
       @session = user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: @session.id, httponly: true }
-      ProvisionDefaultHabitsJob.perform_later(user_id: user.id)
+      Auth::ProvisionDefaultsOnSignInService.new(user: user).call
 
-      redirect_to root_path, notice: "Signed in successfully"
+      redirect_to root_path, notice: t("sessions.create.signed_in")
     else
-      redirect_to sign_in_path(email_hint: params[:email]), alert: "That email or password is incorrect"
+      redirect_to sign_in_path(email_hint: params[:email]), alert: t("sessions.create.invalid_credentials")
     end
   end
 
   def destroy
-    @session.destroy; redirect_to(sessions_path, notice: "That session has been logged out")
+    @session.destroy; redirect_to(sessions_path, notice: t("sessions.destroy.signed_out"))
   end
 
   private

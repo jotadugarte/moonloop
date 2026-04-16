@@ -13,17 +13,17 @@ Things done and things left to do. Update this when finishing branches; use `roa
 3. [x] User profile: age, weight, height, timezone (metric system) — 2026-04-16
 4. [x] BMI auto-calculation from weight and height — 2026-04-16
 
+### Phase 2 — Habits Core
+5. [x] Habit model with frequency types: daily, specific weekdays, every X days, weekly, monthly — 2026-04-16 — Depends on: Phase 1
+6. [x] Default habits seeded per user on registration: Alimentación (Desayuno, Almuerzo, Cena, Merienda), Salud Física (Ejercicio, Agua), Emocional (Mascota) — 2026-04-16 — Depends on: #5
+7. [x] User-managed categories: create, edit, delete — 2026-04-16 — Depends on: Phase 1
+8. [x] Habits displayed grouped by category — 2026-04-16 — Depends on: #5, #7
+9. [x] Activate / deactivate habits (including default ones; re-activatable at any time) — 2026-04-16 — Depends on: #5
+
 ## In Progress
 *(No items currently in progress)*
 
 ## Pending (by priority)
-
-### Phase 2 — Habits Core
-5. [ ] Habit model with frequency types: daily, specific weekdays, every X days, weekly, monthly — Depends on: Phase 1
-6. [ ] Default habits seeded per user on registration: Alimentación (Desayuno, Almuerzo, Cena, Merienda), Salud Física (Ejercicio, Agua), Emocional (Mascota) — Depends on: #5
-7. [ ] User-managed categories: create, edit, delete — Depends on: Phase 1
-8. [ ] Habits displayed grouped by category — Depends on: #5, #7
-9. [ ] Activate / deactivate habits (including default ones; re-activatable at any time) — Depends on: #5
 
 ### Phase 3 — Mi Día (Daily Tracking)
 10. [ ] "Mi Día" view: show today's active habits resolved by user timezone — Depends on: Phase 2

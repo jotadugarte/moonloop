@@ -10,9 +10,9 @@ RSpec.describe "User habits", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Email", with: user.email
-    fill_in "Password", with: "Password123!"
-    click_button "Sign in"
+    fill_in "Correo electrónico", with: user.email
+    fill_in "Contraseña", with: "Password123!"
+    click_button "Iniciar sesión"
   end
 
   it "groups habits under their category headings" do
@@ -37,13 +37,13 @@ RSpec.describe "User habits", type: :system do
     visit user_habits_path
 
     within("##{dom_id(habit)}") do
-      click_button "Deactivate"
+      click_button "Desactivar"
     end
 
     expect(habit.reload.active).to eq(false)
 
     within("##{dom_id(habit)}") do
-      click_button "Activate"
+      click_button "Activar"
     end
 
     expect(habit.reload.active).to eq(true)
@@ -54,9 +54,9 @@ RSpec.describe "User habits", type: :system do
 
     visit user_habits_path
 
-    select category.name, from: "Category"
-    fill_in "Name", with: "Stretch"
-    click_button "Create Personal Habit"
+    select category.name, from: "Categoría"
+    fill_in "Nombre", with: "Stretch"
+    click_button "Crear hábito personal"
 
     expect(page).to have_content("Stretch")
     expect(UserHabit.find_by!(user: user, name_normalized: "stretch").global_habit_template_id).to be_nil
@@ -69,13 +69,13 @@ RSpec.describe "User habits", type: :system do
     visit user_habits_path
 
     within("##{dom_id(template)}") do
-      select category.name, from: "Category"
-      click_button "Add from template"
+      select category.name, from: "Categoría"
+      click_button "Agregar desde plantilla"
     end
 
     habit = UserHabit.find_by!(user: user, global_habit_template_id: template.id)
     expect(habit).to be_present
-    expect(page).to have_content(template.code.humanize)
+    expect(page).to have_content("Desayuno")
   end
 
   it "shows validation errors for duplicate active names (case-insensitive + trim)" do
@@ -84,11 +84,11 @@ RSpec.describe "User habits", type: :system do
 
     visit user_habits_path
 
-    select category.name, from: "Category"
-    fill_in "Name", with: " water "
-    click_button "Create Personal Habit"
+    select category.name, from: "Categoría"
+    fill_in "Nombre", with: " water "
+    click_button "Crear hábito personal"
 
-    expect(page).to have_content("has already been taken")
+    expect(page).to have_content("ya está en uso")
   end
 
   it "does not expose a delete route for habits" do
