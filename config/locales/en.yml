@@ -91,6 +91,7 @@ en:
       recipe_pick_label: "Recipe"
       recipe_blank: "No recipe"
       legacy_freeform_hint: "Saved note (recipes-only mode). Pick a recipe or use Clear:"
+      preview_alt: "Preview (%{meal})"
       freeform_label: "Note"
       save_submit: "Save"
       clear_submit: "Clear"

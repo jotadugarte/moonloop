@@ -13,6 +13,13 @@
       <%= t("date.day_names")[weekday] %>
     </div>
 
+    <% preview = Menus::SlotPreview.call(entry: entry, meal_type: meal_type) %>
+    <% if preview %>
+      <div class="menu-grid__slot-preview">
+        <%= menu_slot_preview_image_tag(preview, meal_type) %>
+      </div>
+    <% end %>
+
     <%= form_with model: (entry || MenuEntry.new),
           url: menu_menu_entries_path(menu),
           scope: :menu_entry,

@@ -26,4 +26,23 @@ RSpec.describe "Menus editor", type: :system do
       end
     end
   end
+
+  # [REQ-MENU-002]
+  it "shows a meal-type fallback preview when the slot recipe has no image" do
+    menu = Menu.create!(user: user, name: "Con receta")
+    recipe = Recipe.create!(user: user, name: "Ensalada")
+    MenuEntry.create!(
+      menu: menu,
+      recipe: recipe,
+      weekday: 5,
+      meal_type: "cena",
+      freeform_text: nil
+    )
+
+    visit "/menus/#{menu.id}/edit"
+
+    within(%([data-test="menu-entry-slot"][data-weekday="5"][data-meal-type="cena"])) do
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"][data-preview-kind="fallback"][src*="fallback_cena"]))
+    end
+  end
 end

@@ -66,6 +66,7 @@ es:
       recipe_pick_label: "Receta"
       recipe_blank: "Sin receta"
       legacy_freeform_hint: "Nota guardada (solo recetas). Elige una receta o usa Limpiar:"
+      preview_alt: "Vista previa (%{meal})"
       freeform_label: "Nota"
       save_submit: "Guardar"
       clear_submit: "Limpiar"

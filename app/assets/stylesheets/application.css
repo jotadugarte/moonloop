@@ -8,3 +8,14 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.menu-grid__slot-preview {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.menu-grid__slot-preview-img {
+  display: block;
+  max-width: 5rem;
+  height: auto;
+  border-radius: 0.35rem;
+}
