@@ -26,6 +26,21 @@
 
 ---
 
+## Domain Model
+
+**Approved:** 2026-04-17 (start-task step 3.0). Locked for Phase 5 implementation.
+
+| Concept | Implementation shape |
+|--------|----------------------|
+| **ExerciseRoutine** | `ApplicationRecord`; `belongs_to :user`; unique `name` scoped to user (Menu parity); invariant: not globally empty (≥1 line on ≥1 weekday); destroy only after dependent routine week-range rows removed in one transaction (service). |
+| **ExerciseRoutineLine** | `belongs_to :exercise_routine`; `weekday` integer 0–6; `position` unique per `(exercise_routine, weekday)`; label/notes with migration-defined string limits. |
+| **ExerciseRoutineAssignment** | Same structural role as menu `PhaseAssignment` for routines: `user_id`, `exercise_routine_id`, `start_week`, `end_week`; no overlap among a user’s routine assignments; independent from menu phase assignments. |
+| **Parity services** | `ExerciseRoutines::PlanEnded`, `ExerciseRoutines::RepeatLastAssignment` (REQ-EXR-005). |
+
+Detailed CbC narrative remains in **Domain model (CbC)** below.
+
+---
+
 ## Domain model (CbC)
 
 ### **ExerciseRoutine**
