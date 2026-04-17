@@ -134,7 +134,7 @@ SPEC updated (`REQ-EXR-001`–`005`). Backlog row for MENU-004/005 parity **remo
 
   <step id="2" status="complete">Write failing specs for the routine week-range assignment model: `start_week`/`end_week`, overlap validation mirroring `PhaseAssignment` (including unsaved-record case), `user_id` + routine ownership. Migration + model; green. `# [REQ-EXR-002]`.</step>
 
-  <step id="3" status="pending">Write failing specs for `ExerciseRoutines::ResolveActiveRoutine` (and any week-index helper) mirroring `Phases::ResolveActiveMenu`. Implement service; green. `# [REQ-EXR-002]`.</step>
+  <step id="3" status="complete">Write failing specs for `ExerciseRoutines::ResolveActiveRoutine` (and any week-index helper) mirroring `Phases::ResolveActiveMenu`. Implement service; green. `# [REQ-EXR-002]`.</step>
 
   <step id="4" status="pending">Write failing request/system specs for exercise routine CRUD (scoped to `Current.user`), **duplicate** routine, and **destroy** flow: first request shows warning/confirmation; confirming deletes **all** `ExerciseRoutineAssignment` rows for that routine then the routine in one transaction. Implement controller + `ExerciseRoutines::DestroyRoutine` (or equivalent). I18n for warnings. Green. `# [REQ-EXR-001]`.</step>
 
