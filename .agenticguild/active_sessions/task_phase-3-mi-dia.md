@@ -164,7 +164,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Extend with failing examples before code changes.</tdd_note>
   </step>
 
-  <step order="9">
+  <step order="9" status="completed">
     <title>Streak calculation (REQ-DAY-004)</title>
     <action>Write failing unit specs for dedicated service: consecutive **closed** due days with **done** only; today open does not break streak; inactive habits excluded; same semantics for explicit failed and no row. Freeze time with `travel_to` / zone helpers. Implement until green. `# [REQ-DAY-004]`.</action>
     <tdd_note>Streak logic must not live in ERB; test-first service.</tdd_note>

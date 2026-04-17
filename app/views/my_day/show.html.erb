@@ -20,7 +20,7 @@
   <ul class="my-day-habits">
     <% @due_habits.each do |habit| %>
       <% completion = @completions_by_habit_id[habit.id] %>
-      <li id="<%= dom_id(habit) %>">
+      <li id="<%= dom_id(habit) %>" data-habit-streak="<%= @streak_by_habit_id[habit.id] %>">
         <span class="my-day-habit-name"><%= habit.name %></span>
         <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
         <% if completion %>

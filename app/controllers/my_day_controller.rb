@@ -26,6 +26,10 @@ class MyDayController < ApplicationController
     else
       HabitCompletion.where(user_habit_id: habit_ids, completed_on: @local_date).index_by(&:user_habit_id)
     end
+
+    @streak_by_habit_id = @due_habits.each_with_object({}) do |habit, acc|
+      acc[habit.id] = Habits::Streak.call(user_habit: habit, as_of: @local_date)
+    end
   end
 
   private
