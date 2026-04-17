@@ -1,6 +1,6 @@
 <agent_state>
   <active_task_pointer>
-    task_phase-4-menus-recipes-alimentacion.md
+    [NONE]
   </active_task_pointer>
 
   <execution_context>
