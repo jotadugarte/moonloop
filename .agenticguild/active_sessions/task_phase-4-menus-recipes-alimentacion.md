@@ -213,6 +213,9 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
 - Define behavior when user disables freeform while existing freeform entries exist (read-only vs require conversion).
 - **I18n (es) — estilo y ortografía:** revisar toda la copia en `config/locales/es.yml` para evitar **voseo** (p. ej. preferir “Reintenta” sobre “Reintentá”) y unificar **acentuación** / convenciones (tuteo neutro, imperativos, comillas, etc.).
 
+## Implementation plan (machine-readable XML)
+
+```xml
 <implementation_plan>
   <metadata>
     <task_name>phase-4-menus-recipes-alimentacion</task_name>
@@ -265,4 +268,5 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="7.2" status="pending">Hardening: add best-effort DB safeguards for SQLite, eager-load grid queries to avoid N+1, and review image variant usage.</step>
   </steps>
 </implementation_plan>
+```
 
