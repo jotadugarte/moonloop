@@ -29,6 +29,12 @@
 
 en:
   hello: "Hello world"
+  phase_start_reminder_mailer:
+    notify:
+      subject: "Your Phase 1 program starts today"
+      body_html: "Hello — today is the first day of your Phase 1 plan (%{email})."
+      body_text: "Today is the first day of your Phase 1 plan."
+      cta: "Open your phase plan"
   date:
     formats:
       long: "%B %d, %Y"

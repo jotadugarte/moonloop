@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_180000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -101,6 +101,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_170000) do
     t.index ["user_id"], name: "index_phase_assignments_on_user_id"
   end
 
+  create_table "phase_reminder_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.date "local_date", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "kind", "local_date"], name: "index_phase_reminder_events_uniqueness", unique: true
+    t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
+  end
+
   create_table "recipes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "instructions"
@@ -179,6 +189,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_170000) do
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
   add_foreign_key "phase_assignments", "users"
+  add_foreign_key "phase_reminder_events", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
