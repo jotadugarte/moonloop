@@ -115,7 +115,7 @@ This file is the discovery “whiteboard” for the feature; no application code
   - Invariants:
     - belongs to a `User`
     - unique `name` per user (case-insensitive) is recommended
-    - may be marked `shareable` (visibility rules TBD)
+    - may be marked **publicly shareable** (public browse/search); admin may revoke sharing for moderation
 - **MenuEntry**
   - Responsibility: a single planned meal slot in a Menu
   - Invariants:
@@ -126,7 +126,7 @@ This file is the discovery “whiteboard” for the feature; no application code
   - Invariants:
     - belongs to a `User`
     - `name` required; optional instructions; optional image attachment
-    - may be marked `shareable` (visibility rules TBD)
+    - may be marked **publicly shareable** (public browse/search); admin may revoke sharing for moderation
 - **PhasePlan** (name provisional)
   - Responsibility: stores the user’s Phase 1 start date
   - Invariants:
@@ -143,6 +143,36 @@ This file is the discovery “whiteboard” for the feature; no application code
 - `WeekIndex` (positive int ≥ 1)
 - `WeekRange` (start_week..end_week)
 - `LocalDate` (civil date in user timezone)
+
+### Ruby Value Objects (approved for implementation)
+These are the concrete wrappers to use in services (avoid raw `String`/`Integer`/`Date` for these concepts):
+
+- **`Menus::MealType`**
+  - Wraps: canonical string key
+  - Allowed values: `desayuno`, `almuerzo`, `cena`, `merienda`
+  - Validation: reject unknown keys; normalize input (strip + downcase) if we accept user-ish input at boundaries
+
+- **`Menus::Weekday`**
+  - Wraps: integer 0..6 (Sunday..Saturday)
+  - Validation: reject out-of-range values
+
+- **`Phases::WeekIndex`**
+  - Wraps: integer ≥ 1
+  - Validation: reject `< 1`
+
+- **`Phases::WeekRange`**
+  - Wraps: `Phases::WeekIndex` start + `Phases::WeekIndex` end
+  - Invariant: `end >= start`
+
+- **`Phases::LocalDate`**
+  - Wraps: `Date` interpreted as a **civil calendar day** in the user’s IANA timezone context
+  - Note: construction should happen at system boundaries (controllers/services) using the user’s timezone rules; the VO itself asserts non-nil `Date`
+
+- **`Sharing::Visibility` (optional but recommended)**
+  - Wraps: `private` vs `public_shareable` (public browsing + admin moderation revoke)
+
+## Roadmap linkage
+- **Roadmap item**: Phase 4 — Menus & Recipes (Alimentación) — items **15–19** (`REQ-MENU-001` … `REQ-MENU-005`)
 
 ## UX surfaces (Hotwire-first)
 - **Menus index**: list menus; create/edit
@@ -166,18 +196,11 @@ This file is the discovery “whiteboard” for the feature; no application code
 ## Risks / Ambiguities to resolve
 - Recipe fallback image “per meal type” depends on **context** (recipe can be used by multiple meal types).
 - SQLite constraints for non-overlapping ranges are limited; need a robust model validation + database best-effort.
-- “Reminder” definition (in-app vs email) and how it is surfaced to the user.
-- Sharing model: when another user “uses” a shared recipe/menu, is it a **copy** (recommended) or a **reference** to the original (problematic when owner edits/deletes)?
-- Moderation / privacy: accidental sharing of personal content; need clear “unshare” semantics.
+- Moderation at scale: public sharing needs admin workflows and clear UX when content is revoked (imports/copies remain unaffected).
 
-## Open questions (need answers to finalize spec)
-1. **Sharing visibility**: Shareable means:
-   - public to all users (browse/search), or
-   - only via a share link/code, or
-   - curated gallery?
-2. Reminder UX details:
-   - If the user disables email reminders, do we still show in-app banners?
-   - Do we persist a “dismissed for today” state for reminders?
+## Open questions (resolved / moved)
+- Sharing visibility + moderation + reminder channel/dismiss decisions are captured under **Decisions (since last update)**.
+- MenuEntry “recipe + note” simultaneity remains in **Backlog / deferred decisions**.
 
 ## Decisions (since last update)
 - **Sharing visibility**: Shareable content is **public** (browse/search by all users).
