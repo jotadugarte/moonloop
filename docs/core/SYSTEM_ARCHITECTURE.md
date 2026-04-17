@@ -20,7 +20,7 @@
 ## 2. Architectural paradigm
 
 - **Server-rendered first:** Controllers render HTML; Turbo handles navigation and forms unless explicitly disabled.
-- **Thin controllers:** Non-trivial workflows go to **service objects** under `app/services/` (e.g. `Habits::*`, `Auth::*`).
+- **Thin controllers:** Non-trivial workflows go to **service objects** under `app/services/` (e.g. `Habits::*`, `Auth::*`). Mi Día and daily tracking use e.g. **`Habits::DueOnDate`** (due-day rules), **`Habits::DueHabitsForDay`** (list for a local day), **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** (persist or remove a completion row), **`Habits::Streak`** (streak from completions + schedule), and **`Habits::NextOccurrence`** (next calendar day for previews; aligned with due-day logic where applicable).
 - **Domain rules in models** where they are simple validations and associations; extract when complexity or cross-cutting orchestration grows.
 - **Internationalization:** Default locale `es`; `en` available. User-visible strings go through `I18n` / `t(...)`.
 - **Traceability:** Requirements live in `docs/core/SPEC.md` (`REQ-*` IDs). Specs use `# [REQ-…]` comments per `.cursor/rules/spec-req-traceability.mdc`.
@@ -44,5 +44,6 @@
 ## 5. Related documents
 
 - `docs/core/SPEC.md` — requirements registry and glossary.
+- `docs/core/DATA_FLOW_MAP.md` — entity flows and side-effects (e.g. Mi Día, habit completions).
 - `docs/ROADMAP.md` — phased delivery.
 - `docs/ai/code_review_prompt.md` — self-review checklist aligned to this stack.
