@@ -116,6 +116,13 @@ RSpec.describe "Phases dashboard", type: :request do
     expect(flash[:alert]).to eq(I18n.t("phases.flash.repeat_last_routine_assignment_nothing_to_repeat"))
   end
 
+  # [REQ-EXR-002] / Turbo: stable frame ids for phase assignment lanes
+  it "wraps menu and routine assignment sections in turbo-frames" do
+    get phase_path
+    expect(response.body).to include('id="phase_menu_assignments"')
+    expect(response.body).to include('id="phase_routine_assignments"')
+  end
+
   # [REQ-EXR-004]
   it "renders menu and routine assignments together on the phase dashboard" do
     user.update!(phase_one_starts_on: Date.new(2026, 4, 10))

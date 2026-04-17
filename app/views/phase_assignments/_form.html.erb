@@ -1,5 +1,5 @@
 <% assignment_err_id = "phase-assignment-form-errors" %>
-<%= form_with model: @assignment, class: "space-y-4 max-w-md" do |f| %>
+<%= form_with model: @assignment, class: "space-y-4 max-w-md", data: { turbo_frame: "_top" } do |f| %>
   <% if @assignment.errors.any? %>
     <div class="text-red-600 text-sm">
       <ul id="<%= assignment_err_id %>" class="list-disc pl-5" role="alert">
