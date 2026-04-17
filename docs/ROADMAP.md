@@ -54,6 +54,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 27. [ ] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — Depends on: Phase 6
 
 ## Backlog
+- [ ] Exercise routines: compartir rutinas en catálogo público (paridad con menús/recetas **REQ-MENU-001/002** y moderación) — Depends on: Phase 5 (#20–22); not in Phase 5 scope until promoted from backlog
 - [ ] Habit completion values (e.g. glasses of water, minutes of exercise) — Depends on: Phase 3
 - [ ] Multiple completions per day per habit — Depends on: Backlog: Completion values
 - [ ] Imperial units support (lbs) for weight and profile
