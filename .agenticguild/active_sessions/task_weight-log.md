@@ -131,5 +131,5 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
 
   <step id="6" status="complete">Add **navigation** entry point(s) consistent with existing layout (e.g. profile or main nav — mirror patterns from menus/Mi Día shortcuts); request or system spec asserting link presence. `# [REQ-WGT-002]`</step>
 
-  <step id="7" status="pending">Update **`docs/core/SCHEMA_REFERENCE.md`** and **`docs/core/DATA_FLOW_MAP.md`** for `logged_at` and flows (create, list, delete, reconcile). Align **`docs/core/SPEC.md`** acceptance language for REQ-WGT-002/003 if needed. Run full test suite; fix regressions.</step>
+  <step id="7" status="complete">Update **`docs/core/SCHEMA_REFERENCE.md`** and **`docs/core/DATA_FLOW_MAP.md`** for `logged_at` and flows (create, list, delete, reconcile). Align **`docs/core/SPEC.md`** acceptance language for REQ-WGT-002/003 if needed. Run full test suite; fix regressions.</step>
 </implementation_plan>

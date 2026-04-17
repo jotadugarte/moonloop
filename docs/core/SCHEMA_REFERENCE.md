@@ -63,9 +63,19 @@ See `REQ-MENU-001`, `REQ-MENU-003`, `REQ-MENU-004`.
 
 ---
 
+## Weight logs
+
+| Table | Primary keys / constraints | SPEC / notes |
+|--------|----------------------------|--------------|
+| `weight_logs` | `user_id` FK; `logged_at` **NOT NULL** (product timeline, stored in UTC); `weight_kg`, `height_cm`, `bmi` snapshots; `created_at` / `updated_at` for audit | `REQ-WGT-001`–`003`. Index **`(user_id, logged_at)`** for listing; ordering for history is **`logged_at DESC`, `id DESC`**. `weight_kg` / `height_cm` are **readonly** after create (corrections via delete + new entry). |
+
+See **§1.8 Weight log** in `DATA_FLOW_MAP.md` for write flows and `User` **`current_weight_kg` / `current_bmi`** reconciliation.
+
+---
+
 ## Habits, Mi Día, auth (existing)
 
-Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habit_templates`, `user_habits`, `habit_completions`, `weight_logs` support Phases 1–3 as described in `SPEC.md` and earlier sections of `DATA_FLOW_MAP.md`.
+Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habit_templates`, `user_habits`, `habit_completions` support Phases 1–3 as described in `SPEC.md` and earlier sections of `DATA_FLOW_MAP.md`. Weight logging is covered above.
 
 ---
 

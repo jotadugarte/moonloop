@@ -45,8 +45,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11
 
 ### Phase 6 — Weight Log
-23. [ ] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — Depends on: Phase 1
-24. [ ] Weight + BMI history view showing progression over time (REQ-WGT-003) — Depends on: #23
+23. [x] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — 2026-04-17 — Depends on: Phase 1
+24. [x] Weight + BMI history view showing progression over time (REQ-WGT-003) — 2026-04-17 — Depends on: #23
 
 ### Phase 7 — Reporting
 25. [ ] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown (REQ-RPT-001) — Depends on: Phase 3
