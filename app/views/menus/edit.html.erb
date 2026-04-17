@@ -9,16 +9,8 @@
       <h2><%= t("menus.meal_types.#{meal_type}") %></h2>
       <div class="menu-grid__weekdays">
         <% (0..6).each do |weekday| %>
-          <div
-            class="menu-grid__slot"
-            data-test="menu-entry-slot"
-            data-weekday="<%= weekday %>"
-            data-meal-type="<%= meal_type %>"
-          >
-            <div class="menu-grid__slot-label">
-              <%= t("date.day_names")[weekday] %>
-            </div>
-          </div>
+          <% entry = @entries_by_slot[[ weekday, meal_type ]] %>
+          <%= render "menus/slot", menu: @menu, weekday: weekday, meal_type: meal_type, entry: entry %>
         <% end %>
       </div>
     </section>

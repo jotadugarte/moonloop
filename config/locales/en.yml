@@ -86,6 +86,14 @@ en:
       almuerzo: "Lunch"
       cena: "Dinner"
       merienda: "Snack"
+    slots:
+      recipe_id_label: "Recipe id"
+      freeform_label: "Note"
+      save_submit: "Save"
+      clear_submit: "Clear"
+    entries:
+      flash:
+        could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
   admin:

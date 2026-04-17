@@ -18,7 +18,11 @@ Rails.application.routes.draw do
   resource  :profile, only: [ :edit, :update ]
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
-  resources :menus, only: [ :index, :create, :edit ]
+  resources :menus, only: [ :index, :create, :edit ] do
+    resources :menu_entries, only: [ :create ], module: :menus do
+      delete :clear, on: :collection
+    end
+  end
   resources :public_recipes, only: [ :index ]
   namespace :admin do
     resources :recipes, only: [] do

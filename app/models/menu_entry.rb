@@ -8,7 +8,7 @@ class MenuEntry < ApplicationRecord
 
   validate :meal_type_must_be_known
   validate :weekday_must_be_well_formed
-  validate :entry_content_must_be_present
+  validate :entry_content_must_be_present, unless: :should_skip_entry_content_validation?
   validate :recipe_must_belong_to_menu_owner
 
   private
@@ -42,5 +42,9 @@ class MenuEntry < ApplicationRecord
     return if recipe&.user_id == menu.user_id
 
     errors.add(:recipe_id, :must_match_menu_owner)
+  end
+
+  def should_skip_entry_content_validation?
+    marked_for_destruction?
   end
 end

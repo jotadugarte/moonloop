@@ -1,0 +1,44 @@
+<% frame_id = dom_id(menu, "slot_#{weekday}_#{meal_type}") %>
+
+<%= turbo_frame_tag frame_id do %>
+  <div
+    class="menu-grid__slot"
+    data-test="menu-entry-slot"
+    data-weekday="<%= weekday %>"
+    data-meal-type="<%= meal_type %>"
+  >
+    <div class="menu-grid__slot-label">
+      <%= t("date.day_names")[weekday] %>
+    </div>
+
+    <%= form_with model: (entry || MenuEntry.new),
+          url: menu_menu_entries_path(menu),
+          scope: :menu_entry,
+          data: { turbo_frame: frame_id } do |f| %>
+      <%= f.hidden_field :weekday, value: weekday %>
+      <%= f.hidden_field :meal_type, value: meal_type %>
+
+      <div>
+        <%= f.label :recipe_id, t("menus.slots.recipe_id_label") %>
+        <%= f.number_field :recipe_id, value: entry&.recipe_id %>
+      </div>
+
+      <div>
+        <%= f.label :freeform_text, t("menus.slots.freeform_label") %>
+        <%= f.text_field :freeform_text, value: entry&.freeform_text %>
+      </div>
+
+      <div>
+        <%= f.submit t("menus.slots.save_submit") %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= button_to t("menus.slots.clear_submit"),
+            clear_menu_menu_entries_path(menu),
+            method: :delete,
+            params: { weekday: weekday, meal_type: meal_type },
+            form: { data: { turbo_frame: frame_id } } %>
+    </div>
+  </div>
+<% end %>

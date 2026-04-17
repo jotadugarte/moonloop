@@ -19,6 +19,7 @@ class MenusController < ApplicationController
 
   def edit
     @meal_types = Menus::MealType::KEYS
+    @entries_by_slot = @menu.menu_entries.index_by { |e| [ e.weekday, e.meal_type ] }
   end
 
   private

@@ -61,6 +61,14 @@ es:
       almuerzo: "Almuerzo"
       cena: "Cena"
       merienda: "Merienda"
+    slots:
+      recipe_id_label: "ID de receta"
+      freeform_label: "Nota"
+      save_submit: "Guardar"
+      clear_submit: "Limpiar"
+    entries:
+      flash:
+        could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
   admin:
