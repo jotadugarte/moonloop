@@ -22,6 +22,37 @@ RSpec.describe LogWeightService do
       expect(user.current_bmi).to eq(24.85)
     end
 
+    # [REQ-WGT-002]
+    it "does not set current stats from a retroactive entry when a newer logged_at already exists" do
+      travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+        newer = create(
+          :weight_log,
+          user: user,
+          weight_kg: 80.0,
+          height_cm: 180,
+          logged_at: 1.day.ago
+        )
+        WeightLogs::ReconcileUserCurrentStats.call(user: user)
+        user.reload
+        expect(user.current_weight_kg).to eq(newer.weight_kg)
+
+        LogWeightService.new(user: user, weight_kg: 70.0, logged_at: 5.days.ago).call
+
+        user.reload
+        expect(user.current_weight_kg).to eq(80.0)
+        expect(user.current_bmi).to eq(newer.bmi)
+      end
+    end
+
+    # [REQ-WGT-002]
+    it "persists the given logged_at on the new row" do
+      travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+        t = Time.utc(2026, 3, 1, 8, 30, 0)
+        LogWeightService.new(user: user, weight_kg: 77.0, logged_at: t).call
+        expect(WeightLog.last.logged_at).to eq(t)
+      end
+    end
+
     # [REQ-WGT-001]
     it 'raises an ArgumentError if weight_kg is out of domain bounds' do
       expect {
