@@ -72,7 +72,7 @@ RSpec.describe "Weight logs", type: :request do
               }
           }.not_to change(WeightLog, :count)
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.body).to include("role=\"alert\"")
         end
       end
@@ -88,7 +88,7 @@ RSpec.describe "Weight logs", type: :request do
               }
             }
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.body).to include("role=\"alert\"")
           expect(response.body).to include(
             I18n.t("activerecord.errors.models.weight_log.attributes.logged_at.future_timestamp")

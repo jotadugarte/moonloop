@@ -27,7 +27,7 @@ class WeightLogsController < ApplicationController
     if e.record.is_a?(User)
       @weight_log.errors.add(:base, t("weight_logs.errors.user_stats_update_failed"))
     end
-    render :new, status: :unprocessable_entity
+    render :new, status: :unprocessable_content
   rescue ArgumentError => e
     @weight_log = weight_log_for_rescue(logged_at: logged_at)
     if e.message.match?(/WeightKg/i)
@@ -35,7 +35,7 @@ class WeightLogsController < ApplicationController
     else
       @weight_log.errors.add(:base, e.message)
     end
-    render :new, status: :unprocessable_entity
+    render :new, status: :unprocessable_content
   end
 
   def confirm_destroy
@@ -85,7 +85,7 @@ class WeightLogsController < ApplicationController
     if parsed.nil?
       @weight_log = weight_log_for_rescue(logged_at: Time.current)
       @weight_log.errors.add(:logged_at, :invalid)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
       return nil
     end
 
