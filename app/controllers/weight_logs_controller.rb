@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 class WeightLogsController < ApplicationController
+  PER_PAGE = 30
+
   before_action :set_weight_log, only: %i[confirm_destroy destroy]
+
+  def index
+    scope = Current.user.weight_logs.ordered_for_history
+    total = scope.count
+    total_pages = total.zero? ? 1 : (total.to_f / PER_PAGE).ceil
+    page = [ [ params[:page].to_i, 1 ].max, total_pages ].min
+
+    @weight_logs = scope.offset((page - 1) * PER_PAGE).limit(PER_PAGE)
+    @page = page
+    @total_pages = total_pages
+  end
 
   def new
     @weight_log = weight_log_for_new
@@ -43,7 +56,7 @@ class WeightLogsController < ApplicationController
 
   def destroy
     WeightLogs::DestroyLog.call(weight_log: @weight_log)
-    redirect_to profile_path, notice: t("weight_logs.flash.destroyed")
+    redirect_to weight_logs_path, notice: t("weight_logs.flash.destroyed")
   end
 
   private

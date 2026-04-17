@@ -5,6 +5,79 @@ require "rails_helper"
 RSpec.describe "Weight logs", type: :request do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
+  describe "GET /weight_logs" do
+    context "when signed in" do
+      before do
+        post sign_in_path, params: { email: user.email, password: "Password123!" }
+      end
+
+      # [REQ-WGT-003]
+      it "renders empty state when there are no logs" do
+        get weight_logs_path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t("weight_logs.index.empty"))
+      end
+
+      # [REQ-WGT-003]
+      it "lists logs with newest logged_at first" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          create(:weight_log, user: user, weight_kg: 22.22, height_cm: 180, logged_at: 5.days.ago)
+          create(:weight_log, user: user, weight_kg: 88.88, height_cm: 180, logged_at: 1.day.ago)
+
+          get weight_logs_path
+
+          body = response.body
+          expect(body.index("88.88")).to be < body.index("22.22")
+        end
+      end
+
+      # [REQ-WGT-003]
+      it "shows 30 entries per page and a link to the next page when there are more" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          31.times do |i|
+            create(:weight_log, user: user, weight_kg: 70.0, height_cm: 180, logged_at: i.days.ago)
+          end
+
+          get weight_logs_path
+
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to include("page=2")
+          expect(response.body).to include(I18n.t("weight_logs.index.pagination.next"))
+        end
+      end
+
+      # [REQ-WGT-003]
+      it "includes a delete link to the confirmation screen for each row" do
+        log = create(:weight_log, user: user, weight_kg: 72.0, height_cm: 180)
+
+        get weight_logs_path
+
+        expect(response.body).to include(confirm_destroy_weight_log_path(log))
+      end
+
+      # [REQ-WGT-003]
+      it "shows a previous link on page 2" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          31.times do |i|
+            create(:weight_log, user: user, weight_kg: 70.0, height_cm: 180, logged_at: i.days.ago)
+          end
+
+          get weight_logs_path(page: 2)
+
+          expect(response.body).to include(I18n.t("weight_logs.index.pagination.previous"))
+        end
+      end
+    end
+
+    # [REQ-WGT-003]
+    it "redirects to sign in when not authenticated" do
+      get weight_logs_path
+
+      expect(response).to redirect_to(sign_in_path)
+    end
+  end
+
   describe "GET /weight_logs/new" do
     context "when signed in" do
       before do
@@ -165,7 +238,7 @@ RSpec.describe "Weight logs", type: :request do
 
           delete weight_log_path(newer)
 
-          expect(response).to redirect_to(profile_path)
+          expect(response).to redirect_to(weight_logs_path)
           expect(flash[:notice]).to eq(I18n.t("weight_logs.flash.destroyed"))
           expect(WeightLog.exists?(newer.id)).to be false
           user.reload
@@ -183,7 +256,7 @@ RSpec.describe "Weight logs", type: :request do
 
         delete weight_log_path(log)
 
-        expect(response).to redirect_to(profile_path)
+        expect(response).to redirect_to(weight_logs_path)
         user.reload
         expect(user.current_weight_kg).to be_nil
         expect(user.current_bmi).to be_nil

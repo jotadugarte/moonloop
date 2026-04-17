@@ -29,6 +29,9 @@
 
 en:
   hello: "Hello world"
+  time:
+    formats:
+      weight_log: "%Y-%m-%d %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Your Phase 1 program starts today"
@@ -537,19 +540,39 @@ en:
     flash:
       created: "Weight saved"
       destroyed: "Weight entry deleted"
+    index:
+      title: "Weight history"
+      heading: "Weight history"
+      new_entry: "Log weight"
+      back_profile: "Profile"
+      empty: "No entries yet. Log your first weigh-in."
+      columns:
+        logged_at: "Date and time"
+        weight_kg: "Weight (kg)"
+        height_cm: "Height (cm)"
+        bmi: "BMI"
+        actions: "Actions"
+      actions:
+        delete: "Delete"
+      pagination:
+        aria_label: "Weight history pagination"
+        previous: "Previous"
+        next: "Next"
+        page_status: "Page %{page} of %{total}"
     new:
       title: "Log weight"
       weight_kg_label: "Weight (kg)"
       logged_at_label: "Weigh-in date and time"
       submit: "Save"
       back: "Back to profile"
+      history_link: "View history"
     errors:
       user_stats_update_failed: "Could not update your current weight. Please try again."
     confirm_destroy:
       title: "Delete weight entry"
       warning_html: "This measurement will be removed from your history and your <strong>current weight</strong> will be updated from your remaining entries. This cannot be undone."
       confirm_submit: "Yes, delete"
-      cancel: "Cancel"
+      cancel: "Back to history"
   profiles:
     update:
       success: "Profile updated successfully"

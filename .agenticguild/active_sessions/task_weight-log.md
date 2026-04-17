@@ -127,7 +127,7 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
 
   <step id="4" status="complete">Write failing **request** (and optionally **system**) specs for **REQ-WGT-002**: new/create weight entry form (weight + datetime in user TZ; no height field); flash/validation errors with accessible patterns; Turbo-appropriate behavior consistent with the app. `# [REQ-WGT-002]`</step>
 
-  <step id="5" status="pending">Write failing **request** specs for **REQ-WGT-003**: **index** lists logs ordered by `logged_at` descending with **30** per page and pagination controls; columns include weight, height snapshot, BMI, and **local** display of `logged_at`; **delete** control with confirmation. Implement controller, routes, ERB, I18n (`es`/`en`). `# [REQ-WGT-003]`</step>
+  <step id="5" status="complete">Write failing **request** specs for **REQ-WGT-003**: **index** lists logs ordered by `logged_at` descending with **30** per page and pagination controls; columns include weight, height snapshot, BMI, and **local** display of `logged_at`; **delete** control with confirmation. Implement controller, routes, ERB, I18n (`es`/`en`). `# [REQ-WGT-003]`</step>
 
   <step id="6" status="pending">Add **navigation** entry point(s) consistent with existing layout (e.g. profile or main nav — mirror patterns from menus/Mi Día shortcuts); request or system spec asserting link presence. `# [REQ-WGT-002]`</step>
 

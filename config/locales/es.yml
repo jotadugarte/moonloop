@@ -1,5 +1,8 @@
 es:
   hello: "Hola mundo"
+  time:
+    formats:
+      weight_log: "%d/%m/%Y %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Hoy empieza tu fase 1"
@@ -337,19 +340,39 @@ es:
     flash:
       created: "Peso registrado"
       destroyed: "Entrada de peso eliminada"
+    index:
+      title: "Historial de peso"
+      heading: "Historial de peso"
+      new_entry: "Registrar peso"
+      back_profile: "Perfil"
+      empty: "Aún no hay mediciones. Registra la primera."
+      columns:
+        logged_at: "Fecha y hora"
+        weight_kg: "Peso (kg)"
+        height_cm: "Altura (cm)"
+        bmi: "IMC"
+        actions: "Acciones"
+      actions:
+        delete: "Eliminar"
+      pagination:
+        aria_label: "Paginación del historial de peso"
+        previous: "Anterior"
+        next: "Siguiente"
+        page_status: "Página %{page} de %{total}"
     new:
       title: "Registrar peso"
       weight_kg_label: "Peso (kg)"
       logged_at_label: "Fecha y hora del pesaje"
       submit: "Guardar"
       back: "Volver al perfil"
+      history_link: "Ver historial"
     errors:
       user_stats_update_failed: "No se pudo actualizar tu peso actual. Inténtalo de nuevo."
     confirm_destroy:
       title: "Eliminar entrada de peso"
       warning_html: "Se borrará esta medición del historial y se actualizará tu <strong>peso actual</strong> según el resto de registros. Esta acción no se puede deshacer."
       confirm_submit: "Sí, eliminar"
-      cancel: "Cancelar"
+      cancel: "Volver al historial"
   profiles:
     update:
       success: "Perfil actualizado correctamente"

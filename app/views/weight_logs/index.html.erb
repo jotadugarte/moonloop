@@ -1,0 +1,54 @@
+<% content_for :title, t(".title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t(".heading") %></h1>
+
+<p class="mb-4">
+  <%= link_to t(".new_entry"), new_weight_log_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t(".back_profile"), edit_profile_path, class: "text-blue-600 underline" %>
+</p>
+
+<% if @weight_logs.any? %>
+  <p class="text-gray-600 mb-2"><%= t(".pagination.page_status", page: @page, total: @total_pages) %></p>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="text-left p-2 border-b"><%= t(".columns.logged_at") %></th>
+          <th class="text-left p-2 border-b"><%= t(".columns.weight_kg") %></th>
+          <th class="text-left p-2 border-b"><%= t(".columns.height_cm") %></th>
+          <th class="text-left p-2 border-b"><%= t(".columns.bmi") %></th>
+          <th class="text-left p-2 border-b" scope="col"><%= t(".columns.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tz = Current.user.timezone %>
+        <% @weight_logs.each do |log| %>
+          <tr class="border-b border-gray-100">
+            <td class="p-2 whitespace-nowrap">
+              <%= l(log.logged_at.in_time_zone(tz), format: :weight_log) %>
+            </td>
+            <td class="p-2"><%= number_with_precision(log.weight_kg, precision: 2, strip_insignificant_zeros: true) %></td>
+            <td class="p-2"><%= log.height_cm %></td>
+            <td class="p-2"><%= number_with_precision(log.bmi, precision: 2, strip_insignificant_zeros: true) %></td>
+            <td class="p-2">
+              <%= link_to t(".actions.delete"), confirm_destroy_weight_log_path(log), class: "text-red-600 underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <nav class="mt-4 flex gap-4 items-center" aria-label="<%= t(".pagination.aria_label") %>">
+    <% if @page > 1 %>
+      <%= link_to t(".pagination.previous"), weight_logs_path(page: @page - 1), class: "text-blue-600 underline" %>
+    <% end %>
+    <% if @page < @total_pages %>
+      <%= link_to t(".pagination.next"), weight_logs_path(page: @page + 1), class: "text-blue-600 underline" %>
+    <% end %>
+  </nav>
+<% else %>
+  <p class="text-gray-600"><%= t(".empty") %></p>
+<% end %>
