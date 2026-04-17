@@ -132,7 +132,7 @@ SPEC updated (`REQ-EXR-001`–`005`). Backlog row for MENU-004/005 parity **remo
 
   <step id="1" status="complete">Write failing specs for `ExerciseRoutine` and `ExerciseRoutineLine` (or chosen names): user ownership, name normalization/uniqueness like `Menu`, ordered lines per weekday, validation that the routine cannot be saved completely empty, line limits consistent with migrations. Add migrations and models; factory traits; make specs green. Tag examples with `# [REQ-EXR-001]`.</step>
 
-  <step id="2" status="pending">Write failing specs for the routine week-range assignment model: `start_week`/`end_week`, overlap validation mirroring `PhaseAssignment` (including unsaved-record case), `user_id` + routine ownership. Migration + model; green. `# [REQ-EXR-002]`.</step>
+  <step id="2" status="complete">Write failing specs for the routine week-range assignment model: `start_week`/`end_week`, overlap validation mirroring `PhaseAssignment` (including unsaved-record case), `user_id` + routine ownership. Migration + model; green. `# [REQ-EXR-002]`.</step>
 
   <step id="3" status="pending">Write failing specs for `ExerciseRoutines::ResolveActiveRoutine` (and any week-index helper) mirroring `Phases::ResolveActiveMenu`. Implement service; green. `# [REQ-EXR-002]`.</step>
 

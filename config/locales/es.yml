@@ -407,6 +407,14 @@ es:
               must_match_user: "debe ser un menú de tu cuenta"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
+        exercise_routine_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            exercise_routine_id:
+              must_match_user: "debe ser una rutina de tu cuenta"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación"
         menu_entry:
           attributes:
             meal_type:

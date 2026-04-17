@@ -3,6 +3,7 @@
 class ExerciseRoutine < ApplicationRecord
   belongs_to :user
   has_many :exercise_routine_lines, dependent: :destroy
+  has_many :exercise_routine_assignments, dependent: :destroy
 
   validates :name, presence: true
 

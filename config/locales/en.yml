@@ -372,6 +372,14 @@ en:
               must_match_user: "must be a menu from your account"
             base:
               range_overlap: "that week range overlaps another assignment"
+        exercise_routine_assignment:
+          attributes:
+            end_week:
+              before_start_week: "must be greater than or equal to the start week"
+            exercise_routine_id:
+              must_match_user: "must be an exercise routine from your account"
+            base:
+              range_overlap: "that week range overlaps another assignment"
         menu_entry:
           attributes:
             meal_type:
