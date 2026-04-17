@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "stringio"
+
 require "rails_helper"
 
 RSpec.describe "Menus editor", type: :system do
@@ -43,6 +45,31 @@ RSpec.describe "Menus editor", type: :system do
 
     within(%([data-test="menu-entry-slot"][data-weekday="5"][data-meal-type="cena"])) do
       expect(page).to have_css(%(img[data-test="menu-slot-preview"][data-preview-kind="fallback"][src*="fallback_cena"]))
+    end
+  end
+
+  # [REQ-MENU-002]
+  it "shows the recipe upload in the slot preview when the recipe has an image" do
+    menu = Menu.create!(user: user, name: "Menú foto")
+    recipe = Recipe.create!(user: user, name: "Tortilla")
+    recipe.image.attach(
+      io: StringIO.new(File.read(Rails.root.join("spec/fixtures/files/recipe_test.svg"))),
+      filename: "recipe_test.svg",
+      content_type: "image/svg+xml"
+    )
+    MenuEntry.create!(
+      menu: menu,
+      recipe: recipe,
+      weekday: 2,
+      meal_type: "desayuno",
+      freeform_text: nil
+    )
+
+    visit edit_menu_path(menu)
+
+    within(%([data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])) do
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"]:not([data-preview-kind="fallback"])))
+      expect(page).to have_css(%(img[src*="active_storage"]))
     end
   end
 end

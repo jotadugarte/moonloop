@@ -3,6 +3,10 @@
 
 <h1><%= t("menus.index.title") %></h1>
 
+<p class="mb-4">
+  <%= link_to t("menus.index.recipes_link"), recipes_path, class: "text-blue-600 underline" %>
+</p>
+
 <%= form_with model: @menu, url: menus_path do |f| %>
   <div>
     <%= f.label :name, t("menus.index.name_label") %>

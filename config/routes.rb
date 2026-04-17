@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       delete :clear, on: :collection
     end
   end
+  resources :recipes
   resources :public_recipes, only: [ :index ]
   namespace :admin do
     resources :recipes, only: [] do

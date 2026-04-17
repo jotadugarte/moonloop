@@ -248,8 +248,8 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="2.3" status="complete">Implement slot recipe picker + freeform input gated by per-user preference; add tests.</step>
     <step id="2.4" status="complete">Implement meal-type fallback image behavior in slot UI (context-based when recipe has no image); add tests.</step>
 
-    <step id="3.1" status="pending"># [REQ-MENU-002] Write system specs for recipe CRUD + image upload + display, including fallback behavior in menu slot context.</step>
-    <step id="3.2" status="pending">Implement recipes controller/views; ensure I18n and consistent attachment rendering.</step>
+    <step id="3.1" status="complete"># [REQ-MENU-002] Write system specs for recipe CRUD + image upload + display, including fallback behavior in menu slot context.</step>
+    <step id="3.2" status="complete">Implement recipes controller/views; ensure I18n and consistent attachment rendering.</step>
 
     <step id="4.1" status="pending"># [REQ-MENU-003] Write unit specs for week index calculation from user timezone + phase1_start_date (before start date, boundary days, timezone changes).</step>
     <step id="4.2" status="pending">Implement phase start date persistence and services for computing current week and resolving active menu for a local date.</step>

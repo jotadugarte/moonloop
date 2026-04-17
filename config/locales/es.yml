@@ -53,6 +53,7 @@ es:
       name_label: "Nombre"
       create_submit: "Crear menú"
       edit: "Editar"
+      recipes_link: "Recetas"
     edit:
       title: "Editar menú: %{name}"
       back_to_index: "Volver a menús"
@@ -75,6 +76,45 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+  recipes:
+    index:
+      title: "Recetas — Moonloop"
+      heading: "Mis recetas"
+      new_recipe: "Nueva receta"
+      menus_link: "Menús"
+      empty: "Aún no tienes recetas. Crea la primera."
+    new:
+      title: "Nueva receta — Moonloop"
+      heading: "Nueva receta"
+      back: "Volver al listado"
+    edit:
+      title: "Editar %{name} — Moonloop"
+      heading: "Editar: %{name}"
+      back: "Volver a la receta"
+    show:
+      title: "%{name} — Moonloop"
+      public_badge: "Visible en el catálogo público"
+      instructions_heading: "Preparación"
+      no_instructions: "Sin instrucciones todavía."
+      edit: "Editar"
+      back_index: "Todas las recetas"
+      delete: "Eliminar"
+      delete_confirm: "¿Eliminar esta receta? Se vaciarán los casilleros de menú que solo tenían esta receta."
+    form:
+      errors_header:
+        one: "1 error impidió guardar la receta:"
+        other: "%{count} errores impidieron guardar la receta:"
+      name_label: "Nombre"
+      instructions_label: "Instrucciones"
+      image_label: "Imagen"
+      remove_image_label: "Quitar imagen actual"
+      public_label: "Compartir en el catálogo público"
+      create_submit: "Crear receta"
+      update_submit: "Guardar cambios"
+    flash:
+      created: "Receta creada."
+      updated: "Receta actualizada."
+      destroyed: "Receta eliminada."
   admin:
     moderation:
       recipe:
@@ -165,6 +205,8 @@ es:
   home:
     index:
       my_day: "Mi Día"
+      menus: "Menús"
+      recipes: "Recetas"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"

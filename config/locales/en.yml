@@ -78,6 +78,7 @@ en:
       name_label: "Name"
       create_submit: "Create menu"
       edit: "Edit"
+      recipes_link: "Recipes"
     edit:
       title: "Edit menu: %{name}"
       back_to_index: "Back to menus"
@@ -100,6 +101,45 @@ en:
         could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
+  recipes:
+    index:
+      title: "Recipes — Moonloop"
+      heading: "My recipes"
+      new_recipe: "New recipe"
+      menus_link: "Menus"
+      empty: "You have no recipes yet. Create the first one."
+    new:
+      title: "New recipe — Moonloop"
+      heading: "New recipe"
+      back: "Back to list"
+    edit:
+      title: "Edit %{name} — Moonloop"
+      heading: "Edit: %{name}"
+      back: "Back to recipe"
+    show:
+      title: "%{name} — Moonloop"
+      public_badge: "Listed in the public catalog"
+      instructions_heading: "Instructions"
+      no_instructions: "No instructions yet."
+      edit: "Edit"
+      back_index: "All recipes"
+      delete: "Delete"
+      delete_confirm: "Delete this recipe? Menu slots that only had this recipe will be cleared."
+    form:
+      errors_header:
+        one: "1 error prevented this recipe from being saved:"
+        other: "%{count} errors prevented this recipe from being saved:"
+      name_label: "Name"
+      instructions_label: "Instructions"
+      image_label: "Image"
+      remove_image_label: "Remove current image"
+      public_label: "Share in the public catalog"
+      create_submit: "Create recipe"
+      update_submit: "Save changes"
+    flash:
+      created: "Recipe created."
+      updated: "Recipe updated."
+      destroyed: "Recipe deleted."
   admin:
     moderation:
       recipe:
@@ -280,6 +320,8 @@ en:
   home:
     index:
       my_day: "My Day"
+      menus: "Menus"
+      recipes: "Recipes"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"

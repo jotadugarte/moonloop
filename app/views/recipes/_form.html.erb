@@ -1,0 +1,52 @@
+<%= form_with model: @recipe, class: "space-y-4 max-w-lg" do |f| %>
+  <% if @recipe.errors.any? %>
+    <div class="text-red-600">
+      <h2 class="font-bold"><%= t("recipes.form.errors_header", count: @recipe.errors.count) %></h2>
+      <ul class="list-disc pl-5">
+        <% @recipe.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, t("recipes.form.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name, required: true, class: "border border-gray-300 rounded p-2 w-full" %>
+  </div>
+
+  <div>
+    <%= f.label :instructions, t("recipes.form.instructions_label"), class: "block font-medium mb-1" %>
+    <%= f.text_area :instructions, rows: 8, class: "border border-gray-300 rounded p-2 w-full font-mono text-sm" %>
+  </div>
+
+  <div>
+    <%= f.label :image, t("recipes.form.image_label"), class: "block font-medium mb-1" %>
+    <%= f.file_field :image, accept: "image/*", class: "block w-full text-sm" %>
+  </div>
+
+  <% if @recipe.image.attached? %>
+    <div>
+      <%= attachable_image_tag @recipe.image,
+            resize_to_limit: [ 320, 320 ],
+            class: "rounded max-w-xs border border-gray-200",
+            alt: @recipe.name %>
+    </div>
+    <div class="flex items-start gap-2">
+      <%= f.check_box :remove_image, class: "mt-1" %>
+      <%= f.label :remove_image, t("recipes.form.remove_image_label"), class: "text-gray-700" %>
+    </div>
+  <% end %>
+
+  <div class="flex items-start gap-2">
+    <%= f.check_box :publicly_shareable, class: "mt-1" %>
+    <%= f.label :publicly_shareable, t("recipes.form.public_label"), class: "text-gray-700" %>
+  </div>
+
+  <div>
+    <%= f.submit(
+          @recipe.new_record? ? t("recipes.form.create_submit") : t("recipes.form.update_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700"
+        ) %>
+  </div>
+<% end %>

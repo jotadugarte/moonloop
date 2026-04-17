@@ -1,4 +1,15 @@
 module ApplicationHelper
+  # Raster images get a resized variant; SVG and other non-variable types use the original blob.
+  def attachable_image_tag(attachment, resize_to_limit:, **image_options)
+    source =
+      if attachment.variable?
+        attachment.variant(resize_to_limit: resize_to_limit)
+      else
+        attachment
+      end
+    image_tag source, **image_options
+  end
+
   def menu_slot_preview_image_tag(preview, meal_type)
     return if preview.blank?
 
@@ -6,7 +17,8 @@ module ApplicationHelper
     data = { test: "menu-slot-preview" }
 
     if preview.display == :uploaded
-      image_tag preview.uploaded_image.variant(resize_to_limit: [ 160, 160 ]),
+      attachable_image_tag preview.uploaded_image,
+        resize_to_limit: [ 160, 160 ],
         alt: alt,
         class: "menu-grid__slot-preview-img",
         data: data
