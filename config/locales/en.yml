@@ -72,6 +72,12 @@ en:
     index:
       title: "Public recipes — Moonloop"
       heading: "Public recipes"
+  admin:
+    moderation:
+      recipe:
+        revoked_public_share: "This recipe is no longer publicly shared."
+      menu:
+        revoked_public_share: "This menu is no longer publicly shared."
   sessions:
     new:
       title: "Sign in"

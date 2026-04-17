@@ -47,6 +47,12 @@ es:
     index:
       title: "Recetas públicas — Moonloop"
       heading: "Recetas públicas"
+  admin:
+    moderation:
+      recipe:
+        revoked_public_share: "Se quitó el estado público de la receta."
+      menu:
+        revoked_public_share: "Se quitó el estado público del menú."
   sessions:
     new:
       title: "Iniciar sesión"

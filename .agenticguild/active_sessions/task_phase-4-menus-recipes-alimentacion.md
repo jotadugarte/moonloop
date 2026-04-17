@@ -130,7 +130,7 @@ This file is the discovery “whiteboard” for the feature; no application code
 - **PhasePlan** (name provisional)
   - Responsibility: stores the user’s Phase 1 start date
   - Invariants:
-    - one per user (or keep on `User` as a field; decision point)
+    - **Decision (Phase 4 implementation):** store Phase 1 start date on `User` as `phase_one_starts_on` (date, nullable until configured) instead of a separate `PhasePlan` record for now (fewer joins; one row per user). Revisit if multi-plan history is needed later.
 - **PhaseAssignment**
   - Responsibility: maps a week range to a Menu
   - Invariants:
@@ -234,11 +234,11 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
   </metadata>
 
   <steps>
-    <step id="0.1" status="pending">Write a characterization spec documenting where Phase 1 start date will be stored (User column vs PhasePlan model) and expected behavior.</step>
+    <step id="0.1" status="complete">Write a characterization spec documenting where Phase 1 start date will be stored (User column vs PhasePlan model) and expected behavior.</step>
     <step id="1.1" status="complete"># [REQ-MENU-001, REQ-MENU-002] Write failing model specs for Menu/Recipe/MenuEntry ownership, validations, and uniqueness per (menu, weekday, meal_type) plus entry-content presence rule.</step>
     <step id="1.2" status="complete">Implement models and migrations for Menu/Recipe/MenuEntry, including indexes/foreign keys and ActiveStorage attachment for Recipe image.</step>
     <step id="1.3" status="complete">Add authorization/validation: users manage their own menus/recipes; other users can browse public shared content only.</step>
-    <step id="1.4" status="pending">Write failing specs for sharing + moderation: public visibility scope and admin revocation of sharing.</step>
+    <step id="1.4" status="complete">Write failing specs for sharing + moderation: public visibility scope and admin revocation of sharing.</step>
 
     <step id="2.1" status="pending"># [REQ-MENU-001] Write request/system specs for menu CRUD and 7×4 grid editor interactions (Turbo), including sparse empty-slot behavior.</step>
     <step id="2.2" status="pending">Implement menu CRUD + grid editor with Turbo; move orchestration into services (e.g., Menus::UpsertEntry).</step>

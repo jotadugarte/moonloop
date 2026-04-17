@@ -19,6 +19,18 @@ Rails.application.routes.draw do
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
   resources :public_recipes, only: [ :index ]
+  namespace :admin do
+    resources :recipes, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+    resources :menus, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+  end
   namespace :identity do
     resource :email,              only: [ :edit, :update ]
     resource :email_verification, only: [ :show, :create ]
