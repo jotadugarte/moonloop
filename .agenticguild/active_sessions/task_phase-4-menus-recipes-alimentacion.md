@@ -261,8 +261,8 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="5.3" status="complete">Implement in-app reminder banner with dismiss-for-today; add system specs ensuring it does not reappear the same day.</step>
     <step id="5.4" status="complete"># [REQ-MENU-005] Implement “plan ended” detection + extension prompt UI; implement repeat-last-phase and add-new-range flows with specs.</step>
 
-    <step id="6.1" status="pending">Write system spec asserting Mi Día shows a shortcut below main content that navigates to menu/phase area.</step>
-    <step id="6.2" status="pending">Implement the Mi Día shortcut (Turbo navigation) and wire it to the phase/menu surfaces.</step>
+    <step id="6.1" status="complete">Write system spec asserting Mi Día shows a shortcut below main content that navigates to menu/phase area.</step>
+    <step id="6.2" status="complete">Implement the Mi Día shortcut (Turbo navigation) and wire it to the phase/menu surfaces.</step>
 
     <step id="7.1" status="pending">Audit new strings for I18n (es/en) and ensure Spanish copy completeness.</step>
     <step id="7.2" status="pending">Hardening: add best-effort DB safeguards for SQLite, eager-load grid queries to avoid N+1, and review image variant usage.</step>

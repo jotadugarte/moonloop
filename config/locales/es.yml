@@ -30,6 +30,9 @@ es:
         zero: "Racha: 0 días"
         one: "Racha: 1 día"
         other: "Racha: %{count} días"
+      phases_shortcut_heading: "Menús y plan de fases"
+      phases_shortcut_intro: "Desde aquí puedes organizar menús por semana, recetas y rangos de fases."
+      phases_shortcut_link: "Ir a menús y plan de fases"
     actions:
       mark_done: "Hecho"
       mark_failed: "Fallado"

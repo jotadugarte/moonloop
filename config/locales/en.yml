@@ -55,6 +55,9 @@ en:
         zero: "Streak: 0 days"
         one: "Streak: 1 day"
         other: "Streak: %{count} days"
+      phases_shortcut_heading: "Menus & phase plan"
+      phases_shortcut_intro: "Plan meals by week, recipes, and phase ranges from here."
+      phases_shortcut_link: "Open menus and phase plan"
     actions:
       mark_done: "Done"
       mark_failed: "Failed"
