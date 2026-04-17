@@ -1,0 +1,28 @@
+<p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
+
+<h1><%= t("menus.edit.title", name: @menu.name) %></h1>
+
+<div class="menu-grid">
+  <% @meal_types.each do |meal_type| %>
+    <section class="menu-grid__meal-type">
+      <h2><%= t("menus.meal_types.#{meal_type}") %></h2>
+      <div class="menu-grid__weekdays">
+        <% (0..6).each do |weekday| %>
+          <div
+            class="menu-grid__slot"
+            data-test="menu-entry-slot"
+            data-weekday="<%= weekday %>"
+            data-meal-type="<%= meal_type %>"
+          >
+            <div class="menu-grid__slot-label">
+              <%= t("date.day_names")[weekday] %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>
+
+<p><%= link_to t("menus.edit.back_to_index"), menus_path %></p>

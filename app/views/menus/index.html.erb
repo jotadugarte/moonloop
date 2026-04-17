@@ -1,0 +1,23 @@
+<p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
+
+<h1><%= t("menus.index.title") %></h1>
+
+<%= form_with model: @menu, url: menus_path do |f| %>
+  <div>
+    <%= f.label :name, t("menus.index.name_label") %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.submit t("menus.index.create_submit") %>
+  </div>
+<% end %>
+
+<hr>
+
+<% @menus.each do |menu| %>
+  <div id="<%= dom_id(menu) %>">
+    <strong><%= menu.name %></strong>
+    <%= link_to t("menus.index.edit"), edit_menu_path(menu) %>
+  </div>
+<% end %>

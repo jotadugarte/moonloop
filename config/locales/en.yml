@@ -72,6 +72,22 @@ en:
     index:
       title: "Public recipes — Moonloop"
       heading: "Public recipes"
+  menus:
+    index:
+      title: "Menus"
+      name_label: "Name"
+      create_submit: "Create menu"
+      edit: "Edit"
+    edit:
+      title: "Edit menu: %{name}"
+      back_to_index: "Back to menus"
+    meal_types:
+      desayuno: "Breakfast"
+      almuerzo: "Lunch"
+      cena: "Dinner"
+      merienda: "Snack"
+    flash:
+      created: "Menu created."
   admin:
     moderation:
       recipe:
