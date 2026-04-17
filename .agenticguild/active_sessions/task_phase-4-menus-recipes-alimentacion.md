@@ -216,6 +216,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
   <metadata>
     <task_name>phase-4-menus-recipes-alimentacion</task_name>
     <classification>Feature</classification>
+    <roadmap_item>Phase 4 — Menus & Recipes (Alimentación) — items 15–19</roadmap_item>
     <requirements>
       <req id="REQ-MENU-001" />
       <req id="REQ-MENU-002" />
@@ -227,56 +228,40 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
       <item>Hotwire-first, server-rendered ERB; thin controllers; service objects under app/services/.</item>
       <item>ActiveStorage for images; Solid Queue for scheduled work where needed.</item>
       <item>All user-visible strings via I18n (es default).</item>
-      <item>RSpec-first; each spec example tagged with # [REQ-...] for traceability.</item>
+      <item>RSpec-first; each example tagged with # [REQ-...] for traceability (stealth_mode=false).</item>
     </architecture_guardrails>
   </metadata>
 
-  <milestone name="0 - Spec hardening">
-    <step>Confirm naming and data placement for Phase 1 start date (User column vs PhasePlan model) and document it in this file if it changes.</step>
-    <step>Confirm whether MenuEntry allows recipe+note simultaneously or enforces XOR (tracked in backlog; do not block Phase 4 MVP unless required).</step>
-  </milestone>
+  <steps>
+    <step id="0.1" status="pending">Write a characterization spec documenting where Phase 1 start date will be stored (User column vs PhasePlan model) and expected behavior.</step>
+    <step id="1.1" status="pending"># [REQ-MENU-001, REQ-MENU-002] Write failing model specs for Menu/Recipe/MenuEntry ownership, validations, and uniqueness per (menu, weekday, meal_type) plus entry-content presence rule.</step>
+    <step id="1.2" status="pending">Implement models and migrations for Menu/Recipe/MenuEntry, including indexes/foreign keys and ActiveStorage attachment for Recipe image.</step>
+    <step id="1.3" status="pending">Add authorization/validation: users manage their own menus/recipes; other users can browse public shared content only.</step>
+    <step id="1.4" status="pending">Write failing specs for sharing + moderation: public visibility scope and admin revocation of sharing.</step>
 
-  <milestone name="1 - Data model for menus & recipes (REQ-MENU-001, REQ-MENU-002)">
-    <step>Write failing model specs for Menu/Recipe/MenuEntry ownership, validations, and constraints (uniqueness per (menu, weekday, meal_type); presence rules for entry content).</step>
-    <step>Implement models and migrations, including indexes and foreign keys; wire ActiveStorage attachment for Recipe image.</step>
-    <step>Add policy/validation ensuring users can only access their own menus/recipes, except browsing public shared content.</step>
-    <step>Write specs for sharing: shareable flag, public visibility query scope, admin moderation action (revoke sharing) behavior.</step>
-  </milestone>
+    <step id="2.1" status="pending"># [REQ-MENU-001] Write request/system specs for menu CRUD and 7×4 grid editor interactions (Turbo), including sparse empty-slot behavior.</step>
+    <step id="2.2" status="pending">Implement menu CRUD + grid editor with Turbo; move orchestration into services (e.g., Menus::UpsertEntry).</step>
+    <step id="2.3" status="pending">Implement slot recipe picker + freeform input gated by per-user preference; add tests.</step>
+    <step id="2.4" status="pending">Implement meal-type fallback image behavior in slot UI (context-based when recipe has no image); add tests.</step>
 
-  <milestone name="2 - Menu editor UX (REQ-MENU-001)">
-    <step>Write request/system specs for menu CRUD and the 7x4 grid editor interactions (Turbo forms), including empty slots (sparse records) behavior.</step>
-    <step>Implement controllers/views with Turbo; keep orchestration in services (e.g., Menus::UpsertEntry).</step>
-    <step>Implement recipe picker inside a slot and freeform text entry (guarded by per-user preference).</step>
-    <step>Implement meal-type fallback image in the menu slot UI (context-based when recipe has no image).</step>
-  </milestone>
+    <step id="3.1" status="pending"># [REQ-MENU-002] Write system specs for recipe CRUD + image upload + display, including fallback behavior in menu slot context.</step>
+    <step id="3.2" status="pending">Implement recipes controller/views; ensure I18n and consistent attachment rendering.</step>
 
-  <milestone name="3 - Recipe library UX (REQ-MENU-002)">
-    <step>Write system specs for recipe CRUD, image upload, and display behavior (including fallback image behavior in slot context).</step>
-    <step>Implement recipes controller/views; ensure I18n coverage and consistent attachment rendering.</step>
-  </milestone>
+    <step id="4.1" status="pending"># [REQ-MENU-003] Write unit specs for week index calculation from user timezone + phase1_start_date (before start date, boundary days, timezone changes).</step>
+    <step id="4.2" status="pending">Implement phase start date persistence and services for computing current week and resolving active menu for a local date.</step>
+    <step id="4.3" status="pending">Write model/service specs for PhaseAssignment validation (no overlaps; gaps allowed) and active lookup.</step>
+    <step id="4.4" status="pending">Implement Phase setup UI (start date + assignment CRUD) and show current week + active menu.</step>
 
-  <milestone name="4 - Phase system & week-range assignments (REQ-MENU-003)">
-    <step>Write unit specs for week index calculation from user timezone + phase1_start_date (edge cases: before start date, timezone changes, boundary days).</step>
-    <step>Implement phase start date persistence and services for computing current week and resolving active menu for a local date.</step>
-    <step>Write model/service specs for PhaseAssignment validation (no overlaps; gaps allowed) and active assignment lookup.</step>
-    <step>Implement Phase setup UI (start date + assignment CRUD) and expose “current week” + active menu.</step>
-  </milestone>
+    <step id="5.1" status="pending"># [REQ-MENU-004] Write specs for “start date > 3 days in future” warning and reminder preference behavior (in-app/email independent) + dismiss-for-today persistence.</step>
+    <step id="5.2" status="pending">Implement reminder event persistence (idempotent key) and daily Solid Queue job to send reminders due “today” per user timezone.</step>
+    <step id="5.3" status="pending">Implement in-app reminder banner with dismiss-for-today; add system specs ensuring it does not reappear the same day.</step>
+    <step id="5.4" status="pending"># [REQ-MENU-005] Implement “plan ended” detection + extension prompt UI; implement repeat-last-phase and add-new-range flows with specs.</step>
 
-  <milestone name="5 - Alerts, reminders, and extension (REQ-MENU-004, REQ-MENU-005)">
-    <step>Write specs for start-date warning rule (more than 3 days in future) and for reminder preference behavior (in-app/email independent).</step>
-    <step>Implement reminder event persistence (idempotent key per user + local day/week index) and a daily Solid Queue job to enqueue/send reminders due “today” in each user’s timezone.</step>
-    <step>Implement in-app reminder banner with “dismiss for today” persistence; write system specs for dismissal not reappearing the same day.</step>
-    <step>Implement Phase extension detection (plan ended) and prompt UI; implement “repeat last phase” and “add new range” flows with specs.</step>
-  </milestone>
+    <step id="6.1" status="pending">Write system spec asserting Mi Día shows a shortcut below main content that navigates to menu/phase area.</step>
+    <step id="6.2" status="pending">Implement the Mi Día shortcut (Turbo navigation) and wire it to the phase/menu surfaces.</step>
 
-  <milestone name="6 - Mi Día shortcut integration">
-    <step>Write system spec asserting the Mi Día page shows a shortcut below the main content and navigates to the phase/menu area.</step>
-    <step>Implement the shortcut in Mi Día view (Turbo navigation).</step>
-  </milestone>
-
-  <milestone name="7 - Hardening & i18n">
-    <step>Audit all new strings for I18n; ensure Spanish default copy is complete.</step>
-    <step>Review DB constraints and add best-effort safeguards in SQLite; ensure queries are eager-loaded to avoid N+1 in grids.</step>
-  </milestone>
+    <step id="7.1" status="pending">Audit new strings for I18n (es/en) and ensure Spanish copy completeness.</step>
+    <step id="7.2" status="pending">Hardening: add best-effort DB safeguards for SQLite, eager-load grid queries to avoid N+1, and review image variant usage.</step>
+  </steps>
 </implementation_plan>
 
