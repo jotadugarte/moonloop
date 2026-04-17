@@ -90,4 +90,29 @@ RSpec.describe "Phases dashboard", type: :request do
     expect(response).to redirect_to(phase_path)
     expect(flash[:alert]).to eq(I18n.t("phases.flash.repeat_last_assignment_nothing_to_repeat"))
   end
+
+  # [REQ-EXR-005]
+  it "repeats the last routine assignment block when requested" do
+    routine = ExerciseRoutine.new(user: user, name: "R")
+    routine.exercise_routine_lines.build(weekday: 0, position: 0, label: "x")
+    routine.save!
+    ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 4)
+
+    post repeat_last_routine_assignment_phase_path
+
+    expect(response).to redirect_to(phase_path)
+    expect(flash[:notice]).to eq(I18n.t("phases.flash.repeat_last_routine_assignment_created"))
+    added = ExerciseRoutineAssignment.order(:start_week).last
+    expect(added.start_week).to eq(5)
+    expect(added.end_week).to eq(8)
+    expect(added.exercise_routine_id).to eq(routine.id)
+  end
+
+  # [REQ-EXR-005]
+  it "does not repeat routine when there are no routine assignments" do
+    post repeat_last_routine_assignment_phase_path
+
+    expect(response).to redirect_to(phase_path)
+    expect(flash[:alert]).to eq(I18n.t("phases.flash.repeat_last_routine_assignment_nothing_to_repeat"))
+  end
 end

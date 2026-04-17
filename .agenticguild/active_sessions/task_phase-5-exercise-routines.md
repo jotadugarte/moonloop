@@ -138,7 +138,7 @@ SPEC updated (`REQ-EXR-001`–`005`). Backlog row for MENU-004/005 parity **remo
 
   <step id="4" status="complete">Write failing request/system specs for exercise routine CRUD (scoped to `Current.user`), **duplicate** routine, and **destroy** flow: first request shows warning/confirmation; confirming deletes **all** `ExerciseRoutineAssignment` rows for that routine then the routine in one transaction. Implement controller + `ExerciseRoutines::DestroyRoutine` (or equivalent). I18n for warnings. Green. `# [REQ-EXR-001]`.</step>
 
-  <step id="5" status="pending">Write failing specs for `ExerciseRoutines::PlanEnded` and `ExerciseRoutines::RepeatLastAssignment` mirroring `Phases::PlanEnded` / `Phases::RepeatLastPhaseAssignment`. Integrate on `PhasesController#show`: assign `@routine_plan_ended`, extension UI for routine lane, routes/actions analogous to menu extension. Green. `# [REQ-EXR-005]`.</step>
+  <step id="5" status="complete">Write failing specs for `ExerciseRoutines::PlanEnded` and `ExerciseRoutines::RepeatLastAssignment` mirroring `Phases::PlanEnded` / `Phases::RepeatLastPhaseAssignment`. Integrate on `PhasesController#show`: assign `@routine_plan_ended`, extension UI for routine lane, routes/actions analogous to menu extension. Green. `# [REQ-EXR-005]`.</step>
 
   <step id="6" status="pending">Write failing specs for REQ-EXR-004 parity: `/phase` renders routine assignment summary alongside menu; anchor PATCH still flashes &gt;3-day warning for shared anchor (existing behavior); ensure phase-start reminder visibility path accounts for routine lane (extend `PhaseStartInAppReminderVisible` or template sections as needed). Adjust mailer/view copy only if tests require. Green. `# [REQ-EXR-004]`.</step>
 

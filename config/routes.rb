@@ -33,8 +33,10 @@ Rails.application.routes.draw do
   resource :phase, only: %i[show update] do
     post :dismiss_reminder, on: :member
     post :repeat_last_assignment, on: :member
+    post :repeat_last_routine_assignment, on: :member
   end
   resources :phase_assignments, only: %i[new create edit update destroy]
+  resources :exercise_routine_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]
   namespace :admin do
     resources :recipes, only: [] do

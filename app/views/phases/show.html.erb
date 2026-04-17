@@ -12,15 +12,28 @@
   </div>
 <% end %>
 
-<% if @plan_ended %>
+<% if @menu_plan_ended %>
   <div class="mb-6 rounded border border-slate-400 bg-slate-50 px-4 py-3 text-slate-900" data-test="phase-plan-ended-banner" role="status" aria-live="polite">
-    <p class="font-medium mb-3"><%= t("phases.show.plan_ended_message") %></p>
+    <p class="font-medium mb-3"><%= t("phases.show.menu_plan_ended_message") %></p>
     <div class="flex flex-wrap gap-3 items-center">
       <%= button_to t("phases.show.repeat_last_assignment"),
                     repeat_last_assignment_phase_path,
                     method: :post,
                     class: "text-sm bg-slate-800 text-white px-3 py-1.5 rounded cursor-pointer hover:bg-slate-900 border-0" %>
       <%= link_to t("phases.show.add_week_range"), new_phase_assignment_path, class: "text-sm text-blue-600 underline" %>
+    </div>
+  </div>
+<% end %>
+
+<% if @routine_plan_ended %>
+  <div class="mb-6 rounded border border-slate-400 bg-slate-50 px-4 py-3 text-slate-900" data-test="phase-routine-plan-ended-banner" role="status" aria-live="polite">
+    <p class="font-medium mb-3"><%= t("phases.show.routine_plan_ended_message") %></p>
+    <div class="flex flex-wrap gap-3 items-center">
+      <%= button_to t("phases.show.repeat_last_routine_assignment"),
+                    repeat_last_routine_assignment_phase_path,
+                    method: :post,
+                    class: "text-sm bg-slate-800 text-white px-3 py-1.5 rounded cursor-pointer hover:bg-slate-900 border-0" %>
+      <%= link_to t("phases.show.add_routine_week_range"), new_exercise_routine_assignment_path, class: "text-sm text-blue-600 underline" %>
     </div>
   </div>
 <% end %>
@@ -39,6 +52,15 @@
     </p>
   <% elsif @week_index.present? %>
     <p class="text-gray-600"><%= t("phases.show.no_menu_for_week") %></p>
+  <% end %>
+
+  <% if @active_routine.present? %>
+    <p>
+      <%= t("phases.show.active_routine_label") %>
+      <%= link_to @active_routine.name, edit_exercise_routine_path(@active_routine), class: "text-blue-600 underline font-medium" %>
+    </p>
+  <% elsif @week_index.present? %>
+    <p class="text-gray-600"><%= t("phases.show.no_routine_for_week") %></p>
   <% end %>
 </section>
 
@@ -98,8 +120,43 @@
   <% end %>
 </section>
 
+<section class="mb-8">
+  <div class="flex items-center gap-4 mb-3">
+    <h2 class="text-lg font-semibold"><%= t("phases.show.routine_assignments_heading") %></h2>
+    <%= link_to t("phases.show.new_routine_assignment"), new_exercise_routine_assignment_path, class: "text-blue-600 underline text-sm" %>
+  </div>
+
+  <% if @routine_assignments.any? %>
+    <table class="border-collapse text-left text-sm">
+      <thead>
+        <tr>
+          <th class="border border-gray-200 px-2 py-1"><%= t("phases.show.table.routine") %></th>
+          <th class="border border-gray-200 px-2 py-1"><%= t("phases.show.table.weeks") %></th>
+          <th class="border border-gray-200 px-2 py-1"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @routine_assignments.each do |a| %>
+          <tr>
+            <td class="border border-gray-200 px-2 py-1"><%= a.exercise_routine.name %></td>
+            <td class="border border-gray-200 px-2 py-1"><%= a.start_week %>–<%= a.end_week %></td>
+            <td class="border border-gray-200 px-2 py-1">
+              <%= link_to t("phases.show.edit_routine_assignment"), edit_exercise_routine_assignment_path(a), class: "text-blue-600 underline" %>
+              <%= button_to t("phases.show.delete_routine_assignment"), exercise_routine_assignment_path(a), method: :delete, class: "text-red-600 bg-transparent border-0 underline cursor-pointer p-0 inline text-sm", form: { class: "inline", data: { turbo_confirm: t("phases.show.delete_routine_assignment_confirm") } } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-gray-600 text-sm"><%= t("phases.show.routine_assignments_empty") %></p>
+  <% end %>
+</section>
+
 <p>
   <%= link_to t("phases.show.back_home"), root_path, class: "text-blue-600 underline" %>
   ·
   <%= link_to t("phases.show.menus_link"), menus_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t("phases.show.exercise_routines_link"), exercise_routines_path, class: "text-blue-600 underline" %>
 </p>
