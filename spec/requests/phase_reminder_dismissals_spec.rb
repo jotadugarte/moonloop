@@ -13,7 +13,7 @@ RSpec.describe "Phase reminder dismiss-for-today", type: :request do
   it "persists the user local calendar day when dismissing" do
     madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 5, 10, 8, 0, 0)
     travel_to(madrid) do
-      post "/phase/dismiss_reminder"
+      post dismiss_reminder_phase_path
 
       expect(response).to redirect_to(phase_path)
       expect(flash[:notice]).to eq(I18n.t("phases.flash.reminder_dismissed"))
