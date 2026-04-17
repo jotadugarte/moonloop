@@ -16,7 +16,7 @@ es:
   my_day:
     flash:
       invalid_date: "La fecha no es válida."
-      future_date_not_allowed: "No podés elegir un día futuro."
+      future_date_not_allowed: "No puedes elegir un día futuro."
     show:
       page_title: "Mi Día — Moonloop"
       heading: "Mi Día"

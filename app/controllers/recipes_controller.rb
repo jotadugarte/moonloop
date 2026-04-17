@@ -50,7 +50,7 @@ class RecipesController < ApplicationController
   private
 
   def set_recipe
-    @recipe = Current.user.recipes.find(params[:id])
+    @recipe = Current.user.recipes.includes(image_attachment: :blob).find(params[:id])
   end
 
   def recipe_params

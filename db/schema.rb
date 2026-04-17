@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_190000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -99,6 +99,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_180000) do
     t.index ["menu_id"], name: "index_phase_assignments_on_menu_id"
     t.index ["user_id", "start_week", "end_week"], name: "index_phase_assignments_on_user_and_range"
     t.index ["user_id"], name: "index_phase_assignments_on_user_id"
+    t.check_constraint "end_week >= start_week", name: "phase_assignments_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "phase_assignments_start_week_gte_one"
   end
 
   create_table "phase_reminder_events", force: :cascade do |t|

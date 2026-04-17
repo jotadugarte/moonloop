@@ -1,6 +1,9 @@
 module ApplicationHelper
   # Raster images get a resized variant; SVG and other non-variable types use the original blob.
+  # Default +loading: lazy+ keeps the menu grid cheap; pass +loading: "eager"+ for above-the-fold heroes.
   def attachable_image_tag(attachment, resize_to_limit:, **image_options)
+    image_options = { loading: "lazy" }.merge(image_options)
+
     source =
       if attachment.variable?
         attachment.variant(resize_to_limit: resize_to_limit)
