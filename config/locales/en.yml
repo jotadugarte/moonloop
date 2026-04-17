@@ -68,6 +68,10 @@ en:
       invalid_status: "That status is not valid."
       invalid_request: "The form data is incomplete."
       could_not_save: "Could not save. Please try again."
+  public_recipes:
+    index:
+      title: "Public recipes — Moonloop"
+      heading: "Public recipes"
   sessions:
     new:
       title: "Sign in"
@@ -225,6 +229,8 @@ en:
               invalid: "is not a valid meal type"
             weekday:
               invalid: "must be between 0 (Sunday) and 6 (Saturday)"
+            recipe_id:
+              must_match_menu_owner: "must be a recipe from your account"
             base:
               content_required: "choose a recipe or enter a note"
   shared:

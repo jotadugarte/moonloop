@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resource  :profile, only: [ :edit, :update ]
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
+  resources :public_recipes, only: [ :index ]
   namespace :identity do
     resource :email,              only: [ :edit, :update ]
     resource :email_verification, only: [ :show, :create ]

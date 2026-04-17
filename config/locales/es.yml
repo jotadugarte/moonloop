@@ -43,6 +43,10 @@ es:
       invalid_status: "El estado no es válido."
       invalid_request: "Faltan datos del formulario."
       could_not_save: "No se pudo guardar. Reintentá."
+  public_recipes:
+    index:
+      title: "Recetas públicas — Moonloop"
+      heading: "Recetas públicas"
   sessions:
     new:
       title: "Iniciar sesión"
@@ -256,5 +260,7 @@ es:
               invalid: "no es un tipo de comida válido"
             weekday:
               invalid: "debe ser un número entre 0 (domingo) y 6 (sábado)"
+            recipe_id:
+              must_match_menu_owner: "debe ser una receta de tu cuenta"
             base:
               content_required: "elegí una receta o escribí una nota"
