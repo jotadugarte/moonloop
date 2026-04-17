@@ -3,56 +3,11 @@ module Menus
     before_action :set_menu
 
     def create
-      outcome = Menus::UpsertEntry.call(
-        user: Current.user,
-        menu: @menu,
-        weekday: menu_entry_params[:weekday],
-        meal_type: menu_entry_params[:meal_type],
-        recipe_id: menu_entry_params[:recipe_id],
-        freeform_text: menu_entry_params[:freeform_text]
-      )
-
-      if outcome == :cleared
-        @weekday = Integer(menu_entry_params[:weekday])
-        @meal_type = menu_entry_params[:meal_type].to_s
-        @entry = nil
-      else
-        @weekday = Integer(menu_entry_params[:weekday])
-        @meal_type = menu_entry_params[:meal_type].to_s
-        @entry = @menu.menu_entries.find_by!(weekday: @weekday, meal_type: @meal_type)
-      end
-
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            slot_frame_id(@menu, @weekday, @meal_type),
-            partial: "menus/slot",
-            locals: { menu: @menu, weekday: @weekday, meal_type: @meal_type, entry: @entry }
-          )
-        end
-        format.html { redirect_to edit_menu_path(@menu) }
-      end
+      run_upsert
+      respond_after_upsert
     rescue ActiveRecord::RecordInvalid => e
-      @weekday = Integer(menu_entry_params[:weekday])
-      @meal_type = menu_entry_params[:meal_type].to_s
-      @entry =
-        if e.record.is_a?(MenuEntry)
-          e.record
-        else
-          @menu.menu_entries.find_by(weekday: @weekday, meal_type: @meal_type)
-        end
-
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            slot_frame_id(@menu, @weekday, @meal_type),
-            partial: "menus/slot",
-            locals: { menu: @menu, weekday: @weekday, meal_type: @meal_type, entry: @entry },
-            status: :unprocessable_entity
-          )
-        end
-        format.html { redirect_to edit_menu_path(@menu), alert: t("menus.entries.flash.could_not_save") }
-      end
+      assign_invalid_entry(e)
+      respond_after_upsert(status: :unprocessable_entity)
     end
 
     def clear
@@ -63,13 +18,7 @@ module Menus
       entry&.destroy!
 
       respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            slot_frame_id(@menu, weekday, meal_type),
-            partial: "menus/slot",
-            locals: { menu: @menu, weekday: weekday, meal_type: meal_type, entry: nil }
-          )
-        end
+        format.turbo_stream { render_turbo_slot(weekday, meal_type, nil) }
         format.html { redirect_to edit_menu_path(@menu) }
       end
     end
@@ -86,6 +35,70 @@ module Menus
 
     def slot_frame_id(menu, weekday, meal_type)
       helpers.dom_id(menu, "slot_#{weekday}_#{meal_type}")
+    end
+
+    def run_upsert
+      outcome = Menus::UpsertEntry.call(**upsert_args)
+      assign_slot_vars(outcome)
+    end
+
+    def upsert_args
+      {
+        user: Current.user,
+        menu: @menu,
+        weekday: menu_entry_params[:weekday],
+        meal_type: menu_entry_params[:meal_type],
+        recipe_id: menu_entry_params[:recipe_id],
+        freeform_text: menu_entry_params[:freeform_text]
+      }
+    end
+
+    def assign_slot_vars(outcome)
+      @weekday = Integer(menu_entry_params[:weekday])
+      @meal_type = menu_entry_params[:meal_type].to_s
+      @entry = outcome == :cleared ? nil : find_saved_entry
+    end
+
+    def find_saved_entry
+      @menu.menu_entries.find_by!(weekday: @weekday, meal_type: @meal_type)
+    end
+
+    def assign_invalid_entry(error)
+      @weekday = Integer(menu_entry_params[:weekday])
+      @meal_type = menu_entry_params[:meal_type].to_s
+      @entry = invalid_entry_from(error)
+    end
+
+    def invalid_entry_from(error)
+      return error.record if error.record.is_a?(MenuEntry)
+
+      @menu.menu_entries.find_by(weekday: @weekday, meal_type: @meal_type)
+    end
+
+    def respond_after_upsert(status: nil)
+      respond_to do |format|
+        format.turbo_stream { render_turbo_slot(@weekday, @meal_type, @entry, status) }
+        format.html { redirect_slot_html(status) }
+      end
+    end
+
+    def render_turbo_slot(weekday, meal_type, entry, status = nil)
+      stream = turbo_stream.replace(
+        slot_frame_id(@menu, weekday, meal_type),
+        partial: "menus/slot",
+        locals: { menu: @menu, weekday: weekday, meal_type: meal_type, entry: entry }
+      )
+      return render(turbo_stream: stream) if status.blank?
+
+      render turbo_stream: stream, status: status
+    end
+
+    def redirect_slot_html(status)
+      if status
+        redirect_to edit_menu_path(@menu), alert: t("menus.entries.flash.could_not_save")
+      else
+        redirect_to edit_menu_path(@menu)
+      end
     end
   end
 end

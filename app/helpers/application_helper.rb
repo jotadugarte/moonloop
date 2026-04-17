@@ -1,4 +1,11 @@
 module ApplicationHelper
+  # ARIA for server-rendered validation summaries (WCAG: role="alert" on list + per-field invalid/describedby).
+  def aria_for_field(model, attr, error_summary_id)
+    return {} if model.errors[attr].blank?
+
+    { invalid: true, describedby: error_summary_id }
+  end
+
   # Raster images get a resized variant; SVG and other non-variable types use the original blob.
   # Default +loading: lazy+ keeps the menu grid cheap; pass +loading: "eager"+ for above-the-fold heroes.
   def attachable_image_tag(attachment, resize_to_limit:, **image_options)

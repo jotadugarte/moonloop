@@ -1,4 +1,5 @@
 <% frame_id = dom_id(menu, "slot_#{weekday}_#{meal_type}") %>
+<% slot_err_id = dom_id(menu, "entry_errors_#{weekday}_#{meal_type}") %>
 <% recipes = menu.user.recipes.order(:name) %>
 <% allow_freeform = Current.user.allow_menu_freeform %>
 
@@ -28,7 +29,7 @@
       <%= f.hidden_field :meal_type, value: meal_type %>
 
       <% if entry&.errors&.any? %>
-        <ul class="text-red-600 text-sm mb-2 list-disc pl-5">
+        <ul id="<%= slot_err_id %>" class="text-red-600 text-sm mb-2 list-disc pl-5" role="alert">
           <% entry.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
@@ -42,13 +43,15 @@
               :id,
               :name,
               { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
-              {} %>
+              { aria: aria_for_field(f.object, :recipe_id, slot_err_id) } %>
       </div>
 
       <% if allow_freeform %>
         <div>
           <%= f.label :freeform_text, t("menus.slots.freeform_label") %>
-          <%= f.text_field :freeform_text, value: entry&.freeform_text %>
+          <%= f.text_field :freeform_text,
+                value: entry&.freeform_text,
+                aria: aria_for_field(f.object, :freeform_text, slot_err_id) %>
         </div>
       <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">

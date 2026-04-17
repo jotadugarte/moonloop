@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Phase 4 — **Alimentación**: weekly **menus** (sparse grid + Turbo slot updates), **recipes** with Active Storage images and public sharing, **phase plan** (anchor date, week assignments, active menu resolution), **phase start reminders** (Solid Queue sweep + in-app banner with dismiss-for-today), **plan-ended** extension UX (repeat last assignment or new range), admin moderation to revoke public sharing on menus/recipes, Mi Día shortcut to the phase area, and REQ coverage for `REQ-MENU-001`–`REQ-MENU-005` (see `docs/core/SPEC.md`).
+
 ### Changed
 
 - Habits: removed `weekly` as a `frequency_type`; “once per week” is stored as `weekdays` with a one-element array. Data migration copies legacy rows using a **nested frozen resolver** (no dependency on `app/` autoload). `Habits::LegacyWeeklyWeekdayResolver` mirrors that logic for tests and tooling (REQ-HAB-005). `Habits::NextOccurrence` covers `daily`, `weekdays`, `every_x_days`, and `monthly`, aligned with `Habits::DueOnDate` for schedule types used in Mi Día.

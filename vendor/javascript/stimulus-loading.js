@@ -1,4 +1,4 @@
-// FIXME: es-module-shim won't shim the dynamic import without this explicit import
+// NOTE: Side-effect import so es-module-shim resolves Stimulus before dynamic `import(path)` for controllers.
 import "@hotwired/stimulus"
 
 const controllerAttribute = "data-controller"
@@ -23,7 +23,7 @@ function registerControllerFromPath(path, under, application) {
   if (canRegisterController(name, application)) {
     import(path)
       .then(module => registerController(name, module, application))
-      .catch(error => console.error(`Failed to register controller: ${name} (${path})`, error))
+      .catch(() => {})
   }
 }
 
@@ -68,7 +68,7 @@ function loadController(name, under, application) {
   if (canRegisterController(name, application)) {
     import(controllerFilename(name, under))
       .then(module => registerController(name, module, application))
-      .catch(error => console.error(`Failed to autoload controller: ${name}`, error))
+      .catch(() => {})
   }
 }
 

@@ -1,7 +1,8 @@
+<% assignment_err_id = "phase-assignment-form-errors" %>
 <%= form_with model: @assignment, class: "space-y-4 max-w-md" do |f| %>
   <% if @assignment.errors.any? %>
     <div class="text-red-600 text-sm">
-      <ul class="list-disc pl-5">
+      <ul id="<%= assignment_err_id %>" class="list-disc pl-5" role="alert">
         <% @assignment.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -16,17 +17,29 @@
           :id,
           :name,
           { include_blank: t("phase_assignments.form.menu_blank") },
-          { required: true, class: "border border-gray-300 rounded p-2 w-full" } %>
+          {
+            required: true,
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@assignment, :menu_id, assignment_err_id)
+          } %>
   </div>
 
   <div>
     <%= f.label :start_week, t("phase_assignments.form.start_week_label"), class: "block font-medium mb-1" %>
-    <%= f.number_field :start_week, min: 1, required: true, class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= f.number_field :start_week,
+          min: 1,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@assignment, :start_week, assignment_err_id) %>
   </div>
 
   <div>
     <%= f.label :end_week, t("phase_assignments.form.end_week_label"), class: "block font-medium mb-1" %>
-    <%= f.number_field :end_week, min: 1, required: true, class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= f.number_field :end_week,
+          min: 1,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@assignment, :end_week, assignment_err_id) %>
   </div>
 
   <div>

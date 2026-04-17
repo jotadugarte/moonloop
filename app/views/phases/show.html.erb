@@ -3,7 +3,7 @@
 <h1 class="text-2xl font-bold mb-4"><%= t("phases.show.heading") %></h1>
 
 <% if @phase_start_in_app_reminder %>
-  <div class="mb-6 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900" data-test="phase-start-reminder-banner" role="status">
+  <div class="mb-6 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900" data-test="phase-start-reminder-banner" role="alert">
     <p class="font-medium mb-2"><%= t("phases.show.phase_start_reminder_banner") %></p>
     <%= button_to t("phases.show.phase_start_reminder_dismiss"),
                   dismiss_reminder_phase_path,
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if @plan_ended %>
-  <div class="mb-6 rounded border border-slate-400 bg-slate-50 px-4 py-3 text-slate-900" data-test="phase-plan-ended-banner" role="status">
+  <div class="mb-6 rounded border border-slate-400 bg-slate-50 px-4 py-3 text-slate-900" data-test="phase-plan-ended-banner" role="status" aria-live="polite">
     <p class="font-medium mb-3"><%= t("phases.show.plan_ended_message") %></p>
     <div class="flex flex-wrap gap-3 items-center">
       <%= button_to t("phases.show.repeat_last_assignment"),
@@ -44,9 +44,10 @@
 
 <section class="mb-8 max-w-md">
   <h2 class="text-lg font-semibold mb-2"><%= t("phases.show.anchor_heading") %></h2>
+  <% phase_user_err_id = "phase-user-form-errors" %>
   <%= form_with model: @user, url: phase_path, method: :patch, class: "space-y-3" do |f| %>
     <% if @user.errors.any? %>
-      <ul class="text-red-600 text-sm list-disc pl-5">
+      <ul id="<%= phase_user_err_id %>" class="text-red-600 text-sm list-disc pl-5" role="alert">
         <% @user.errors.each do |err| %>
           <li><%= err.full_message %></li>
         <% end %>
@@ -54,7 +55,9 @@
     <% end %>
     <div>
       <%= f.label :phase_one_starts_on, t("phases.show.anchor_label"), class: "block font-medium mb-1" %>
-      <%= f.date_field :phase_one_starts_on, class: "border border-gray-300 rounded p-2 w-full" %>
+      <%= f.date_field :phase_one_starts_on,
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :phase_one_starts_on, phase_user_err_id) %>
     </div>
     <div>
       <%= f.submit t("phases.show.anchor_submit"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
