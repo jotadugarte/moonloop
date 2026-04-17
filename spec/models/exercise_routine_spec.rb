@@ -32,8 +32,12 @@ RSpec.describe ExerciseRoutine, type: :model do
 
   # [REQ-EXR-001]
   it "rejects a second routine with the same normalized name for the same user" do
-    described_class.create!(user: user, name: "Fuerza")
+    first = described_class.new(user: user, name: "Fuerza")
+    first.exercise_routine_lines.build(weekday: 0, position: 0, label: "Tirón")
+    first.save!
+
     dup = described_class.new(user: user, name: "  fuerza  ")
+    dup.exercise_routine_lines.build(weekday: 1, position: 0, label: "Empuje")
     expect(dup).not_to be_valid
     expect(dup.errors[:name]).to be_present
   end
