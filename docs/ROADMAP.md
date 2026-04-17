@@ -42,7 +42,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ### Phase 5 — Exercise Routines
 20. [ ] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — Depends on: Phase 2
 21. [ ] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — Depends on: Phase 4 (#15–19), #20
-22. [ ] Surface active routine in "Mi Día" linked to the Ejercicio habit (REQ-EXR-003) — Depends on: #20, Phase 3 #11
+22. [ ] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — Depends on: #20, Phase 3 #11
 
 ### Phase 6 — Weight Log
 23. [ ] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — Depends on: Phase 1
