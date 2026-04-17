@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_203000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,42 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_190000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "exercise_routine_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.integer "exercise_routine_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["exercise_routine_id"], name: "index_exercise_routine_assignments_on_exercise_routine_id"
+    t.index ["user_id", "start_week", "end_week"], name: "index_exercise_routine_assignments_on_user_and_range"
+    t.index ["user_id"], name: "index_exercise_routine_assignments_on_user_id"
+    t.check_constraint "end_week >= start_week", name: "exercise_routine_assignments_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "exercise_routine_assignments_start_week_gte_one"
+  end
+
+  create_table "exercise_routine_lines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "exercise_routine_id", null: false
+    t.string "label", limit: 500, null: false
+    t.text "notes"
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.integer "weekday", null: false
+    t.index ["exercise_routine_id", "weekday", "position"], name: "index_exercise_routine_lines_on_routine_weekday_position", unique: true
+    t.index ["exercise_routine_id"], name: "index_exercise_routine_lines_on_exercise_routine_id"
+  end
+
+  create_table "exercise_routines", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "name_normalized"], name: "index_exercise_routines_on_user_and_name_normalized", unique: true
+    t.index ["user_id"], name: "index_exercise_routines_on_user_id"
   end
 
   create_table "global_habit_templates", force: :cascade do |t|
@@ -184,6 +220,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_190000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "exercise_routine_assignments", "exercise_routines"
+  add_foreign_key "exercise_routine_assignments", "users"
+  add_foreign_key "exercise_routine_lines", "exercise_routines"
+  add_foreign_key "exercise_routines", "users"
   add_foreign_key "habit_categories", "users"
   add_foreign_key "habit_completions", "user_habits"
   add_foreign_key "menu_entries", "menus"

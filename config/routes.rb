@@ -18,6 +18,12 @@ Rails.application.routes.draw do
   resource  :profile, only: [ :edit, :update ]
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
+  resources :exercise_routines, only: %i[index create edit update destroy] do
+    member do
+      get :confirm_destroy
+      post :duplicate
+    end
+  end
   resources :menus, only: [ :index, :create, :edit ] do
     resources :menu_entries, only: [ :create ], module: :menus do
       delete :clear, on: :collection
@@ -27,8 +33,10 @@ Rails.application.routes.draw do
   resource :phase, only: %i[show update] do
     post :dismiss_reminder, on: :member
     post :repeat_last_assignment, on: :member
+    post :repeat_last_routine_assignment, on: :member
   end
   resources :phase_assignments, only: %i[new create edit update destroy]
+  resources :exercise_routine_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]
   namespace :admin do
     resources :recipes, only: [] do

@@ -55,10 +55,67 @@
                   method: :delete %>
           <% end %>
         </fieldset>
+        <% if habit.global_habit_template&.code == "fitness_exercise" %>
+          <div class="my-day-exercise-inline mt-3 pl-2 border-l-2 border-gray-300" data-test="my-day-exercise-inline">
+            <p class="text-sm font-medium text-gray-900"><%= t("my_day.show.exercise_inline_heading") %></p>
+            <% if @active_exercise_routine %>
+              <p class="text-sm text-gray-800"><%= @active_exercise_routine.name %></p>
+              <% if @exercise_preview_lines.any? %>
+                <ul class="list-disc list-inside text-sm text-gray-700 my-1">
+                  <% @exercise_preview_lines.each do |line| %>
+                    <li><%= line.label %></li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-sm text-gray-600"><%= t("my_day.show.exercise_no_lines_this_day") %></p>
+              <% end %>
+              <p class="mt-1">
+                <%= link_to t("my_day.show.exercise_full_week_link"),
+                      edit_exercise_routine_path(@active_exercise_routine),
+                      class: "text-blue-600 underline text-sm font-medium",
+                      data: { turbo_action: "advance" } %>
+              </p>
+            <% else %>
+              <p class="text-sm text-gray-600"><%= t("my_day.show.exercise_no_routine_this_week") %></p>
+            <% end %>
+          </div>
+        <% end %>
       </li>
     <% end %>
   </ul>
 <% end %>
+
+<% if @fitness_exercise_habit && !@fitness_exercise_habit.active? %>
+  <section
+    class="mt-6 p-4 rounded border border-gray-200 bg-gray-50 opacity-80"
+    data-test="my-day-exercise-inactive"
+    aria-disabled="true">
+    <h2 class="text-base font-semibold text-gray-700"><%= t("my_day.show.exercise_inactive_heading") %></h2>
+    <p class="text-sm text-gray-600 mt-1"><%= t("my_day.show.exercise_inactive_body") %></p>
+    <p class="mt-2">
+      <%= link_to t("my_day.show.exercise_inactive_cta"),
+            user_habits_path,
+            class: "text-blue-600 underline text-sm font-medium",
+            data: { turbo_action: "advance" } %>
+    </p>
+  </section>
+<% end %>
+
+<section class="mt-8 pt-6 border-t border-gray-200" data-test="my-day-exercise-shortcut">
+  <h2 class="text-lg font-semibold mb-2"><%= t("my_day.show.exercise_shortcut_heading") %></h2>
+  <p class="text-gray-700 text-sm mb-2"><%= t("my_day.show.exercise_shortcut_intro") %></p>
+  <div class="flex flex-wrap gap-x-4 gap-y-1">
+    <%= link_to t("my_day.show.exercise_shortcut_routines"),
+          exercise_routines_path,
+          class: "text-blue-600 underline font-medium",
+          data: { turbo_action: "advance" } %>
+    <span class="text-gray-400" aria-hidden="true">·</span>
+    <%= link_to t("my_day.show.exercise_shortcut_phase_plan"),
+          phase_path,
+          class: "text-blue-600 underline font-medium",
+          data: { turbo_action: "advance" } %>
+  </div>
+</section>
 
 <section class="mt-8 pt-6 border-t border-gray-200" data-test="my-day-phases-shortcut">
   <h2 class="text-lg font-semibold mb-2"><%= t("my_day.show.phases_shortcut_heading") %></h2>

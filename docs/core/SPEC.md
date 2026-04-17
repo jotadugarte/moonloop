@@ -14,7 +14,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
-| `EXR` | Exercise routines — **planned** |
+| `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
 | `RPT` | Reporting — **planned** |
 
 ---
@@ -50,6 +50,9 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
+| Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). | `ExerciseRoutine` (name may match implementation) |
+| Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
+| Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
 | Phase reminder event | Idempotent record that a phase-start reminder was processed for a given **local** calendar day and channel kind. | `PhaseReminderEvent` |
 
 ---
@@ -57,7 +60,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 ## Core entities and relationships
 
 - **User** (`users`)
-  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`
+  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
   - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
   - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)
@@ -140,6 +143,11 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
 | REQ-MENU-004 | If anchor is more than three **local** days away, flash warning; **reminder** on phase-start day: in-app banner (dismiss for today) and optional email; independent channel prefs; idempotent `phase_reminder_events` and daily sweep job (`config/recurring.yml`). | Implemented |
 | REQ-MENU-005 | When current week is **past** all assignment ranges, show extension prompt; **repeat last block** (same menu and span) or link to **add a new range**. | Implemented |
+| REQ-EXR-001 | **Exercise routine content model:** user-owned weekly routine; ordered lines per weekday (0–6); CRUD + duplicate; delete with cascade of week-range assignments after confirmation. See **Acceptance criteria — REQ-EXR-001** below. | Implemented |
+| REQ-EXR-002 | **Program weeks → routine:** same anchor and `Phases::WeekNumber` as menus; `exercise_routine_assignments` with non-overlapping ranges per user; resolve active routine; phase plan UI on `/phase`. See **Acceptance criteria — REQ-EXR-002** below. | Implemented |
+| REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
+| REQ-EXR-004 | **Phase alerts (routine lane):** shared anchor warning; phase-start reminders coherent with menus; routine lane visible on `/phase`. See **Acceptance criteria — REQ-EXR-004** below. | Implemented |
+| REQ-EXR-005 | **Routine plan extension:** when current week is past all routine ranges, extension prompt; repeat last routine block or add new range. See **Acceptance criteria — REQ-EXR-005** below. | Implemented |
 
 ---
 
@@ -149,7 +157,6 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-EXR-001 … REQ-EXR-003 | Exercise routines and linkage to “Mi Día” — per roadmap Phase 5. | Phase 5 |
 | REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
 | REQ-WGT-003 | Weight + BMI history view (progression over time). | Phase 6 |
 | REQ-RPT-001 … REQ-RPT-003 | Habit fulfillment, streak, and weight charts — per roadmap Phase 7. | Phase 7 |
@@ -162,6 +169,72 @@ These rules define whether a habit is **due** on a given **local** calendar day 
 - **`weekdays`** — Due on listed weekdays (0 = Sunday … 6 = Saturday). The **first** due day is the first matching weekday **on or after** `activation_date`.
 - **`every_x_days`** — `activation_date` is the **first** due day; thereafter due when `(local_date - activation_date) % interval == 0` (civil days in the user’s timezone). Not due on any local date **before** `activation_date`.
 - **`monthly`** — Due on the anchor day-of-month from `activation_date`, with **end-of-month clamp** when the anchor does not exist in a month (same idea as `REQ-HAB-009` for `NextOccurrence`). The calendar month that contains `activation_date` counts toward scheduling.
+
+### Acceptance criteria — exercise routines (Phase 5)
+
+These criteria are **testable**; implementation may use different model/table names if behavior matches. **Product decisions** for Phase 5 are locked in **Decisions log — REQ-EXR** below.
+
+#### REQ-EXR-001 — Weekly routine content
+
+1. An authenticated user can **create** a named exercise routine owned by themselves; **name** is required, normalized (strip whitespace), and **unique per user** in the same sense as **`Menu`** (case-insensitive / normalized uniqueness — mirror `menus` rules).
+2. For each **weekday** 0–6, planned content is an **ordered list** of lines (each line is a persisted row with **`position`** ordering within that weekday). Lines may include a primary label and optional notes per implementation; **individual weekdays may have zero lines** as long as the routine is not globally empty (see (3)).
+3. A routine is **invalid to save** if it would be **totally empty**: there must be **at least one line item** on **at least one** weekday (validation error on create/update).
+4. **Performance / limits:** use **reasonable defaults** aligned with normal Rails + SQLite usage (e.g. sensible string length per line, optional cap on lines per day to prevent abuse); exact numbers live in implementation and migrations but must not allow pathological payloads.
+5. The user can **list** all their routines, **edit** a routine, **delete** a routine, and **duplicate** an existing routine into a **new** routine (new name, copy of structure/content), same-owner only. **Delete with assignments (Q12):** deletion **is allowed**; before committing, the UI shows a **warning** that **all week-range assignments** referencing this routine will be **removed automatically**; on confirmation, the system deletes those assignment rows **then** the routine (single logical operation, transactional).
+6. All user-visible strings use I18n (`es` default, `en` available).
+7. Authorization: a user cannot read or mutate another user’s routines (scoped by `Current.user` or equivalent).
+
+#### REQ-EXR-002 — Week ranges → routine (same system as menus)
+
+1. **Same anchor:** program week index for routines uses **`users.phase_one_starts_on`** and the user’s **current** IANA timezone, via the same week-index semantics as **`Phases::WeekNumber`** (and the same “no index before anchor” rule as menus).
+2. **Assignments:** the user can define one or more **contiguous inclusive** ranges `[start_week, end_week]` (integers ≥ 1, `end_week ≥ start_week`) each pointing to **one** of their exercise routines; **ranges must not overlap** with each other for that user’s **routine** assignments (gaps between ranges are allowed).
+3. **Independence:** routine week assignments do **not** share a table with menu `phase_assignments` and do **not** participate in menu overlap validation; the same week index may resolve to both an active menu and an active exercise routine.
+4. **Resolve active routine:** given a `week_index` (or derived from a local date), the system can resolve **zero or one** active routine for that user (first matching range in a deterministic order, e.g. ascending `start_week`, mirroring menu resolution).
+5. Validations mirror `PhaseAssignment` quality bar: self-overlap on create/update must not false-positive unsaved records (DB-scoped overlap check).
+6. **Phase plan surface:** CRUD for **routine week-range assignments** uses the **same phase plan UX** as menu assignments — i.e. integrated on **`GET /phase`** (or the same “phase” flow the app uses for `phase_assignments`), not a separate standalone assignment app.
+
+#### REQ-EXR-003 — Mi Día linkage and shortcuts
+
+1. **Habit row (Ejercicio):** When the user’s `UserHabit` for **`fitness_exercise`** exists **and** is **due** on the selected Mi Día date per `REQ-DAY-001`, the UI shows the **active routine** context for that week (preview / links). Identification is by **`GlobalHabitTemplate#code == "fitness_exercise"`**, not display name.
+2. **Only when the habit is due:** the **inline** routine preview / habit-row integration appears **only** on days when Ejercicio is in the due list (not on days when it is not due).
+3. **Global shortcut:** Mi Día always exposes a **global** Turbo-friendly shortcut to the exercise routine / phase plan entry points (same family as `data-test="my-day-phases-shortcut"`), **even if** the user has **no** `fitness_exercise` habit row (deleted template, etc.).
+4. **Inactive Ejercicio habit:** if the `fitness_exercise` habit exists but is **inactive**, show the routine-related UI in a **disabled** state that explains reactivation (encourage the user to turn the habit back on); do not pretend the habit is active.
+5. **Preview + week:** Mi Día shows what applies to **that calendar day** within the active routine **and** provides a link to view the **full week** layout for the active routine when relevant.
+6. **Turbo:** links use patterns consistent with existing shortcuts (`turbo_action: "advance"` where appropriate).
+7. **Navigation beyond Mi Día:** the user can reach exercise routine management and the phase plan from **home** (or primary nav), not only from Mi Día.
+8. There is a discoverable path from the routine/plan area back to Mi Día (navigation symmetry with menus/phases as far as layout allows).
+
+#### REQ-EXR-004 — Phase alerts (parity REQ-MENU-004, routine lane)
+
+1. **Shared anchor:** The same **`phase_one_starts_on`** rules as **REQ-MENU-003** / **REQ-MENU-004** apply to the overall program (one anchor for both menu and routine week math).
+2. **Warning:** If the user sets or changes the anchor to more than **three local days** in the future, show the same class of **flash warning** as for menus (REQ-MENU-004).
+3. **Reminders:** Phase-start **in-app** and **email** behavior (REQ-MENU-004) must remain coherent when the user has **routine** assignments: the `/phase` experience makes the **routine** lane visible alongside the menu lane so the user does not rely only on menu rows to understand the program. (Reuse existing reminder jobs/events where possible; extend copy or sections only as needed so routines are not omitted.)
+
+#### REQ-EXR-005 — Routine plan extension (parity REQ-MENU-005)
+
+1. **Plan ended (routines only):** When the current **program week index** is **greater than** the maximum `end_week` among the user’s **exercise routine week-range assignments** (and at least one assignment exists), treat the **routine** plan as ended — mirror **REQ-MENU-005** semantics for the menu lane (`Phases::PlanEnded` pattern).
+2. **Prompt:** Show an extension prompt for the **routine** lane: user can **repeat the last contiguous routine assignment block** (same routine and span as the last block) or **add a new week range** mapped to a routine.
+3. **Service parity:** Implement the analogue of **`Phases::RepeatLastPhaseAssignment`** for routine assignments (new service under `ExerciseRoutines::` or `Phases::`, consistent with SYSTEM_ARCHITECTURE).
+
+#### Decisions log — REQ-EXR (Phase 5, locked)
+
+| ID | Decision |
+|----|----------|
+| Q1 | Content per weekday: **ordered list** of lines with `position`. |
+| Q2 | **No** routine may be saved **completely empty** (≥1 line on ≥1 weekday). |
+| Q3 | Lengths/counts: **reasonable implementation limits** (standard Rails/SQLite practice); no arbitrary product number required in SPEC. |
+| Q4 | **Global shortcut** to routines/plan always on Mi Día even without `fitness_exercise` habit. |
+| Q5 | **Inline** habit-row integration **only when Ejercicio is due** that day. |
+| Q6 | If Ejercicio exists but is **inactive**: show routine block **disabled** + message to reactivate. |
+| Q7 | Routine **week-range assignments** are edited on the **phase plan** (`/phase` family), alongside menu phase assignments. |
+| Q8 | **Public sharing** of routines (like menus/recipes): **not** Phase 5 — see **Backlog** in `docs/ROADMAP.md`. |
+| Q9 | **Reuse** existing phase-assignment UX for routine ranges. |
+| Q10 | Mi Día: day preview **plus** link to **full week** view for the active routine. |
+| Q11 | **Parity with menus:** **REQ-MENU-004**-style alerts/reminders and **REQ-MENU-005**-style plan-ended extension apply to the **routine** lane — see **REQ-EXR-004** and **REQ-EXR-005**. |
+| Q12 | **Delete routine** when week-range assignments exist: **allowed**; user sees a **prior warning** that assignments will be **removed automatically**; on confirm, system **deletes those ranges then the routine** (transactional). |
+| Q13 | Routine **name uniqueness** per user: **same rules as `Menu`**. |
+| Q14 | User can **duplicate** a routine (copy) into a new owned routine. |
+| Q15 | Entry points from **home** / primary navigation, not only Mi Día. |
 
 ---
 
@@ -183,6 +256,7 @@ Feature-specific docs can be linked here as they are written, for example:
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
 - Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
+- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**. See **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file.
 
 ---
 

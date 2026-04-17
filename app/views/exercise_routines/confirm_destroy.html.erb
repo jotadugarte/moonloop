@@ -1,0 +1,7 @@
+<h1><%= t(".title") %></h1>
+
+<p><%= t(".warning_html", count: @assignment_count).html_safe %></p>
+
+<%= button_to t(".confirm_submit"), exercise_routine_path(@routine), method: :delete %>
+
+<p><%= link_to t(".cancel"), exercise_routines_path %></p>

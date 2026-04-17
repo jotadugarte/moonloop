@@ -24,6 +24,14 @@ class PhasesController < ApplicationController
     end
   end
 
+  def repeat_last_routine_assignment
+    if ExerciseRoutines::RepeatLastAssignment.call(user: @user)
+      redirect_to phase_path, notice: t("phases.flash.repeat_last_routine_assignment_created")
+    else
+      redirect_to phase_path, alert: t("phases.flash.repeat_last_routine_assignment_nothing_to_repeat")
+    end
+  end
+
   def dismiss_reminder
     tz = Time.find_zone(@user.timezone)
     local_today = tz&.today || Time.zone.today
@@ -41,9 +49,12 @@ class PhasesController < ApplicationController
   def load_phase_dashboard
     @week_index = Phases::WeekNumber.today_for(@user)
     @active_menu = Phases::ResolveActiveMenu.call(user: @user, week_index: @week_index)
+    @active_routine = ExerciseRoutines::ResolveActiveRoutine.call(user: @user, week_index: @week_index)
     @assignments = @user.phase_assignments.includes(:menu).order(:start_week)
+    @routine_assignments = @user.exercise_routine_assignments.includes(:exercise_routine).order(:start_week)
     @phase_start_in_app_reminder = Phases::PhaseStartInAppReminderVisible.call(user: @user)
-    @plan_ended = Phases::PlanEnded.call(user: @user, week_index: @week_index)
+    @menu_plan_ended = Phases::PlanEnded.call(user: @user, week_index: @week_index)
+    @routine_plan_ended = ExerciseRoutines::PlanEnded.call(user: @user, week_index: @week_index)
   end
 
   def redirect_after_phase_update

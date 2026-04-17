@@ -1,4 +1,14 @@
 module ApplicationHelper
+  def exercise_routine_weekday_options_for_select
+    I18n.t("date.day_names").each_with_index.map { |name, i| [ name, i ] }
+  end
+
+  def exercise_routine_form_errors?(routine)
+    return true if routine.errors.any?
+
+    routine.exercise_routine_lines.any? { |line| line.errors.any? }
+  end
+
   # ARIA for server-rendered validation summaries (WCAG: role="alert" on list + per-field invalid/describedby).
   def aria_for_field(model, attr, error_summary_id)
     return {} if model.errors[attr].blank?

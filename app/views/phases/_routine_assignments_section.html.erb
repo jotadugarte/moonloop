@@ -1,0 +1,45 @@
+<section class="mb-8" data-test="phase-routine-assignments-section">
+  <div class="flex items-center gap-4 mb-3">
+    <h2 class="text-lg font-semibold"><%= t("phases.show.routine_assignments_heading") %></h2>
+    <%= link_to t("phases.show.new_routine_assignment"), new_exercise_routine_assignment_path,
+          class: "text-blue-600 underline text-sm",
+          data: { turbo_frame: "_top" } %>
+  </div>
+
+  <% if routine_assignments.any? %>
+    <table class="border-collapse text-left text-sm">
+      <thead>
+        <tr>
+          <th class="border border-gray-200 px-2 py-1"><%= t("phases.show.table.routine") %></th>
+          <th class="border border-gray-200 px-2 py-1"><%= t("phases.show.table.weeks") %></th>
+          <th class="border border-gray-200 px-2 py-1"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% routine_assignments.each do |a| %>
+          <tr>
+            <td class="border border-gray-200 px-2 py-1"><%= a.exercise_routine.name %></td>
+            <td class="border border-gray-200 px-2 py-1"><%= a.start_week %>–<%= a.end_week %></td>
+            <td class="border border-gray-200 px-2 py-1">
+              <%= link_to t("phases.show.edit_routine_assignment"), edit_exercise_routine_assignment_path(a),
+                    class: "text-blue-600 underline",
+                    data: { turbo_frame: "_top" } %>
+              <%= button_to t("phases.show.delete_routine_assignment"), exercise_routine_assignment_path(a),
+                    method: :delete,
+                    class: "text-red-600 bg-transparent border-0 underline cursor-pointer p-0 inline text-sm",
+                    form: {
+                      class: "inline",
+                      data: {
+                        turbo_confirm: t("phases.show.delete_routine_assignment_confirm"),
+                        turbo_frame: "_top"
+                      }
+                    } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-gray-600 text-sm"><%= t("phases.show.routine_assignments_empty") %></p>
+  <% end %>
+</section>

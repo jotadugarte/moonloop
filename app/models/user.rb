@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :habit_categories, dependent: :destroy
   has_many :user_habits, dependent: :destroy
   has_many :menus, dependent: :destroy
+  has_many :exercise_routines, dependent: :destroy
+  has_many :exercise_routine_assignments, dependent: :destroy
   has_many :recipes, dependent: :destroy
   has_many :phase_assignments, dependent: :destroy
   has_many :phase_reminder_events, dependent: :destroy

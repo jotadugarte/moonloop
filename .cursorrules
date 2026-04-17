@@ -132,6 +132,8 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 10. **Idempotent Catalog Seeds:** Seeds for global catalog models (e.g. `Habit`, `Phase`, `Exercise`) MUST be idempotent. Use `Model.find_or_create_by!(key: attrs[:key]) { |m| m.attr = val }` — the block executes only on creation, never on find, guaranteeing safe re-runs in all environments.
 11. **User habit `frequency_type` (Moonloop):** Allowed values are `daily`, `weekdays`, `every_x_days`, and `monthly` only. Do **not** add or reintroduce `weekly`. “Once per week on weekday D” is stored as `weekdays` with `frequency_params["weekdays"]` containing **one** integer in `0..6`. Full rules and REQ traceability: `docs/core/SPEC.md` (REQ-HAB-005). Data migrations that rewrite legacy `weekly` rows keep frozen logic in `db/migrate` per `docs/core/SYSTEM_ARCHITECTURE.md`.
 12. **Habit completions / Mi Día (Moonloop):** Create or clear persisted completion rows only through **`Habits::RecordCompletion`** and **`Habits::ClearCompletion`**; do not create or destroy **`HabitCompletion`** from controllers except by calling those services. Resolve which habits appear on a day with **`Habits::DueHabitsForDay`** and **`Habits::DueOnDate`**; compute streak length with **`Habits::Streak`**. In HTTP handlers, scope **`UserHabit`** / **`HabitCompletion`** access to the signed-in user (**`Current.user`**). Requirements and flows: `docs/core/SPEC.md` (REQ-DAY-001–004), `docs/core/DATA_FLOW_MAP.md`.
+13. **Phase plan — independent assignment lanes (Moonloop):** When `/phase` (or the same flow) surfaces more than one family of week-range assignments (e.g. **menus** vs **exercise routines**), use **separate** controller state and actions per lane (e.g. `@menu_plan_ended` / `@routine_plan_ended`, repeat-last and “add range” routes per lane). Do **not** reuse a single `@plan_ended` (or one banner) for two different `*_assignments` tables — that hides one lane’s extension state. See `docs/core/SPEC.md` (REQ-EXR-004, REQ-EXR-005, REQ-MENU-005).
+14. **Week-range overlap scope (Moonloop):** Non-overlapping week ranges are validated **within** each assignment model. **`PhaseAssignment`** ranges do not validate against **`ExerciseRoutineAssignment`** (and vice versa); the same program week index may resolve to both an active menu and an active routine. See `docs/core/SPEC.md` (REQ-EXR-002).
 
 # TESTING (RSpec)
 1. **Structure:** Arrange, Act, Assert.
@@ -139,6 +141,7 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 3. **System Tests:** Use Capybara for Hotwire interactions.
 4. **No Private Testing:** Do NOT test private methods directly (`send`, `instance_eval`). Test the public interface or extract the logic to a Service Object or Value Object. See `docs/core/testing_private_methods_in_rails.md`.
 5. **Turbo Stream controller tests:** When testing a controller action that responds with `turbo_stream`, pass `as: :turbo_stream` in the request (e.g. `post habit_logs_url, params: {...}, as: :turbo_stream`). Without this, the `respond_to` block will not match and the test will silently receive a redirect or blank response instead of the expected stream.
+6. **`errors.added?` and interpolation options:** When a validation uses `errors.add(:attr, :symbol, **options)` (e.g. `max:` for I18n), specs must pass the **same keyword options** to `errors.added?(:attr, :symbol, **options)` so the assertion matches. Relying on `added?` without those options often returns false even when the error is present.
 
 # INTERNATIONALIZATION (i18n) PROTOCOL
 - **Strict Prohibition:** NEVER leave hardcoded strings in Controllers, Models, Helpers, Mailers, or Views.
@@ -175,6 +178,7 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 - **Efficiency:** Prefer **Turbo Streams** (append/prepend/replace) over full **Turbo Frame** reloads whenever possible.
 - **"Div Soup":** Avoid wrapping Turbo Frames in unnecessary `<div>` tags unless strictly required for layout.
 - **Turbo Stream partial IDs:** DOM element IDs targeted by `turbo_stream.replace` MUST follow the pattern `"#{model_name}_#{record.id}"` (e.g. `"habit_42"`). Never use hardcoded or position-based IDs — this ensures replacements are idempotent and do not collide between records.
+- **Forms targeting the full page from inside a frame:** When a `form_with` is rendered inside a Turbo Frame but must submit so the **full document** navigates or replaces (e.g. new/edit flows linked from `/phase`), pass `data: { turbo_frame: "_top" }` on the form so the response is not constrained to the wrong frame.
 
 ## 4. Service & Query Objects
 - **Controller Logic:** If a Controller action contains complex filtering or business logic, extract it to a **Service Object** immediately (e.g., `AreaReportService`).

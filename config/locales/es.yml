@@ -3,8 +3,8 @@ es:
   phase_start_reminder_mailer:
     notify:
       subject: "Hoy empieza tu fase 1"
-      body_html: "Hola — hoy es el primer día de tu plan de fase 1 (%{email})."
-      body_text: "Hoy es el primer día de tu plan de fase 1."
+      body_html: "Hola — hoy es el primer día de tu plan de fase 1 (%{email}). Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
+      body_text: "Hoy es el primer día de tu plan de fase 1. Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
       cta: "Abrir tu plan de fases"
   date:
     formats:
@@ -30,6 +30,17 @@ es:
         zero: "Racha: 0 días"
         one: "Racha: 1 día"
         other: "Racha: %{count} días"
+      exercise_inline_heading: "Rutina activa (esta semana)"
+      exercise_no_lines_this_day: "No hay ejercicios planificados para este día en la rutina."
+      exercise_no_routine_this_week: "No hay una rutina asignada para esta semana del programa. Configúrala en el plan de fases."
+      exercise_full_week_link: "Ver y editar la rutina completa"
+      exercise_inactive_heading: "Ejercicio (hábito inactivo)"
+      exercise_inactive_body: "Para ver la rutina en contexto en Mi Día, reactiva el hábito de ejercicio en tus hábitos."
+      exercise_inactive_cta: "Ir a hábitos"
+      exercise_shortcut_heading: "Rutinas y plan de fases"
+      exercise_shortcut_intro: "Gestiona tus rutinas de ejercicio y los rangos por semana del programa."
+      exercise_shortcut_routines: "Rutinas de ejercicio"
+      exercise_shortcut_phase_plan: "Plan de fases"
       phases_shortcut_heading: "Menús y plan de fases"
       phases_shortcut_intro: "Desde aquí puedes organizar menús por semana, recetas y rangos de fases."
       phases_shortcut_link: "Ir a menús y plan de fases"
@@ -85,6 +96,46 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+  exercise_routines:
+    flash:
+      created: "Rutina creada."
+      updated: "Rutina actualizada."
+      destroyed: "Rutina eliminada."
+      duplicated: "Rutina duplicada."
+      duplicate_failed: "No se pudo duplicar la rutina."
+    duplicate:
+      default_name: "Copia de %{name}"
+      collision_name: "%{base} (%{n})"
+    index:
+      title: "Rutinas de ejercicio"
+      my_day_link: "Mi Día"
+      name_label: "Nombre"
+      first_line_label: "Primer ejercicio (etiqueta)"
+      weekday_label: "Día"
+      create_submit: "Crear rutina"
+      edit: "Editar"
+      duplicate_submit: "Duplicar"
+      destroy: "Eliminar"
+    edit:
+      title: "Editar rutina: %{name}"
+      back_to_index: "Volver a rutinas"
+      name_label: "Nombre"
+      lines_heading: "Ejercicios por día"
+      weekday: "Día"
+      label: "Etiqueta"
+      notes: "Notas (opcional)"
+      remove_line: "Quitar esta fila"
+      save: "Guardar"
+      add_line: "Añadir ejercicio (domingo)"
+      placeholder_line_label: "Nuevo ejercicio"
+    confirm_destroy:
+      title: "Eliminar rutina"
+      warning_html:
+        zero: "No hay asignaciones de semanas vinculadas a esta rutina. Se eliminará la rutina. Esta acción no se puede deshacer."
+        one: "Se eliminará <strong>%{count}</strong> asignación de semanas y después la rutina. Esta acción no se puede deshacer."
+        other: "Se eliminarán <strong>%{count}</strong> asignaciones de semanas y después la rutina. Esta acción no se puede deshacer."
+      confirm_submit: "Sí, eliminar"
+      cancel: "Cancelar"
   recipes:
     index:
       title: "Recetas — Moonloop"
@@ -132,31 +183,47 @@ es:
       no_week_yet: "Define la fecha de inicio de la fase 1 para ver tu semana actual."
       active_menu_label: "Menú activo esta semana:"
       no_menu_for_week: "No hay un menú asignado para esta semana. Añade un rango abajo."
+      active_routine_label: "Rutina activa esta semana:"
+      no_routine_for_week: "No hay una rutina de ejercicio asignada para esta semana. Añade un rango abajo."
       anchor_heading: "Inicio de la fase 1"
       anchor_label: "Fecha de inicio (tu calendario local)"
       anchor_submit: "Guardar fecha"
-      assignments_heading: "Asignaciones por semanas"
-      new_assignment: "Nueva asignación"
-      assignments_empty: "Aún no hay rangos. Crea uno para enlazar semanas con un menú."
+      assignments_heading: "Asignaciones de menú por semanas"
+      new_assignment: "Nueva asignación de menú"
+      assignments_empty: "Aún no hay rangos de menú. Crea uno para enlazar semanas con un menú."
+      routine_assignments_heading: "Asignaciones de rutina por semanas"
+      new_routine_assignment: "Nueva asignación de rutina"
+      routine_assignments_empty: "Aún no hay rangos de rutina de ejercicio."
       table:
         menu: "Menú"
+        routine: "Rutina"
         weeks: "Semanas"
       edit_assignment: "Editar"
       delete_assignment: "Eliminar"
       delete_assignment_confirm: "¿Eliminar esta asignación?"
+      edit_routine_assignment: "Editar"
+      delete_routine_assignment: "Eliminar"
+      delete_routine_assignment_confirm: "¿Eliminar esta asignación de rutina?"
       back_home: "Inicio"
+      my_day_link: "Mi Día"
       menus_link: "Menús"
-      phase_start_reminder_banner: "Hoy empieza tu fase 1."
+      exercise_routines_link: "Rutinas de ejercicio"
+      phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."
       phase_start_reminder_dismiss: "Ocultar por hoy"
-      plan_ended_message: "Tus rangos de semanas terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo."
-      repeat_last_assignment: "Repetir el último bloque"
-      add_week_range: "Añadir un rango de semanas"
+      menu_plan_ended_message: "Tus rangos de menú terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo de menú."
+      routine_plan_ended_message: "Tus rangos de rutina de ejercicio terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo de rutina."
+      repeat_last_assignment: "Repetir el último bloque (menú)"
+      repeat_last_routine_assignment: "Repetir el último bloque (rutina)"
+      add_week_range: "Añadir rango de menú"
+      add_routine_week_range: "Añadir rango de rutina"
     flash:
       anchor_updated: "Fecha de inicio actualizada."
       anchor_far_future_warning: "El inicio de tu fase 1 es dentro de más de tres días. Te recordaremos cuando comience."
       reminder_dismissed: "Recordatorio oculto por hoy."
       repeat_last_assignment_created: "Se añadió un rango nuevo a partir del último bloque de menú."
       repeat_last_assignment_nothing_to_repeat: "No hay una asignación anterior para repetir."
+      repeat_last_routine_assignment_created: "Se añadió un rango nuevo a partir del último bloque de rutina."
+      repeat_last_routine_assignment_nothing_to_repeat: "No hay una asignación de rutina anterior para repetir."
   phase_assignments:
     new:
       title: "Nueva asignación — Moonloop"
@@ -177,6 +244,26 @@ es:
       created: "Asignación creada."
       updated: "Asignación actualizada."
       destroyed: "Asignación eliminada."
+  exercise_routine_assignments:
+    new:
+      title: "Nueva asignación de rutina — Moonloop"
+      heading: "Nueva asignación de rutina (semanas)"
+      back: "Volver al plan"
+    edit:
+      title: "Editar asignación de rutina — Moonloop"
+      heading: "Editar asignación de rutina"
+      back: "Volver al plan"
+    form:
+      routine_label: "Rutina de ejercicio"
+      routine_blank: "Elige una rutina"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Crear asignación"
+      update_submit: "Guardar asignación"
+    flash:
+      created: "Asignación de rutina creada."
+      updated: "Asignación de rutina actualizada."
+      destroyed: "Asignación de rutina eliminada."
   admin:
     moderation:
       recipe:
@@ -269,6 +356,7 @@ es:
       my_day: "Mi Día"
       menus: "Menús"
       recipes: "Recetas"
+      exercise_routines: "Rutinas de ejercicio"
       phase_plan: "Plan de fases"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
@@ -369,6 +457,13 @@ es:
         meal_type: "Tipo de comida"
         weekday: "Día de la semana"
         freeform_text: "Nota"
+      exercise_routine:
+        name: "Nombre"
+      exercise_routine_line:
+        weekday: "Día"
+        position: "Orden"
+        label: "Etiqueta"
+        notes: "Notas"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -405,6 +500,19 @@ es:
               before_start_week: "debe ser mayor o igual que la semana inicial"
             menu_id:
               must_match_user: "debe ser un menú de tu cuenta"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación"
+        exercise_routine:
+          attributes:
+            base:
+              empty_routine: "añade al menos una línea de ejercicio en al menos un día"
+              too_many_lines_on_weekday: "no puede haber más de %{max} líneas de ejercicio en un solo día"
+        exercise_routine_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            exercise_routine_id:
+              must_match_user: "debe ser una rutina de tu cuenta"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
         menu_entry:
