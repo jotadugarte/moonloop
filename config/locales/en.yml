@@ -29,6 +29,12 @@
 
 en:
   hello: "Hello world"
+  phase_start_reminder_mailer:
+    notify:
+      subject: "Your Phase 1 program starts today"
+      body_html: "Hello — today is the first day of your Phase 1 plan (%{email})."
+      body_text: "Today is the first day of your Phase 1 plan."
+      cta: "Open your phase plan"
   date:
     formats:
       long: "%B %d, %Y"
@@ -49,6 +55,9 @@ en:
         zero: "Streak: 0 days"
         one: "Streak: 1 day"
         other: "Streak: %{count} days"
+      phases_shortcut_heading: "Menus & phase plan"
+      phases_shortcut_intro: "Plan meals by week, recipes, and phase ranges from here."
+      phases_shortcut_link: "Open menus and phase plan"
     actions:
       mark_done: "Done"
       mark_failed: "Failed"
@@ -68,6 +77,137 @@ en:
       invalid_status: "That status is not valid."
       invalid_request: "The form data is incomplete."
       could_not_save: "Could not save. Please try again."
+  public_recipes:
+    index:
+      title: "Public recipes — Moonloop"
+      heading: "Public recipes"
+  menus:
+    index:
+      title: "Menus"
+      name_label: "Name"
+      create_submit: "Create menu"
+      edit: "Edit"
+      recipes_link: "Recipes"
+    edit:
+      title: "Edit menu: %{name}"
+      back_to_index: "Back to menus"
+    meal_types:
+      desayuno: "Breakfast"
+      almuerzo: "Lunch"
+      cena: "Dinner"
+      merienda: "Snack"
+    slots:
+      recipe_id_label: "Recipe"
+      recipe_pick_label: "Recipe"
+      recipe_blank: "No recipe"
+      legacy_freeform_hint: "Saved note (recipes-only mode). Pick a recipe or use Clear:"
+      preview_alt: "Preview (%{meal})"
+      freeform_label: "Note"
+      save_submit: "Save"
+      clear_submit: "Clear"
+    entries:
+      flash:
+        could_not_save: "Could not save this slot."
+    flash:
+      created: "Menu created."
+  recipes:
+    index:
+      title: "Recipes — Moonloop"
+      heading: "My recipes"
+      new_recipe: "New recipe"
+      menus_link: "Menus"
+      empty: "You have no recipes yet. Create the first one."
+    new:
+      title: "New recipe — Moonloop"
+      heading: "New recipe"
+      back: "Back to list"
+    edit:
+      title: "Edit %{name} — Moonloop"
+      heading: "Edit: %{name}"
+      back: "Back to recipe"
+    show:
+      title: "%{name} — Moonloop"
+      public_badge: "Listed in the public catalog"
+      instructions_heading: "Instructions"
+      no_instructions: "No instructions yet."
+      edit: "Edit"
+      back_index: "All recipes"
+      delete: "Delete"
+      delete_confirm: "Delete this recipe? Menu slots that only had this recipe will be cleared."
+    form:
+      errors_header:
+        one: "1 error prevented this recipe from being saved:"
+        other: "%{count} errors prevented this recipe from being saved:"
+      name_label: "Name"
+      instructions_label: "Instructions"
+      image_label: "Image"
+      remove_image_label: "Remove current image"
+      public_label: "Share in the public catalog"
+      create_submit: "Create recipe"
+      update_submit: "Save changes"
+    flash:
+      created: "Recipe created."
+      updated: "Recipe updated."
+      destroyed: "Recipe deleted."
+  phases:
+    show:
+      title: "Phase plan — Moonloop"
+      heading: "My phase plan"
+      current_week: "Current program week: %{index}"
+      no_week_yet: "Set your Phase 1 start date to see your current week."
+      active_menu_label: "Active menu this week:"
+      no_menu_for_week: "No menu is assigned for this week. Add a range below."
+      anchor_heading: "Phase 1 start"
+      anchor_label: "Start date (your local calendar)"
+      anchor_submit: "Save start date"
+      assignments_heading: "Week assignments"
+      new_assignment: "New assignment"
+      assignments_empty: "No ranges yet. Create one to link weeks to a menu."
+      table:
+        menu: "Menu"
+        weeks: "Weeks"
+      edit_assignment: "Edit"
+      delete_assignment: "Delete"
+      delete_assignment_confirm: "Delete this assignment?"
+      back_home: "Home"
+      menus_link: "Menus"
+      phase_start_reminder_banner: "Today is the first day of your Phase 1 plan."
+      phase_start_reminder_dismiss: "Hide for today"
+      plan_ended_message: "Your configured week ranges end before the current program week. Extend your plan or add a new range."
+      repeat_last_assignment: "Repeat last block"
+      add_week_range: "Add a new week range"
+    flash:
+      anchor_updated: "Start date updated."
+      anchor_far_future_warning: "Your Phase 1 start is more than three days away. We will remind you when it begins."
+      reminder_dismissed: "Reminder hidden for today."
+      repeat_last_assignment_created: "New week range added from your last menu block."
+      repeat_last_assignment_nothing_to_repeat: "There is no previous assignment to repeat."
+  phase_assignments:
+    new:
+      title: "New assignment — Moonloop"
+      heading: "New week assignment"
+      back: "Back to plan"
+    edit:
+      title: "Edit assignment — Moonloop"
+      heading: "Edit assignment"
+      back: "Back to plan"
+    form:
+      menu_label: "Menu"
+      menu_blank: "Choose a menu"
+      start_week_label: "Start week (≥ 1)"
+      end_week_label: "End week"
+      create_submit: "Create assignment"
+      update_submit: "Save assignment"
+    flash:
+      created: "Assignment created."
+      updated: "Assignment updated."
+      destroyed: "Assignment removed."
+  admin:
+    moderation:
+      recipe:
+        revoked_public_share: "This recipe is no longer publicly shared."
+      menu:
+        revoked_public_share: "This menu is no longer publicly shared."
   sessions:
     new:
       title: "Sign in"
@@ -187,9 +327,18 @@ en:
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
         timezone: "Timezone"
+        allow_menu_freeform: "Free-form menu notes"
       user_habit:
         name: "Name"
         activation_date: "Activation date"
+      phase_assignment:
+        menu: "Menu"
+        start_week: "Start week"
+        end_week: "End week"
+      menu_entry:
+        meal_type: "Meal type"
+        weekday: "Weekday"
+        freeform_text: "Note"
     errors:
       models:
         user:
@@ -215,6 +364,25 @@ en:
               must_be_object: "must be a JSON object"
               invalid_weekdays: "must include weekdays 0..6"
               invalid_interval: "must include interval >= 1"
+        phase_assignment:
+          attributes:
+            end_week:
+              before_start_week: "must be greater than or equal to the start week"
+            menu_id:
+              must_match_user: "must be a menu from your account"
+            base:
+              range_overlap: "that week range overlaps another assignment"
+        menu_entry:
+          attributes:
+            meal_type:
+              invalid: "is not a valid meal type"
+            weekday:
+              invalid: "must be between 0 (Sunday) and 6 (Saturday)"
+            recipe_id:
+              must_match_menu_owner: "must be a recipe from your account"
+            base:
+              content_required: "choose a recipe or enter a note"
+              recipes_only_require_recipe_or_clear: "choose a recipe or use Clear to empty this slot"
   shared:
     back: "Back"
     save_changes: "Save changes"
@@ -226,6 +394,9 @@ en:
   home:
     index:
       my_day: "My Day"
+      menus: "Menus"
+      recipes: "Recipes"
+      phase_plan: "Phase plan"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"
@@ -253,6 +424,7 @@ en:
     edit:
       title: "Edit Profile"
       submit: "Update Profile"
+      allow_menu_freeform: "Allow free-form notes in menu slots"
       prohibited:
         one: "1 error prohibited your profile from being saved:"
         other: "%{count} errors prohibited your profile from being saved:"

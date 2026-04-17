@@ -60,4 +60,13 @@
   </ul>
 <% end %>
 
+<section class="mt-8 pt-6 border-t border-gray-200" data-test="my-day-phases-shortcut">
+  <h2 class="text-lg font-semibold mb-2"><%= t("my_day.show.phases_shortcut_heading") %></h2>
+  <p class="text-gray-700 text-sm mb-2"><%= t("my_day.show.phases_shortcut_intro") %></p>
+  <%= link_to t("my_day.show.phases_shortcut_link"),
+              phase_path,
+              class: "text-blue-600 underline font-medium",
+              data: { turbo_action: "advance" } %>
+</section>
+
 <p><%= link_to t("my_day.show.back_home"), root_path %></p>

@@ -14,6 +14,10 @@ class User < ApplicationRecord
   has_many :weight_logs, dependent: :destroy
   has_many :habit_categories, dependent: :destroy
   has_many :user_habits, dependent: :destroy
+  has_many :menus, dependent: :destroy
+  has_many :recipes, dependent: :destroy
+  has_many :phase_assignments, dependent: :destroy
+  has_many :phase_reminder_events, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, allow_nil: true, length: { minimum: 12 }

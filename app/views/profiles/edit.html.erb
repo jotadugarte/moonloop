@@ -1,10 +1,11 @@
 <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
 
+<% profile_err_id = "profile-form-errors" %>
 <%= form_with(model: @user, url: profile_path, method: :patch, class: "space-y-4 max-w-md") do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
       <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
-      <ul class="list-disc pl-5">
+      <ul id="<%= profile_err_id %>" class="list-disc pl-5" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -14,12 +15,26 @@
 
   <div>
     <%= form.label :date_of_birth, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.date_field :date_of_birth, required: true, class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= form.date_field :date_of_birth,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@user, :date_of_birth, profile_err_id) %>
   </div>
 
   <div data-controller="timezone">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.text_field :timezone, required: true, data: { timezone_target: "input" }, class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= form.text_field :timezone,
+          required: true,
+          data: { timezone_target: "input" },
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@user, :timezone, profile_err_id) %>
+  </div>
+
+  <div class="flex items-start gap-2">
+    <%= form.check_box :allow_menu_freeform,
+          class: "mt-1",
+          aria: aria_for_field(@user, :allow_menu_freeform, profile_err_id) %>
+    <%= form.label :allow_menu_freeform, t(".allow_menu_freeform"), class: "text-gray-700" %>
   </div>
 
   <div class="pt-4">

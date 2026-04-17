@@ -1,0 +1,21 @@
+<% content_for :title, t("recipes.index.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("recipes.index.heading") %></h1>
+
+<p class="mb-4">
+  <%= link_to t("recipes.index.new_recipe"), new_recipe_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t("recipes.index.menus_link"), menus_path, class: "text-blue-600 underline" %>
+</p>
+
+<ul class="space-y-2">
+  <% @recipes.each do |recipe| %>
+    <li>
+      <%= link_to recipe.name, recipe_path(recipe), class: "text-blue-600 font-medium" %>
+    </li>
+  <% end %>
+</ul>
+
+<% if @recipes.empty? %>
+  <p class="text-gray-600"><%= t("recipes.index.empty") %></p>
+<% end %>

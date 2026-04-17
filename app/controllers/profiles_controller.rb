@@ -17,6 +17,6 @@ class ProfilesController < ApplicationController
 
   def profile_params
     # height_cm is strictly excluded from these permitted attributes
-    params.require(:user).permit(:date_of_birth, :timezone)
+    params.require(:user).permit(:date_of_birth, :timezone, :allow_menu_freeform)
   end
 end

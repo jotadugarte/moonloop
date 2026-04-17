@@ -1,5 +1,11 @@
 es:
   hello: "Hola mundo"
+  phase_start_reminder_mailer:
+    notify:
+      subject: "Hoy empieza tu fase 1"
+      body_html: "Hola — hoy es el primer día de tu plan de fase 1 (%{email})."
+      body_text: "Hoy es el primer día de tu plan de fase 1."
+      cta: "Abrir tu plan de fases"
   date:
     formats:
       long: "%d de %B de %Y"
@@ -10,7 +16,7 @@ es:
   my_day:
     flash:
       invalid_date: "La fecha no es válida."
-      future_date_not_allowed: "No podés elegir un día futuro."
+      future_date_not_allowed: "No puedes elegir un día futuro."
     show:
       page_title: "Mi Día — Moonloop"
       heading: "Mi Día"
@@ -24,6 +30,9 @@ es:
         zero: "Racha: 0 días"
         one: "Racha: 1 día"
         other: "Racha: %{count} días"
+      phases_shortcut_heading: "Menús y plan de fases"
+      phases_shortcut_intro: "Desde aquí puedes organizar menús por semana, recetas y rangos de fases."
+      phases_shortcut_link: "Ir a menús y plan de fases"
     actions:
       mark_done: "Hecho"
       mark_failed: "Fallado"
@@ -42,7 +51,138 @@ es:
       invalid_date: "La fecha no es válida."
       invalid_status: "El estado no es válido."
       invalid_request: "Faltan datos del formulario."
-      could_not_save: "No se pudo guardar. Reintentá."
+      could_not_save: "No se pudo guardar. Reintenta."
+  public_recipes:
+    index:
+      title: "Recetas públicas — Moonloop"
+      heading: "Recetas públicas"
+  menus:
+    index:
+      title: "Menús"
+      name_label: "Nombre"
+      create_submit: "Crear menú"
+      edit: "Editar"
+      recipes_link: "Recetas"
+    edit:
+      title: "Editar menú: %{name}"
+      back_to_index: "Volver a menús"
+    meal_types:
+      desayuno: "Desayuno"
+      almuerzo: "Almuerzo"
+      cena: "Cena"
+      merienda: "Merienda"
+    slots:
+      recipe_id_label: "Receta"
+      recipe_pick_label: "Receta"
+      recipe_blank: "Sin receta"
+      legacy_freeform_hint: "Nota guardada (solo recetas). Elige una receta o usa Limpiar:"
+      preview_alt: "Vista previa (%{meal})"
+      freeform_label: "Nota"
+      save_submit: "Guardar"
+      clear_submit: "Limpiar"
+    entries:
+      flash:
+        could_not_save: "No se pudo guardar el casillero."
+    flash:
+      created: "Menú creado."
+  recipes:
+    index:
+      title: "Recetas — Moonloop"
+      heading: "Mis recetas"
+      new_recipe: "Nueva receta"
+      menus_link: "Menús"
+      empty: "Aún no tienes recetas. Crea la primera."
+    new:
+      title: "Nueva receta — Moonloop"
+      heading: "Nueva receta"
+      back: "Volver al listado"
+    edit:
+      title: "Editar %{name} — Moonloop"
+      heading: "Editar: %{name}"
+      back: "Volver a la receta"
+    show:
+      title: "%{name} — Moonloop"
+      public_badge: "Visible en el catálogo público"
+      instructions_heading: "Preparación"
+      no_instructions: "Sin instrucciones todavía."
+      edit: "Editar"
+      back_index: "Todas las recetas"
+      delete: "Eliminar"
+      delete_confirm: "¿Eliminar esta receta? Se vaciarán los casilleros de menú que solo tenían esta receta."
+    form:
+      errors_header:
+        one: "1 error impidió guardar la receta:"
+        other: "%{count} errores impidieron guardar la receta:"
+      name_label: "Nombre"
+      instructions_label: "Instrucciones"
+      image_label: "Imagen"
+      remove_image_label: "Quitar imagen actual"
+      public_label: "Compartir en el catálogo público"
+      create_submit: "Crear receta"
+      update_submit: "Guardar cambios"
+    flash:
+      created: "Receta creada."
+      updated: "Receta actualizada."
+      destroyed: "Receta eliminada."
+  phases:
+    show:
+      title: "Mi plan de fases — Moonloop"
+      heading: "Mi plan de fases"
+      current_week: "Semana actual del programa: %{index}"
+      no_week_yet: "Define la fecha de inicio de la fase 1 para ver tu semana actual."
+      active_menu_label: "Menú activo esta semana:"
+      no_menu_for_week: "No hay un menú asignado para esta semana. Añade un rango abajo."
+      anchor_heading: "Inicio de la fase 1"
+      anchor_label: "Fecha de inicio (tu calendario local)"
+      anchor_submit: "Guardar fecha"
+      assignments_heading: "Asignaciones por semanas"
+      new_assignment: "Nueva asignación"
+      assignments_empty: "Aún no hay rangos. Crea uno para enlazar semanas con un menú."
+      table:
+        menu: "Menú"
+        weeks: "Semanas"
+      edit_assignment: "Editar"
+      delete_assignment: "Eliminar"
+      delete_assignment_confirm: "¿Eliminar esta asignación?"
+      back_home: "Inicio"
+      menus_link: "Menús"
+      phase_start_reminder_banner: "Hoy empieza tu fase 1."
+      phase_start_reminder_dismiss: "Ocultar por hoy"
+      plan_ended_message: "Tus rangos de semanas terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo."
+      repeat_last_assignment: "Repetir el último bloque"
+      add_week_range: "Añadir un rango de semanas"
+    flash:
+      anchor_updated: "Fecha de inicio actualizada."
+      anchor_far_future_warning: "El inicio de tu fase 1 es dentro de más de tres días. Te recordaremos cuando comience."
+      reminder_dismissed: "Recordatorio oculto por hoy."
+      repeat_last_assignment_created: "Se añadió un rango nuevo a partir del último bloque de menú."
+      repeat_last_assignment_nothing_to_repeat: "No hay una asignación anterior para repetir."
+  phase_assignments:
+    new:
+      title: "Nueva asignación — Moonloop"
+      heading: "Nueva asignación de semanas"
+      back: "Volver al plan"
+    edit:
+      title: "Editar asignación — Moonloop"
+      heading: "Editar asignación"
+      back: "Volver al plan"
+    form:
+      menu_label: "Menú"
+      menu_blank: "Elige un menú"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Crear asignación"
+      update_submit: "Guardar asignación"
+    flash:
+      created: "Asignación creada."
+      updated: "Asignación actualizada."
+      destroyed: "Asignación eliminada."
+  admin:
+    moderation:
+      recipe:
+        revoked_public_share: "Se quitó el estado público de la receta."
+      menu:
+        revoked_public_share: "Se quitó el estado público del menú."
   sessions:
     new:
       title: "Iniciar sesión"
@@ -112,6 +252,7 @@ es:
     edit:
       title: "Editar perfil"
       submit: "Actualizar perfil"
+      allow_menu_freeform: "Permitir notas libres en los casilleros del menú"
       prohibited:
         one: "1 error impidió guardar tu perfil:"
         other: "%{count} errores impidieron guardar tu perfil:"
@@ -126,6 +267,9 @@ es:
   home:
     index:
       my_day: "Mi Día"
+      menus: "Menús"
+      recipes: "Recetas"
+      phase_plan: "Plan de fases"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"
@@ -213,9 +357,18 @@ es:
         date_of_birth: "Fecha de nacimiento"
         height_cm: "Altura (cm)"
         timezone: "Zona horaria"
+        allow_menu_freeform: "Notas libres en menús"
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
+      phase_assignment:
+        menu: "Menú"
+        start_week: "Semana inicial"
+        end_week: "Semana final"
+      menu_entry:
+        meal_type: "Tipo de comida"
+        weekday: "Día de la semana"
+        freeform_text: "Nota"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -246,3 +399,22 @@ es:
               must_be_object: "debe ser un objeto JSON"
               invalid_weekdays: "debe incluir días de la semana de 0 a 6"
               invalid_interval: "debe incluir un intervalo mayor o igual a 1"
+        phase_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            menu_id:
+              must_match_user: "debe ser un menú de tu cuenta"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación"
+        menu_entry:
+          attributes:
+            meal_type:
+              invalid: "no es un tipo de comida válido"
+            weekday:
+              invalid: "debe ser un número entre 0 (domingo) y 6 (sábado)"
+            recipe_id:
+              must_match_menu_owner: "debe ser una receta de tu cuenta"
+            base:
+              content_required: "elige una receta o escribe una nota"
+              recipes_only_require_recipe_or_clear: "elige una receta o usa Limpiar para vaciar este casillero"

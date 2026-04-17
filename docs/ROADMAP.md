@@ -27,21 +27,21 @@ Things done and things left to do. Update this when finishing branches; use `roa
 13. [x] Retroactive editing: mark or edit habits for past days (REQ-DAY-003) — 2026-04-16 — Depends on: #12
 14. [x] Streak calculation per habit (consecutive days completed without failure) (REQ-DAY-004) — 2026-04-16 — Depends on: #12
 
+### Phase 4 — Menus & Recipes (Alimentación)
+15. [x] Menu model: weekly plan with one meal entry per day-of-week per meal type (Desayuno, Almuerzo, etc.) (REQ-MENU-001) — 2026-04-17 — Depends on: Phase 2
+16. [x] Recipe model: name, instructions, image upload; default image provided per meal type (REQ-MENU-002) — 2026-04-17 — Depends on: #15
+17. [x] Phase system: user defines a start date for Phase 1 and assigns week ranges to menus (e.g. weeks 1–4 → Menu A, weeks 5–12 → Menu B) (REQ-MENU-003) — 2026-04-17 — Depends on: #15
+18. [x] Phase alerts: warn user if start date is more than 3 days in the future; send reminder on the day a phase begins (REQ-MENU-004) — 2026-04-17 — Depends on: #17
+19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
+
 ## In Progress
 *(No items currently in progress)*
 
 ## Pending (by priority)
 
-### Phase 4 — Menus & Recipes (Alimentación)
-15. [ ] Menu model: weekly plan with one meal entry per day-of-week per meal type (Desayuno, Almuerzo, etc.) (REQ-MENU-001) — Depends on: Phase 2
-16. [ ] Recipe model: name, instructions, image upload; default image provided per meal type (REQ-MENU-002) — Depends on: #15
-17. [ ] Phase system: user defines a start date for Phase 1 and assigns week ranges to menus (e.g. weeks 1–4 → Menu A, weeks 5–12 → Menu B) (REQ-MENU-003) — Depends on: #15
-18. [ ] Phase alerts: warn user if start date is more than 3 days in the future; send reminder on the day a phase begins (REQ-MENU-004) — Depends on: #17
-19. [ ] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — Depends on: #17
-
 ### Phase 5 — Exercise Routines
 20. [ ] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — Depends on: Phase 2
-21. [ ] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — Depends on: Phase 4 #17, #20
+21. [ ] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — Depends on: Phase 4 (#15–19), #20
 22. [ ] Surface active routine in "Mi Día" linked to the Ejercicio habit (REQ-EXR-003) — Depends on: #20, Phase 3 #11
 
 ### Phase 6 — Weight Log

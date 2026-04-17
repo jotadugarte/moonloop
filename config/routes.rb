@@ -18,6 +18,30 @@ Rails.application.routes.draw do
   resource  :profile, only: [ :edit, :update ]
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
+  resources :menus, only: [ :index, :create, :edit ] do
+    resources :menu_entries, only: [ :create ], module: :menus do
+      delete :clear, on: :collection
+    end
+  end
+  resources :recipes
+  resource :phase, only: %i[show update] do
+    post :dismiss_reminder, on: :member
+    post :repeat_last_assignment, on: :member
+  end
+  resources :phase_assignments, only: %i[new create edit update destroy]
+  resources :public_recipes, only: [ :index ]
+  namespace :admin do
+    resources :recipes, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+    resources :menus, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+  end
   namespace :identity do
     resource :email,              only: [ :edit, :update ]
     resource :email_verification, only: [ :show, :create ]
