@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_160000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -89,6 +89,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_150000) do
     t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
+  create_table "phase_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.integer "menu_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["menu_id"], name: "index_phase_assignments_on_menu_id"
+    t.index ["user_id", "start_week", "end_week"], name: "index_phase_assignments_on_user_and_range"
+    t.index ["user_id"], name: "index_phase_assignments_on_user_id"
+  end
+
   create_table "recipes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "instructions"
@@ -162,6 +174,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_150000) do
   add_foreign_key "menu_entries", "menus"
   add_foreign_key "menu_entries", "recipes"
   add_foreign_key "menus", "users"
+  add_foreign_key "phase_assignments", "menus"
+  add_foreign_key "phase_assignments", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"

@@ -10,6 +10,7 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
     expect(connection.data_source_exists?("menus")).to eq(true)
     expect(connection.data_source_exists?("recipes")).to eq(true)
     expect(connection.data_source_exists?("menu_entries")).to eq(true)
+    expect(connection.data_source_exists?("phase_assignments")).to eq(true)
   end
 
   # [REQ-MENU-002]
@@ -19,10 +20,11 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "defines AR models Menu, Recipe, and MenuEntry" do
+  it "defines AR models Menu, Recipe, MenuEntry, and PhaseAssignment" do
     expect("Menu".safe_constantize).to be_present
     expect("Recipe".safe_constantize).to be_present
     expect("MenuEntry".safe_constantize).to be_present
+    expect("PhaseAssignment".safe_constantize).to be_present
   end
 
   # [REQ-MENU-001]

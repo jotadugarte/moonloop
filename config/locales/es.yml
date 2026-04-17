@@ -115,6 +115,50 @@ es:
       created: "Receta creada."
       updated: "Receta actualizada."
       destroyed: "Receta eliminada."
+  phases:
+    show:
+      title: "Mi plan de fases — Moonloop"
+      heading: "Mi plan de fases"
+      current_week: "Semana actual del programa: %{index}"
+      no_week_yet: "Define la fecha de inicio de la fase 1 para ver tu semana actual."
+      active_menu_label: "Menú activo esta semana:"
+      no_menu_for_week: "No hay un menú asignado para esta semana. Añade un rango abajo."
+      anchor_heading: "Inicio de la fase 1"
+      anchor_label: "Fecha de inicio (tu calendario local)"
+      anchor_submit: "Guardar fecha"
+      assignments_heading: "Asignaciones por semanas"
+      new_assignment: "Nueva asignación"
+      assignments_empty: "Aún no hay rangos. Crea uno para enlazar semanas con un menú."
+      table:
+        menu: "Menú"
+        weeks: "Semanas"
+      edit_assignment: "Editar"
+      delete_assignment: "Eliminar"
+      delete_assignment_confirm: "¿Eliminar esta asignación?"
+      back_home: "Inicio"
+      menus_link: "Menús"
+    flash:
+      anchor_updated: "Fecha de inicio actualizada."
+  phase_assignments:
+    new:
+      title: "Nueva asignación — Moonloop"
+      heading: "Nueva asignación de semanas"
+      back: "Volver al plan"
+    edit:
+      title: "Editar asignación — Moonloop"
+      heading: "Editar asignación"
+      back: "Volver al plan"
+    form:
+      menu_label: "Menú"
+      menu_blank: "Elige un menú"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Crear asignación"
+      update_submit: "Guardar asignación"
+    flash:
+      created: "Asignación creada."
+      updated: "Asignación actualizada."
+      destroyed: "Asignación eliminada."
   admin:
     moderation:
       recipe:
@@ -207,6 +251,7 @@ es:
       my_day: "Mi Día"
       menus: "Menús"
       recipes: "Recetas"
+      phase_plan: "Plan de fases"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"
@@ -298,6 +343,10 @@ es:
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
+      phase_assignment:
+        menu: "Menú"
+        start_week: "Semana inicial"
+        end_week: "Semana final"
       menu_entry:
         meal_type: "Tipo de comida"
         weekday: "Día de la semana"
@@ -332,6 +381,14 @@ es:
               must_be_object: "debe ser un objeto JSON"
               invalid_weekdays: "debe incluir días de la semana de 0 a 6"
               invalid_interval: "debe incluir un intervalo mayor o igual a 1"
+        phase_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            menu_id:
+              must_match_user: "debe ser un menú de tu cuenta"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación"
         menu_entry:
           attributes:
             meal_type:

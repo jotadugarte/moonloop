@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     end
   end
   resources :recipes
+  resource :phase, only: %i[show update]
+  resources :phase_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]
   namespace :admin do
     resources :recipes, only: [] do

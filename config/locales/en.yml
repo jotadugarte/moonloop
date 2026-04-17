@@ -140,6 +140,50 @@ en:
       created: "Recipe created."
       updated: "Recipe updated."
       destroyed: "Recipe deleted."
+  phases:
+    show:
+      title: "Phase plan — Moonloop"
+      heading: "My phase plan"
+      current_week: "Current program week: %{index}"
+      no_week_yet: "Set your Phase 1 start date to see your current week."
+      active_menu_label: "Active menu this week:"
+      no_menu_for_week: "No menu is assigned for this week. Add a range below."
+      anchor_heading: "Phase 1 start"
+      anchor_label: "Start date (your local calendar)"
+      anchor_submit: "Save start date"
+      assignments_heading: "Week assignments"
+      new_assignment: "New assignment"
+      assignments_empty: "No ranges yet. Create one to link weeks to a menu."
+      table:
+        menu: "Menu"
+        weeks: "Weeks"
+      edit_assignment: "Edit"
+      delete_assignment: "Delete"
+      delete_assignment_confirm: "Delete this assignment?"
+      back_home: "Home"
+      menus_link: "Menus"
+    flash:
+      anchor_updated: "Start date updated."
+  phase_assignments:
+    new:
+      title: "New assignment — Moonloop"
+      heading: "New week assignment"
+      back: "Back to plan"
+    edit:
+      title: "Edit assignment — Moonloop"
+      heading: "Edit assignment"
+      back: "Back to plan"
+    form:
+      menu_label: "Menu"
+      menu_blank: "Choose a menu"
+      start_week_label: "Start week (≥ 1)"
+      end_week_label: "End week"
+      create_submit: "Create assignment"
+      update_submit: "Save assignment"
+    flash:
+      created: "Assignment created."
+      updated: "Assignment updated."
+      destroyed: "Assignment removed."
   admin:
     moderation:
       recipe:
@@ -269,6 +313,10 @@ en:
       user_habit:
         name: "Name"
         activation_date: "Activation date"
+      phase_assignment:
+        menu: "Menu"
+        start_week: "Start week"
+        end_week: "End week"
       menu_entry:
         meal_type: "Meal type"
         weekday: "Weekday"
@@ -298,6 +346,14 @@ en:
               must_be_object: "must be a JSON object"
               invalid_weekdays: "must include weekdays 0..6"
               invalid_interval: "must include interval >= 1"
+        phase_assignment:
+          attributes:
+            end_week:
+              before_start_week: "must be greater than or equal to the start week"
+            menu_id:
+              must_match_user: "must be a menu from your account"
+            base:
+              range_overlap: "that week range overlaps another assignment"
         menu_entry:
           attributes:
             meal_type:
@@ -322,6 +378,7 @@ en:
       my_day: "My Day"
       menus: "Menus"
       recipes: "Recipes"
+      phase_plan: "Phase plan"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"
