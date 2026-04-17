@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe "Menus CRUD", type: :request do
+  let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
+
+  before do
+    post sign_in_path, params: { email: user.email, password: "Password123!" }
+  end
+
+  # [REQ-MENU-001]
+  it "lists menus for the signed-in user" do
+    Menu.create!(user: user, name: "Semana A")
+
+    get "/menus"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Semana A")
+  end
+
+  # [REQ-MENU-001]
+  it "creates a menu" do
+    post "/menus", params: { menu: { name: "Nueva semana" } }
+
+    expect(response).to have_http_status(:found)
+    expect(Menu.find_by(user: user, name: "Nueva semana")).to be_present
+  end
+
+  # [REQ-MENU-001]
+  it "forbids accessing another user's menu editor" do
+    other = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    foreign = Menu.create!(user: other, name: "Ajeno")
+
+    get "/menus/#{foreign.id}/edit"
+
+    expect(response).to have_http_status(:not_found)
+  end
+end
