@@ -515,6 +515,8 @@ en:
       recipes: "Recipes"
       exercise_routines: "Exercise routines"
       phase_plan: "Phase plan"
+      weight_history: "Weight history"
+      log_weight: "Log weight"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"

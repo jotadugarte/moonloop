@@ -398,6 +398,8 @@ es:
       recipes: "Recetas"
       exercise_routines: "Rutinas de ejercicio"
       phase_plan: "Plan de fases"
+      weight_history: "Historial de peso"
+      log_weight: "Registrar peso"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"

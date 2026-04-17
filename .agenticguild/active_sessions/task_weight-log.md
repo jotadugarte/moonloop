@@ -129,7 +129,7 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
 
   <step id="5" status="complete">Write failing **request** specs for **REQ-WGT-003**: **index** lists logs ordered by `logged_at` descending with **30** per page and pagination controls; columns include weight, height snapshot, BMI, and **local** display of `logged_at`; **delete** control with confirmation. Implement controller, routes, ERB, I18n (`es`/`en`). `# [REQ-WGT-003]`</step>
 
-  <step id="6" status="pending">Add **navigation** entry point(s) consistent with existing layout (e.g. profile or main nav — mirror patterns from menus/Mi Día shortcuts); request or system spec asserting link presence. `# [REQ-WGT-002]`</step>
+  <step id="6" status="complete">Add **navigation** entry point(s) consistent with existing layout (e.g. profile or main nav — mirror patterns from menus/Mi Día shortcuts); request or system spec asserting link presence. `# [REQ-WGT-002]`</step>
 
   <step id="7" status="pending">Update **`docs/core/SCHEMA_REFERENCE.md`** and **`docs/core/DATA_FLOW_MAP.md`** for `logged_at` and flows (create, list, delete, reconcile). Align **`docs/core/SPEC.md`** acceptance language for REQ-WGT-002/003 if needed. Run full test suite; fix regressions.</step>
 </implementation_plan>
