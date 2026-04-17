@@ -23,10 +23,12 @@
       <li id="<%= dom_id(habit) %>" data-habit-streak="<%= @streak_by_habit_id[habit.id] %>">
         <span class="my-day-habit-name"><%= habit.name %></span>
         <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
+        <span class="my-day-habit-streak"><%= t("my_day.show.streak_display", count: @streak_by_habit_id[habit.id]) %></span>
         <% if completion %>
           <span class="my-day-habit-status"><%= t("habit_completions.status.#{completion.status}") %></span>
         <% end %>
-        <div class="my-day-actions">
+        <fieldset class="my-day-actions">
+          <legend class="my-day-actions-legend"><%= t("my_day.show.actions_legend") %></legend>
           <%= button_to t("my_day.actions.mark_done"),
                 habit_completions_path,
                 method: :post,
@@ -52,7 +54,7 @@
                   habit_completion_path(completion),
                   method: :delete %>
           <% end %>
-        </div>
+        </fieldset>
       </li>
     <% end %>
   </ul>

@@ -3,13 +3,19 @@
 module Habits
   # Current streak length (REQ-DAY-004) — expanded example-by-example in streak_spec.
   class Streak
-    def self.call(user_habit:, as_of:)
-      new(user_habit: user_habit, as_of: as_of).call
+    def self.call(user_habit:, as_of:, completions_by_date: nil)
+      new(user_habit: user_habit, as_of: as_of, completions_by_date: completions_by_date).call
     end
 
-    def initialize(user_habit:, as_of:)
+    def self.lower_bound_for(user_habit)
+      user_habit.activation_date.presence ||
+        user_habit.created_at.in_time_zone(user_habit.user.timezone).to_date
+    end
+
+    def initialize(user_habit:, as_of:, completions_by_date: nil)
       @user_habit = user_habit
       @as_of = as_of
+      @completions_by_date = completions_by_date
     end
 
     def call
@@ -56,11 +62,15 @@ module Habits
     private
 
     def completion_on(date)
-      @user_habit.habit_completions.find_by(completed_on: date)
+      if @completions_by_date
+        @completions_by_date[date]
+      else
+        @user_habit.habit_completions.find_by(completed_on: date)
+      end
     end
 
     def lower_bound_date
-      @user_habit.activation_date.presence || @user_habit.created_at.in_time_zone(@user_habit.user.timezone).to_date
+      self.class.lower_bound_for(@user_habit)
     end
   end
 end

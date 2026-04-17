@@ -12,7 +12,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `HAB` | Habit templates, categories, user habits, provisioning, scheduling helpers |
 | `WGT` | Weight log persistence (model-level; full UX may be later phase) |
 | `I18N` | Locales and user-visible copy |
-| `DAY` | Daily habit tracking (“Mi Día”) — **in progress** (Phase 3) |
+| `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus & recipes — **planned** |
 | `EXR` | Exercise routines — **planned** |
 | `RPT` | Reporting — **planned** |
@@ -42,7 +42,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Weight log | Historical weight entry with snapshot height and BMI | `WeightLog` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
-| Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). | `habit_completions` (Phase 3) |
+| Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). | `HabitCompletion` / `habit_completions` |
 | Streak (habit) | Count of consecutive **closed** due days ending at a reference day where the habit was **done**; a closed due day without **done** breaks the streak (explicit **failed** and absent completion are equivalent for this rule). | Derived; see REQ-DAY-004 |
 
 ---
@@ -101,7 +101,11 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-HAB-006 | Among **active** habits, display name uniqueness per user is enforced using normalized name (case-insensitive). | Implemented |
 | REQ-HAB-007 | User can activate and deactivate habits, including defaults; deactivated habits can be reactivated. | Implemented |
 | REQ-HAB-008 | UI lists habits grouped by category; user can create a personal habit and add a habit from a template. | Implemented |
-| REQ-HAB-009 | `UserHabit#next_occurrence_after` delegates to `Habits::NextOccurrence` for `daily` and `monthly`; for `monthly`, if the anchor day does not exist in a month, the date **clamps** to the last valid day of that month. Other frequency types may raise until extended. | Implemented (subset of types) |
+| REQ-HAB-009 | `UserHabit#next_occurrence_after` delegates to `Habits::NextOccurrence` for `daily`, `weekdays`, `every_x_days`, and `monthly`. For `monthly`, if the anchor day does not exist in a month, the date **clamps** to the last valid day of that month. `weekdays` and `every_x_days` follow the same calendar rules as `Habits::DueOnDate`. | Implemented |
+| REQ-DAY-001 | “Mi Día” lists **active** habits that are **due** on the selected calendar day, resolved using the user’s **current** timezone. Inactive habits are omitted. For a given day, habits are not listed for dates **before** `activation_date`. A habit due that day stays visible **unmarked** while still pending (clearing completion does not hide the row). | Implemented |
+| REQ-DAY-002 | User marks a habit **done** or **failed** for a calendar day (at least the current day); persistence is per local day and habit. | Implemented |
+| REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Implemented |
+| REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. | Implemented |
 | REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, and BMI for a user. | Implemented (data model; full Phase 6 UX tracked on roadmap) |
 
 ---
@@ -112,10 +116,6 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-DAY-001 | “Mi Día” lists **active** habits that are **due** on the selected calendar day, resolved using the user’s **current** timezone. Inactive habits are omitted. For a given day, habits are not listed for dates **before** `activation_date`. A habit due that day stays visible **unmarked** while still pending (clearing completion does not hide the row). | Phase 3 |
-| REQ-DAY-002 | User marks a habit **done** or **failed** for a calendar day (at least the current day); persistence is per local day and habit. | Phase 3 |
-| REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Phase 3 |
-| REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. | Phase 3 |
 | REQ-MENU-001 … REQ-MENU-005 | Weekly menu plan, recipes, phase system, alerts, extension — per roadmap Phase 4 (items 15–19). | Phase 4 |
 | REQ-EXR-001 … REQ-EXR-003 | Exercise routines and linkage to “Mi Día” — per roadmap Phase 5. | Phase 5 |
 | REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
@@ -140,7 +140,7 @@ These rules define whether a habit is **due** on a given **local** calendar day 
 3. **Habit provisioning** — On sign-in, job ensures template-backed default categories and habits exist once per logical template `code`.
 4. **Category lifecycle** — CRUD categories; destroy prevented if habits still reference the category.
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
-6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements **daily** and **monthly** only until extended; **weekdays** and **every_x_days** align with Mi Día due-day logic (`Habits::DueOnDate` or equivalent) in Phase 3. Monthly respects shorter months.
+6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements the same frequency types as Mi Día scheduling (`daily`, `weekdays`, `every_x_days`, `monthly`), aligned with `Habits::DueOnDate` where applicable. Monthly respects shorter months (end-of-month clamp).
 
 ---
 

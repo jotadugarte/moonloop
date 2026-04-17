@@ -2,24 +2,7 @@
 
 class HabitCompletionsController < ApplicationController
   def create
-    permitted = params.require(:habit_completion).permit(:user_habit_id, :completed_on, :status)
-    habit = Current.user.user_habits.find_by(id: permitted[:user_habit_id])
-    unless habit
-      redirect_to my_day_path, alert: t("habit_completions.flash.not_found")
-      return
-    end
-
-    local_date = Date.iso8601(permitted[:completed_on].to_s)
-    status = permitted[:status].to_s
-
-    result = Habits::RecordCompletion.call(
-      user: Current.user,
-      user_habit: habit,
-      local_date: local_date,
-      status: status
-    )
-
-    redirect_after_result(result, day: local_date)
+    process_create
   rescue ActionController::ParameterMissing
     redirect_to my_day_path, alert: t("habit_completions.flash.invalid_request")
   rescue ArgumentError, TypeError
@@ -27,7 +10,7 @@ class HabitCompletionsController < ApplicationController
   end
 
   def destroy
-    completion = HabitCompletion.joins(:user_habit).where(user_habits: { user_id: Current.user.id }).find_by(id: params[:id])
+    completion = find_completion_for_current_user
     unless completion
       redirect_to my_day_path, alert: t("habit_completions.flash.not_found")
       return
@@ -40,6 +23,42 @@ class HabitCompletionsController < ApplicationController
   end
 
   private
+
+  def process_create
+    permitted = habit_completion_params
+    habit = find_habit(permitted[:user_habit_id])
+    return not_found_redirect unless habit
+
+    local_date = Date.iso8601(permitted[:completed_on].to_s)
+    result = record_completion(habit, local_date, permitted[:status].to_s)
+
+    redirect_after_result(result, day: local_date)
+  end
+
+  def habit_completion_params
+    params.require(:habit_completion).permit(:user_habit_id, :completed_on, :status)
+  end
+
+  def find_habit(user_habit_id)
+    Current.user.user_habits.find_by(id: user_habit_id)
+  end
+
+  def find_completion_for_current_user
+    HabitCompletion.joins(:user_habit).where(user_habits: { user_id: Current.user.id }).find_by(id: params[:id])
+  end
+
+  def record_completion(habit, local_date, status)
+    Habits::RecordCompletion.call(
+      user: Current.user,
+      user_habit: habit,
+      local_date: local_date,
+      status: status
+    )
+  end
+
+  def not_found_redirect
+    redirect_to my_day_path, alert: t("habit_completions.flash.not_found")
+  end
 
   def my_day_redirect_options(day)
     return {} unless day.is_a?(Date)

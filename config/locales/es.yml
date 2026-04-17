@@ -19,6 +19,11 @@ es:
       view_today: "Volver a hoy"
       empty: "No hay hábitos previstos para este día."
       back_home: "Volver al inicio"
+      actions_legend: "Acciones para este día"
+      streak_display:
+        zero: "Racha: 0 días"
+        one: "Racha: 1 día"
+        other: "Racha: %{count} días"
     actions:
       mark_done: "Hecho"
       mark_failed: "Fallado"

@@ -44,6 +44,11 @@ en:
       view_today: "Back to today"
       empty: "No habits scheduled for this day."
       back_home: "Back to home"
+      actions_legend: "Actions for this day"
+      streak_display:
+        zero: "Streak: 0 days"
+        one: "Streak: 1 day"
+        other: "Streak: %{count} days"
     actions:
       mark_done: "Done"
       mark_failed: "Failed"

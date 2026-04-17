@@ -25,6 +25,7 @@ RSpec.describe "Mi Día streak display", type: :request do
       get my_day_path, params: { fecha: "2026-04-19" }
 
       expect(response.body).to include(%(data-habit-streak="2"))
+      expect(response.body).to include(I18n.t("my_day.show.streak_display", count: 2))
     end
   end
 end
