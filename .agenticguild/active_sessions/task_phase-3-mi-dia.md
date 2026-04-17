@@ -170,7 +170,7 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Streak logic must not live in ERB; test-first service.</tdd_note>
   </step>
 
-  <step order="10">
+  <step order="10" status="completed">
     <title>Extend `Habits::NextOccurrence` and housekeeping</title>
     <action>Align `NextOccurrence` (or deprecate in favor of DueOnDate) for types still used in UI previews; update `# [REQ-HAB-009]` coverage as needed. Run full `bundle exec rspec`; fix lints on touched files.</action>
     <tdd_note>Any new behavior covered by failing test first.</tdd_note>

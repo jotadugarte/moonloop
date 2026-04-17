@@ -18,5 +18,20 @@ RSpec.describe Habits::NextOccurrence do
 
       expect(result).to eq(Date.new(2026, 4, 14))
     end
+
+    # [REQ-HAB-009]
+    it "returns the next due day strictly after date for every_x_days" do
+      user = create(:user, timezone: "Etc/UTC")
+      habit = create(:user_habit,
+        user: user,
+        frequency_type: "every_x_days",
+        frequency_params: { "interval" => 3 },
+        activation_date: Date.new(2026, 4, 10))
+
+      # Due on 10, 13, 16, … — first due strictly after 10 Apr is 13 Apr
+      result = described_class.after(user_habit: habit, date: Date.new(2026, 4, 10))
+
+      expect(result).to eq(Date.new(2026, 4, 13))
+    end
   end
 end

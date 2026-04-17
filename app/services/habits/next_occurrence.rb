@@ -1,6 +1,6 @@
 module Habits
   # Computes the next calendar occurrence after +date+ for preview/tests.
-  # +every_x_days+ is still deferred; +weekdays+ aligns with +Habits::DueOnDate+ listing.
+  # +weekdays+ and +every_x_days+ follow the same calendar rules as +Habits::DueOnDate+.
   class NextOccurrence
     def self.after(user_habit:, date:)
       raise ArgumentError unless date.is_a?(Date)
@@ -18,6 +18,21 @@ module Habits
         end
 
         raise ArgumentError, "no next weekday in range"
+      when "every_x_days"
+        act = user_habit.activation_date
+        raise ArgumentError if act.blank?
+
+        interval = user_habit.frequency_params.is_a?(Hash) ? user_habit.frequency_params["interval"] : nil
+        raise ArgumentError unless interval.is_a?(Integer) && interval >= 1
+
+        candidate = date + 1.day
+        400.times do
+          return candidate if candidate >= act && ((candidate - act).to_i % interval).zero?
+
+          candidate += 1.day
+        end
+
+        raise ArgumentError, "no next every_x_days occurrence in search window"
       when "monthly"
         raise ArgumentError if user_habit.activation_date.blank?
 
