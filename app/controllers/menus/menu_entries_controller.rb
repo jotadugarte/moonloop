@@ -32,10 +32,15 @@ module Menus
         end
         format.html { redirect_to edit_menu_path(@menu) }
       end
-    rescue ActiveRecord::RecordInvalid
+    rescue ActiveRecord::RecordInvalid => e
       @weekday = Integer(menu_entry_params[:weekday])
       @meal_type = menu_entry_params[:meal_type].to_s
-      @entry = @menu.menu_entries.find_by(weekday: @weekday, meal_type: @meal_type)
+      @entry =
+        if e.record.is_a?(MenuEntry)
+          e.record
+        else
+          @menu.menu_entries.find_by(weekday: @weekday, meal_type: @meal_type)
+        end
 
       respond_to do |format|
         format.turbo_stream do

@@ -23,8 +23,14 @@ module Menus
       rid = recipe_id.present? ? recipe_id.to_i : nil
       text = freeform_text.to_s.strip
       text = nil if text.blank?
+      text = nil unless user.allow_menu_freeform
 
       if rid.nil? && text.nil?
+        if entry.persisted? && !user.allow_menu_freeform && entry.recipe_id.blank? && entry.freeform_text.present?
+          entry.errors.add(:base, :recipes_only_require_recipe_or_clear)
+          raise ActiveRecord::RecordInvalid.new(entry)
+        end
+
         entry.destroy! if entry.persisted?
         return :cleared
       end

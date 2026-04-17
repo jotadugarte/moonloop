@@ -22,6 +22,11 @@
     <%= form.text_field :timezone, required: true, data: { timezone_target: "input" }, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
 
+  <div class="flex items-start gap-2">
+    <%= form.check_box :allow_menu_freeform, class: "mt-1" %>
+    <%= form.label :allow_menu_freeform, t(".allow_menu_freeform"), class: "text-gray-700" %>
+  </div>
+
   <div class="pt-4">
     <%= form.submit t('.submit'), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
   </div>

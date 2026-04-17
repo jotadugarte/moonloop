@@ -62,7 +62,10 @@ es:
       cena: "Cena"
       merienda: "Merienda"
     slots:
-      recipe_id_label: "ID de receta"
+      recipe_id_label: "Receta"
+      recipe_pick_label: "Receta"
+      recipe_blank: "Sin receta"
+      legacy_freeform_hint: "Nota guardada (solo recetas). Elige una receta o usa Limpiar:"
       freeform_label: "Nota"
       save_submit: "Guardar"
       clear_submit: "Limpiar"
@@ -146,6 +149,7 @@ es:
     edit:
       title: "Editar perfil"
       submit: "Actualizar perfil"
+      allow_menu_freeform: "Permitir notas libres en los casilleros del menú"
       prohibited:
         one: "1 error impidió guardar tu perfil:"
         other: "%{count} errores impidieron guardar tu perfil:"
@@ -247,6 +251,7 @@ es:
         date_of_birth: "Fecha de nacimiento"
         height_cm: "Altura (cm)"
         timezone: "Zona horaria"
+        allow_menu_freeform: "Notas libres en menús"
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
@@ -293,4 +298,5 @@ es:
             recipe_id:
               must_match_menu_owner: "debe ser una receta de tu cuenta"
             base:
-              content_required: "elegí una receta o escribí una nota"
+              content_required: "elige una receta o escribe una nota"
+              recipes_only_require_recipe_or_clear: "elige una receta o usa Limpiar para vaciar este casillero"

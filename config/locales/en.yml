@@ -87,7 +87,10 @@ en:
       cena: "Dinner"
       merienda: "Snack"
     slots:
-      recipe_id_label: "Recipe id"
+      recipe_id_label: "Recipe"
+      recipe_pick_label: "Recipe"
+      recipe_blank: "No recipe"
+      legacy_freeform_hint: "Saved note (recipes-only mode). Pick a recipe or use Clear:"
       freeform_label: "Note"
       save_submit: "Save"
       clear_submit: "Clear"
@@ -221,6 +224,7 @@ en:
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
         timezone: "Timezone"
+        allow_menu_freeform: "Free-form menu notes"
       user_habit:
         name: "Name"
         activation_date: "Activation date"
@@ -263,6 +267,7 @@ en:
               must_match_menu_owner: "must be a recipe from your account"
             base:
               content_required: "choose a recipe or enter a note"
+              recipes_only_require_recipe_or_clear: "choose a recipe or use Clear to empty this slot"
   shared:
     back: "Back"
     save_changes: "Save changes"
@@ -301,6 +306,7 @@ en:
     edit:
       title: "Edit Profile"
       submit: "Update Profile"
+      allow_menu_freeform: "Allow free-form notes in menu slots"
       prohibited:
         one: "1 error prohibited your profile from being saved:"
         other: "%{count} errors prohibited your profile from being saved:"
