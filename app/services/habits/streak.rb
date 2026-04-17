@@ -16,11 +16,13 @@ module Habits
       user_today = Time.find_zone!(@user_habit.user.timezone).today
       raise ArgumentError, "as_of cannot be after the user's local today" if @as_of > user_today
 
+      lower = lower_bound_date
+      raise ArgumentError, "as_of cannot be before this habit's schedulable window" if @as_of < lower
+
       return 0 unless @user_habit.active?
 
       cursor = @as_of
       streak = 0
-      lower = lower_bound_date
 
       while cursor >= lower
         unless DueOnDate.due_on?(@user_habit, cursor)

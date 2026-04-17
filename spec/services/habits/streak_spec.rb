@@ -49,5 +49,20 @@ RSpec.describe "Habits::Streak" do
         }.to raise_error(ArgumentError, /today/)
       end
     end
+
+    # [REQ-DAY-004]
+    it "raises ArgumentError when as_of is before the habit's schedulable window starts" do
+      user = create(:user, timezone: "Etc/UTC")
+      habit = create(:user_habit,
+        user: user,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        expect {
+          Habits::Streak.call(user_habit: habit, as_of: Date.new(2025, 12, 15))
+        }.to raise_error(ArgumentError, /schedulable|before|window/i)
+      end
+    end
   end
 end
