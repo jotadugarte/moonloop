@@ -66,6 +66,29 @@ RSpec.describe "Habits::Streak" do
     end
 
     # [REQ-DAY-004]
+    it "raises ArgumentError when the bounded day walk exceeds the safety limit" do
+      stub_const("Habits::Streak::MAX_CALENDAR_DAY_STEPS", 5)
+
+      user = create(:user, timezone: "Etc/UTC")
+      habit = create(:user_habit,
+        user: user,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 1, 25, 12, 0, 0) do
+        # Each closed due day must be "done" or the walk breaks early; five done days
+        # force five full iterations, then the sixth loop head trips the safety bound.
+        (Date.new(2026, 1, 16)..Date.new(2026, 1, 20)).each do |day|
+          create(:habit_completion, user_habit: habit, completed_on: day, status: "done")
+        end
+
+        expect {
+          Habits::Streak.call(user_habit: habit, as_of: Date.new(2026, 1, 20))
+        }.to raise_error(ArgumentError, /exceeded 5 steps/)
+      end
+    end
+
+    # [REQ-DAY-004]
     it "raises ArgumentError when as_of is nil" do
       user = create(:user, timezone: "Etc/UTC")
       habit = create(:user_habit,

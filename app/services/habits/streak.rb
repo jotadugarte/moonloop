@@ -3,6 +3,9 @@
 module Habits
   # Current streak length (REQ-DAY-004) — expanded example-by-example in streak_spec.
   class Streak
+    # Hard cap on backward day-steps (see docs/core/deterministic_coding_standards.md Rule 2).
+    # Real walks are O(as_of − lower); this only guards pathological ranges or bugs.
+    MAX_CALENDAR_DAY_STEPS = 100_000
     def self.call(user_habit:, as_of:, completions_by_date: nil)
       new(user_habit: user_habit, as_of: as_of, completions_by_date: completions_by_date).call
     end
@@ -31,8 +34,15 @@ module Habits
 
       cursor = @as_of
       streak = 0
+      steps = 0
 
       while cursor >= lower
+        steps += 1
+        if steps > MAX_CALENDAR_DAY_STEPS
+          raise ArgumentError,
+                "streak walk exceeded #{MAX_CALENDAR_DAY_STEPS} steps (as_of=#{ @as_of }, lower=#{ lower })"
+        end
+
         unless DueOnDate.due_on?(@user_habit, cursor)
           cursor -= 1
           next
