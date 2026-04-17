@@ -29,6 +29,30 @@ class MyDayController < ApplicationController
     habit_ids = @due_habits.map(&:id)
     @completions_by_habit_id = completions_for_day(habit_ids)
     @streak_by_habit_id = streaks_for_due_habits
+
+    load_exercise_routine_context
+  end
+
+  def load_exercise_routine_context
+    @week_index = Phases::WeekNumber.for_local_date(user: Current.user, local_date: @local_date)
+    @active_exercise_routine =
+      if @week_index.present?
+        ExerciseRoutines::ResolveActiveRoutine.call(user: Current.user, week_index: @week_index)
+      end
+
+    @fitness_exercise_habit =
+      Current.user.user_habits
+        .includes(:habit_category, :global_habit_template)
+        .joins(:global_habit_template)
+        .find_by(global_habit_templates: { code: "fitness_exercise" })
+
+    wday = @local_date.wday
+    @exercise_preview_lines =
+      if @active_exercise_routine
+        @active_exercise_routine.exercise_routine_lines.where(weekday: wday).order(:position)
+      else
+        ExerciseRoutineLine.none
+      end
   end
 
   def completions_for_day(habit_ids)

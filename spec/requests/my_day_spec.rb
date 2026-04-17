@@ -127,4 +127,114 @@ RSpec.describe "Mi Día (My Day)", type: :request do
       expect(response.body).not_to include("Empieza después")
     end
   end
+
+  # [REQ-EXR-003]
+  it "always exposes global exercise + phase plan shortcuts" do
+    get my_day_path
+
+    expect(response.body).to include('data-test="my-day-exercise-shortcut"')
+    expect(response.body).to include(exercise_routines_path)
+    expect(response.body).to include(phase_path)
+  end
+
+  # [REQ-EXR-003]
+  it "shows active routine preview for fitness_exercise when that habit is due" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      user.update!(phase_one_starts_on: Date.new(2026, 4, 10), timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      template = create(:global_habit_template, code: "fitness_exercise")
+      create(:user_habit,
+        user: user,
+        habit_category: category,
+        global_habit_template: template,
+        name: "Ejercicio",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      routine = ExerciseRoutine.new(user: user, name: "Gym A")
+      routine.exercise_routine_lines.build(weekday: 4, position: 0, label: "Press banca")
+      routine.save!
+
+      ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 4)
+
+      get my_day_path
+
+      expect(response.body).to include('data-test="my-day-exercise-inline"')
+      expect(response.body).to include("Gym A")
+      expect(response.body).to include("Press banca")
+      expect(response.body).to include(edit_exercise_routine_path(routine))
+    end
+  end
+
+  # [REQ-EXR-003]
+  it "does not show inline routine when fitness_exercise is not due that day" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      user.update!(phase_one_starts_on: Date.new(2026, 4, 10), timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      template = create(:global_habit_template, code: "fitness_exercise")
+      create(:user_habit,
+        user: user,
+        habit_category: category,
+        global_habit_template: template,
+        name: "Ejercicio",
+        frequency_type: "weekdays",
+        frequency_params: { "weekdays" => [ 1 ] },
+        activation_date: Date.new(2026, 1, 1))
+
+      routine = ExerciseRoutine.new(user: user, name: "Gym A")
+      routine.exercise_routine_lines.build(weekday: 4, position: 0, label: "Press banca")
+      routine.save!
+
+      ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 4)
+
+      get my_day_path
+
+      expect(response.body).not_to include('data-test="my-day-exercise-inline"')
+      expect(response.body).to include('data-test="my-day-exercise-shortcut"')
+    end
+  end
+
+  # [REQ-EXR-003]
+  it "shows a disabled block when fitness_exercise exists but is inactive" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      user.update!(phase_one_starts_on: Date.new(2026, 4, 10), timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      template = create(:global_habit_template, code: "fitness_exercise")
+      create(:user_habit,
+        user: user,
+        habit_category: category,
+        global_habit_template: template,
+        name: "Ejercicio",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        active: false)
+
+      get my_day_path
+
+      expect(response.body).to include('data-test="my-day-exercise-inactive"')
+      expect(response.body).not_to include('data-test="my-day-exercise-inline"')
+      expect(response.body).to include(user_habits_path)
+    end
+  end
+
+  # [REQ-EXR-003]
+  it "shows inline guidance when due but no routine is assigned for the week" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      user.update!(phase_one_starts_on: Date.new(2026, 4, 10), timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      template = create(:global_habit_template, code: "fitness_exercise")
+      create(:user_habit,
+        user: user,
+        habit_category: category,
+        global_habit_template: template,
+        name: "Ejercicio",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      get my_day_path
+
+      expect(response.body).to include('data-test="my-day-exercise-inline"')
+      expect(response.body).to include(I18n.t("my_day.show.exercise_no_routine_this_week"))
+    end
+  end
 end
