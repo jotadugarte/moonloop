@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   resources :recipes
   resource :phase, only: %i[show update] do
     post :dismiss_reminder, on: :member
+    post :repeat_last_assignment, on: :member
   end
   resources :phase_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]

@@ -7,6 +7,7 @@ class PhasesController < ApplicationController
     @active_menu = Phases::ResolveActiveMenu.call(user: @user, week_index: @week_index)
     @assignments = @user.phase_assignments.includes(:menu).order(:start_week)
     @phase_start_in_app_reminder = Phases::PhaseStartInAppReminderVisible.call(user: @user)
+    @plan_ended = Phases::PlanEnded.call(user: @user, week_index: @week_index)
   end
 
   def update
@@ -22,7 +23,17 @@ class PhasesController < ApplicationController
       @active_menu = Phases::ResolveActiveMenu.call(user: @user, week_index: @week_index)
       @assignments = @user.phase_assignments.includes(:menu).order(:start_week)
       @phase_start_in_app_reminder = Phases::PhaseStartInAppReminderVisible.call(user: @user)
+      @plan_ended = Phases::PlanEnded.call(user: @user, week_index: @week_index)
       render :show, status: :unprocessable_entity
+    end
+  end
+
+  def repeat_last_assignment
+    @user = Current.user
+    if Phases::RepeatLastPhaseAssignment.call(user: @user)
+      redirect_to phase_path, notice: t("phases.flash.repeat_last_assignment_created")
+    else
+      redirect_to phase_path, alert: t("phases.flash.repeat_last_assignment_nothing_to_repeat")
     end
   end
 

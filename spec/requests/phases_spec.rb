@@ -67,4 +67,27 @@ RSpec.describe "Phases dashboard", type: :request do
     expect(user.phase_reminder_in_app).to eq(false)
     expect(user.phase_reminder_email).to eq(true)
   end
+
+  # [REQ-MENU-005]
+  it "repeats the last assignment block when requested" do
+    menu = Menu.create!(user: user, name: "Plan")
+    PhaseAssignment.create!(user: user, menu: menu, start_week: 1, end_week: 4)
+
+    post repeat_last_assignment_phase_path
+
+    expect(response).to redirect_to(phase_path)
+    expect(flash[:notice]).to eq(I18n.t("phases.flash.repeat_last_assignment_created"))
+    added = PhaseAssignment.order(:start_week).last
+    expect(added.start_week).to eq(5)
+    expect(added.end_week).to eq(8)
+    expect(added.menu_id).to eq(menu.id)
+  end
+
+  # [REQ-MENU-005]
+  it "does not repeat when there are no assignments" do
+    post repeat_last_assignment_phase_path
+
+    expect(response).to redirect_to(phase_path)
+    expect(flash[:alert]).to eq(I18n.t("phases.flash.repeat_last_assignment_nothing_to_repeat"))
+  end
 end

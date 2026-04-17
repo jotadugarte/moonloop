@@ -170,10 +170,15 @@ en:
       menus_link: "Menus"
       phase_start_reminder_banner: "Today is the first day of your Phase 1 plan."
       phase_start_reminder_dismiss: "Hide for today"
+      plan_ended_message: "Your configured week ranges end before the current program week. Extend your plan or add a new range."
+      repeat_last_assignment: "Repeat last block"
+      add_week_range: "Add a new week range"
     flash:
       anchor_updated: "Start date updated."
       anchor_far_future_warning: "Your Phase 1 start is more than three days away. We will remind you when it begins."
       reminder_dismissed: "Reminder hidden for today."
+      repeat_last_assignment_created: "New week range added from your last menu block."
+      repeat_last_assignment_nothing_to_repeat: "There is no previous assignment to repeat."
   phase_assignments:
     new:
       title: "New assignment — Moonloop"

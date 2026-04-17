@@ -145,10 +145,15 @@ es:
       menus_link: "Menús"
       phase_start_reminder_banner: "Hoy empieza tu fase 1."
       phase_start_reminder_dismiss: "Ocultar por hoy"
+      plan_ended_message: "Tus rangos de semanas terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo."
+      repeat_last_assignment: "Repetir el último bloque"
+      add_week_range: "Añadir un rango de semanas"
     flash:
       anchor_updated: "Fecha de inicio actualizada."
       anchor_far_future_warning: "El inicio de tu fase 1 es dentro de más de tres días. Te recordaremos cuando comience."
       reminder_dismissed: "Recordatorio oculto por hoy."
+      repeat_last_assignment_created: "Se añadió un rango nuevo a partir del último bloque de menú."
+      repeat_last_assignment_nothing_to_repeat: "No hay una asignación anterior para repetir."
   phase_assignments:
     new:
       title: "Nueva asignación — Moonloop"

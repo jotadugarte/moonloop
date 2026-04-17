@@ -12,6 +12,19 @@
   </div>
 <% end %>
 
+<% if @plan_ended %>
+  <div class="mb-6 rounded border border-slate-400 bg-slate-50 px-4 py-3 text-slate-900" data-test="phase-plan-ended-banner" role="status">
+    <p class="font-medium mb-3"><%= t("phases.show.plan_ended_message") %></p>
+    <div class="flex flex-wrap gap-3 items-center">
+      <%= button_to t("phases.show.repeat_last_assignment"),
+                    repeat_last_assignment_phase_path,
+                    method: :post,
+                    class: "text-sm bg-slate-800 text-white px-3 py-1.5 rounded cursor-pointer hover:bg-slate-900 border-0" %>
+      <%= link_to t("phases.show.add_week_range"), new_phase_assignment_path, class: "text-sm text-blue-600 underline" %>
+    </div>
+  </div>
+<% end %>
+
 <section class="mb-8 space-y-2">
   <% if @week_index.present? %>
     <p><%= t("phases.show.current_week", index: @week_index) %></p>
