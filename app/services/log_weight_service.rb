@@ -15,7 +15,8 @@ class LogWeightService
       log = user.weight_logs.create!(
         weight_kg: weight_kg,
         height_cm: height_cm,
-        bmi: bmi_value
+        bmi: bmi_value,
+        logged_at: Time.current
       )
 
       # Sink current values to User for faster reads

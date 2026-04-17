@@ -63,13 +63,13 @@ RSpec.describe WeightLog, type: :model do
       log = build(:weight_log, logged_at: nil)
       expect(log).not_to be_valid
       expect(log.errors[:logged_at]).to include(
-        I18n.t("errors.messages.blank")
+        I18n.t("activerecord.errors.messages.blank")
       )
     end
 
     # [REQ-WGT-001]
     it 'is invalid when strictly after now in the user timezone' do
-      user = create(:user, timezone: "UTC")
+      user = create(:user, timezone: "Etc/UTC")
       travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
         log = build(:weight_log, user: user, logged_at: 1.hour.from_now)
         expect(log).not_to be_valid

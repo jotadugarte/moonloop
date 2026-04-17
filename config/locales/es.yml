@@ -464,6 +464,8 @@ es:
         position: "Orden"
         label: "Etiqueta"
         notes: "Notas"
+      weight_log:
+        logged_at: "Fecha y hora del pesaje"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -515,6 +517,10 @@ es:
               must_match_user: "debe ser una rutina de tu cuenta"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
+        weight_log:
+          attributes:
+            logged_at:
+              future_timestamp: "no puede ser posterior al momento actual"
         menu_entry:
           attributes:
             meal_type:

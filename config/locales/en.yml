@@ -433,6 +433,8 @@ en:
         position: "Order"
         label: "Label"
         notes: "Notes"
+      weight_log:
+        logged_at: "Weigh-in date and time"
     errors:
       models:
         user:
@@ -479,6 +481,10 @@ en:
               must_match_user: "must be an exercise routine from your account"
             base:
               range_overlap: "that week range overlaps another assignment"
+        weight_log:
+          attributes:
+            logged_at:
+              future_timestamp: "cannot be after the current moment"
         menu_entry:
           attributes:
             meal_type:
