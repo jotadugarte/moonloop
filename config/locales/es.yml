@@ -333,6 +333,14 @@ es:
       new_password: "Contraseña nueva"
       confirm_new_password: "Confirmar contraseña nueva"
       password_hint: "Mínimo 12 caracteres."
+  weight_logs:
+    flash:
+      destroyed: "Entrada de peso eliminada"
+    confirm_destroy:
+      title: "Eliminar entrada de peso"
+      warning_html: "Se borrará esta medición del historial y se actualizará tu <strong>peso actual</strong> según el resto de registros. Esta acción no se puede deshacer."
+      confirm_submit: "Sí, eliminar"
+      cancel: "Cancelar"
   profiles:
     update:
       success: "Perfil actualizado correctamente"

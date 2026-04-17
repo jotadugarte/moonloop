@@ -123,7 +123,7 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
 
   <step id="2" status="complete">Write failing **service** specs for **reconciling** `User#current_weight_kg` and `User#current_bmi` from the `weight_logs` row with **maximum `logged_at`** (tie-break `id`), or `nil` if none. Refactor **`LogWeightService`** to accept `logged_at` (and `weight_kg`), persist it on the new row, then call reconciler so a **retroactive** entry does not overwrite “current” when a newer `logged_at` exists. Extend/adjust existing `LogWeightService` specs. `# [REQ-WGT-002]`</step>
 
-  <step id="3" status="pending">Write failing specs for **destroy**: authenticated user deletes own `WeightLog` only; confirmation flow as per app patterns; after destroy, run same **reconciler** for `User` stats. Implement `destroy` action + thin orchestration (service object under `app/services/` if non-trivial). Transaction safety. `# [REQ-WGT-002]` `# [REQ-WGT-003]`</step>
+  <step id="3" status="complete">Write failing specs for **destroy**: authenticated user deletes own `WeightLog` only; confirmation flow as per app patterns; after destroy, run same **reconciler** for `User` stats. Implement `destroy` action + thin orchestration (service object under `app/services/` if non-trivial). Transaction safety. `# [REQ-WGT-002]` `# [REQ-WGT-003]`</step>
 
   <step id="4" status="pending">Write failing **request** (and optionally **system**) specs for **REQ-WGT-002**: new/create weight entry form (weight + datetime in user TZ; no height field); flash/validation errors with accessible patterns; Turbo-appropriate behavior consistent with the app. `# [REQ-WGT-002]`</step>
 
