@@ -244,7 +244,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="1.4" status="complete">Write failing specs for sharing + moderation: public visibility scope and admin revocation of sharing.</step>
 
     <step id="2.1" status="complete"># [REQ-MENU-001] Write request/system specs for menu CRUD and 7×4 grid editor interactions (Turbo), including sparse empty-slot behavior.</step>
-    <step id="2.2" status="pending">Implement menu CRUD + grid editor with Turbo; move orchestration into services (e.g., Menus::UpsertEntry).</step>
+    <step id="2.2" status="complete">Implement menu CRUD + grid editor with Turbo; move orchestration into services (e.g., Menus::UpsertEntry).</step>
     <step id="2.3" status="pending">Implement slot recipe picker + freeform input gated by per-user preference; add tests.</step>
     <step id="2.4" status="pending">Implement meal-type fallback image behavior in slot UI (context-based when recipe has no image); add tests.</step>
 
