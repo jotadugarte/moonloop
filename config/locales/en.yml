@@ -29,6 +29,45 @@
 
 en:
   hello: "Hello world"
+  date:
+    formats:
+      long: "%B %d, %Y"
+  my_day:
+    flash:
+      invalid_date: "That date is not valid."
+      future_date_not_allowed: "You cannot pick a future day."
+    show:
+      page_title: "My Day — Moonloop"
+      heading: "My Day"
+      date_label: "Day"
+      go_to_date: "Go"
+      view_today: "Back to today"
+      empty: "No habits scheduled for this day."
+      back_home: "Back to home"
+      actions_legend: "Actions for this day"
+      streak_display:
+        zero: "Streak: 0 days"
+        one: "Streak: 1 day"
+        other: "Streak: %{count} days"
+    actions:
+      mark_done: "Done"
+      mark_failed: "Failed"
+      clear: "Clear"
+  habit_completions:
+    status:
+      done: "Done"
+      failed: "Failed"
+    flash:
+      saved: "Completion saved."
+      cleared: "Marked as pending again."
+      inactive: "You cannot mark an inactive habit."
+      future_date: "You cannot mark future days."
+      not_due: "That habit is not scheduled for that day."
+      not_found: "We could not find that habit."
+      invalid_date: "That date is not valid."
+      invalid_status: "That status is not valid."
+      invalid_request: "The form data is incomplete."
+      could_not_save: "Could not save. Please try again."
   sessions:
     new:
       title: "Sign in"
@@ -148,6 +187,9 @@ en:
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
         timezone: "Timezone"
+      user_habit:
+        name: "Name"
+        activation_date: "Activation date"
     errors:
       models:
         user:
@@ -161,8 +203,14 @@ en:
           attributes:
             base:
               cannot_delete_with_habits: "cannot delete a category that has habits"
+        habit_completion:
+          attributes:
+            base:
+              user_habit_inactive: "cannot record completions while the habit is inactive"
         user_habit:
           attributes:
+            activation_date:
+              locked_when_completions_exist: "cannot be changed while completions exist"
             frequency_params:
               must_be_object: "must be a JSON object"
               invalid_weekdays: "must include weekdays 0..6"
@@ -177,6 +225,7 @@ en:
         other: "%{count} errors prohibited this %{model} from being saved:"
   home:
     index:
+      my_day: "My Day"
       signed_as: "Signed as %{email}"
       login_section_title: "Login and verification"
       change_password: "Change password"

@@ -1,0 +1,63 @@
+<% content_for :title, t("my_day.show.page_title") %>
+
+<h1><%= t("my_day.show.heading") %></h1>
+
+<%= form_with url: my_day_path, method: :get, local: true, class: "my-day-date-picker" do %>
+  <label for="fecha"><%= t("my_day.show.date_label") %></label>
+  <input type="date" id="fecha" name="fecha" value="<%= @local_date %>" max="<%= @max_date %>">
+  <button type="submit"><%= t("my_day.show.go_to_date") %></button>
+<% end %>
+
+<p class="my-day-date"><%= l(@local_date, format: :long) %></p>
+
+<% if @local_date < @max_date %>
+  <p><%= link_to t("my_day.show.view_today"), my_day_path %></p>
+<% end %>
+
+<% if @due_habits.empty? %>
+  <p><%= t("my_day.show.empty") %></p>
+<% else %>
+  <ul class="my-day-habits">
+    <% @due_habits.each do |habit| %>
+      <% completion = @completions_by_habit_id[habit.id] %>
+      <li id="<%= dom_id(habit) %>" data-habit-streak="<%= @streak_by_habit_id[habit.id] %>">
+        <span class="my-day-habit-name"><%= habit.name %></span>
+        <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
+        <span class="my-day-habit-streak"><%= t("my_day.show.streak_display", count: @streak_by_habit_id[habit.id]) %></span>
+        <% if completion %>
+          <span class="my-day-habit-status"><%= t("habit_completions.status.#{completion.status}") %></span>
+        <% end %>
+        <fieldset class="my-day-actions">
+          <legend class="my-day-actions-legend"><%= t("my_day.show.actions_legend") %></legend>
+          <%= button_to t("my_day.actions.mark_done"),
+                habit_completions_path,
+                method: :post,
+                params: {
+                  habit_completion: {
+                    user_habit_id: habit.id,
+                    completed_on: @local_date.iso8601,
+                    status: "done"
+                  }
+                } %>
+          <%= button_to t("my_day.actions.mark_failed"),
+                habit_completions_path,
+                method: :post,
+                params: {
+                  habit_completion: {
+                    user_habit_id: habit.id,
+                    completed_on: @local_date.iso8601,
+                    status: "failed"
+                  }
+                } %>
+          <% if completion %>
+            <%= button_to t("my_day.actions.clear"),
+                  habit_completion_path(completion),
+                  method: :delete %>
+          <% end %>
+        </fieldset>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p><%= link_to t("my_day.show.back_home"), root_path %></p>

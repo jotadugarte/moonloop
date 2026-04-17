@@ -1,5 +1,48 @@
 es:
   hello: "Hola mundo"
+  date:
+    formats:
+      long: "%d de %B de %Y"
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
+    abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+    day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
+    abbr_day_names: [dom, lun, mar, mié, jue, vie, sáb]
+  my_day:
+    flash:
+      invalid_date: "La fecha no es válida."
+      future_date_not_allowed: "No podés elegir un día futuro."
+    show:
+      page_title: "Mi Día — Moonloop"
+      heading: "Mi Día"
+      date_label: "Día"
+      go_to_date: "Ir"
+      view_today: "Volver a hoy"
+      empty: "No hay hábitos previstos para este día."
+      back_home: "Volver al inicio"
+      actions_legend: "Acciones para este día"
+      streak_display:
+        zero: "Racha: 0 días"
+        one: "Racha: 1 día"
+        other: "Racha: %{count} días"
+    actions:
+      mark_done: "Hecho"
+      mark_failed: "Fallado"
+      clear: "Quitar marca"
+  habit_completions:
+    status:
+      done: "Hecho"
+      failed: "Fallado"
+    flash:
+      saved: "Cumplimiento guardado."
+      cleared: "Volviste a pendiente."
+      inactive: "No puedes marcar un hábito inactivo."
+      future_date: "No puedes marcar días futuros."
+      not_due: "Ese hábito no corresponde a ese día."
+      not_found: "No encontramos ese hábito."
+      invalid_date: "La fecha no es válida."
+      invalid_status: "El estado no es válido."
+      invalid_request: "Faltan datos del formulario."
+      could_not_save: "No se pudo guardar. Reintentá."
   sessions:
     new:
       title: "Iniciar sesión"
@@ -82,6 +125,7 @@ es:
         other: "%{count} errores impidieron guardar este %{model}:"
   home:
     index:
+      my_day: "Mi Día"
       signed_as: "Sesión iniciada como %{email}"
       login_section_title: "Inicio de sesión y verificación"
       change_password: "Cambiar contraseña"
@@ -171,6 +215,7 @@ es:
         timezone: "Zona horaria"
       user_habit:
         name: "Nombre"
+        activation_date: "Fecha de activación"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -189,8 +234,14 @@ es:
           attributes:
             base:
               cannot_delete_with_habits: "no se puede eliminar una categoría que tiene hábitos"
+        habit_completion:
+          attributes:
+            base:
+              user_habit_inactive: "no puedes registrar cumplimientos mientras el hábito está inactivo"
         user_habit:
           attributes:
+            activation_date:
+              locked_when_completions_exist: "no se puede cambiar mientras existan cumplimientos registrados"
             frequency_params:
               must_be_object: "debe ser un objeto JSON"
               invalid_weekdays: "debe incluir días de la semana de 0 a 6"

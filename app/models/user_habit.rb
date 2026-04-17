@@ -3,6 +3,8 @@ class UserHabit < ApplicationRecord
   belongs_to :habit_category
   belongs_to :global_habit_template, optional: true
 
+  has_many :habit_completions, dependent: :destroy
+
   validates :name, :name_normalized, presence: true
   validates :frequency_type, presence: true
   validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days monthly] }
@@ -14,6 +16,7 @@ class UserHabit < ApplicationRecord
   validate :active_name_must_be_unique_per_user, if: -> { user_id.present? && active? && name_normalized.present? }
   validate :frequency_params_shape
   validate :frequency_requirements
+  validate :activation_date_locked_if_completions_exist, on: :update
 
   def next_occurrence_after(date)
     Habits::NextOccurrence.after(user_habit: self, date: date)
@@ -55,5 +58,12 @@ class UserHabit < ApplicationRecord
     relation = relation.where.not(id: id) if persisted?
     return unless relation.exists?
     errors.add(:name, :taken)
+  end
+
+  def activation_date_locked_if_completions_exist
+    return unless activation_date_changed?
+    return if habit_completions.none?
+
+    errors.add(:activation_date, :locked_when_completions_exist)
   end
 end

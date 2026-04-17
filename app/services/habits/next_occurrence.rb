@@ -1,8 +1,6 @@
 module Habits
   # Computes the next calendar occurrence after +date+ for preview/tests.
-  # Only +daily+ and +monthly+ are implemented today. +weekdays+ and +every_x_days+
-  # are deferred to Phase 3 (“Mi Día” / schedule resolution); callers receive
-  # NotImplementedError until those paths exist.
+  # +weekdays+ and +every_x_days+ follow the same calendar rules as +Habits::DueOnDate+.
   class NextOccurrence
     def self.after(user_habit:, date:)
       raise ArgumentError unless date.is_a?(Date)
@@ -10,6 +8,31 @@ module Habits
       case user_habit.frequency_type
       when "daily"
         date + 1.day
+      when "weekdays"
+        weekdays = normalized_weekdays(user_habit)
+        raise ArgumentError if weekdays.empty?
+
+        1.upto(7) do |offset|
+          candidate = date + offset
+          return candidate if weekdays.include?(candidate.wday)
+        end
+
+        raise ArgumentError, "no next weekday in range"
+      when "every_x_days"
+        act = user_habit.activation_date
+        raise ArgumentError if act.blank?
+
+        interval = user_habit.frequency_params.is_a?(Hash) ? user_habit.frequency_params["interval"] : nil
+        raise ArgumentError unless interval.is_a?(Integer) && interval >= 1
+
+        candidate = date + 1.day
+        400.times do
+          return candidate if candidate >= act && ((candidate - act).to_i % interval).zero?
+
+          candidate += 1.day
+        end
+
+        raise ArgumentError, "no next every_x_days occurrence in search window"
       when "monthly"
         raise ArgumentError if user_habit.activation_date.blank?
 
@@ -22,5 +45,13 @@ module Habits
         raise NotImplementedError, "next_occurrence_after not implemented for #{user_habit.frequency_type.inspect}"
       end
     end
+
+    def self.normalized_weekdays(user_habit)
+      raw = user_habit.frequency_params.is_a?(Hash) ? user_habit.frequency_params["weekdays"] : nil
+      return [] unless raw.is_a?(Array)
+
+      raw.select { |v| v.is_a?(Integer) && v.between?(0, 6) }
+    end
+    private_class_method :normalized_weekdays
   end
 end

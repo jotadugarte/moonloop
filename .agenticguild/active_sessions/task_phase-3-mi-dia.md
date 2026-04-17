@@ -116,19 +116,19 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
   <classification>Feature</classification>
   <scope>Roadmap Phase 3 (#10–#14): #10 unify `weekly`→`weekdays` (done elsewhere); `Habits::DueOnDate` (or equivalent) for all frequency types; `habit_completions` persistence; Mi Día UI; mark/retro/streak per `docs/core/SYSTEM_ARCHITECTURE.md` (thin controllers, services under `app/services/habits/`, I18n, REQ traceability in specs).</scope>
 
-  <step order="1">
+  <step order="1" status="completed">
     <title>SPEC and registry alignment</title>
     <action>Update `docs/core/SPEC.md`: extend planned `REQ-DAY-001`–`004` with agreed semantics (TZ actual, inactive hidden, retro unlimited no future, streak closed-days-only, explicit failed == absent for streak); REQ-HAB-005 / `weekly` removal tracked in `task_unify-weekly-weekdays.md`; document `activation_date` edit rule (zero completion rows including after delete-all); `every_x_days` day-0 formula; first `weekdays`/`monthly` occurrence rules. Follow `.cursor/rules/spec-md-req-registry.mdc`.</action>
     <tdd_note>Not code-first; do not skip before writing failing tests for domain code in later steps.</tdd_note>
   </step>
 
-  <step order="2">
+  <step order="2" status="completed">
     <title>Roadmap #10 — Remove `weekly` type</title>
     <action>**Done** in session `task_unify-weekly-weekdays.md`: spec rejects `weekly`, data migration, model + SPEC. Remaining plan steps here skip #10.</action>
     <tdd_note>Start with failing tests that assert the new allowed set and migration behavior.</tdd_note>
   </step>
 
-  <step order="3">
+  <step order="3" status="completed">
     <title>`Habits::DueOnDate` (calendar rules)</title>
     <action>Write failing unit specs for `due_on?(user_habit, local_date)` covering `daily`, `weekdays` (multi and single element), `every_x_days` with `(date - activation_date) % interval == 0` and no dues before `activation_date`, `monthly` with clamp consistent with REQ-HAB-009, and first occurrence ≥ `activation_date` for weekdays. Use user timezone for civil dates. Implement service until green.</action>
     <tdd_note>Every branch introduced by a failing test before implementation.</tdd_note>
@@ -140,37 +140,37 @@ Discovery **cerrada** el 2026-04-16. Fuente de verdad de decisiones: tablas Lote
     <tdd_note>Failing model tests before migration application in dev.</tdd_note>
   </step>
 
-  <step order="5">
+  <step order="5" status="completed">
     <title>`activation_date` conditional immutability</title>
     <action>Write failing specs: `UserHabit` allows `activation_date` change when habit has zero completions; forbids change when at least one completion row exists; re-allows after all completions destroyed. Align with Lote 3. `# [REQ-HAB-005]` or new REQ row if split.</action>
     <tdd_note>Failing model tests first.</tdd_note>
   </step>
 
-  <step order="6">
+  <step order="6" status="completed">
     <title>Mi Día view (REQ-DAY-001)</title>
     <action>Write failing request or system specs: authenticated user sees only **active** habits due today per `DueOnDate` and user timezone; habits inactive omitted; none shown before `activation_date` for selected day. Controller thin; service composes list. I18n strings. Implement until green. `# [REQ-DAY-001]`.</action>
     <tdd_note>Failing integration/request spec before controller implementation.</tdd_note>
   </step>
 
-  <step order="7">
+  <step order="7" status="completed">
     <title>Mark done / failed / clear to pending (REQ-DAY-002)</title>
     <action>Write failing specs (request/system + service): mark today and past dates; reject future; Turbo-safe uniqueness; transitions done ↔ failed ↔ delete row; inactive habit returns error or redirect. Implement until green. `# [REQ-DAY-002]`.</action>
     <tdd_note>Failing tests before actions.</tdd_note>
   </step>
 
-  <step order="8">
+  <step order="8" status="completed">
     <title>Retro editing (REQ-DAY-003)</title>
     <action>Extend failing specs: unlimited past dates within due rules; no future; UI row remains visible when unchecked (behavioral spec where appropriate). `# [REQ-DAY-003]`.</action>
     <tdd_note>Extend with failing examples before code changes.</tdd_note>
   </step>
 
-  <step order="9">
+  <step order="9" status="completed">
     <title>Streak calculation (REQ-DAY-004)</title>
     <action>Write failing unit specs for dedicated service: consecutive **closed** due days with **done** only; today open does not break streak; inactive habits excluded; same semantics for explicit failed and no row. Freeze time with `travel_to` / zone helpers. Implement until green. `# [REQ-DAY-004]`.</action>
     <tdd_note>Streak logic must not live in ERB; test-first service.</tdd_note>
   </step>
 
-  <step order="10">
+  <step order="10" status="completed">
     <title>Extend `Habits::NextOccurrence` and housekeeping</title>
     <action>Align `NextOccurrence` (or deprecate in favor of DueOnDate) for types still used in UI previews; update `# [REQ-HAB-009]` coverage as needed. Run full `bundle exec rspec`; fix lints on touched files.</action>
     <tdd_note>Any new behavior covered by failing test first.</tdd_note>
