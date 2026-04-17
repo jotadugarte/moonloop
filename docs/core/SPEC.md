@@ -143,6 +143,11 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
 | REQ-MENU-004 | If anchor is more than three **local** days away, flash warning; **reminder** on phase-start day: in-app banner (dismiss for today) and optional email; independent channel prefs; idempotent `phase_reminder_events` and daily sweep job (`config/recurring.yml`). | Implemented |
 | REQ-MENU-005 | When current week is **past** all assignment ranges, show extension prompt; **repeat last block** (same menu and span) or link to **add a new range**. | Implemented |
+| REQ-EXR-001 | **Exercise routine content model:** user-owned weekly routine; ordered lines per weekday (0–6); CRUD + duplicate; delete with cascade of week-range assignments after confirmation. See **Acceptance criteria — REQ-EXR-001** below. | Implemented |
+| REQ-EXR-002 | **Program weeks → routine:** same anchor and `Phases::WeekNumber` as menus; `exercise_routine_assignments` with non-overlapping ranges per user; resolve active routine; phase plan UI on `/phase`. See **Acceptance criteria — REQ-EXR-002** below. | Implemented |
+| REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
+| REQ-EXR-004 | **Phase alerts (routine lane):** shared anchor warning; phase-start reminders coherent with menus; routine lane visible on `/phase`. See **Acceptance criteria — REQ-EXR-004** below. | Implemented |
+| REQ-EXR-005 | **Routine plan extension:** when current week is past all routine ranges, extension prompt; repeat last routine block or add new range. See **Acceptance criteria — REQ-EXR-005** below. | Implemented |
 
 ---
 
@@ -152,11 +157,6 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-EXR-001 | **Exercise routine content model:** user-owned weekly routine; assign planned exercise **content per weekday** (0–6); CRUD at least equivalent to menus (list, create, edit, delete with assignment handling); duplicate. See **Acceptance criteria — REQ-EXR-001** below. | Phase 5 |
-| REQ-EXR-002 | **Program weeks → routine:** same anchor and week index as menus (`phase_one_starts_on`, `Phases::WeekNumber`); week-range assignments to routines with **no overlapping ranges** per user among **routine** assignments; resolve **active routine** for a given week index; phase plan UI on `/phase`. See **Acceptance criteria — REQ-EXR-002** below. | Phase 5 |
-| REQ-EXR-003 | **Mi Día + navigation:** surface the active routine in context of the **Ejercicio** habit (`fitness_exercise`); Turbo-friendly shortcuts; home/nav entry points. See **Acceptance criteria — REQ-EXR-003** below. | Phase 5 |
-| REQ-EXR-004 | **Phase alerts for routines (parity REQ-MENU-004):** shared anchor behavior with menus; user sees appropriate warnings/reminders in-app (and email channel where applicable) so the **routine** lane is not invisible relative to the menu lane. See **Acceptance criteria — REQ-EXR-004** below. | Phase 5 |
-| REQ-EXR-005 | **Routine plan extension (parity REQ-MENU-005):** when the current program week is **past** every **routine** week-range assignment, prompt to repeat the last routine block or add a new range (mirror menu flow). See **Acceptance criteria — REQ-EXR-005** below. | Phase 5 |
 | REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
 | REQ-WGT-003 | Weight + BMI history view (progression over time). | Phase 6 |
 | REQ-RPT-001 … REQ-RPT-003 | Habit fulfillment, streak, and weight charts — per roadmap Phase 7. | Phase 7 |
@@ -256,7 +256,7 @@ Feature-specific docs can be linked here as they are written, for example:
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
 - Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
-- Phase 5 (Rutinas de ejercicio): **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file (`REQ-EXR-001`–`005`); implementation TBD (`app/services/exercise_routines/` or equivalent; Mi Día + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**)
+- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**. See **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file.
 
 ---
 

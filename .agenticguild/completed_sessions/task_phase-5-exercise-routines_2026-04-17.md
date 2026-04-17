@@ -1,3 +1,8 @@
+% Task: phase-5-exercise-routines — **COMPLETED** 2026-04-17
+% Archived from `.agenticguild/active_sessions/task_phase-5-exercise-routines.md`
+
+---
+
 % Task: phase-5-exercise-routines
 % Scope: Full Phase 5 (ROADMAP #20–#22) — REQ-EXR-001 … REQ-EXR-005
 % Confirmed: 2026-04-17 — entire Phase 5 arc; SPEC locked with decisions log; Q11/Q12 updated per product
