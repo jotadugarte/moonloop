@@ -14,7 +14,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
-| `EXR` | Exercise routines — **planned** (Phase 5; acceptance criteria below) |
+| `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
 | `RPT` | Reporting — **planned** |
 
 ---

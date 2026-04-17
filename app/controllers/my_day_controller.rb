@@ -34,25 +34,46 @@ class MyDayController < ApplicationController
   end
 
   def load_exercise_routine_context
+    assign_exercise_week_index
+    assign_active_exercise_routine
+    assign_fitness_exercise_habit
+    assign_exercise_preview_lines
+  end
+
+  def assign_exercise_week_index
     @week_index = Phases::WeekNumber.for_local_date(user: Current.user, local_date: @local_date)
-    @active_exercise_routine =
-      if @week_index.present?
-        ExerciseRoutines::ResolveActiveRoutine.call(user: Current.user, week_index: @week_index)
-      end
+  end
 
-    @fitness_exercise_habit =
-      Current.user.user_habits
-        .includes(:habit_category, :global_habit_template)
-        .joins(:global_habit_template)
-        .find_by(global_habit_templates: { code: "fitness_exercise" })
+  def assign_active_exercise_routine
+    @active_exercise_routine = resolve_active_exercise_routine
+  end
 
+  def resolve_active_exercise_routine
+    return if @week_index.blank?
+
+    ExerciseRoutines::ResolveActiveRoutine.call(user: Current.user, week_index: @week_index)
+  end
+
+  def assign_fitness_exercise_habit
+    @fitness_exercise_habit = load_fitness_exercise_habit
+  end
+
+  def load_fitness_exercise_habit
+    Current.user.user_habits
+      .includes(:habit_category, :global_habit_template)
+      .joins(:global_habit_template)
+      .find_by(global_habit_templates: { code: "fitness_exercise" })
+  end
+
+  def assign_exercise_preview_lines
     wday = @local_date.wday
-    @exercise_preview_lines =
-      if @active_exercise_routine
-        @active_exercise_routine.exercise_routine_lines.where(weekday: wday).order(:position)
-      else
-        ExerciseRoutineLine.none
-      end
+    @exercise_preview_lines = preview_lines_for_weekday(wday)
+  end
+
+  def preview_lines_for_weekday(wday)
+    return ExerciseRoutineLine.none if @active_exercise_routine.blank?
+
+    @active_exercise_routine.exercise_routine_lines.where(weekday: wday).order(:position)
   end
 
   def completions_for_day(habit_ids)

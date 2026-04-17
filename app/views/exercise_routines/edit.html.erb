@@ -1,34 +1,63 @@
+<% routine_err_id = "exercise-routine-form-errors" %>
 <h1><%= t(".title", name: @routine.name) %></h1>
 
 <p><%= link_to t(".back_to_index"), exercise_routines_path %></p>
 
-<%= form_with model: @routine, url: exercise_routine_path(@routine), method: :patch do |f| %>
+<%= form_with model: @routine, url: exercise_routine_path(@routine), method: :patch, class: "space-y-4 max-w-lg" do |f| %>
+  <% if exercise_routine_form_errors?(@routine) %>
+    <div class="text-red-600 text-sm">
+      <ul id="<%= routine_err_id %>" class="list-disc pl-5" role="alert">
+        <% @routine.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+        <% @routine.exercise_routine_lines.each do |line| %>
+          <% line.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div>
-    <%= f.label :name, t(".name_label") %>
-    <%= f.text_field :name %>
+    <%= f.label :name, t(".name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@routine, :name, routine_err_id) %>
   </div>
 
   <h2><%= t(".lines_heading") %></h2>
 
   <%= f.fields_for :exercise_routine_lines do |lf| %>
-    <fieldset style="margin-bottom: 1rem; border: 1px solid #ccc; padding: 0.5rem;">
+    <fieldset class="border border-gray-300 rounded p-2 mb-4">
       <%= lf.hidden_field :id %>
       <%= lf.hidden_field :position %>
       <div>
-        <%= lf.label :weekday, t(".weekday") %>
-        <%= lf.number_field :weekday, min: 0, max: 6 %>
+        <%= lf.label :weekday, t(".weekday"), class: "block font-medium mb-1" %>
+        <%= lf.select :weekday,
+              exercise_routine_weekday_options_for_select,
+              {},
+              {
+                class: "border border-gray-300 rounded p-2 w-full",
+                aria: aria_for_field(lf.object, :weekday, routine_err_id)
+              } %>
       </div>
       <div>
-        <%= lf.label :label, t(".label") %>
-        <%= lf.text_field :label %>
+        <%= lf.label :label, t(".label"), class: "block font-medium mb-1" %>
+        <%= lf.text_field :label,
+              class: "border border-gray-300 rounded p-2 w-full",
+              aria: aria_for_field(lf.object, :label, routine_err_id) %>
       </div>
       <div>
-        <%= lf.label :notes, t(".notes") %>
-        <%= lf.text_area :notes, rows: 2 %>
+        <%= lf.label :notes, t(".notes"), class: "block font-medium mb-1" %>
+        <%= lf.text_area :notes, rows: 2,
+              class: "border border-gray-300 rounded p-2 w-full",
+              aria: aria_for_field(lf.object, :notes, routine_err_id) %>
       </div>
       <div>
-        <%= lf.label :_destroy, t(".remove_line") %>
-        <%= lf.check_box :_destroy %>
+        <%= lf.label :_destroy, t(".remove_line"), class: "block font-medium mb-1" %>
+        <%= lf.check_box :_destroy,
+              aria: aria_for_field(lf.object, :_destroy, routine_err_id) %>
       </div>
     </fieldset>
   <% end %>
@@ -38,7 +67,7 @@
   </p>
 
   <div>
-    <%= f.submit t(".save") %>
+    <%= f.submit t(".save"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
   </div>
 <% end %>
 

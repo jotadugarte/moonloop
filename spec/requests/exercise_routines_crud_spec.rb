@@ -96,4 +96,20 @@ RSpec.describe "Exercise routines CRUD", type: :request do
     expect(copy.exercise_routine_lines.count).to eq(1)
     expect(copy.exercise_routine_lines.first.label).to eq("A")
   end
+
+  # [REQ-EXR-001] — duplicate name collision uses I18n (collision_name)
+  it "uniquifies duplicate names when the default copy label is already taken" do
+    routine = create_routine!(name: "Original", label: "A")
+    post duplicate_exercise_routine_path(routine)
+    post duplicate_exercise_routine_path(routine)
+
+    expect(response).to have_http_status(:found)
+    second_copy = ExerciseRoutine.order(:created_at).last
+    expected = I18n.t(
+      "exercise_routines.duplicate.collision_name",
+      base: I18n.t("exercise_routines.duplicate.default_name", name: "Original"),
+      n: 2
+    )
+    expect(second_copy.name).to eq(expected)
+  end
 end

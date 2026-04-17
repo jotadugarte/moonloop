@@ -67,4 +67,16 @@ RSpec.describe ExerciseRoutine, type: :model do
     routine.exercise_routine_lines.build(weekday: 3, position: 0, label: "Caminar")
     expect(routine).to be_valid
   end
+
+  # [REQ-EXR-001]
+  it "rejects more than MAX_LINES_PER_WEEKDAY lines on one weekday" do
+    routine = described_class.new(user: user, name: "Muchas")
+    (described_class::MAX_LINES_PER_WEEKDAY + 1).times do |i|
+      routine.exercise_routine_lines.build(weekday: 2, position: i, label: "L#{i}")
+    end
+    expect(routine).not_to be_valid
+    expect(
+      routine.errors.added?(:base, :too_many_lines_on_weekday, max: described_class::MAX_LINES_PER_WEEKDAY)
+    ).to eq(true)
+  end
 end

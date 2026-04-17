@@ -22,7 +22,7 @@ class ExerciseRoutinesController < ApplicationController
   end
 
   def edit
-    apply_add_line_if_requested
+    append_line_from_request
   end
 
   def update
@@ -45,7 +45,7 @@ class ExerciseRoutinesController < ApplicationController
   def duplicate
     copy = ExerciseRoutines::DuplicateRoutine.call(source: @routine, new_name: params[:new_name])
     redirect_to edit_exercise_routine_path(copy), notice: t("exercise_routines.flash.duplicated")
-  rescue ActiveRecord::RecordInvalid
+  rescue ActiveRecord::RecordInvalid, ArgumentError
     redirect_to exercise_routines_path, alert: t("exercise_routines.flash.duplicate_failed")
   end
 
@@ -55,17 +55,12 @@ class ExerciseRoutinesController < ApplicationController
     @routine = Current.user.exercise_routines.find(params[:id])
   end
 
-  def apply_add_line_if_requested
+  def append_line_from_request
     return unless params[:add_line].present?
 
-    w = params.fetch(:weekday, 0).to_i.clamp(0, 6)
-    max_p = @routine.exercise_routine_lines.reject(&:marked_for_destruction?)
-      .select { |l| l.weekday == w }.map(&:position).compact.max
-    next_p = max_p.nil? ? 0 : max_p + 1
-    @routine.exercise_routine_lines.build(
-      weekday: w,
-      position: next_p,
-      label: I18n.t("exercise_routines.edit.placeholder_line_label")
+    ExerciseRoutines::AppendLineForWeekday.call(
+      routine: @routine,
+      weekday: params.fetch(:weekday, 0)
     )
   end
 

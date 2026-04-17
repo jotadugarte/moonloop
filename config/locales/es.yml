@@ -105,12 +105,13 @@ es:
       duplicate_failed: "No se pudo duplicar la rutina."
     duplicate:
       default_name: "Copia de %{name}"
+      collision_name: "%{base} (%{n})"
     index:
       title: "Rutinas de ejercicio"
       my_day_link: "Mi Día"
       name_label: "Nombre"
       first_line_label: "Primer ejercicio (etiqueta)"
-      weekday_label: "Día (0–6)"
+      weekday_label: "Día"
       create_submit: "Crear rutina"
       edit: "Editar"
       duplicate_submit: "Duplicar"
@@ -120,7 +121,7 @@ es:
       back_to_index: "Volver a rutinas"
       name_label: "Nombre"
       lines_heading: "Ejercicios por día"
-      weekday: "Día (0=domingo … 6=sábado)"
+      weekday: "Día"
       label: "Etiqueta"
       notes: "Notas (opcional)"
       remove_line: "Quitar esta fila"
@@ -501,6 +502,11 @@ es:
               must_match_user: "debe ser un menú de tu cuenta"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
+        exercise_routine:
+          attributes:
+            base:
+              empty_routine: "añade al menos una línea de ejercicio en al menos un día"
+              too_many_lines_on_weekday: "no puede haber más de %{max} líneas de ejercicio en un solo día"
         exercise_routine_assignment:
           attributes:
             end_week:

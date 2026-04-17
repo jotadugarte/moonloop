@@ -130,12 +130,13 @@ en:
       duplicate_failed: "Could not duplicate the routine."
     duplicate:
       default_name: "Copy of %{name}"
+      collision_name: "%{base} (%{n})"
     index:
       title: "Exercise routines"
       my_day_link: "My Day"
       name_label: "Name"
       first_line_label: "First exercise (label)"
-      weekday_label: "Day (0–6)"
+      weekday_label: "Day"
       create_submit: "Create routine"
       edit: "Edit"
       duplicate_submit: "Duplicate"
@@ -145,7 +146,7 @@ en:
       back_to_index: "Back to routines"
       name_label: "Name"
       lines_heading: "Exercises by weekday"
-      weekday: "Day (0=Sun … 6=Sat)"
+      weekday: "Day"
       label: "Label"
       notes: "Notes (optional)"
       remove_line: "Remove this row"
@@ -465,6 +466,11 @@ en:
               must_match_user: "must be a menu from your account"
             base:
               range_overlap: "that week range overlaps another assignment"
+        exercise_routine:
+          attributes:
+            base:
+              empty_routine: "add at least one exercise line on at least one day"
+              too_many_lines_on_weekday: "cannot have more than %{max} exercise lines on a single day"
         exercise_routine_assignment:
           attributes:
             end_week:

@@ -6,6 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- Phase 5 — **Exercise routines**: weekly routine lines per weekday, week-range assignments on `/phase` (same anchor as menus), Mi Día integration for `fitness_exercise`, dual “plan ended” / repeat-last for menu vs routine lanes, CRUD + duplicate + transactional delete with assignment cascade, home and plan entry points, and REQ coverage for `REQ-EXR-001`–`REQ-EXR-005` (see `docs/core/SPEC.md`).
 - Phase 4 — **Alimentación**: weekly **menus** (sparse grid + Turbo slot updates), **recipes** with Active Storage images and public sharing, **phase plan** (anchor date, week assignments, active menu resolution), **phase start reminders** (Solid Queue sweep + in-app banner with dismiss-for-today), **plan-ended** extension UX (repeat last assignment or new range), admin moderation to revoke public sharing on menus/recipes, Mi Día shortcut to the phase area, and REQ coverage for `REQ-MENU-001`–`REQ-MENU-005` (see `docs/core/SPEC.md`).
 
 ### Changed

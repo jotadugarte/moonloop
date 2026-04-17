@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExerciseRoutine < ApplicationRecord
+  MAX_LINES_PER_WEEKDAY = 100
+
   belongs_to :user
   has_many :exercise_routine_lines, -> { order(:weekday, :position) }, dependent: :destroy, inverse_of: :exercise_routine
   has_many :exercise_routine_assignments, dependent: :destroy
@@ -15,6 +17,7 @@ class ExerciseRoutine < ApplicationRecord
 
   validate :name_must_be_unique_for_user
   validate :must_have_at_least_one_line
+  validate :lines_per_weekday_within_limit
   validates_associated :exercise_routine_lines
 
   private
@@ -36,5 +39,15 @@ class ExerciseRoutine < ApplicationRecord
     return if lines.any? { |line| line.label.to_s.strip.present? }
 
     errors.add(:base, :empty_routine)
+  end
+
+  def lines_per_weekday_within_limit
+    lines = exercise_routine_lines.reject(&:marked_for_destruction?)
+    lines.group_by(&:weekday).each_value do |rows|
+      next if rows.size <= MAX_LINES_PER_WEEKDAY
+
+      errors.add(:base, :too_many_lines_on_weekday, max: MAX_LINES_PER_WEEKDAY)
+      break
+    end
   end
 end
