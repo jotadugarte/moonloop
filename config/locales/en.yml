@@ -190,6 +190,10 @@ en:
       user_habit:
         name: "Name"
         activation_date: "Activation date"
+      menu_entry:
+        meal_type: "Meal type"
+        weekday: "Weekday"
+        freeform_text: "Note"
     errors:
       models:
         user:
@@ -215,6 +219,14 @@ en:
               must_be_object: "must be a JSON object"
               invalid_weekdays: "must include weekdays 0..6"
               invalid_interval: "must include interval >= 1"
+        menu_entry:
+          attributes:
+            meal_type:
+              invalid: "is not a valid meal type"
+            weekday:
+              invalid: "must be between 0 (Sunday) and 6 (Saturday)"
+            base:
+              content_required: "choose a recipe or enter a note"
   shared:
     back: "Back"
     save_changes: "Save changes"

@@ -216,6 +216,10 @@ es:
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
+      menu_entry:
+        meal_type: "Tipo de comida"
+        weekday: "Día de la semana"
+        freeform_text: "Nota"
     errors:
       messages:
         blank: "no puede estar en blanco"
@@ -246,3 +250,11 @@ es:
               must_be_object: "debe ser un objeto JSON"
               invalid_weekdays: "debe incluir días de la semana de 0 a 6"
               invalid_interval: "debe incluir un intervalo mayor o igual a 1"
+        menu_entry:
+          attributes:
+            meal_type:
+              invalid: "no es un tipo de comida válido"
+            weekday:
+              invalid: "debe ser un número entre 0 (domingo) y 6 (sábado)"
+            base:
+              content_required: "elegí una receta o escribí una nota"

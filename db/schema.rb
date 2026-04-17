@@ -10,7 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_120400) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "global_habit_templates", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.string "code", null: false
@@ -37,6 +65,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_210000) do
     t.integer "user_habit_id", null: false
     t.index ["user_habit_id", "completed_on"], name: "index_habit_completions_on_user_habit_and_completed_on", unique: true
     t.index ["user_habit_id"], name: "index_habit_completions_on_user_habit_id"
+  end
+
+  create_table "menu_entries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "freeform_text"
+    t.string "meal_type", null: false
+    t.integer "menu_id", null: false
+    t.integer "recipe_id"
+    t.datetime "updated_at", null: false
+    t.integer "weekday", null: false
+    t.index ["menu_id", "weekday", "meal_type"], name: "index_menu_entries_on_menu_weekday_meal_type", unique: true
+    t.index ["menu_id"], name: "index_menu_entries_on_menu_id"
+    t.index ["recipe_id"], name: "index_menu_entries_on_recipe_id"
+  end
+
+  create_table "menus", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_menus_on_user_id"
+  end
+
+  create_table "recipes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "instructions"
+    t.string "name", null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_recipes_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -93,8 +153,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_210000) do
     t.index ["user_id"], name: "index_weight_logs_on_user_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "habit_categories", "users"
   add_foreign_key "habit_completions", "user_habits"
+  add_foreign_key "menu_entries", "menus"
+  add_foreign_key "menu_entries", "recipes"
+  add_foreign_key "menus", "users"
+  add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
