@@ -140,7 +140,7 @@ SPEC updated (`REQ-EXR-001`–`005`). Backlog row for MENU-004/005 parity **remo
 
   <step id="5" status="complete">Write failing specs for `ExerciseRoutines::PlanEnded` and `ExerciseRoutines::RepeatLastAssignment` mirroring `Phases::PlanEnded` / `Phases::RepeatLastPhaseAssignment`. Integrate on `PhasesController#show`: assign `@routine_plan_ended`, extension UI for routine lane, routes/actions analogous to menu extension. Green. `# [REQ-EXR-005]`.</step>
 
-  <step id="6" status="pending">Write failing specs for REQ-EXR-004 parity: `/phase` renders routine assignment summary alongside menu; anchor PATCH still flashes &gt;3-day warning for shared anchor (existing behavior); ensure phase-start reminder visibility path accounts for routine lane (extend `PhaseStartInAppReminderVisible` or template sections as needed). Adjust mailer/view copy only if tests require. Green. `# [REQ-EXR-004]`.</step>
+  <step id="6" status="complete">Write failing specs for REQ-EXR-004 parity: `/phase` renders routine assignment summary alongside menu; anchor PATCH still flashes &gt;3-day warning for shared anchor (existing behavior); ensure phase-start reminder visibility path accounts for routine lane (extend `PhaseStartInAppReminderVisible` or template sections as needed). Adjust mailer/view copy only if tests require. Green. `# [REQ-EXR-004]`.</step>
 
   <step id="7" status="pending">Write failing request/system specs for `GET /phase` nested or sibling resources for **routine** phase assignments (reuse patterns from `PhaseAssignmentsController`); Turbo partials consistent with existing phase UI. Green. `# [REQ-EXR-002]`.</step>
 

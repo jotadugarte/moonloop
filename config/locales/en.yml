@@ -32,8 +32,8 @@ en:
   phase_start_reminder_mailer:
     notify:
       subject: "Your Phase 1 program starts today"
-      body_html: "Hello — today is the first day of your Phase 1 plan (%{email})."
-      body_text: "Today is the first day of your Phase 1 plan."
+      body_html: "Hello — today is the first day of your Phase 1 plan (%{email}). Use your phase plan to see both menus and exercise routines by week."
+      body_text: "Today is the first day of your Phase 1 plan. Use your phase plan to see both menus and exercise routines by week."
       cta: "Open your phase plan"
   date:
     formats:
@@ -219,7 +219,7 @@ en:
       back_home: "Home"
       menus_link: "Menus"
       exercise_routines_link: "Exercise routines"
-      phase_start_reminder_banner: "Today is the first day of your Phase 1 plan."
+      phase_start_reminder_banner: "Today is the first day of your Phase 1 plan — review menus and exercise routines by week below."
       phase_start_reminder_dismiss: "Hide for today"
       menu_plan_ended_message: "Your menu week ranges end before the current program week. Extend your plan or add a new menu range."
       routine_plan_ended_message: "Your exercise routine week ranges end before the current program week. Extend your plan or add a new routine range."

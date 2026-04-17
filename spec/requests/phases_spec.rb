@@ -115,4 +115,43 @@ RSpec.describe "Phases dashboard", type: :request do
     expect(response).to redirect_to(phase_path)
     expect(flash[:alert]).to eq(I18n.t("phases.flash.repeat_last_routine_assignment_nothing_to_repeat"))
   end
+
+  # [REQ-EXR-004]
+  it "renders menu and routine assignments together on the phase dashboard" do
+    user.update!(phase_one_starts_on: Date.new(2026, 4, 10))
+    travel_to(Date.new(2026, 4, 12)) do
+      menu = Menu.create!(user: user, name: "Combinado Menú")
+      routine = ExerciseRoutine.new(user: user, name: "Combinado Rutina")
+      routine.exercise_routine_lines.build(weekday: 0, position: 0, label: "x")
+      routine.save!
+      PhaseAssignment.create!(user: user, menu: menu, start_week: 1, end_week: 20)
+      ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 20)
+
+      get phase_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Combinado Menú")
+      expect(response.body).to include("Combinado Rutina")
+      expect(response.body).to include('data-test="phase-menu-assignments-section"')
+      expect(response.body).to include('data-test="phase-routine-assignments-section"')
+    end
+  end
+
+  # [REQ-EXR-004]
+  it "still flashes the far-future anchor warning when exercise routine assignments exist" do
+    user.update!(timezone: "America/New_York")
+    routine = ExerciseRoutine.new(user: user, name: "Con anchor")
+    routine.exercise_routine_lines.build(weekday: 0, position: 0, label: "x")
+    routine.save!
+    ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 8)
+
+    ny = ActiveSupport::TimeZone["America/New_York"].local(2026, 4, 17, 12, 0, 0)
+    travel_to(ny) do
+      patch phase_path, params: { user: { phase_one_starts_on: "2026-04-21" } }
+
+      expect(response).to redirect_to(phase_path)
+      expect(flash[:alert]).to eq(I18n.t("phases.flash.anchor_far_future_warning"))
+      expect(user.reload.phase_one_starts_on).to eq(Date.new(2026, 4, 21))
+    end
+  end
 end

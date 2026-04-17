@@ -87,7 +87,7 @@
   <% end %>
 </section>
 
-<section class="mb-8">
+<section class="mb-8" data-test="phase-menu-assignments-section">
   <div class="flex items-center gap-4 mb-3">
     <h2 class="text-lg font-semibold"><%= t("phases.show.assignments_heading") %></h2>
     <%= link_to t("phases.show.new_assignment"), new_phase_assignment_path, class: "text-blue-600 underline text-sm" %>
@@ -120,7 +120,7 @@
   <% end %>
 </section>
 
-<section class="mb-8">
+<section class="mb-8" data-test="phase-routine-assignments-section">
   <div class="flex items-center gap-4 mb-3">
     <h2 class="text-lg font-semibold"><%= t("phases.show.routine_assignments_heading") %></h2>
     <%= link_to t("phases.show.new_routine_assignment"), new_exercise_routine_assignment_path, class: "text-blue-600 underline text-sm" %>
