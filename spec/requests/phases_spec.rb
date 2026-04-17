@@ -161,4 +161,12 @@ RSpec.describe "Phases dashboard", type: :request do
       expect(user.reload.phase_one_starts_on).to eq(Date.new(2026, 4, 21))
     end
   end
+
+  # [REQ-EXR-003]
+  it "links to Mi Día from the phase plan footer" do
+    get phase_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(my_day_path)
+  end
 end

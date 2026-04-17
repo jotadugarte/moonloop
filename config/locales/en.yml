@@ -229,6 +229,7 @@ en:
       delete_routine_assignment: "Delete"
       delete_routine_assignment_confirm: "Delete this routine assignment?"
       back_home: "Home"
+      my_day_link: "My Day"
       menus_link: "Menus"
       exercise_routines_link: "Exercise routines"
       phase_start_reminder_banner: "Today is the first day of your Phase 1 plan — review menus and exercise routines by week below."

@@ -204,6 +204,7 @@ es:
       delete_routine_assignment: "Eliminar"
       delete_routine_assignment_confirm: "¿Eliminar esta asignación de rutina?"
       back_home: "Inicio"
+      my_day_link: "Mi Día"
       menus_link: "Menús"
       exercise_routines_link: "Rutinas de ejercicio"
       phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."

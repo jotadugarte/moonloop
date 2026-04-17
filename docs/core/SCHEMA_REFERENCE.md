@@ -37,6 +37,18 @@
 
 ---
 
+## Exercise routines
+
+| Table | Primary keys / constraints | SPEC / notes |
+|--------|----------------------------|--------------|
+| `exercise_routines` | `user_id` FK; unique `(user_id, name_normalized)` | `REQ-EXR-001`. User-owned named routines; not globally empty (≥1 line on ≥1 weekday) |
+| `exercise_routine_lines` | FK to `exercise_routines`; unique `(exercise_routine_id, weekday, position)`; `weekday` 0–6; `label` max 500 | `REQ-EXR-001`. Ordered lines per weekday |
+| `exercise_routine_assignments` | `user_id`, `exercise_routine_id` FKs; check `start_week >= 1`, `end_week >= start_week` | `REQ-EXR-002`. Non-overlapping ranges per user among **routine** assignments only (independent from `phase_assignments`) |
+
+**Semantics:** Program week index and anchor are shared with menus via `users.phase_one_starts_on` and `Phases::WeekNumber` (`REQ-EXR-002`). Deleting a routine after confirmation removes dependent `exercise_routine_assignment` rows then the routine in one transaction (`REQ-EXR-001` Q12).
+
+---
+
 ## Users (phase-related columns)
 
 | Column | Meaning |
@@ -59,4 +71,4 @@ Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habi
 
 ## Foreign keys (excerpt)
 
-Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `phase_reminder_events` → `users`; Active Storage tables per `db/schema.rb`.
+Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; Active Storage tables per `db/schema.rb`.

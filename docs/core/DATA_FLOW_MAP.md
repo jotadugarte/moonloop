@@ -11,6 +11,8 @@
 3. **`Habits::DueHabitsForDay`** loads active `UserHabit` rows for the user and filters to habits **due** on that civil date via **`Habits::DueOnDate`** (inactive habits never appear).
 4. **`HabitCompletion`** rows for `(user_habit_id ∈ due habits, completed_on = selected day)` build the per-habit done/failed/pending UI state (pending = no row).
 5. **`Habits::Streak`** computes the displayed streak per due habit for that day; the controller may pass preloaded completion rows for the walk window to avoid N+1 queries.
+6. **Exercise context (REQ-EXR-003):** **`Phases::WeekNumber.for_local_date`** yields the program week index (or nil if no anchor / before anchor). **`ExerciseRoutines::ResolveActiveRoutine`** returns the routine mapped to that week via **`exercise_routine_assignments`**, independent of menu assignments.
+7. **Ejercicio habit:** the `UserHabit` joined to **`global_habit_templates.code == "fitness_exercise"`** is loaded separately when needed (e.g. inactive habit not in the due list). Inline routine preview on Mi Día appears only when that habit is **due** and **active**; a global shortcut to **`/exercise_routines`** and **`/phase`** is always shown.
 
 ### 1.2 Mark done / failed (write)
 
@@ -32,14 +34,21 @@
 3. **Response:** `turbo_stream.replace` for the slot frame only (partial `menus/slot`).
 4. **Clear slot:** `DELETE .../menu_entries/clear` removes the row if present; same Turbo replace with empty slot.
 
-### 1.5 Phase plan (anchor, assignments, active menu)
+### 1.5 Phase plan (anchor, assignments, active menu + routine)
 
-1. **Browser** loads `GET /phase`; **`PhasesController`** sets `week_index` via **`Phases::WeekNumber.today_for`**, resolves **`Phases::ResolveActiveMenu`**, loads ordered **`phase_assignments`**, and computes in-app reminder visibility and “plan ended” via **`Phases::PhaseStartInAppReminderVisible`** and **`Phases::PlanEnded`**.
+1. **Browser** loads `GET /phase`; **`PhasesController`** sets `week_index` via **`Phases::WeekNumber.today_for`**, resolves **`Phases::ResolveActiveMenu`** and **`ExerciseRoutines::ResolveActiveRoutine`**, loads ordered **`phase_assignments`** and **`exercise_routine_assignments`**, and computes in-app reminder visibility and **two** “plan ended” flags via **`Phases::PhaseStartInAppReminderVisible`**, **`Phases::PlanEnded`** (menu lane), and **`ExerciseRoutines::PlanEnded`** (routine lane).
 2. **Patch anchor / reminder prefs:** `PATCH /phase` updates **`User`** (`phase_one_starts_on`, reminder booleans); may set flash **notice** and **alert** when anchor is more than three local days ahead.
-3. **Assignments CRUD:** standard nested resources under **`PhaseAssignmentsController`**, scoped to **`Current.user`**; overlaps rejected at validation.
-4. **Plan extension:** **`Phases::RepeatLastPhaseAssignment`** duplicates the last contiguous assignment block forward when the user confirms.
+3. **Menu assignments CRUD:** **`PhaseAssignmentsController`**, scoped to **`Current.user`**; overlaps rejected at validation.
+4. **Routine assignments CRUD:** **`ExerciseRoutineAssignmentsController`**, scoped to **`Current.user`**; overlaps rejected among **routine** assignments only.
+5. **Plan extension (menus):** **`Phases::RepeatLastPhaseAssignment`** duplicates the last contiguous menu assignment block forward when the user confirms.
+6. **Plan extension (routines):** **`ExerciseRoutines::RepeatLastAssignment`** duplicates the last contiguous **routine** assignment block forward when the user confirms.
 
-### 1.6 Phase-start reminders (async)
+### 1.6 Exercise routines (CRUD, duplicate, destroy)
+
+1. **Browser** uses **`ExerciseRoutinesController`** for list/create/edit/update; **`POST …/duplicate`** copies structure to a new routine.
+2. **Destroy with assignments:** **`GET …/confirm_destroy`** warns that week-range rows will be removed; confirming invokes **`ExerciseRoutines::DestroyRoutine`**, which deletes all **`exercise_routine_assignments`** for that routine then the **`exercise_routine`** in one transaction.
+
+### 1.7 Phase-start reminders (async)
 
 1. **Solid Queue** runs **`Phases::SweepPhaseStartRemindersJob`** on the schedule in **`config/recurring.yml`**.
 2. For each user whose **local today** is a phase-start day and prefs allow, **`Phases::ProcessPhaseStartReminderForUser`** creates idempotent **`PhaseReminderEvent`** rows and sends mail when email is enabled.
@@ -55,6 +64,8 @@
 | User marks **inactive** habit | Completion writes rejected | Service + controller flash |
 | **`MenuEntry`** save | Recipe (if present) must belong to same user as menu; freeform gated by **`allow_menu_freeform`** | Model + **`Menus::UpsertEntry`** |
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
+| **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
+| **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
 | Phase-start **reminder** sweep | At most one logical send per `(user, kind, local_date)` | Unique index on **`phase_reminder_events`** |
 
 ## 3. Caching invalidation

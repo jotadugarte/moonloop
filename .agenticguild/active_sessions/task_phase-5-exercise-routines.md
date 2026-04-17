@@ -144,9 +144,9 @@ SPEC updated (`REQ-EXR-001`–`005`). Backlog row for MENU-004/005 parity **remo
 
   <step id="7" status="complete">Write failing request/system specs for `GET /phase` nested or sibling resources for **routine** phase assignments (reuse patterns from `PhaseAssignmentsController`); Turbo partials consistent with existing phase UI. Green. `# [REQ-EXR-002]`.</step>
 
-  <step id="8" status="pending">Write failing specs for Mi Día: `fitness_exercise` resolution; inline block only when habit due; global shortcut always; inactive habit disabled block; day preview + link to full-week routine view; Turbo links. Update `MyDayController` + views + I18n. Green. `# [REQ-EXR-003]`.</step>
+  <step id="8" status="complete">Write failing specs for Mi Día: `fitness_exercise` resolution; inline block only when habit due; global shortcut always; inactive habit disabled block; day preview + link to full-week routine view; Turbo links. Update `MyDayController` + views + I18n. Green. `# [REQ-EXR-003]`.</step>
 
-  <step id="9" status="pending">Add home / primary nav links to routines list and/or phase plan per SPEC Q15; request spec. Green. `# [REQ-EXR-003]`.</step>
+  <step id="9" status="complete">Add home / primary nav links to routines list and/or phase plan per SPEC Q15; request spec. Green. `# [REQ-EXR-003]`.</step>
 
-  <step id="10" status="pending">Update `docs/core/SCHEMA_REFERENCE.md` and `docs/core/DATA_FLOW_MAP.md` for new tables and flows (including delete cascade path and dual PlanEnded). Run full suite; fix regressions.</step>
+  <step id="10" status="complete">Update `docs/core/SCHEMA_REFERENCE.md` and `docs/core/DATA_FLOW_MAP.md` for new tables and flows (including delete cascade path and dual PlanEnded). Run full suite; fix regressions.</step>
 </implementation_plan>
