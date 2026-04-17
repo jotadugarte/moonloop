@@ -6,6 +6,7 @@ class PhasesController < ApplicationController
     @week_index = Phases::WeekNumber.today_for(@user)
     @active_menu = Phases::ResolveActiveMenu.call(user: @user, week_index: @week_index)
     @assignments = @user.phase_assignments.includes(:menu).order(:start_week)
+    @phase_start_in_app_reminder = Phases::PhaseStartInAppReminderVisible.call(user: @user)
   end
 
   def update
@@ -20,6 +21,7 @@ class PhasesController < ApplicationController
       @week_index = Phases::WeekNumber.today_for(@user)
       @active_menu = Phases::ResolveActiveMenu.call(user: @user, week_index: @week_index)
       @assignments = @user.phase_assignments.includes(:menu).order(:start_week)
+      @phase_start_in_app_reminder = Phases::PhaseStartInAppReminderVisible.call(user: @user)
       render :show, status: :unprocessable_entity
     end
   end

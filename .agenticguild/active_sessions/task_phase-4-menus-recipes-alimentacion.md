@@ -258,7 +258,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
 
     <step id="5.1" status="complete"># [REQ-MENU-004] Write specs for “start date > 3 days in future” warning and reminder preference behavior (in-app/email independent) + dismiss-for-today persistence.</step>
     <step id="5.2" status="complete">Implement reminder event persistence (idempotent key) and daily Solid Queue job to send reminders due “today” per user timezone.</step>
-    <step id="5.3" status="pending">Implement in-app reminder banner with dismiss-for-today; add system specs ensuring it does not reappear the same day.</step>
+    <step id="5.3" status="complete">Implement in-app reminder banner with dismiss-for-today; add system specs ensuring it does not reappear the same day.</step>
     <step id="5.4" status="pending"># [REQ-MENU-005] Implement “plan ended” detection + extension prompt UI; implement repeat-last-phase and add-new-range flows with specs.</step>
 
     <step id="6.1" status="pending">Write system spec asserting Mi Día shows a shortcut below main content that navigates to menu/phase area.</step>

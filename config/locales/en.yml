@@ -168,6 +168,8 @@ en:
       delete_assignment_confirm: "Delete this assignment?"
       back_home: "Home"
       menus_link: "Menus"
+      phase_start_reminder_banner: "Today is the first day of your Phase 1 plan."
+      phase_start_reminder_dismiss: "Hide for today"
     flash:
       anchor_updated: "Start date updated."
       anchor_far_future_warning: "Your Phase 1 start is more than three days away. We will remind you when it begins."

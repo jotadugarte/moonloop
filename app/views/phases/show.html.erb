@@ -2,6 +2,16 @@
 
 <h1 class="text-2xl font-bold mb-4"><%= t("phases.show.heading") %></h1>
 
+<% if @phase_start_in_app_reminder %>
+  <div class="mb-6 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900" data-test="phase-start-reminder-banner" role="status">
+    <p class="font-medium mb-2"><%= t("phases.show.phase_start_reminder_banner") %></p>
+    <%= button_to t("phases.show.phase_start_reminder_dismiss"),
+                  dismiss_reminder_phase_path,
+                  method: :post,
+                  class: "text-sm bg-amber-700 text-white px-3 py-1.5 rounded cursor-pointer hover:bg-amber-800 border-0" %>
+  </div>
+<% end %>
+
 <section class="mb-8 space-y-2">
   <% if @week_index.present? %>
     <p><%= t("phases.show.current_week", index: @week_index) %></p>
