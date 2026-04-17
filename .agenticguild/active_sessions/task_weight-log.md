@@ -125,7 +125,7 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
 
   <step id="3" status="complete">Write failing specs for **destroy**: authenticated user deletes own `WeightLog` only; confirmation flow as per app patterns; after destroy, run same **reconciler** for `User` stats. Implement `destroy` action + thin orchestration (service object under `app/services/` if non-trivial). Transaction safety. `# [REQ-WGT-002]` `# [REQ-WGT-003]`</step>
 
-  <step id="4" status="pending">Write failing **request** (and optionally **system**) specs for **REQ-WGT-002**: new/create weight entry form (weight + datetime in user TZ; no height field); flash/validation errors with accessible patterns; Turbo-appropriate behavior consistent with the app. `# [REQ-WGT-002]`</step>
+  <step id="4" status="complete">Write failing **request** (and optionally **system**) specs for **REQ-WGT-002**: new/create weight entry form (weight + datetime in user TZ; no height field); flash/validation errors with accessible patterns; Turbo-appropriate behavior consistent with the app. `# [REQ-WGT-002]`</step>
 
   <step id="5" status="pending">Write failing **request** specs for **REQ-WGT-003**: **index** lists logs ordered by `logged_at` descending with **30** per page and pagination controls; columns include weight, height snapshot, BMI, and **local** display of `logged_at`; **delete** control with confirmation. Implement controller, routes, ERB, I18n (`es`/`en`). `# [REQ-WGT-003]`</step>
 

@@ -5,6 +5,112 @@ require "rails_helper"
 RSpec.describe "Weight logs", type: :request do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
+  describe "GET /weight_logs/new" do
+    context "when signed in" do
+      before do
+        post sign_in_path, params: { email: user.email, password: "Password123!" }
+      end
+
+      # [REQ-WGT-002]
+      it "renders the weight entry form" do
+        get new_weight_log_path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t("weight_logs.new.title"))
+        expect(response.body).to include("weight_log_weight_kg")
+        expect(response.body).to include("weight_log_logged_at")
+      end
+    end
+
+    # [REQ-WGT-002]
+    it "redirects to sign in when not authenticated" do
+      get new_weight_log_path
+
+      expect(response).to redirect_to(sign_in_path)
+    end
+  end
+
+  describe "POST /weight_logs" do
+    context "when signed in" do
+      before do
+        post sign_in_path, params: { email: user.email, password: "Password123!" }
+      end
+
+      # [REQ-WGT-002]
+      it "creates a weight log and redirects with notice" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          expect {
+            post weight_logs_path,
+              params: {
+                weight_log: {
+                  weight_kg: "78.2",
+                  logged_at: "2026-04-16T10:30"
+                }
+              }
+          }.to change(WeightLog, :count).by(1)
+
+          expect(response).to redirect_to(profile_path)
+          expect(flash[:notice]).to eq(I18n.t("weight_logs.flash.created"))
+
+          log = WeightLog.order(:id).last
+          expect(log.weight_kg).to eq(78.2)
+          user.reload
+          expect(user.current_weight_kg).to eq(78.2)
+        end
+      end
+
+      # [REQ-WGT-002]
+      it "re-renders with errors when weight_kg is out of domain" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          expect {
+            post weight_logs_path,
+              params: {
+                weight_log: {
+                  weight_kg: "10",
+                  logged_at: "2026-04-16T10:30"
+                }
+              }
+          }.not_to change(WeightLog, :count)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include("role=\"alert\"")
+        end
+      end
+
+      # [REQ-WGT-002]
+      it "re-renders when logged_at is in the future" do
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          post weight_logs_path,
+            params: {
+              weight_log: {
+                weight_kg: "70",
+                logged_at: "2026-04-17T14:00"
+              }
+            }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include("role=\"alert\"")
+          expect(response.body).to include(
+            I18n.t("activerecord.errors.models.weight_log.attributes.logged_at.future_timestamp")
+          )
+        end
+      end
+    end
+
+    # [REQ-WGT-002]
+    it "redirects to sign in when not authenticated" do
+      post weight_logs_path,
+        params: {
+          weight_log: {
+            weight_kg: "70",
+            logged_at: "2026-04-10T12:00"
+          }
+        }
+
+      expect(response).to redirect_to(sign_in_path)
+    end
+  end
+
   describe "GET /weight_logs/:id/confirm_destroy" do
     context "when signed in" do
       before do

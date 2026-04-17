@@ -335,7 +335,16 @@ es:
       password_hint: "Mínimo 12 caracteres."
   weight_logs:
     flash:
+      created: "Peso registrado"
       destroyed: "Entrada de peso eliminada"
+    new:
+      title: "Registrar peso"
+      weight_kg_label: "Peso (kg)"
+      logged_at_label: "Fecha y hora del pesaje"
+      submit: "Guardar"
+      back: "Volver al perfil"
+    errors:
+      user_stats_update_failed: "No se pudo actualizar tu peso actual. Inténtalo de nuevo."
     confirm_destroy:
       title: "Eliminar entrada de peso"
       warning_html: "Se borrará esta medición del historial y se actualizará tu <strong>peso actual</strong> según el resto de registros. Esta acción no se puede deshacer."
@@ -529,6 +538,7 @@ es:
           attributes:
             logged_at:
               future_timestamp: "no puede ser posterior al momento actual"
+              invalid: "no es una fecha y hora válidas"
         menu_entry:
           attributes:
             meal_type:
