@@ -13,7 +13,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `WGT` | Weight log persistence (model-level; full UX may be later phase) |
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
-| `MENU` | Menus & recipes — **planned** |
+| `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **planned** |
 | `RPT` | Reporting — **planned** |
 
@@ -50,7 +50,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 ## Core entities and relationships
 
 - **User** (`users`)
-  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`
+  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
   - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`
 
@@ -107,6 +107,11 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Implemented |
 | REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. | Implemented |
 | REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, and BMI for a user. | Implemented (data model; full Phase 6 UX tracked on roadmap) |
+| REQ-MENU-001 | Weekly **menu** plan: at most one persisted slot per `(menu, weekday, meal_type)`; slot holds a user-owned **recipe** and/or optional freeform text per profile preference; validations and Hotwire grid editor. | Implemented |
+| REQ-MENU-002 | **Recipe** model: name, instructions, optional **ActiveStorage** image; in menu slots, fallback image by meal type when the recipe has no image. | Implemented |
+| REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
+| REQ-MENU-004 | If anchor is more than three **local** days away, flash warning; **reminder** on phase-start day: in-app banner (dismiss for today) and optional email; independent channel prefs; idempotent `phase_reminder_events` and daily sweep job (`config/recurring.yml`). | Implemented |
+| REQ-MENU-005 | When current week is **past** all assignment ranges, show extension prompt; **repeat last block** (same menu and span) or link to **add a new range**. | Implemented |
 
 ---
 
@@ -116,7 +121,6 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-MENU-001 … REQ-MENU-005 | Weekly menu plan, recipes, phase system, alerts, extension — per roadmap Phase 4 (items 15–19). | Phase 4 |
 | REQ-EXR-001 … REQ-EXR-003 | Exercise routines and linkage to “Mi Día” — per roadmap Phase 5. | Phase 5 |
 | REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
 | REQ-WGT-003 | Weight + BMI history view (progression over time). | Phase 6 |
