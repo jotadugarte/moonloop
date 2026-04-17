@@ -13,11 +13,13 @@ module Habits
     end
 
     def call
+      user_today = Time.find_zone!(@user_habit.user.timezone).today
+      raise ArgumentError, "as_of cannot be after the user's local today" if @as_of > user_today
+
       return 0 unless @user_habit.active?
 
       cursor = @as_of
       streak = 0
-      user_today = Time.find_zone!(@user_habit.user.timezone).today
       lower = lower_bound_date
 
       while cursor >= lower
