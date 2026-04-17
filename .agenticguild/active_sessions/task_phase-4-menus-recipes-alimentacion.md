@@ -211,6 +211,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
 ## Backlog / deferred decisions
 - Decide whether a `MenuEntry` may have **recipe + note** simultaneously vs enforce **XOR** (exactly one of recipe or freeform).
 - Define behavior when user disables freeform while existing freeform entries exist (read-only vs require conversion).
+- **I18n (es) — estilo y ortografía:** revisar toda la copia en `config/locales/es.yml` para evitar **voseo** (p. ej. preferir “Reintenta” sobre “Reintentá”) y unificar **acentuación** / convenciones (tuteo neutro, imperativos, comillas, etc.).
 
 <implementation_plan>
   <metadata>
@@ -236,7 +237,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="0.1" status="pending">Write a characterization spec documenting where Phase 1 start date will be stored (User column vs PhasePlan model) and expected behavior.</step>
     <step id="1.1" status="complete"># [REQ-MENU-001, REQ-MENU-002] Write failing model specs for Menu/Recipe/MenuEntry ownership, validations, and uniqueness per (menu, weekday, meal_type) plus entry-content presence rule.</step>
     <step id="1.2" status="complete">Implement models and migrations for Menu/Recipe/MenuEntry, including indexes/foreign keys and ActiveStorage attachment for Recipe image.</step>
-    <step id="1.3" status="pending">Add authorization/validation: users manage their own menus/recipes; other users can browse public shared content only.</step>
+    <step id="1.3" status="complete">Add authorization/validation: users manage their own menus/recipes; other users can browse public shared content only.</step>
     <step id="1.4" status="pending">Write failing specs for sharing + moderation: public visibility scope and admin revocation of sharing.</step>
 
     <step id="2.1" status="pending"># [REQ-MENU-001] Write request/system specs for menu CRUD and 7×4 grid editor interactions (Turbo), including sparse empty-slot behavior.</step>

@@ -42,7 +42,7 @@ es:
       invalid_date: "La fecha no es válida."
       invalid_status: "El estado no es válido."
       invalid_request: "Faltan datos del formulario."
-      could_not_save: "No se pudo guardar. Reintentá."
+      could_not_save: "No se pudo guardar. Reintenta."
   public_recipes:
     index:
       title: "Recetas públicas — Moonloop"
