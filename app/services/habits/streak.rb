@@ -13,6 +13,8 @@ module Habits
     end
 
     def call
+      raise ArgumentError, "as_of must be a Date" unless @as_of.is_a?(Date)
+
       user_today = Time.find_zone!(@user_habit.user.timezone).today
       raise ArgumentError, "as_of cannot be after the user's local today" if @as_of > user_today
 

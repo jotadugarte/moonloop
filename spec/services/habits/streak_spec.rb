@@ -64,5 +64,18 @@ RSpec.describe "Habits::Streak" do
         }.to raise_error(ArgumentError, /schedulable|before|window/i)
       end
     end
+
+    # [REQ-DAY-004]
+    it "raises ArgumentError when as_of is nil" do
+      user = create(:user, timezone: "Etc/UTC")
+      habit = create(:user_habit,
+        user: user,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      expect {
+        Habits::Streak.call(user_habit: habit, as_of: nil)
+      }.to raise_error(ArgumentError, /as.of|must be a date/i)
+    end
   end
 end
