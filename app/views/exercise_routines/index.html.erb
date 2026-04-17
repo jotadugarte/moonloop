@@ -1,0 +1,31 @@
+<h1><%= t(".title") %></h1>
+
+<%= form_with model: @routine, url: exercise_routines_path do |f| %>
+  <div>
+    <%= f.label :name, t(".name_label") %>
+    <%= f.text_field :name %>
+  </div>
+  <%= f.fields_for :exercise_routine_lines do |lf| %>
+    <div>
+      <%= lf.label :weekday, t(".weekday_label") %>
+      <%= lf.number_field :weekday, min: 0, max: 6 %>
+      <%= lf.label :label, t(".first_line_label") %>
+      <%= lf.text_field :label %>
+      <%= lf.hidden_field :position, value: lf.object.position || 0 %>
+    </div>
+  <% end %>
+  <div>
+    <%= f.submit t(".create_submit") %>
+  </div>
+<% end %>
+
+<hr>
+
+<% @routines.each do |routine| %>
+  <div id="<%= dom_id(routine) %>">
+    <strong><%= routine.name %></strong>
+    <%= link_to t(".edit"), edit_exercise_routine_path(routine) %>
+    <%= button_to t(".duplicate_submit"), duplicate_exercise_routine_path(routine), method: :post, form: { data: { turbo_confirm: false } } %>
+    <%= link_to t(".destroy"), confirm_destroy_exercise_routine_path(routine) %>
+  </div>
+<% end %>

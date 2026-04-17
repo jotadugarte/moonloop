@@ -2,8 +2,10 @@
 
 class ExerciseRoutine < ApplicationRecord
   belongs_to :user
-  has_many :exercise_routine_lines, dependent: :destroy
+  has_many :exercise_routine_lines, -> { order(:weekday, :position) }, dependent: :destroy, inverse_of: :exercise_routine
   has_many :exercise_routine_assignments, dependent: :destroy
+
+  accepts_nested_attributes_for :exercise_routine_lines, allow_destroy: true
 
   validates :name, presence: true
 

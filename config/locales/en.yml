@@ -110,6 +110,44 @@ en:
         could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
+  exercise_routines:
+    flash:
+      created: "Routine created."
+      updated: "Routine updated."
+      destroyed: "Routine deleted."
+      duplicated: "Routine duplicated."
+      duplicate_failed: "Could not duplicate the routine."
+    duplicate:
+      default_name: "Copy of %{name}"
+    index:
+      title: "Exercise routines"
+      name_label: "Name"
+      first_line_label: "First exercise (label)"
+      weekday_label: "Day (0–6)"
+      create_submit: "Create routine"
+      edit: "Edit"
+      duplicate_submit: "Duplicate"
+      destroy: "Delete"
+    edit:
+      title: "Edit routine: %{name}"
+      back_to_index: "Back to routines"
+      name_label: "Name"
+      lines_heading: "Exercises by weekday"
+      weekday: "Day (0=Sun … 6=Sat)"
+      label: "Label"
+      notes: "Notes (optional)"
+      remove_line: "Remove this row"
+      save: "Save"
+      add_line: "Add exercise (Sunday)"
+      placeholder_line_label: "New exercise"
+    confirm_destroy:
+      title: "Delete routine"
+      warning_html:
+        zero: "There are no week-range assignments for this routine. The routine will be removed. This cannot be undone."
+        one: "<strong>%{count}</strong> week-range assignment will be removed, then the routine. This cannot be undone."
+        other: "<strong>%{count}</strong> week-range assignments will be removed, then the routine. This cannot be undone."
+      confirm_submit: "Yes, delete"
+      cancel: "Cancel"
   recipes:
     index:
       title: "Recipes — Moonloop"
@@ -339,6 +377,13 @@ en:
         meal_type: "Meal type"
         weekday: "Weekday"
         freeform_text: "Note"
+      exercise_routine:
+        name: "Name"
+      exercise_routine_line:
+        weekday: "Day"
+        position: "Order"
+        label: "Label"
+        notes: "Notes"
     errors:
       models:
         user:

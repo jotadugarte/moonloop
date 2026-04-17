@@ -1,0 +1,47 @@
+<h1><%= t(".title", name: @routine.name) %></h1>
+
+<p><%= link_to t(".back_to_index"), exercise_routines_path %></p>
+
+<%= form_with model: @routine, url: exercise_routine_path(@routine), method: :patch do |f| %>
+  <div>
+    <%= f.label :name, t(".name_label") %>
+    <%= f.text_field :name %>
+  </div>
+
+  <h2><%= t(".lines_heading") %></h2>
+
+  <%= f.fields_for :exercise_routine_lines do |lf| %>
+    <fieldset style="margin-bottom: 1rem; border: 1px solid #ccc; padding: 0.5rem;">
+      <%= lf.hidden_field :id %>
+      <%= lf.hidden_field :position %>
+      <div>
+        <%= lf.label :weekday, t(".weekday") %>
+        <%= lf.number_field :weekday, min: 0, max: 6 %>
+      </div>
+      <div>
+        <%= lf.label :label, t(".label") %>
+        <%= lf.text_field :label %>
+      </div>
+      <div>
+        <%= lf.label :notes, t(".notes") %>
+        <%= lf.text_area :notes, rows: 2 %>
+      </div>
+      <div>
+        <%= lf.label :_destroy, t(".remove_line") %>
+        <%= lf.check_box :_destroy %>
+      </div>
+    </fieldset>
+  <% end %>
+
+  <p>
+    <%= link_to t(".add_line"), edit_exercise_routine_path(@routine, add_line: 1, weekday: 0) %>
+  </p>
+
+  <div>
+    <%= f.submit t(".save") %>
+  </div>
+<% end %>
+
+<p>
+  <%= button_to t("exercise_routines.index.duplicate_submit"), duplicate_exercise_routine_path(@routine), method: :post %>
+</p>

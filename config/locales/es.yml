@@ -85,6 +85,44 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+  exercise_routines:
+    flash:
+      created: "Rutina creada."
+      updated: "Rutina actualizada."
+      destroyed: "Rutina eliminada."
+      duplicated: "Rutina duplicada."
+      duplicate_failed: "No se pudo duplicar la rutina."
+    duplicate:
+      default_name: "Copia de %{name}"
+    index:
+      title: "Rutinas de ejercicio"
+      name_label: "Nombre"
+      first_line_label: "Primer ejercicio (etiqueta)"
+      weekday_label: "Día (0–6)"
+      create_submit: "Crear rutina"
+      edit: "Editar"
+      duplicate_submit: "Duplicar"
+      destroy: "Eliminar"
+    edit:
+      title: "Editar rutina: %{name}"
+      back_to_index: "Volver a rutinas"
+      name_label: "Nombre"
+      lines_heading: "Ejercicios por día"
+      weekday: "Día (0=domingo … 6=sábado)"
+      label: "Etiqueta"
+      notes: "Notas (opcional)"
+      remove_line: "Quitar esta fila"
+      save: "Guardar"
+      add_line: "Añadir ejercicio (domingo)"
+      placeholder_line_label: "Nuevo ejercicio"
+    confirm_destroy:
+      title: "Eliminar rutina"
+      warning_html:
+        zero: "No hay asignaciones de semanas vinculadas a esta rutina. Se eliminará la rutina. Esta acción no se puede deshacer."
+        one: "Se eliminará <strong>%{count}</strong> asignación de semanas y después la rutina. Esta acción no se puede deshacer."
+        other: "Se eliminarán <strong>%{count}</strong> asignaciones de semanas y después la rutina. Esta acción no se puede deshacer."
+      confirm_submit: "Sí, eliminar"
+      cancel: "Cancelar"
   recipes:
     index:
       title: "Recetas — Moonloop"
@@ -369,6 +407,13 @@ es:
         meal_type: "Tipo de comida"
         weekday: "Día de la semana"
         freeform_text: "Nota"
+      exercise_routine:
+        name: "Nombre"
+      exercise_routine_line:
+        weekday: "Día"
+        position: "Orden"
+        label: "Etiqueta"
+        notes: "Notas"
     errors:
       messages:
         blank: "no puede estar en blanco"
