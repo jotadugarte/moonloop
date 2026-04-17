@@ -256,7 +256,7 @@ These are the concrete wrappers to use in services (avoid raw `String`/`Integer`
     <step id="4.3" status="complete">Write model/service specs for PhaseAssignment validation (no overlaps; gaps allowed) and active lookup.</step>
     <step id="4.4" status="complete">Implement Phase setup UI (start date + assignment CRUD) and show current week + active menu.</step>
 
-    <step id="5.1" status="pending"># [REQ-MENU-004] Write specs for “start date > 3 days in future” warning and reminder preference behavior (in-app/email independent) + dismiss-for-today persistence.</step>
+    <step id="5.1" status="complete"># [REQ-MENU-004] Write specs for “start date > 3 days in future” warning and reminder preference behavior (in-app/email independent) + dismiss-for-today persistence.</step>
     <step id="5.2" status="pending">Implement reminder event persistence (idempotent key) and daily Solid Queue job to send reminders due “today” per user timezone.</step>
     <step id="5.3" status="pending">Implement in-app reminder banner with dismiss-for-today; add system specs ensuring it does not reappear the same day.</step>
     <step id="5.4" status="pending"># [REQ-MENU-005] Implement “plan ended” detection + extension prompt UI; implement repeat-last-phase and add-new-range flows with specs.</step>

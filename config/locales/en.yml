@@ -164,6 +164,8 @@ en:
       menus_link: "Menus"
     flash:
       anchor_updated: "Start date updated."
+      anchor_far_future_warning: "Your Phase 1 start is more than three days away. We will remind you when it begins."
+      reminder_dismissed: "Reminder hidden for today."
   phase_assignments:
     new:
       title: "New assignment — Moonloop"
