@@ -39,6 +39,8 @@
 
 ## Domain Model
 
+**Confirmed:** 2026-04-17 — user approved; no changes to types before TDD execution.
+
 ### **WeightLog** (existente)
 
 - **Responsabilidad:** Snapshot inmutable de un pesaje con altura y BMI coetáneos al registro.
