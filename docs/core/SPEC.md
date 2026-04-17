@@ -44,6 +44,13 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
 | Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). | `HabitCompletion` / `habit_completions` |
 | Streak (habit) | Count of consecutive **closed** due days ending at a reference day where the habit was **done**; a closed due day without **done** breaks the streak (explicit **failed** and absent completion are equivalent for this rule). | Derived; see REQ-DAY-004 |
+| Menu | User-owned reusable **weekly** meal plan; sparse `menu_entries` for filled slots only. | `Menu` |
+| Menu entry | At most one row per `(menu, weekday, meal_type)`; references optional `Recipe` and/or `freeform_text` when the user allows freeform in profile. | `MenuEntry` |
+| Recipe | User-owned dish with name, instructions, optional **ActiveStorage** image; may be marked publicly shareable for catalog browsing. | `Recipe` |
+| Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
+| Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
+| Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
+| Phase reminder event | Idempotent record that a phase-start reminder was processed for a given **local** calendar day and channel kind. | `PhaseReminderEvent` |
 
 ---
 
@@ -52,7 +59,8 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **User** (`users`)
   - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
-  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`
+  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
+  - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)
 
 - **Session** (`sessions`)
   - `belongs_to :user`
@@ -75,6 +83,26 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 - **WeightLog** (`weight_logs`)
   - `belongs_to :user`; stores `weight_kg`, `height_cm`, `bmi` per entry
+
+- **Menu** (`menus`)
+  - `belongs_to :user`, `has_many :menu_entries`, `has_many :phase_assignments`
+  - `publicly_shareable` for public catalog; admin may revoke sharing (moderation)
+
+- **MenuEntry** (`menu_entries`)
+  - `belongs_to :menu`, optional `belongs_to :recipe`
+  - Unique `(menu_id, weekday, meal_type)`; `weekday` 0–6 (Sunday..Saturday); `meal_type` one of the canonical habit-aligned keys (`desayuno`, `almuerzo`, `cena`, `merienda`)
+  - Content: at least one of `recipe_id` or `freeform_text` when persisted (subject to user preference)
+
+- **Recipe** (`recipes`)
+  - `belongs_to :user`, `has_many :menu_entries`; optional `has_one_attached :image`
+  - `publicly_shareable`; admin may revoke sharing
+
+- **PhaseAssignment** (`phase_assignments`)
+  - `belongs_to :user`, `belongs_to :menu`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
+  - Non-overlapping week ranges per user enforced in the model
+
+- **PhaseReminderEvent** (`phase_reminder_events`)
+  - `belongs_to :user`; unique `(user_id, kind, local_date)` for idempotent reminder delivery
 
 ---
 
@@ -154,6 +182,7 @@ Feature-specific docs can be linked here as they are written, for example:
 
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
+- Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
 
 ---
 

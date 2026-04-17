@@ -20,7 +20,10 @@
 ## 2. Architectural paradigm
 
 - **Server-rendered first:** Controllers render HTML; Turbo handles navigation and forms unless explicitly disabled.
-- **Thin controllers:** Non-trivial workflows go to **service objects** under `app/services/` (e.g. `Habits::*`, `Auth::*`). Mi Día and daily tracking use e.g. **`Habits::DueOnDate`** (due-day rules), **`Habits::DueHabitsForDay`** (list for a local day), **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** (persist or remove a completion row), **`Habits::Streak`** (streak from completions + schedule), and **`Habits::NextOccurrence`** (next calendar day for previews; aligned with due-day logic where applicable).
+- **Thin controllers:** Non-trivial workflows go to **service objects** under `app/services/` (e.g. `Habits::*`, `Auth::*`, `Menus::*`, `Phases::*`). Mi Día and daily tracking use e.g. **`Habits::DueOnDate`** (due-day rules), **`Habits::DueHabitsForDay`** (list for a local day), **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** (persist or remove a completion row), **`Habits::Streak`** (streak from completions + schedule), and **`Habits::NextOccurrence`** (next calendar day for previews; aligned with due-day logic where applicable). Menu slots delegate persistence to **`Menus::UpsertEntry`**; phase week math and reminders use **`Phases::*`** services and **`Phases::SweepPhaseStartRemindersJob`**.
+- **Service call style:** Prefer **keyword arguments** on `.call` APIs; when assembling kwargs from a Hash, splat with `**` so Ruby does not treat a single Hash as a positional argument.
+- **Forms (accessibility):** For server-rendered validation, error summaries should use a stable `id` and `role="alert"`; fields with errors should expose `aria-invalid` and `aria-describedby` pointing at that summary (see **`ApplicationHelper#aria_for_field`**).
+- **Admin moderation:** Revoking public sharing uses `Admin::BaseController` + `MOONLOOP_ADMIN_EMAILS` (comma/space-separated list, case-insensitive). Revoke actions scope targets to **currently publicly shareable** rows so moderation cannot toggle arbitrary IDs off-catalog.
 - **Domain rules in models** where they are simple validations and associations; extract when complexity or cross-cutting orchestration grows.
 - **Internationalization:** Default locale `es`; `en` available. User-visible strings go through `I18n` / `t(...)`.
 - **Traceability:** Requirements live in `docs/core/SPEC.md` (`REQ-*` IDs). Specs use `# [REQ-…]` comments per `.cursor/rules/spec-req-traceability.mdc`.
@@ -44,6 +47,7 @@
 ## 5. Related documents
 
 - `docs/core/SPEC.md` — requirements registry and glossary.
-- `docs/core/DATA_FLOW_MAP.md` — entity flows and side-effects (e.g. Mi Día, habit completions).
+- `docs/core/DATA_FLOW_MAP.md` — entity flows and side-effects (e.g. Mi Día, habit completions, menus, phase plan).
+- `docs/core/SCHEMA_REFERENCE.md` — tables/columns mapped to SPEC (regenerated/updated when schema changes).
 - `docs/ROADMAP.md` — phased delivery.
 - `docs/ai/code_review_prompt.md` — self-review checklist aligned to this stack.
