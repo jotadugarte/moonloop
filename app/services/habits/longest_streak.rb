@@ -42,26 +42,37 @@ module Habits
       (lower..through).each do |d|
         next unless DueOnDate.due_on?(@user_habit, d, schedule_only: schedule_only)
 
-        comp = completions[d]
-        done = comp&.status == "done"
-
-        if d < user_today
-          if done
-            current += 1
-            best = [ best, current ].max
-          else
-            current = 0
-          end
-        elsif done
-          current += 1
-          best = [ best, current ].max
-        end
+        done = completions[d]&.status == "done"
+        current, best = advance_run_after_due_day(
+          day: d,
+          user_today: user_today,
+          done: done,
+          current: current,
+          best: best
+        )
       end
 
       best
     end
 
     private
+
+    # Closed calendar days: a missed due day breaks the run; "today" stays open unless marked done.
+    def advance_run_after_due_day(day:, user_today:, done:, current:, best:)
+      return advance_run_on_closed_day(done: done, current: current, best: best) if day < user_today
+
+      return [ current, best ] unless done
+
+      nxt = current + 1
+      [ nxt, [ best, nxt ].max ]
+    end
+
+    def advance_run_on_closed_day(done:, current:, best:)
+      return [ 0, best ] unless done
+
+      nxt = current + 1
+      [ nxt, [ best, nxt ].max ]
+    end
 
     def load_completions(lower, through)
       @user_habit.habit_completions.where(completed_on: lower..through).index_by(&:completed_on)
