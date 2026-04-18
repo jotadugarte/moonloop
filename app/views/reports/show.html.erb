@@ -1,0 +1,89 @@
+<% content_for :title, t("reports.show.page_title") %>
+
+<h1><%= t("reports.show.heading") %></h1>
+
+<nav class="reports-section-nav" aria-label="<%= t("reports.show.section_nav_aria") %>">
+  <a href="#cumplimiento"><%= t("reports.show.nav_fulfillment") %></a>
+  ·
+  <a href="#rachas"><%= t("reports.show.nav_streaks") %></a>
+  ·
+  <a href="#peso"><%= t("reports.show.nav_weight") %></a>
+</nav>
+
+<%= form_with url: informes_path, method: :get, local: true, class: "reports-date-picker" do %>
+  <label for="fecha"><%= t("reports.show.date_label") %></label>
+  <input type="date" id="fecha" name="fecha" value="<%= @local_date %>" max="<%= @max_date %>">
+  <button type="submit"><%= t("reports.show.go_to_date") %></button>
+<% end %>
+
+<p class="reports-reference-date"><%= t("reports.show.reference_period_intro", date: l(@local_date, format: :long)) %></p>
+
+<% if @local_date < @max_date %>
+  <p><%= link_to t("reports.show.view_today"), informes_path %></p>
+<% end %>
+
+<section id="cumplimiento" class="reports-section" data-test="reports-fulfillment">
+  <h2><%= t("reports.show.fulfillment_heading") %></h2>
+  <p class="reports-range-hint"><%= t("reports.show.fulfillment_week_range", start: l(@week_range.begin, format: :long), end: l(@week_range.end, format: :long)) %></p>
+  <p class="reports-range-hint"><%= t("reports.show.fulfillment_month_range", start: l(@month_range.begin, format: :long), end: l(@month_range.end, format: :long)) %></p>
+
+  <% if @fulfillment_rows.empty? %>
+    <p><%= t("reports.show.fulfillment_empty") %></p>
+  <% else %>
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= t("reports.show.col_category") %></th>
+          <th scope="col"><%= t("reports.show.col_habit") %></th>
+          <th scope="col"><%= t("reports.show.col_week") %></th>
+          <th scope="col"><%= t("reports.show.col_month") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @fulfillment_rows.each do |row| %>
+          <tr>
+            <td><%= row[:habit].habit_category.name %></td>
+            <td><%= row[:habit].name %></td>
+            <td><%= reports_fulfillment_cell(row[:week_stats]) %></td>
+            <td><%= reports_fulfillment_cell(row[:month_stats]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</section>
+
+<section id="rachas" class="reports-section" data-test="reports-streaks">
+  <h2><%= t("reports.show.streaks_heading") %></h2>
+  <% if @streak_rows.empty? %>
+    <p><%= t("reports.show.streaks_empty") %></p>
+  <% else %>
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= t("reports.show.col_category") %></th>
+          <th scope="col"><%= t("reports.show.col_habit") %></th>
+          <th scope="col"><%= t("reports.show.col_current_streak") %></th>
+          <th scope="col"><%= t("reports.show.col_longest_streak") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @streak_rows.each do |row| %>
+          <tr>
+            <td><%= row[:habit].habit_category.name %></td>
+            <td><%= row[:habit].name %></td>
+            <td><%= t("reports.show.streak_days", count: row[:current]) %></td>
+            <td><%= t("reports.show.streak_days", count: row[:longest]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</section>
+
+<section id="peso" class="reports-section" data-test="reports-weight">
+  <h2><%= t("reports.show.weight_heading") %></h2>
+  <%= reports_weight_chart_tag(@weight_series, timezone: Current.user.timezone) %>
+</section>
+
+<p><%= link_to t("reports.show.back_home"), root_path %></p>

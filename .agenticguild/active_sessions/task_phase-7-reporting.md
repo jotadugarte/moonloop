@@ -123,11 +123,11 @@ Locked execution contract for `start-task` (TDD-first feature work).
     TDD — REQ-RPT-003 weight series: Write failing specs for a service (e.g. WeightLogs::ChartSeries) that returns all weigh-ins for the user in one indexed query on user_id and logged_at, ordered ascending, minimal columns. Do not use WeightLogs::HistoryPage pagination. Implement until green.
   </step>
 
-  <step id="7" status="pending">
+  <step id="7" status="complete">
     Integration — Informes UI: Single route GET /informes (Spanish path consistent with mi_dia), one controller action, one page with tabs or sections for fulfillment, streaks, and weight without separate top-level routes per tab. Request or system specs for auth, render, section visibility. I18n for all user-visible strings (es default, en).
   </step>
 
-  <step id="8" status="pending">
+  <step id="8" status="complete">
     Presentation: Weight trend via server-first SVG or polyline or equivalent lightweight markup; axis and labels respect user timezone for logged_at display, consistent with existing weight history.
   </step>
 
