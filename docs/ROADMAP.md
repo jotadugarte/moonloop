@@ -47,6 +47,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 25. [x] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown (REQ-RPT-001) — 2026-04-17 — Depends on: Phase 3
 26. [x] Streak report: current streak and all-time longest streak per habit (REQ-RPT-002) — 2026-04-17 — Depends on: Phase 3 #14
 27. [x] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — 2026-04-17 — Depends on: Phase 6
+28. [x] Mi Día / rachas: prefetch de completados acotado (`Habits::MiDayStreakPrefetch`), caché (`Rails.cache`) e invalidación vía `UserHabit#touch` tras completar o borrar día (REQ-DAY-004) — 2026-04-18 — Depends on: Phase 3 #11–#14
 
 ## In Progress
 *(No items currently in progress)*
@@ -61,5 +62,4 @@ Things done and things left to do. Update this when finishing branches; use `roa
 - [ ] Multiple completions per day per habit — Depends on: Backlog: Completion values
 - [ ] Imperial units support (lbs) for weight and profile
 - [ ] Push / email reminders for habits
-- [ ] Mi Día / rachas: optimizar consultas, paginación o caché ante historial muy largo (retro ilimitado + racha desde el inicio; evitar vistas lentas) — Depends on: Phase 3 #11–#14
 - [ ] Reportes de racha (REQ-RPT-002): valorar **materializar** racha (columnas o contadores derivados, p. ej. racha actual / máxima por hábito, actualizados al guardar) si el cálculo en vivo sobre historial largo es lento — Depends on: Phase 7 #26 (done); perfilar en producción si hace falta

@@ -1,6 +1,6 @@
 # Task: Exploración — Backlog (`docs/ROADMAP.md`)
 
-**Estado:** **cerrado para implementación** — entregable activo: **Backlog #6** (optimización Mi Día / rachas con historial largo). Ejecutar con skill `start-task`.
+**Estado:** **implementación completada** (2026-04-18) — prefetch `Habits::MiDayStreakPrefetch`, delegación en `MyDayController`, caché + `touch` en escrituras; ver **Done #28** en `docs/ROADMAP.md`. Cierre de rama: skill **`finish-branch`**.
 
 **Nota:** Las preguntas 2–6 del whiteboard (catálogo público, métricas, imperial, recordatorios) quedan **fuera de scope** de esta sesión.
 
