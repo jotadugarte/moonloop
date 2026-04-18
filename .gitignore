@@ -33,6 +33,3 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
-# Agentic Guild: active task sessions are local scratch; do not commit.
-.agenticguild/active_sessions/
-
