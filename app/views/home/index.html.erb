@@ -4,19 +4,21 @@
 
 <div>
   <%= link_to t("home.index.my_day"), my_day_path %>
+  <%= t("ui.inline_sep") %>
+  <%= link_to t("home.index.informes"), informes_path %>
 </div>
 
 <div>
   <%= link_to t("home.index.menus"), menus_path %>
-  ·
+  <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.recipes"), recipes_path %>
-  ·
+  <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.exercise_routines"), exercise_routines_path %>
-  ·
+  <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.phase_plan"), phase_path %>
-  ·
+  <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.weight_history"), weight_logs_path %>
-  ·
+  <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.log_weight"), new_weight_log_path %>
 </div>
 

@@ -61,6 +61,16 @@
 3. **Delete:** **`GET /weight_logs/:id/confirm_destroy`** (warning) → **`DELETE /weight_logs/:id`** via **`WeightLogs::DestroyLog`** (transaction: **`destroy!`** the log, then **`ReconcileUserCurrentStats`**). Scoped to **`Current.user.weight_logs`**; other users’ IDs → **404**.
 4. **Navigation:** Home and profile expose links to history and the entry form (`REQ-WGT-002`).
 
+### 1.9 Informes / reporting (read only, `REQ-RPT-001`–`003`)
+
+1. **Browser** requests **`GET /informes`** with optional **`fecha`** (ISO date), same validity rules as Mi Día (not after local today; invalid → redirect + flash).
+2. **`ReportsController#show`** delegates assembly to **`Reports::ShowPage`**, which runs entirely **read-only** (no writes to `HabitCompletion`, `WeightLog`, or habits).
+3. **`Reports::CalendarPeriodBounds`** returns the **Monday–Sunday** week range and **civil month** range that contain the reference local date (user IANA timezone).
+4. **Completions preload:** one **`HabitCompletion`** query spans from **`min`**(each habit’s streak lower bound, start of the combined week/month window) through **`max`**(end of that window, reference date), grouped by `user_habit_id` and indexed by `completed_on` — used both for fulfillment slices and for streak walks (`REQ-RPT-001` / `REQ-RPT-002`).
+5. **Fulfillment:** for each `UserHabit`, **`Habits::FulfillmentForPeriod`** runs on the week slice and month slice (via **`Habits::DueOnDate`**, including **`schedule_only:`** for inactive habits with activity in-range per **REQ-RPT-001**). Rows are omitted when both week and month stats are absent.
+6. **Streaks:** habits **inactive** with **no** completion in the **union** of that week and month are **omitted** from the streak table; for each remaining habit, **`Habits::ReportCurrentStreak`** (wraps **`Habits::Streak`**) and **`Habits::LongestStreak`** consume the preloaded completion map from each habit’s lower bound through **`as_of`**.
+7. **Weight chart:** **`WeightLogs::ChartSeries`** loads the user’s full ordered `weight_logs` projection (not **`WeightLogs::HistoryPage`** pagination); the view renders server-side SVG (helper), axis labels in user TZ like history.
+
 ## 2. Cascading side effects and invariants
 
 | Trigger | Required behavior | Mechanism |
@@ -74,6 +84,7 @@
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
 | **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
 | **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | HTTP create: **`WeightLogs::LoggedAtParamParser`** then **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; delete: **`WeightLogs::DestroyLog`** |
+| **`GET /informes`** | **Read-only**; must not create/update/delete domain rows | **`Reports::ShowPage`** + query objects only |
 | Phase-start **reminder** sweep | At most one logical send per `(user, kind, local_date)` | Unique index on **`phase_reminder_events`** |
 
 ## 3. Caching invalidation

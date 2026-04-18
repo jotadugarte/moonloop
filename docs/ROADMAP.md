@@ -43,15 +43,17 @@ Things done and things left to do. Update this when finishing branches; use `roa
 23. [x] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — 2026-04-17 — Depends on: Phase 1
 24. [x] Weight + BMI history view showing progression over time (REQ-WGT-003) — 2026-04-17 — Depends on: #23
 
+### Phase 7 — Reporting
+25. [x] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown (REQ-RPT-001) — 2026-04-17 — Depends on: Phase 3
+26. [x] Streak report: current streak and all-time longest streak per habit (REQ-RPT-002) — 2026-04-17 — Depends on: Phase 3 #14
+27. [x] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — 2026-04-17 — Depends on: Phase 6
+
 ## In Progress
 *(No items currently in progress)*
 
 ## Pending (by priority)
 
-### Phase 7 — Reporting
-25. [ ] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown (REQ-RPT-001) — Depends on: Phase 3
-26. [ ] Streak report: current streak and all-time longest streak per habit (REQ-RPT-002) — Depends on: Phase 3 #14
-27. [ ] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — Depends on: Phase 6
+*(No items in this section — see **Backlog**.)*
 
 ## Backlog
 - [ ] Exercise routines: compartir rutinas en catálogo público (paridad con menús/recetas **REQ-MENU-001/002** y moderación) — Depends on: Phase 5 (#20–22); not in Phase 5 scope until promoted from backlog
@@ -60,4 +62,4 @@ Things done and things left to do. Update this when finishing branches; use `roa
 - [ ] Imperial units support (lbs) for weight and profile
 - [ ] Push / email reminders for habits
 - [ ] Mi Día / rachas: optimizar consultas, paginación o caché ante historial muy largo (retro ilimitado + racha desde el inicio; evitar vistas lentas) — Depends on: Phase 3 #11–#14
-- [ ] Reportes de racha (REQ-RPT-002): valorar **materializar** racha (columnas o contadores derivados, p. ej. racha actual / máxima por hábito, actualizados al guardar) si el cálculo en vivo sobre historial largo es lento — Depends on: Phase 7 #26
+- [ ] Reportes de racha (REQ-RPT-002): valorar **materializar** racha (columnas o contadores derivados, p. ej. racha actual / máxima por hábito, actualizados al guardar) si el cálculo en vivo sobre historial largo es lento — Depends on: Phase 7 #26 (done); perfilar en producción si hace falta

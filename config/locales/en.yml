@@ -29,9 +29,12 @@
 
 en:
   hello: "Hello world"
+  ui:
+    inline_sep: "·"
   time:
     formats:
       weight_log: "%Y-%m-%d %H:%M"
+      reports_chart_axis: "%Y-%m-%d %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Your Phase 1 program starts today"
@@ -91,6 +94,45 @@ en:
       invalid_status: "That status is not valid."
       invalid_request: "The form data is incomplete."
       could_not_save: "Could not save. Please try again."
+  reports:
+    flash:
+      invalid_date: "That date is not valid."
+      future_date: "You cannot pick a future day."
+    show:
+      page_title: "Reports — Moonloop"
+      heading: "Reports"
+      section_nav_aria: "Report sections"
+      nav_fulfillment: "Fulfillment"
+      nav_streaks: "Streaks"
+      nav_weight: "Weight"
+      date_label: "Reference day"
+      go_to_date: "Go"
+      reference_period_intro: "Week and month below are based on this day: %{date}."
+      view_today: "Back to today"
+      fulfillment_heading: "Habit fulfillment"
+      fulfillment_week_range: "Week (Mon–Sun): %{start} — %{end}"
+      fulfillment_month_range: "Month: %{start} — %{end}"
+      fulfillment_empty: "No habits to show for these periods."
+      fulfillment_no_due_days: "No due days"
+      fulfillment_placeholder: "—"
+      fulfillment_pct: "%{value}%"
+      fulfillment_cell: "%{done}/%{due} (%{pct})"
+      streaks_heading: "Streaks"
+      streaks_empty: "No habits to show for these periods."
+      streak_days:
+        zero: "0 days"
+        one: "1 day"
+        other: "%{count} days"
+      weight_heading: "Weight trend"
+      weight_empty: "No weight entries to chart yet."
+      weight_chart_aria: "Weight over time chart"
+      col_category: "Category"
+      col_habit: "Habit"
+      col_week: "Week"
+      col_month: "Month"
+      col_current_streak: "Current streak"
+      col_longest_streak: "Longest streak"
+      back_home: "Back to home"
   public_recipes:
     index:
       title: "Public recipes — Moonloop"
@@ -511,6 +553,7 @@ en:
   home:
     index:
       my_day: "My Day"
+      informes: "Reports"
       menus: "Menus"
       recipes: "Recipes"
       exercise_routines: "Exercise routines"

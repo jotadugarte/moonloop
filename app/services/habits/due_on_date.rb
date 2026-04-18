@@ -4,18 +4,24 @@ module Habits
   # Returns whether +user_habit+ is scheduled on +local_date+ (civil date in the user's calendar).
   # Inactive habits are never due. See SPEC: "Scheduling — due-day resolution (Mi Día)".
   class DueOnDate
-    def self.due_on?(user_habit, local_date)
-      new(user_habit: user_habit, local_date: local_date).due_on?
+    # +schedule_only:+ when true, evaluates frequency rules as if the habit were active (REQ-RPT-001:
+    # fulfillment for inactive habits that still have completions in the reporting window). Mi Día keeps
+    # the default +false+ (inactive habits are never due in-product).
+    def self.due_on?(user_habit, local_date, schedule_only: false)
+      new(user_habit: user_habit, local_date: local_date, schedule_only: schedule_only).due_on?
     end
 
-    def initialize(user_habit:, local_date:)
+    def initialize(user_habit:, local_date:, schedule_only: false)
       @user_habit = user_habit
       @local_date = local_date
+      @schedule_only = schedule_only
     end
 
     def due_on?
-      return false unless @user_habit.active?
       return false unless @local_date.is_a?(Date)
+      unless @schedule_only
+        return false unless @user_habit.active?
+      end
 
       case @user_habit.frequency_type
       when "daily"

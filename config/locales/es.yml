@@ -1,8 +1,11 @@
 es:
   hello: "Hola mundo"
+  ui:
+    inline_sep: "·"
   time:
     formats:
       weight_log: "%d/%m/%Y %H:%M"
+      reports_chart_axis: "%d/%m %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Hoy empieza tu fase 1"
@@ -66,6 +69,45 @@ es:
       invalid_status: "El estado no es válido."
       invalid_request: "Faltan datos del formulario."
       could_not_save: "No se pudo guardar. Reintenta."
+  reports:
+    flash:
+      invalid_date: "La fecha no es válida."
+      future_date: "No puedes elegir un día futuro."
+    show:
+      page_title: "Informes — Moonloop"
+      heading: "Informes"
+      section_nav_aria: "Secciones del informe"
+      nav_fulfillment: "Cumplimiento"
+      nav_streaks: "Rachas"
+      nav_weight: "Peso"
+      date_label: "Día de referencia"
+      go_to_date: "Ir"
+      reference_period_intro: "Semana y mes mostrados según este día: %{date}."
+      view_today: "Volver a hoy"
+      fulfillment_heading: "Cumplimiento de hábitos"
+      fulfillment_week_range: "Semana (lun–dom): %{start} — %{end}"
+      fulfillment_month_range: "Mes: %{start} — %{end}"
+      fulfillment_empty: "No hay hábitos que mostrar para estos periodos."
+      fulfillment_no_due_days: "Sin días previstos"
+      fulfillment_placeholder: "—"
+      fulfillment_pct: "%{value} %"
+      fulfillment_cell: "%{done}/%{due} (%{pct})"
+      streaks_heading: "Rachas"
+      streaks_empty: "No hay hábitos que mostrar para estos periodos."
+      streak_days:
+        zero: "0 días"
+        one: "1 día"
+        other: "%{count} días"
+      weight_heading: "Evolución del peso"
+      weight_empty: "Aún no hay registros de peso para graficar."
+      weight_chart_aria: "Gráfico de peso en el tiempo"
+      col_category: "Categoría"
+      col_habit: "Hábito"
+      col_week: "Semana"
+      col_month: "Mes"
+      col_current_streak: "Racha actual"
+      col_longest_streak: "Racha máxima"
+      back_home: "Volver al inicio"
   public_recipes:
     index:
       title: "Recetas públicas — Moonloop"
@@ -394,6 +436,7 @@ es:
   home:
     index:
       my_day: "Mi Día"
+      informes: "Informes"
       menus: "Menús"
       recipes: "Recetas"
       exercise_routines: "Rutinas de ejercicio"
