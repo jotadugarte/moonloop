@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe Habits::MiDayStreakPrefetch do
+# String describe: constant may not exist yet (TDD red); resolution happens inside examples.
+RSpec.describe "Habits::MiDayStreakPrefetch" do
   # Oracle: mirrors MyDayController#streak_completions_indexed_by_date + #streaks_for_due_habits.
   def streak_by_habit_id_like_controller(due_habits, local_date)
     return {} if due_habits.empty?
@@ -45,7 +46,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
         due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
         expected = streak_by_habit_id_like_controller(due, local_date)
 
-        result = described_class.call(user: user, due_habits: due, local_date: local_date)
+        result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
         expect(result).to eq(expected)
         expect(result[habit.id]).to eq(31)
       end
@@ -75,7 +76,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
         due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
         expected = streak_by_habit_id_like_controller(due, local_date)
 
-        result = described_class.call(user: user, due_habits: due, local_date: local_date)
+        result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
         expect(result).to eq(expected)
         expect(result[bare_habit.id]).to eq(0)
         expect(result[done_habit.id]).to eq(1)
@@ -108,7 +109,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
         expect(due.map(&:name)).to eq([ "Activo" ])
 
         expected = streak_by_habit_id_like_controller(due, local_date)
-        result = described_class.call(user: user, due_habits: due, local_date: local_date)
+        result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
 
         expect(result).to eq(expected)
         expect(result.keys).to eq([ active.id ])
@@ -132,7 +133,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
         due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
         expect(due).to be_empty
 
-        result = described_class.call(user: user, due_habits: due, local_date: local_date)
+        result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
         expect(result).to eq({})
       end
     end
