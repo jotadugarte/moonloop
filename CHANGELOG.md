@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Mi Día / rachas: `Habits::MiDayStreakPrefetch` loads streak window completions in one query, caches the `user_habit_id => streak_count` map in `Rails.cache`, and relies on `UserHabit#touch` after `Habits::RecordCompletion` / `Habits::ClearCompletion` so cache keys stay coherent (REQ-DAY-004; roadmap #28).
+
 ### Added
 
 - Phase 7 — **Informes** (`GET /informes`): habit fulfillment (week Mon–Sun and civil month, `Habits::FulfillmentForPeriod` + `DueOnDate` with optional `schedule_only` for inactive habits with activity in range), current and longest streaks (`Habits::ReportCurrentStreak`, `Habits::LongestStreak`), weight trend via server-rendered SVG (`WeightLogs::ChartSeries`), orchestration in `Reports::ShowPage`, i18n (`es` / `en`), home link, and REQ coverage for `REQ-RPT-001`–`REQ-RPT-003` (see `docs/core/SPEC.md`).

@@ -2,8 +2,7 @@
 
 require "rails_helper"
 
-# String describe: constant may not exist yet (TDD red); resolution happens inside examples.
-RSpec.describe "Habits::MiDayStreakPrefetch" do
+RSpec.describe Habits::MiDayStreakPrefetch do
   # Oracle: mirrors MyDayController#streak_completions_indexed_by_date + #streaks_for_due_habits.
   def streak_by_habit_id_like_controller(due_habits, local_date)
     return {} if due_habits.empty?
@@ -253,8 +252,8 @@ RSpec.describe "Habits::MiDayStreakPrefetch" do
 
     # [REQ-DAY-004]
     it "keeps a composite index on user_habit_id and completed_on for lookups" do
-      names = HabitCompletion.connection.indexes("habit_completions").map(&:name)
-      expect(names).to include("index_habit_completions_on_user_habit_and_completed_on")
+      indexes = HabitCompletion.connection.indexes("habit_completions")
+      expect(indexes.any? { |idx| idx.columns == %w[user_habit_id completed_on] }).to be(true)
     end
   end
 

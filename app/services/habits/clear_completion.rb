@@ -18,6 +18,7 @@ module Habits
       return :inactive unless habit.active?
 
       @habit_completion.destroy!
+      # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
       habit.touch
 
       :ok
