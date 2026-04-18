@@ -95,6 +95,8 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 - **Guard Clauses:** Prefer `return unless` over nested blocks.
 - **Dead Code:** Remove commented-out code immediately. Remove unused helpers or redundant wrappers when a shared helper makes them dead code (e.g. per-resource `xxx_sort_icon` when `IndexSortHelper#index_sort_icon` exists).
 - **Params in services:** When a service reads a hash from `params.permit(...).to_h` (or similar), Rails often stringifies keys. Support both symbol and string keys when reading attributes (e.g. `attrs[:selected] || attrs["selected"]`) so behavior is correct regardless of key type.
+- **Domain value-object errors:** When rescuing `ArgumentError` from `WeightKg`, `HeightCm`, or similar PORO/Data value objects, branch using a **stable class-level predicate** (e.g. `WeightKg.invalid_argument_error?(error)`) instead of regex-matching `error.message`.
+- **Translated HTML in ERB:** When a locale string embeds a small amount of markup (e.g. `<strong>`), render with `sanitize(t("..."), tags: %w[strong])` and a **minimal** tag allowlist—avoid `html_safe` on the full translated string.
 
 # FRONTEND ARCHITECTURE (The Rails Way)
 1. **HTML First:** Default to server-rendered HTML. Do not reach for React/Vue unless the interaction is highly complex.

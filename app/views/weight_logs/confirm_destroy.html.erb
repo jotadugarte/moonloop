@@ -1,0 +1,9 @@
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".title") %></h1>
+
+<p><%= sanitize(t(".warning_html"), tags: %w[strong]) %></p>
+
+<%= button_to t(".confirm_submit"), weight_log_path(@weight_log), method: :delete %>
+
+<p><%= link_to t(".cancel"), weight_logs_path %></p>

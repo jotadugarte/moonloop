@@ -1,8 +1,9 @@
 class LogWeightService
-  attr_reader :user, :weight_kg, :height_cm, :bmi_value
+  attr_reader :user, :weight_kg, :height_cm, :bmi_value, :logged_at
 
-  def initialize(user:, weight_kg:)
+  def initialize(user:, weight_kg:, logged_at: Time.current)
     @user = user
+    @logged_at = logged_at
     # Leveraging Value Objects (domain constraints) to fail fast on invalid arguments
     @weight_kg = WeightKg.new(value: weight_kg).value
     @height_cm = HeightCm.new(value: user.height_cm).value
@@ -11,18 +12,14 @@ class LogWeightService
 
   def call
     ActiveRecord::Base.transaction do
-      # Create log snapshot
       log = user.weight_logs.create!(
         weight_kg: weight_kg,
         height_cm: height_cm,
-        bmi: bmi_value
+        bmi: bmi_value,
+        logged_at: logged_at
       )
 
-      # Sink current values to User for faster reads
-      user.update!(
-        current_weight_kg: weight_kg,
-        current_bmi: bmi_value
-      )
+      WeightLogs::ReconcileUserCurrentStats.call(user: user)
 
       log
     end

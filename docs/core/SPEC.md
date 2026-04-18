@@ -10,7 +10,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `AUTH` | Registration, session, email verification, password reset |
 | `PROF` | User profile, BMI / weight on profile |
 | `HAB` | Habit templates, categories, user habits, provisioning, scheduling helpers |
-| `WGT` | Weight log persistence (model-level; full UX may be later phase) |
+| `WGT` | Weight log — persistence, entry flow, history, reconciliation (`REQ-WGT-001`–`003`) |
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
@@ -21,7 +21,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 
 ## Purpose and vision
 
-Moonloop is a **wellness and habits** web application. Users authenticate, maintain a **metric profile** (height, weight, timezone, derived BMI), define **habits** grouped in **categories**, and (in later phases) track completion by day, plan meals, log weight over time, and view reports. The product is **Spanish-first** in the UI; English is supported as a secondary locale.
+Moonloop is a **wellness and habits** web application. Users authenticate, maintain a **metric profile** (height, weight, timezone, derived BMI), define **habits** grouped in **categories**, track completion by day, plan meals, **log weight over time** with history, and (in later phases) view aggregate reports. The product is **Spanish-first** in the UI; English is supported as a secondary locale.
 
 ---
 
@@ -39,7 +39,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Frequency params | JSON parameters for the frequency (e.g. weekday list, interval) | `user_habits.frequency_params` |
 | Active habit | Habit with `active: true`; inactive habits do not consume the “unique name among active” rule | `user_habits.active` |
 | Provisioning | Idempotent job that ensures default templates/categories/habits exist for a user | `ProvisionDefaultHabitsJob`, sign-in hook |
-| Weight log | Historical weight entry with snapshot height and BMI | `WeightLog` |
+| Weight log | Historical weigh-in: **`logged_at`** (product timeline, UTC in DB), **`weight_kg`**, snapshot **`height_cm`**, derived **`bmi`**; entry form, history list, delete + reconcile | `WeightLog` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
 | Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). | `HabitCompletion` / `habit_completions` |
@@ -85,7 +85,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
   - **`activation_date` edits:** may change only while the habit has **zero** completion rows; if any completion exists, changing `activation_date` is forbidden until all completions are removed (including after a user clears every day back to pending).
 
 - **WeightLog** (`weight_logs`)
-  - `belongs_to :user`; stores `weight_kg`, `height_cm`, `bmi` per entry
+  - `belongs_to :user`; **`logged_at`** required (instant of weigh-in; ordered by **`logged_at DESC`, `id DESC`** for history); stores **`weight_kg`**, **`height_cm`**, **`bmi`** per entry (immutable **`weight_kg` / `height_cm`** after insert); validations include **`logged_at`** not after “now” in the user’s timezone
 
 - **Menu** (`menus`)
   - `belongs_to :user`, `has_many :menu_entries`, `has_many :phase_assignments`
@@ -137,7 +137,9 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-DAY-002 | User marks a habit **done** or **failed** for a calendar day (at least the current day); persistence is per local day and habit. | Implemented |
 | REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Implemented |
 | REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. | Implemented |
-| REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, and BMI for a user. | Implemented (data model; full Phase 6 UX tracked on roadmap) |
+| REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, BMI, and **`logged_at`** (indexed with `user_id`) for a user. | Implemented |
+| REQ-WGT-002 | **Weight log entry:** authenticated user can record weigh-ins over time via a form (**`weight_kg`**, **`logged_at`** in the user’s timezone; no height field on the form); navigation entry points (e.g. home, profile). | Implemented |
+| REQ-WGT-003 | **History:** authenticated user can view a paginated list (**30** per page) of their weigh-ins ordered by **`logged_at`** descending, with local date/time, weight, height snapshot, BMI, and delete-with-confirmation that reconciles **`current_*`**. | Implemented |
 | REQ-MENU-001 | Weekly **menu** plan: at most one persisted slot per `(menu, weekday, meal_type)`; slot holds a user-owned **recipe** and/or optional freeform text per profile preference; validations and Hotwire grid editor. | Implemented |
 | REQ-MENU-002 | **Recipe** model: name, instructions, optional **ActiveStorage** image; in menu slots, fallback image by meal type when the recipe has no image. | Implemented |
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
@@ -157,8 +159,6 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-WGT-002 | Weight log UX: record entries over time (entry flow). | Phase 6 |
-| REQ-WGT-003 | Weight + BMI history view (progression over time). | Phase 6 |
 | REQ-RPT-001 … REQ-RPT-003 | Habit fulfillment, streak, and weight charts — per roadmap Phase 7. | Phase 7 |
 
 ### Scheduling — due-day resolution (Mi Día)

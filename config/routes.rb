@@ -16,6 +16,11 @@ Rails.application.routes.draw do
   end
   resource  :password, only: [ :edit, :update ]
   resource  :profile, only: [ :edit, :update ]
+  resources :weight_logs, only: %i[index new create destroy] do
+    member do
+      get :confirm_destroy
+    end
+  end
   get "mi_dia", to: "my_day#show", as: :my_day
   resources :habit_completions, only: [ :create, :destroy ]
   resources :exercise_routines, only: %i[index create edit update destroy] do

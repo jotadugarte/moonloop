@@ -4,5 +4,6 @@ FactoryBot.define do
     weight_kg { 70.0 }
     height_cm { 175 }
     bmi { 22.86 }
+    logged_at { Time.current }
   end
 end

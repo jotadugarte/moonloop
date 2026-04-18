@@ -34,19 +34,19 @@ Things done and things left to do. Update this when finishing branches; use `roa
 18. [x] Phase alerts: warn user if start date is more than 3 days in the future; send reminder on the day a phase begins (REQ-MENU-004) — 2026-04-17 — Depends on: #17
 19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
 
-## In Progress
-*(No items currently in progress)*
-
-## Pending (by priority)
-
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
 21. [x] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — 2026-04-17 — Depends on: Phase 4 (#15–19), #20
 22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11
 
 ### Phase 6 — Weight Log
-23. [ ] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — Depends on: Phase 1
-24. [ ] Weight + BMI history view showing progression over time (REQ-WGT-003) — Depends on: #23
+23. [x] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — 2026-04-17 — Depends on: Phase 1
+24. [x] Weight + BMI history view showing progression over time (REQ-WGT-003) — 2026-04-17 — Depends on: #23
+
+## In Progress
+*(No items currently in progress)*
+
+## Pending (by priority)
 
 ### Phase 7 — Reporting
 25. [ ] Habit completion report: fulfillment percentage per habit with weekly and monthly breakdown (REQ-RPT-001) — Depends on: Phase 3

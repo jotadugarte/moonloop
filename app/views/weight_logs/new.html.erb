@@ -1,0 +1,46 @@
+<% content_for :title, t(".title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t(".title") %></h1>
+
+<% err_id = "weight-log-form-errors" %>
+<%= form_with model: @weight_log, url: weight_logs_path, class: "space-y-4 max-w-md" do |form| %>
+  <% if @weight_log.errors.any? %>
+    <div class="text-red-600 mb-4">
+      <ul id="<%= err_id %>" class="list-disc pl-5" role="alert">
+        <% @weight_log.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :weight_kg, t(".weight_kg_label"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.number_field :weight_kg,
+          step: 0.1,
+          min: 20,
+          max: 500,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@weight_log, :weight_kg, err_id) %>
+  </div>
+
+  <div>
+    <%= form.label :logged_at, t(".logged_at_label"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.datetime_local_field :logged_at,
+          required: true,
+          value: @weight_log.logged_at&.in_time_zone(Current.user.timezone)&.strftime("%Y-%m-%dT%H:%M"),
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@weight_log, :logged_at, err_id) %>
+  </div>
+
+  <div class="pt-4">
+    <%= form.submit t(".submit"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
+  </div>
+<% end %>
+
+<p class="mt-6">
+  <%= link_to t(".history_link"), weight_logs_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t(".back"), edit_profile_path, class: "text-blue-600 underline" %>
+</p>
