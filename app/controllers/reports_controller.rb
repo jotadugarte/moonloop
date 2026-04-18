@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# REQ-RPT-001 — fulfillment; REQ-RPT-002 — streaks; REQ-RPT-003 — weight chart (single page /informes).
 class ReportsController < ApplicationController
   def show
     zone = Time.find_zone!(Current.user.timezone)

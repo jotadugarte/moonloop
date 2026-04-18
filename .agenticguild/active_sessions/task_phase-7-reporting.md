@@ -131,7 +131,7 @@ Locked execution contract for `start-task` (TDD-first feature work).
     Presentation: Weight trend via server-first SVG or polyline or equivalent lightweight markup; axis and labels respect user timezone for logged_at display, consistent with existing weight history.
   </step>
 
-  <step id="9" status="pending">
+  <step id="9" status="complete">
     Traceability and navigation: Add REQ-RPT comment anchors per project rules; link to /informes from home or primary nav. Full test suite green.
   </step>
 </implementation_plan>

@@ -20,6 +20,15 @@ RSpec.describe "Weight log navigation", type: :request do
     expect(response.body).to include(I18n.t("home.index.log_weight"))
   end
 
+  # [REQ-RPT-001, REQ-RPT-002, REQ-RPT-003]
+  it "includes the Informes link on the home page" do
+    get root_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include(informes_path)
+    expect(response.body).to include(I18n.t("home.index.informes"))
+  end
+
   # [REQ-WGT-002]
   it "includes weight history and log-weight links on profile edit" do
     get edit_profile_path

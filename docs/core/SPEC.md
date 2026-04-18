@@ -15,13 +15,13 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
-| `RPT` | Reporting — **Phase 7 (in progress)** |
+| `RPT` | Reporting (Informes) — **implemented** (Phase 7) |
 
 ---
 
 ## Purpose and vision
 
-Moonloop is a **wellness and habits** web application. Users authenticate, maintain a **metric profile** (height, weight, timezone, derived BMI), define **habits** grouped in **categories**, track completion by day, plan meals, **log weight over time** with history, and (in later phases) view aggregate reports. The product is **Spanish-first** in the UI; English is supported as a secondary locale.
+Moonloop is a **wellness and habits** web application. Users authenticate, maintain a **metric profile** (height, weight, timezone, derived BMI), define **habits** grouped in **categories**, track completion by day, plan meals, **log weight over time** with history, and view **aggregate reports** (fulfillment, streaks, weight trend) on **Informes** (`GET /informes`). The product is **Spanish-first** in the UI; English is supported as a secondary locale.
 
 ---
 
@@ -150,18 +150,17 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
 | REQ-EXR-004 | **Phase alerts (routine lane):** shared anchor warning; phase-start reminders coherent with menus; routine lane visible on `/phase`. See **Acceptance criteria — REQ-EXR-004** below. | Implemented |
 | REQ-EXR-005 | **Routine plan extension:** when current week is past all routine ranges, extension prompt; repeat last routine block or add new range. See **Acceptance criteria — REQ-EXR-005** below. | Implemented |
+| REQ-RPT-001 | **Habit fulfillment report** on **Informes:** per habit, fulfillment with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
+| REQ-RPT-002 | **Streak report** on **Informes:** per habit, **current** streak (parity with **`Habits::Streak`**) and **all-time longest** streak; `as_of` date rules match Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
+| REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 
 ---
 
 ## Requirement registry (planned — roadmap)
 
-These IDs are reserved for traceability; behavior is **not** fully implemented until the corresponding phase ships.
+Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When a row is implemented, move it to **Requirement registry (implemented)** above.
 
-| ID | Requirement | Roadmap phase |
-|----|-------------|----------------|
-| REQ-RPT-001 | **Habit fulfillment report:** per habit, fulfillment percentage with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
-| REQ-RPT-002 | **Streak report:** per habit, **current** streak and **all-time longest** streak; `as_of` date rules **match Mi Día** (local date param, max today, no future). See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
-| REQ-RPT-003 | **Weight progress chart:** visual trend of weight over time from `weight_logs`; single efficient query (indexed `user_id` + `logged_at`), not history-list pagination; timezone-consistent display. See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
+*(No planned REQ rows at this time.)*
 
 ### Acceptance criteria — reporting (Phase 7)
 
@@ -289,6 +288,7 @@ These criteria are **testable**; implementation may use different model/table na
 4. **Category lifecycle** — CRUD categories; destroy prevented if habits still reference the category.
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
 6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements the same frequency types as Mi Día scheduling (`daily`, `weekdays`, `every_x_days`, `monthly`), aligned with `Habits::DueOnDate` where applicable. Monthly respects shorter months (end-of-month clamp).
+7. **Informes** — Authenticated user opens **`GET /informes`**, picks a reference local day (same rules as Mi Día), and views habit fulfillment (week + month), current and longest streaks per habit, and a weight trend chart from `weight_logs`.
 
 ---
 
@@ -300,6 +300,7 @@ Feature-specific docs can be linked here as they are written, for example:
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
 - Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
 - Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**. See **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file.
+- Phase 7 (Informes): `GET /informes` → `ReportsController#show`; services **`Reports::CalendarPeriodBounds`**, **`Habits::FulfillmentForPeriod`**, **`Habits::LongestStreak`**, **`Habits::ReportCurrentStreak`**, **`WeightLogs::ChartSeries`**; **`Habits::DueOnDate`** supports optional **`schedule_only:`** for inactive-habit reporting. See **REQ-RPT-001**–**003** and **Decisions log — REQ-RPT** in this file.
 
 ---
 
