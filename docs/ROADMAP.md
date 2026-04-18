@@ -2,7 +2,7 @@
 
 Things done and things left to do. Update this when finishing branches; use `roadmap-manage` to add, prioritize, or catalog items.
 
-**Format:** Use `[x]` for done, `[ ]` for pending. Add `(REQ-ID)` to link to SPEC. Add `— YYYY-MM-DD` for done date. Add `— Branch: name` for in-progress. Add `— Depends on: Item` for dependencies.
+**Format:** Use `[x]` for done, `[ ]` for pending. Add `(REQ-ID)` to link to SPEC. Add `— YYYY-MM-DD` for done date. Add `— Branch: name` for in-progress. Add `— Depends on: Item` for dependencies. Item numbers are **global stable ids** (they are not renumbered when regrouping by phase; e.g. **#29** may appear under Phase 4 after **#19**).
 
 ---
 
@@ -33,11 +33,12 @@ Things done and things left to do. Update this when finishing branches; use `roa
 17. [x] Phase system: user defines a start date for Phase 1 and assigns week ranges to menus (e.g. weeks 1–4 → Menu A, weeks 5–12 → Menu B) (REQ-MENU-003) — 2026-04-17 — Depends on: #15
 18. [x] Phase alerts: warn user if start date is more than 3 days in the future; send reminder on the day a phase begins (REQ-MENU-004) — 2026-04-17 — Depends on: #17
 19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
+29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` also supports `publicly_shareable` for admin revoke; no public menu index yet. (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
-21. [x] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — 2026-04-17 — Depends on: Phase 4 (#15–19), #20
-22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11
+21. [x] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — 2026-04-17 — Depends on: Phase 4 (#15–19, #29), #20
+22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11, Phase 4 (#15–19)
 
 ### Phase 6 — Weight Log
 23. [x] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — 2026-04-17 — Depends on: Phase 1
@@ -57,10 +58,10 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items in this section — see **Backlog**.)*
 
 ## Backlog
-- [ ] Exercise routines: compartir rutinas en catálogo público (paridad con menús/recetas **REQ-MENU-001/002** y moderación) — Depends on: Phase 5 (#20–22); not in Phase 5 scope until promoted from backlog
+- [ ] Exercise routines: compartir rutinas en catálogo público (paridad con recetas en **Done #29** — listado público, opt-in, moderación admin; menús aún sin índice público) — Depends on: Phase 5 (#20–22), Phase 4 **#29**; not in Phase 5 scope until promoted from backlog
 - [ ] Habit completion values (e.g. glasses of water, minutes of exercise) — Depends on: Phase 3
 - [ ] Multiple completions per day per habit — Depends on: Backlog: Completion values
 - [ ] Imperial units support (lbs) for weight and profile
-- [ ] Push / email reminders for habits
-- [ ] Reportes de racha (REQ-RPT-002): valorar **materializar** racha (columnas o contadores derivados, p. ej. racha actual / máxima por hábito, actualizados al guardar) si el cálculo en vivo sobre historial largo es lento — Depends on: Phase 7 #26 (done); perfilar en producción si hace falta
+- [ ] Push notifications and/or **per-habit** email reminders — **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**). No Web Push / FCM in app yet.
+- [ ] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción
 - [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
