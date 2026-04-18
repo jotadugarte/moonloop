@@ -368,6 +368,8 @@ en:
         revoked_public_share: "This recipe is no longer publicly shared."
       menu:
         revoked_public_share: "This menu is no longer publicly shared."
+      exercise_routine:
+        revoked_public_share: "This exercise routine is no longer publicly shared."
   sessions:
     new:
       title: "Sign in"

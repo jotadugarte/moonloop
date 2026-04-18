@@ -343,6 +343,8 @@ es:
         revoked_public_share: "Se quitó el estado público de la receta."
       menu:
         revoked_public_share: "Se quitó el estado público del menú."
+      exercise_routine:
+        revoked_public_share: "Se quitó el estado público de la rutina de ejercicio."
   sessions:
     new:
       title: "Iniciar sesión"

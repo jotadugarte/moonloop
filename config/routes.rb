@@ -61,6 +61,11 @@ Rails.application.routes.draw do
         patch :revoke_public_share
       end
     end
+    resources :exercise_routines, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
   end
   namespace :identity do
     resource :email,              only: [ :edit, :update ]
