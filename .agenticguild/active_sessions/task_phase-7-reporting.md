@@ -111,7 +111,7 @@ Locked execution contract for `start-task` (TDD-first feature work).
     TDD — REQ-RPT-001 fulfillment: Write failing specs for Habits::FulfillmentForPeriod (or equivalent) that, for a UserHabit and inclusive local Date range, returns due_count, done_count, and derived percentage using Habits::DueOnDate and HabitCompletion (done only counts toward numerator; failed and absent do not). Cover inactive habits: omitted when no completion in range; included when at least one completion exists in range. Implement until green.
   </step>
 
-  <step id="4" status="pending">
+  <step id="4" status="complete">
     TDD — REQ-RPT-002 longest streak: Write failing specs for Habits::LongestStreak (or equivalent) that computes all-time longest run of consecutive due days each marked done, per REQ-DAY-004 (aligned with Habits::Streak for closed days and non-due skipping). Reuse or mirror completion prefetch patterns from Habits::Streak / MyDayController; respect lower_bound and activation rules. Implement until green. Do not add persisted streak columns in this phase (backlog optimization only).
   </step>
 
