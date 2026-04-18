@@ -39,6 +39,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
 21. [x] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — 2026-04-17 — Depends on: Phase 4 (#15–19, #29), #20
 22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11, Phase 4 (#15–19)
+30. [x] Exercise routines: catálogo público (opt-in, moderación admin, **mostrar autor**). La **plantilla pública** en el catálogo sigue la **última versión** guardada por el autor. Si otro usuario **adoptó / usa una copia** en su cuenta, **no** se actualiza sola: aviso de que la rutina de origen cambió, puede **revisar** y **aceptar actualizar** su copia (REQ-EXR-006) — 2026-04-18 — Depends on: Phase 5 (#20–22), Phase 4 **#29**
 
 ### Phase 6 — Weight Log
 23. [x] Weight log: record entries over time (date+time, weight_kg, height_cm snapshot, bmi) (REQ-WGT-002; model REQ-WGT-001) — 2026-04-17 — Depends on: Phase 1
@@ -55,8 +56,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-30. [ ] Exercise routines: catálogo público (opt-in, moderación admin, **mostrar autor**). La **plantilla pública** en el catálogo sigue la **última versión** guardada por el autor. Si otro usuario **adoptó / usa una copia** en su cuenta, **no** se actualiza sola: aviso de que la rutina de origen cambió, puede **revisar** y **aceptar actualizar** su copia — Depends on: Phase 5 (#20–22), Phase 4 **#29**; requiere vínculo origen→copia (o equivalente) y flujo de reconciliación — **Sequence: deliver before #31**
-31. [ ] Menús: página / índice público de catálogo + **misma semántica que rutinas** (#30): adopción solo usuarios logueados, una copia por menú origen por usuario, nombre de copia preservado al adoptar y al aceptar actualizaciones de contenido, aviso si el origen cambia, vínculo “origen ya no disponible” si borran/revocan; listado `publicly_shareable`, paridad UX **Done #29**, moderación admin — Depends on: **#30**; Phase 4 (#15–19, #29); modelo menú/recetas/slots análogo a rutinas (origen→copia)
+31. [ ] Menús: página / índice público de catálogo + **misma semántica que rutinas** (**Done #30**): adopción solo usuarios logueados, una copia por menú origen por usuario, nombre de copia preservado al adoptar y al aceptar actualizaciones de contenido, aviso si el origen cambia, vínculo “origen ya no disponible” si borran/revocan; listado `publicly_shareable`, paridad UX **Done #29**, moderación admin — Depends on: **Done #30**; Phase 4 (#15–19, #29); modelo menú/recetas/slots análogo a rutinas (origen→copia)
 
 ## Backlog
 - [ ] Habit completion values (e.g. glasses of water, minutes of exercise) — Depends on: Phase 3

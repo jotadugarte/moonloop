@@ -1,6 +1,6 @@
 # Task: Catálogo público de rutinas de ejercicio
 
-**Origen:** `docs/ROADMAP.md` — **Pending #30** (catálogo público de rutinas; **#31** = menús después).  
+**Origen:** `docs/ROADMAP.md` — **Done #30** (catálogo público de rutinas; **#31** = menús públicos siguiente).  
 **SPEC:** Q8 en *Decisions log — REQ-EXR* — al promover desde backlog: patrón **Done #29** + adopción / copia / avisos.  
 **Paridad menús:** Misma semántica de producto para menús públicos (**ROADMAP #31**, tras cerrar **#30** / esta sesión). Esta sesión detalla **rutinas**; menús replican el patrón en otro entregable.
 
@@ -74,7 +74,9 @@ Así se evita divergencia de bugs entre dos copiadores paralelos.
 
 ## Handoff
 
-Spec de producto para **rutinas** cerrado. **Formalizado en roadmap (2026-04-18):** entregar **#30** (esta sesión) primero; **#31** (menús públicos, misma semántica) después. Menús: nueva sesión `start-task` tras cerrar catálogo de rutinas; servicios `Menus::*` análogos a `ExerciseRoutines::*`.
+**Entregado (2026-04-18):** **ROADMAP #30** / **REQ-EXR-006** — catálogo público de rutinas, adopción, sync, moderación admin, opt-in del dueño; suite + humo verdes.
+
+**Siguiente:** **#31** menús públicos — nueva sesión `start-task`; servicios `Menus::*` análogos a `ExerciseRoutines::*`.
 
 <implementation_plan>
   <classification>Feature</classification>
@@ -90,7 +92,7 @@ Spec de producto para **rutinas** cerrado. **Formalizado en roadmap (2026-04-18)
     <step order="7" status="complete">Wire controllers/routes: `PublicExerciseRoutinesController` (or aligned name) index/show; authenticated adopt + review/accept actions; permit `publicly_shareable` on owner form; `Admin::ExerciseRoutinesController` revoke mirroring recipes. Thin controllers per SYSTEM_ARCHITECTURE.</step>
     <step order="8" status="complete">I18n (es default, en) all new strings; a11y for alerts/banners on pending update and source unavailable.</step>
     <step order="9" status="complete">Update `docs/core/SPEC.md`: REQ-EXR-006 (or agreed id), glossary/decisions; `docs/core/SCHEMA_REFERENCE.md` if maintained; traceability comments in code per project rules.</step>
-    <step order="10" status="pending">Run full test suite; fix regressions; manual smoke public catalog + adopt + accept + revoke.</step>
+    <step order="10" status="complete">Run full test suite; fix regressions; manual smoke public catalog + adopt + accept + revoke.</step>
   </steps>
   <out_of_scope>Public menu catalog task (same semantics, separate REQ); email notifications; Web Push.</out_of_scope>
 </implementation_plan>

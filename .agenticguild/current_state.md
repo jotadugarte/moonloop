@@ -4,8 +4,8 @@
   </active_task_pointer>
 
   <execution_context>
-    <active_skill>explore-task</active_skill>
-    <current_phase>[NONE]</current_phase>
-    <current_step>[NONE]</current_step>
+    <active_skill>[NONE]</active_skill>
+    <current_phase>delivered</current_phase>
+    <current_step>ROADMAP #30 / REQ-EXR-006 complete — next: #31 public menus</current_step>
   </execution_context>
 </agent_state>
