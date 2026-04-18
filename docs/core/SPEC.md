@@ -181,7 +181,7 @@ These criteria are **testable**; implementation lives under services (e.g. `Repo
 1. **Current streak** for a habit **matches** **`Habits::Streak`** for the same **`user_habit`**, **`as_of`** local date, and the same completion/due rules as **REQ-DAY-004** (including closed “today” behavior and non-due days).
 2. **`as_of` parity with Mi Día:** Same rules as Mi Día for selecting the local calendar day (query param, cannot be future, cap at **today** in user TZ).
 3. **Longest streak (all-time):** Longest run of **consecutive due days** each marked **done**, using the **same** streak semantics as **REQ-DAY-004** over the habit’s history from activation / lower bound through the evaluated range; **no** persisted aggregate columns are **required** for Phase 7 (optional optimization is backlog).
-4. **Inactive habits:** Same visibility rule as **REQ-RPT-001** (show in a period only if at least one completion in scope where applicable).
+4. **Inactive habits:** Same intent as **REQ-RPT-001** — omit an **inactive** habit from the **streak** table unless it has **at least one** `HabitCompletion` whose **`completed_on`** falls in the **reference window** shown on Informes for the chosen day: the **inclusive union** of the **Monday–Sunday week** and the **civil month** that contain the user’s selected local reference date (same bounds **`Reports::CalendarPeriodBounds`** uses for fulfillment). Active habits remain listed for streaks regardless of completions in that window.
 5. **I18n:** User-visible copy uses `es` default, `en` available.
 
 #### REQ-RPT-003 — Weight progress chart
