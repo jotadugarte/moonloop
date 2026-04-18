@@ -41,7 +41,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `exercise_routines` | `user_id` FK; unique `(user_id, name_normalized)` | `REQ-EXR-001`. User-owned named routines; not globally empty (≥1 line on ≥1 weekday) |
+| `exercise_routines` | `user_id` FK; optional self-FK `source_exercise_routine_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_exercise_routine_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-EXR-006**) | `REQ-EXR-001`, **REQ-EXR-006**. User-owned named routines; not globally empty (≥1 line on ≥1 weekday); optional public catalog and adopted-copy metadata |
 | `exercise_routine_lines` | FK to `exercise_routines`; unique `(exercise_routine_id, weekday, position)`; `weekday` 0–6; `label` max 500 | `REQ-EXR-001`. Ordered lines per weekday |
 | `exercise_routine_assignments` | `user_id`, `exercise_routine_id` FKs; check `start_week >= 1`, `end_week >= start_week` | `REQ-EXR-002`. Non-overlapping ranges per user among **routine** assignments only (independent from `phase_assignments`) |
 

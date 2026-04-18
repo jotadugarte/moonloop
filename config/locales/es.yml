@@ -178,6 +178,7 @@ es:
     index:
       title: "Rutinas de ejercicio"
       my_day_link: "Mi Día"
+      public_share_label: "Compartir en el catálogo público de rutinas"
       name_label: "Nombre"
       first_line_label: "Primer ejercicio (etiqueta)"
       weekday_label: "Día"
@@ -188,6 +189,7 @@ es:
     edit:
       title: "Editar rutina: %{name}"
       back_to_index: "Volver a rutinas"
+      public_share_label: "Compartir en el catálogo público de rutinas"
       adoption_sync:
         pending: "La rutina pública de origen tiene cambios nuevos. Puedes aplicar solo el contenido (líneas); el nombre de tu copia no cambiará."
         accept_update: "Aplicar actualización desde el origen"
@@ -574,6 +576,7 @@ es:
         freeform_text: "Nota"
       exercise_routine:
         name: "Nombre"
+        publicly_shareable: "Catálogo público"
       exercise_routine_line:
         weekday: "Día"
         position: "Orden"

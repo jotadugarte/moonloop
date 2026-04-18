@@ -50,7 +50,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
-| Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). | `ExerciseRoutine` (name may match implementation) |
+| Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). Optional **`publicly_shareable`** public catalog (REQ-EXR-006); adopted copies may reference a **source** routine with explicit content sync. | `ExerciseRoutine` (name may match implementation) |
 | Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
 | Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
 | Phase reminder event | Idempotent record that a phase-start reminder was processed for a given **local** calendar day and channel kind. | `PhaseReminderEvent` |
@@ -99,6 +99,10 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **Recipe** (`recipes`)
   - `belongs_to :user`, `has_many :menu_entries`; optional `has_one_attached :image`
   - `publicly_shareable`; admin may revoke sharing
+
+- **ExerciseRoutine** (`exercise_routines`)
+  - `belongs_to :user`; lines and week-range assignments per **REQ-EXR-001** / **REQ-EXR-002**
+  - `publicly_shareable` for the authenticated **public routine catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_exercise_routine_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-EXR-006**).
 
 - **PhaseAssignment** (`phase_assignments`)
   - `belongs_to :user`, `belongs_to :menu`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
@@ -150,6 +154,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
 | REQ-EXR-004 | **Phase alerts (routine lane):** shared anchor warning; phase-start reminders coherent with menus; routine lane visible on `/phase`. See **Acceptance criteria — REQ-EXR-004** below. | Implemented |
 | REQ-EXR-005 | **Routine plan extension:** when current week is past all routine ranges, extension prompt; repeat last routine block or add new range. See **Acceptance criteria — REQ-EXR-005** below. | Implemented |
+| REQ-EXR-006 | **Public exercise routine catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with line copy and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; admin revoke like recipes/menus. See **Acceptance criteria — REQ-EXR-006** below. | Implemented |
 | REQ-RPT-001 | **Habit fulfillment report** on **Informes:** per habit, fulfillment with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-002 | **Streak report** on **Informes:** per habit, **current** streak (parity with **`Habits::Streak`**) and **all-time longest** streak; `as_of` date rules match Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
@@ -258,6 +263,15 @@ These criteria are **testable**; implementation may use different model/table na
 2. **Prompt:** Show an extension prompt for the **routine** lane: user can **repeat the last contiguous routine assignment block** (same routine and span as the last block) or **add a new week range** mapped to a routine.
 3. **Service parity:** Implement the analogue of **`Phases::RepeatLastPhaseAssignment`** for routine assignments (new service under `ExerciseRoutines::` or `Phases::`, consistent with SYSTEM_ARCHITECTURE).
 
+#### REQ-EXR-006 — Public catalog, adoption, and sync
+
+1. **Opt-in:** The routine owner can set **`publicly_shareable`** on create/update; default **false**; catalog lists only **`publicly_shareable: true`** routines for authenticated users.
+2. **Catalog read:** **Index** and **show** for public routines do not expose private routines; **show** returns **404** when the routine is not public; **author** in HTML is a safe identifier (e.g. numeric id label), **not** email.
+3. **Adoption:** An authenticated user other than the owner may **adopt** a public routine **at most once** per source (one copy per `(adopter, source)`); chosen **copy name** follows the same uniqueness rules as other routines; lines are copied; **`source_exercise_routine_id`** and sync metadata are stored.
+4. **Sync:** When the source’s **line content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **lines only** (copy **name** and **`exercise_routine_assignment`** links to the same `exercise_routine_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
+5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed routine id does not **500**.
+6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate as recipes/menus) can **revoke** public sharing on a routine; it disappears from the public catalog.
+
 #### Decisions log — REQ-EXR (Phase 5, locked)
 
 | ID | Decision |
@@ -269,7 +283,7 @@ These criteria are **testable**; implementation may use different model/table na
 | Q5 | **Inline** habit-row integration **only when Ejercicio is due** that day. |
 | Q6 | If Ejercicio exists but is **inactive**: show routine block **disabled** + message to reactivate. |
 | Q7 | Routine **week-range assignments** are edited on the **phase plan** (`/phase` family), alongside menu phase assignments. |
-| Q8 | **Public sharing** of routines (like menus/recipes): **not** Phase 5 — see **Backlog** in `docs/ROADMAP.md`. |
+| Q8 | **Public sharing** of routines (catalog, adoption, sync, moderation): **REQ-EXR-006**; parity intent with **Done #29** / recipe catalog (see **ROADMAP** **#30**). |
 | Q9 | **Reuse** existing phase-assignment UX for routine ranges. |
 | Q10 | Mi Día: day preview **plus** link to **full week** view for the active routine. |
 | Q11 | **Parity with menus:** **REQ-MENU-004**-style alerts/reminders and **REQ-MENU-005**-style plan-ended extension apply to the **routine** lane — see **REQ-EXR-004** and **REQ-EXR-005**. |
@@ -299,7 +313,7 @@ Feature-specific docs can be linked here as they are written, for example:
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
 - Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
-- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**. See **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file.
+- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`, `PublicExerciseRoutinesController`, `Admin::ExerciseRoutinesController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**; public catalog **REQ-EXR-006**. See **Acceptance criteria — exercise routines (Phase 5)**, **REQ-EXR-006**, and **Decisions log — REQ-EXR** in this file.
 - Phase 7 (Informes): `GET /informes` → `ReportsController#show`; services **`Reports::CalendarPeriodBounds`**, **`Habits::FulfillmentForPeriod`**, **`Habits::LongestStreak`**, **`Habits::ReportCurrentStreak`**, **`WeightLogs::ChartSeries`**; **`Habits::DueOnDate`** supports optional **`schedule_only:`** for inactive-habit reporting. See **REQ-RPT-001**–**003** and **Decisions log — REQ-RPT** in this file.
 
 ---

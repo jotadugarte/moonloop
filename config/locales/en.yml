@@ -203,6 +203,7 @@ en:
     index:
       title: "Exercise routines"
       my_day_link: "My Day"
+      public_share_label: "Share in the public exercise routine catalog"
       name_label: "Name"
       first_line_label: "First exercise (label)"
       weekday_label: "Day"
@@ -213,6 +214,7 @@ en:
     edit:
       title: "Edit routine: %{name}"
       back_to_index: "Back to routines"
+      public_share_label: "Share in the public exercise routine catalog"
       adoption_sync:
         pending: "The public source routine has new changes. You can apply line content only; your copy name stays the same."
         accept_update: "Apply update from source"
@@ -503,6 +505,7 @@ en:
         freeform_text: "Note"
       exercise_routine:
         name: "Name"
+        publicly_shareable: "Public catalog"
       exercise_routine_line:
         weekday: "Day"
         position: "Order"

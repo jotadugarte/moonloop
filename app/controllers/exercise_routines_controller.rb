@@ -84,6 +84,7 @@ class ExerciseRoutinesController < ApplicationController
   def routine_params
     params.require(:exercise_routine).permit(
       :name,
+      :publicly_shareable,
       exercise_routine_lines_attributes: %i[id weekday position label notes _destroy]
     )
   end

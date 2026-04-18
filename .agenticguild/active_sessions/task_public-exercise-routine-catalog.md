@@ -12,7 +12,7 @@
 
 - **Recetas:** `Recipe#publicly_shareable`, catálogo “vivo”, moderación admin.
 - **Menús:** `publicly_shareable` + moderación; falta índice público y flujo adopción (ROADMAP actualizado).
-- **Rutinas:** sin `publicly_shareable`; sin adopción ni `source_*`.
+- **Rutinas:** `publicly_shareable`, catálogo público, adopción/sync, moderación admin (**REQ-EXR-006**).
 
 ## Decisiones acordadas (producto y reglas)
 
@@ -85,12 +85,12 @@ Spec de producto para **rutinas** cerrado. **Formalizado en roadmap (2026-04-18)
     <step order="2" status="complete">Write failing specs for adoption: authenticated user can adopt from public origin once; second adopt same origin returns conflict/validation error; unauthenticated cannot adopt; adopted routine has correct `user_id`, preserved chosen name, copied lines, `source_exercise_routine_id` set; unique name rules match existing Menu/routine normalization (failing case duplicate name).</step>
     <step order="3" status="complete">Write failing specs for sync: when origin content changes, copy shows pending state; accepting update replaces lines only, preserves copy name and assignments on same routine id; idempotence / stale origin version rejected or re-fetched per agreed message; when origin deleted or no longer public, copy shows source unavailable, no 500 on old public URL.</step>
     <step order="4" status="complete">Write failing spec for admin moderation: revoke sets `publicly_shareable` false on public routine only; scoped like recipes.</step>
-    <step order="5">Add migration(s): `exercise_routines.publicly_shareable` (default false), self-referential `source_exercise_routine_id` (nullable), columns for last reconciled origin fingerprint/timestamp as designed; unique index ensuring at most one adopted copy per (adopter user, source) while source link active.</step>
-    <step order="6">Implement `ExerciseRoutines::` service(s): content fingerprint helper; parameterized structure copy used by both duplicate flow and adopt; adopt orchestration; apply update from origin with transaction and line replace; guardrails for unavailable source.</step>
-    <step order="7">Wire controllers/routes: `PublicExerciseRoutinesController` (or aligned name) index/show; authenticated adopt + review/accept actions; permit `publicly_shareable` on owner form; `Admin::ExerciseRoutinesController` revoke mirroring recipes. Thin controllers per SYSTEM_ARCHITECTURE.</step>
-    <step order="8">I18n (es default, en) all new strings; a11y for alerts/banners on pending update and source unavailable.</step>
-    <step order="9">Update `docs/core/SPEC.md`: REQ-EXR-006 (or agreed id), glossary/decisions; `docs/core/SCHEMA_REFERENCE.md` if maintained; traceability comments in code per project rules.</step>
-    <step order="10">Run full test suite; fix regressions; manual smoke public catalog + adopt + accept + revoke.</step>
+    <step order="5" status="complete">Add migration(s): `exercise_routines.publicly_shareable` (default false), self-referential `source_exercise_routine_id` (nullable), columns for last reconciled origin fingerprint/timestamp as designed; unique index ensuring at most one adopted copy per (adopter user, source) while source link active.</step>
+    <step order="6" status="complete">Implement `ExerciseRoutines::` service(s): content fingerprint helper; parameterized structure copy used by both duplicate flow and adopt; adopt orchestration; apply update from origin with transaction and line replace; guardrails for unavailable source.</step>
+    <step order="7" status="complete">Wire controllers/routes: `PublicExerciseRoutinesController` (or aligned name) index/show; authenticated adopt + review/accept actions; permit `publicly_shareable` on owner form; `Admin::ExerciseRoutinesController` revoke mirroring recipes. Thin controllers per SYSTEM_ARCHITECTURE.</step>
+    <step order="8" status="complete">I18n (es default, en) all new strings; a11y for alerts/banners on pending update and source unavailable.</step>
+    <step order="9" status="complete">Update `docs/core/SPEC.md`: REQ-EXR-006 (or agreed id), glossary/decisions; `docs/core/SCHEMA_REFERENCE.md` if maintained; traceability comments in code per project rules.</step>
+    <step order="10" status="pending">Run full test suite; fix regressions; manual smoke public catalog + adopt + accept + revoke.</step>
   </steps>
   <out_of_scope>Public menu catalog task (same semantics, separate REQ); email notifications; Web Push.</out_of_scope>
 </implementation_plan>
