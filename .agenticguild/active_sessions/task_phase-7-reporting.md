@@ -119,7 +119,7 @@ Locked execution contract for `start-task` (TDD-first feature work).
     TDD — REQ-RPT-002 current streak: Specs proving the report current streak equals Habits::Streak.call for the same user_habit, as_of, and preloaded completions_by_date, with the same date param rules as Mi Día. Avoid N+1 in controller or orchestrating service.
   </step>
 
-  <step id="6" status="pending">
+  <step id="6" status="complete">
     TDD — REQ-RPT-003 weight series: Write failing specs for a service (e.g. WeightLogs::ChartSeries) that returns all weigh-ins for the user in one indexed query on user_id and logged_at, ordered ascending, minimal columns. Do not use WeightLogs::HistoryPage pagination. Implement until green.
   </step>
 
