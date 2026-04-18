@@ -191,6 +191,12 @@ en:
       destroyed: "Routine deleted."
       duplicated: "Routine duplicated."
       duplicate_failed: "Could not duplicate the routine."
+      source_sync_applied: "Updated content from the source routine was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This routine is not an adopted copy."
+        source_unavailable: "The source routine is no longer available in the catalog."
+        origin_changed_retry: "The source routine changed again. Review and try applying once more."
     duplicate:
       default_name: "Copy of %{name}"
       collision_name: "%{base} (%{n})"
@@ -207,6 +213,10 @@ en:
     edit:
       title: "Edit routine: %{name}"
       back_to_index: "Back to routines"
+      adoption_sync:
+        pending: "The public source routine has new changes. You can apply line content only; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source routine is no longer available (it was removed or made private). Your copy remains in your account."
       name_label: "Name"
       lines_heading: "Exercises by weekday"
       weekday: "Day"

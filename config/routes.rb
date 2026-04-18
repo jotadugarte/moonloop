@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     member do
       get :confirm_destroy
       post :duplicate
+      post :accept_source_update
     end
   end
   resources :menus, only: [ :index, :create, :edit ] do

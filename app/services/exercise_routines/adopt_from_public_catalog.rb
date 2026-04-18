@@ -21,11 +21,15 @@ module ExerciseRoutines
       name = chosen_name.to_s.strip
       raise Error.new(:name_blank) if name.blank?
 
+      fp = ContentFingerprint.for_routine(source)
+
       ApplicationRecord.transaction do
         copy = ExerciseRoutine.new(
           user: adopter,
           name: name,
-          source_exercise_routine_id: source.id
+          source_exercise_routine_id: source.id,
+          source_sync_fingerprint: fp,
+          adoption_catalog_origin_id: source.id
         )
         CopyRoutineLines.call(target: copy, source: source)
         copy.save!

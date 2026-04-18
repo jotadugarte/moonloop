@@ -166,6 +166,12 @@ es:
       destroyed: "Rutina eliminada."
       duplicated: "Rutina duplicada."
       duplicate_failed: "No se pudo duplicar la rutina."
+      source_sync_applied: "Se aplicó el contenido actualizado desde la rutina de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Esta rutina no es una copia adoptada."
+        source_unavailable: "La rutina de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "La rutina de origen cambió otra vez. Vuelve a revisar antes de aplicar."
     duplicate:
       default_name: "Copia de %{name}"
       collision_name: "%{base} (%{n})"
@@ -182,6 +188,10 @@ es:
     edit:
       title: "Editar rutina: %{name}"
       back_to_index: "Volver a rutinas"
+      adoption_sync:
+        pending: "La rutina pública de origen tiene cambios nuevos. Puedes aplicar solo el contenido (líneas); el nombre de tu copia no cambiará."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El vínculo con la rutina de origen ya no está disponible (se eliminó o dejó de ser pública). Tu copia sigue en tu cuenta."
       name_label: "Nombre"
       lines_heading: "Ejercicios por día"
       weekday: "Día"
