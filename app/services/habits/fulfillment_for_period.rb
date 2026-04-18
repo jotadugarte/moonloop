@@ -53,6 +53,7 @@ module Habits
       @user_habit.habit_completions.where(completed_on: @range.begin..@range.end).index_by(&:completed_on)
     end
 
+    # Empty +Hash+ means no rows in the supplied window; inactive habits then stay hidden (REQ-RPT-001 §5).
     def omit_inactive?(completions)
       !@user_habit.active? && completions.values.none?
     end

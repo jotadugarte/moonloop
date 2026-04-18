@@ -29,6 +29,8 @@
 
 en:
   hello: "Hello world"
+  ui:
+    inline_sep: "·"
   time:
     formats:
       weight_log: "%Y-%m-%d %H:%M"
@@ -112,9 +114,11 @@ en:
       fulfillment_month_range: "Month: %{start} — %{end}"
       fulfillment_empty: "No habits to show for these periods."
       fulfillment_no_due_days: "No due days"
+      fulfillment_placeholder: "—"
+      fulfillment_pct: "%{value}%"
       fulfillment_cell: "%{done}/%{due} (%{pct})"
       streaks_heading: "Streaks"
-      streaks_empty: "You do not have any habits yet."
+      streaks_empty: "No habits to show for these periods."
       streak_days:
         zero: "0 days"
         one: "1 day"

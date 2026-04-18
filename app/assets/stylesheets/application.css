@@ -369,3 +369,18 @@
   height: auto;
   border-radius: 0.35rem;
 }
+
+/* ——— Reports (Informes) ——— */
+.reports-weight-chart__series {
+  fill: none;
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+.reports-weight-chart__point {
+  fill: #2563eb;
+}
+
+.reports-weight-chart__axis {
+  fill: #374151;
+}

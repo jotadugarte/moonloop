@@ -4,19 +4,19 @@
 
 <nav class="reports-section-nav" aria-label="<%= t("reports.show.section_nav_aria") %>">
   <a href="#cumplimiento"><%= t("reports.show.nav_fulfillment") %></a>
-  ·
+  <%= t("ui.inline_sep") %>
   <a href="#rachas"><%= t("reports.show.nav_streaks") %></a>
-  ·
+  <%= t("ui.inline_sep") %>
   <a href="#peso"><%= t("reports.show.nav_weight") %></a>
 </nav>
 
+<p id="reports-reference-period" class="reports-reference-date"><%= t("reports.show.reference_period_intro", date: l(@local_date, format: :long)) %></p>
+
 <%= form_with url: informes_path, method: :get, local: true, class: "reports-date-picker" do %>
   <label for="fecha"><%= t("reports.show.date_label") %></label>
-  <input type="date" id="fecha" name="fecha" value="<%= @local_date %>" max="<%= @max_date %>">
+  <input type="date" id="fecha" name="fecha" value="<%= @local_date %>" max="<%= @max_date %>" aria-describedby="reports-reference-period">
   <button type="submit"><%= t("reports.show.go_to_date") %></button>
 <% end %>
-
-<p class="reports-reference-date"><%= t("reports.show.reference_period_intro", date: l(@local_date, format: :long)) %></p>
 
 <% if @local_date < @max_date %>
   <p><%= link_to t("reports.show.view_today"), informes_path %></p>

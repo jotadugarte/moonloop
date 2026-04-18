@@ -67,6 +67,30 @@ RSpec.describe "Reports (Informes)", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include(habit.name)
         expect(response.body).to include(category.name)
+        expect(response.body).to match(%r{\b0/7\b})
+      end
+    end
+
+    # [REQ-RPT-002]
+    it "does not list an inactive habit in streaks when it has no completions in the reference window" do
+      post sign_in_path, params: { email: user.email, password: password }
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 3, 1),
+        active: true)
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 3, 5), status: "done")
+        habit.update!(active: false)
+
+        get informes_path, params: { fecha: "2026-04-15" }
+
+        expect(response).to have_http_status(:ok)
+        streaks = response.body.split('data-test="reports-streaks"').last.split("</section>").first
+        expect(streaks).not_to include(habit.name)
       end
     end
   end
