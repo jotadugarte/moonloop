@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_18_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -70,9 +70,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_120000) do
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.boolean "publicly_shareable", default: false, null: false
+    t.integer "source_exercise_routine_id"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["source_exercise_routine_id"], name: "index_exercise_routines_on_source_exercise_routine_id"
     t.index ["user_id", "name_normalized"], name: "index_exercise_routines_on_user_and_name_normalized", unique: true
+    t.index ["user_id", "source_exercise_routine_id"], name: "index_exercise_routines_adoption_unique_per_user_and_source", unique: true, where: "source_exercise_routine_id IS NOT NULL"
     t.index ["user_id"], name: "index_exercise_routines_on_user_id"
   end
 
@@ -225,6 +228,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_120000) do
   add_foreign_key "exercise_routine_assignments", "exercise_routines"
   add_foreign_key "exercise_routine_assignments", "users"
   add_foreign_key "exercise_routine_lines", "exercise_routines"
+  add_foreign_key "exercise_routines", "exercise_routines", column: "source_exercise_routine_id"
   add_foreign_key "exercise_routines", "users"
   add_foreign_key "habit_categories", "users"
   add_foreign_key "habit_completions", "user_habits"

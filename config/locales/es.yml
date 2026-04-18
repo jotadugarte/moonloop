@@ -121,6 +121,15 @@ es:
       back_to_catalog: "Volver al catálogo de rutinas"
     shared:
       author: "Autor #%{id}"
+    adopt:
+      name_label: "Nombre para tu copia"
+      submit: "Adoptar rutina"
+      success: "Rutina adoptada. Ya puedes editarla."
+      errors:
+        not_public: "Esta rutina no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propia rutina."
+        already_adopted: "Ya adoptaste esta rutina."
+        name_blank: "El nombre no puede estar vacío."
   menus:
     index:
       title: "Menús"

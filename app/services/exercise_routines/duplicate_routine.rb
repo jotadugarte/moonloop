@@ -11,14 +11,7 @@ module ExerciseRoutines
 
       ApplicationRecord.transaction do
         duplicate = ExerciseRoutine.new(user: source.user, name: unique_name)
-        source.exercise_routine_lines.sort_by { |l| [ l.weekday, l.position ] }.each do |line|
-          duplicate.exercise_routine_lines.build(
-            weekday: line.weekday,
-            position: line.position,
-            label: line.label,
-            notes: line.notes
-          )
-        end
+        CopyRoutineLines.call(target: duplicate, source: source)
         duplicate.save!
         duplicate
       end

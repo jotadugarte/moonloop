@@ -4,4 +4,14 @@
 
 <p><%= t("public_exercise_routines.shared.author", id: @routine.user_id) %></p>
 
+<% if Current.user && Current.user.id != @routine.user_id %>
+  <%= form_with url: adopt_public_exercise_routine_path(@routine), method: :post, local: true do |f| %>
+    <p>
+      <%= label_tag :name, t("public_exercise_routines.adopt.name_label") %>
+      <%= text_field_tag :name, params[:name].presence || @routine.name, id: :name, required: true %>
+    </p>
+    <p><%= f.submit t("public_exercise_routines.adopt.submit") %></p>
+  <% end %>
+<% end %>
+
 <p><%= link_to t("public_exercise_routines.show.back_to_catalog"), public_exercise_routines_path %></p>

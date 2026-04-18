@@ -146,6 +146,15 @@ en:
       back_to_catalog: "Back to routine catalog"
     shared:
       author: "Author #%{id}"
+    adopt:
+      name_label: "Name for your copy"
+      submit: "Adopt routine"
+      success: "Routine adopted. You can edit it now."
+      errors:
+        not_public: "This routine is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own routine."
+        already_adopted: "You already adopted this routine."
+        name_blank: "Name can't be blank."
   menus:
     index:
       title: "Menus"

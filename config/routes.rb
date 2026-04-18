@@ -44,7 +44,11 @@ Rails.application.routes.draw do
   resources :phase_assignments, only: %i[new create edit update destroy]
   resources :exercise_routine_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]
-  resources :public_exercise_routines, only: %i[index show]
+  resources :public_exercise_routines, only: %i[index show] do
+    member do
+      post :adopt
+    end
+  end
   namespace :admin do
     resources :recipes, only: [] do
       member do

@@ -4,6 +4,8 @@ class ExerciseRoutine < ApplicationRecord
   MAX_LINES_PER_WEEKDAY = 100
 
   belongs_to :user
+  belongs_to :source_exercise_routine, class_name: "ExerciseRoutine", optional: true, inverse_of: :adopted_copies
+  has_many :adopted_copies, class_name: "ExerciseRoutine", foreign_key: :source_exercise_routine_id, inverse_of: :source_exercise_routine, dependent: :restrict_with_exception
   has_many :exercise_routine_lines, -> { order(:weekday, :position) }, dependent: :destroy, inverse_of: :exercise_routine
   has_many :exercise_routine_assignments, dependent: :destroy
 
