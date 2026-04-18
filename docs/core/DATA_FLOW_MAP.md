@@ -56,8 +56,8 @@
 
 ### 1.8 Weight log (create, list, delete, reconcile)
 
-1. **Entry form (`REQ-WGT-002`):** **`GET /weight_logs/new`** → **`POST /weight_logs`** with **`weight_kg`** and **`logged_at`** (datetime-local interpreted in the user’s **IANA timezone**). Height is **not** edited on this form; each persisted row snapshots **`User#height_cm`** at save time. **`LogWeightService`** creates **`WeightLog`** (BMI computed on the model) inside a transaction, then **`WeightLogs::ReconcileUserCurrentStats`**, which sets **`users.current_weight_kg`** and **`users.current_bmi`** from the **`WeightLog`** row with **maximum `logged_at`** (tie-break **`id` DESC**), or **`nil`** if no logs remain. A **retroactive** `logged_at` must not overwrite “current” if a newer weigh-in already exists.
-2. **History (`REQ-WGT-003`):** **`GET /weight_logs`** lists the signed-in user’s logs with that ordering, **30 rows per page** (`page` query param), columns for local **`logged_at`**, weight, height snapshot, BMI, and a **Delete** link per row.
+1. **Entry form (`REQ-WGT-002`):** **`GET /weight_logs/new`** → **`POST /weight_logs`** with **`weight_kg`** and **`logged_at`** (datetime-local string). **`WeightLogs::LoggedAtParamParser`** turns the raw field into a **`Time`** in the user’s **IANA timezone** (blank input → **`Time.current`**; invalid parse → validation error on **`logged_at`**). Height is **not** edited on this form; each persisted row snapshots **`User#height_cm`** at save time. **`LogWeightService`** creates **`WeightLog`** (BMI computed on the model) inside a transaction, then **`WeightLogs::ReconcileUserCurrentStats`**, which sets **`users.current_weight_kg`** and **`users.current_bmi`** from the **`WeightLog`** row with **maximum `logged_at`** (tie-break **`id` DESC**), or **`nil`** if no logs remain. A **retroactive** `logged_at` must not overwrite “current” if a newer weigh-in already exists.
+2. **History (`REQ-WGT-003`):** **`GET /weight_logs`** lists the signed-in user’s logs with that ordering. **`WeightLogs::HistoryPage`** applies **30 rows per page** and the **`page`** query param (offset/limit on the ordered scope). Columns: local **`logged_at`**, weight, height snapshot, BMI, and a **Delete** link per row.
 3. **Delete:** **`GET /weight_logs/:id/confirm_destroy`** (warning) → **`DELETE /weight_logs/:id`** via **`WeightLogs::DestroyLog`** (transaction: **`destroy!`** the log, then **`ReconcileUserCurrentStats`**). Scoped to **`Current.user.weight_logs`**; other users’ IDs → **404**.
 4. **Navigation:** Home and profile expose links to history and the entry form (`REQ-WGT-002`).
 
@@ -73,7 +73,7 @@
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
 | **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
-| **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; **`WeightLogs::DestroyLog`** |
+| **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | HTTP create: **`WeightLogs::LoggedAtParamParser`** then **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; delete: **`WeightLogs::DestroyLog`** |
 | Phase-start **reminder** sweep | At most one logical send per `(user, kind, local_date)` | Unique index on **`phase_reminder_events`** |
 
 ## 3. Caching invalidation

@@ -1,19 +1,16 @@
 # frozen_string_literal: true
 
 class WeightLogsController < ApplicationController
-  PER_PAGE = 30
-
   before_action :set_weight_log, only: %i[confirm_destroy destroy]
 
   def index
-    scope = Current.user.weight_logs.ordered_for_history
-    total = scope.count
-    total_pages = total.zero? ? 1 : (total.to_f / PER_PAGE).ceil
-    page = [ [ params[:page].to_i, 1 ].max, total_pages ].min
-
-    @weight_logs = scope.offset((page - 1) * PER_PAGE).limit(PER_PAGE)
-    @page = page
-    @total_pages = total_pages
+    page = WeightLogs::HistoryPage.call(
+      scope: Current.user.weight_logs.ordered_for_history,
+      page_param: params[:page]
+    )
+    @weight_logs = page.records
+    @page = page.page
+    @total_pages = page.total_pages
   end
 
   def new
@@ -21,34 +18,20 @@ class WeightLogsController < ApplicationController
   end
 
   def create
-    logged_at = resolve_logged_at_for_create
-    return if performed?
-
-    LogWeightService.new(
+    parsed = WeightLogs::LoggedAtParamParser.new(
       user: Current.user,
-      weight_kg: weight_log_params[:weight_kg],
-      logged_at: logged_at
+      raw: weight_log_params[:logged_at]
     ).call
-    redirect_to profile_path, notice: t("weight_logs.flash.created")
+    unless parsed.success
+      render_invalid_logged_at
+      return
+    end
+
+    persist_weight_entry(parsed.time)
   rescue ActiveRecord::RecordInvalid => e
-    @weight_log =
-      if e.record.is_a?(WeightLog)
-        e.record
-      else
-        weight_log_for_rescue(logged_at: logged_at)
-      end
-    if e.record.is_a?(User)
-      @weight_log.errors.add(:base, t("weight_logs.errors.user_stats_update_failed"))
-    end
-    render :new, status: :unprocessable_content
+    handle_record_invalid(e, logged_at: parsed.time)
   rescue ArgumentError => e
-    @weight_log = weight_log_for_rescue(logged_at: logged_at)
-    if e.message.match?(/WeightKg/i)
-      @weight_log.errors.add(:weight_kg, e.message)
-    else
-      @weight_log.errors.add(:base, e.message)
-    end
-    render :new, status: :unprocessable_content
+    handle_domain_argument_error(e, logged_at: parsed.time)
   end
 
   def confirm_destroy
@@ -84,25 +67,44 @@ class WeightLogsController < ApplicationController
     )
   end
 
-  def resolve_logged_at_for_create
-    raw = weight_log_params[:logged_at].to_s
-    return Time.current if raw.blank?
-
-    parsed =
-      begin
-        Time.use_zone(Current.user.timezone) { Time.zone.parse(raw) }
-      rescue ArgumentError
-        nil
-      end
-
-    if parsed.nil?
-      @weight_log = weight_log_for_rescue(logged_at: Time.current)
-      @weight_log.errors.add(:logged_at, :invalid)
-      render :new, status: :unprocessable_content
-      return nil
-    end
-
-    parsed
+  def render_invalid_logged_at
+    @weight_log = weight_log_for_rescue(logged_at: Time.current)
+    @weight_log.errors.add(:logged_at, :invalid)
+    render :new, status: :unprocessable_content
   end
 
+  # After a successful save, send users to the profile so "current weight" matches the latest reading in context.
+  def persist_weight_entry(logged_at)
+    LogWeightService.new(
+      user: Current.user,
+      weight_kg: weight_log_params[:weight_kg],
+      logged_at: logged_at
+    ).call
+    redirect_to profile_path, notice: t("weight_logs.flash.created")
+  end
+
+  def handle_record_invalid(error, logged_at:)
+    @weight_log =
+      if error.record.is_a?(WeightLog)
+        error.record
+      else
+        weight_log_for_rescue(logged_at: logged_at)
+      end
+    if error.record.is_a?(User)
+      @weight_log.errors.add(:base, t("weight_logs.errors.user_stats_update_failed"))
+    end
+    render :new, status: :unprocessable_content
+  end
+
+  def handle_domain_argument_error(error, logged_at:)
+    @weight_log = weight_log_for_rescue(logged_at: logged_at)
+    if WeightKg.invalid_argument_error?(error)
+      @weight_log.errors.add(:weight_kg, error.message)
+    elsif HeightCm.invalid_argument_error?(error)
+      @weight_log.errors.add(:base, error.message)
+    else
+      @weight_log.errors.add(:base, error.message)
+    end
+    render :new, status: :unprocessable_content
+  end
 end
