@@ -25,6 +25,9 @@ module Habits
       completion.status = @status
       return :invalid_record unless completion.save
 
+      # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
+      @user_habit.touch
+
       :ok
     end
 

@@ -10,7 +10,7 @@
 2. **`MyDayController#show`** resolves “today” and the selected day in the user’s **current** IANA timezone; rejects future dates and invalid `fecha`.
 3. **`Habits::DueHabitsForDay`** loads active `UserHabit` rows for the user and filters to habits **due** on that civil date via **`Habits::DueOnDate`** (inactive habits never appear).
 4. **`HabitCompletion`** rows for `(user_habit_id ∈ due habits, completed_on = selected day)` build the per-habit done/failed/pending UI state (pending = no row).
-5. **`Habits::Streak`** computes the displayed streak per due habit for that day; the controller may pass preloaded completion rows for the walk window to avoid N+1 queries.
+5. **`Habits::MiDayStreakPrefetch`** loads completion rows for the streak walk window (`user_habit_id ∈ due habits`, `completed_on` from the **min** per-habit lower bound through the selected day, narrow `SELECT`) and runs **`Habits::Streak`** per due habit with that preloaded map (**REQ-DAY-004**). The resulting map is stored in **`Rails.cache`** (key: user id, selected local date, and fresh `user_habits.id` + `updated_at` tuples). **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** **`touch`** the **`UserHabit`** so the cache key advances after writes.
 6. **Exercise context (REQ-EXR-003):** **`Phases::WeekNumber.for_local_date`** yields the program week index (or nil if no anchor / before anchor). **`ExerciseRoutines::ResolveActiveRoutine`** returns the routine mapped to that week via **`exercise_routine_assignments`**, independent of menu assignments.
 7. **Ejercicio habit:** the `UserHabit` joined to **`global_habit_templates.code == "fitness_exercise"`** is loaded separately when needed (e.g. inactive habit not in the due list). Inline routine preview on Mi Día appears only when that habit is **due** and **active**; a global shortcut to **`/exercise_routines`** and **`/phase`** is always shown.
 
@@ -18,14 +18,14 @@
 
 1. **Browser** submits `POST /habit_completions` with `user_habit_id`, `completed_on`, `status` (`done` or `failed`).
 2. **`HabitCompletionsController`** scopes the habit to **`Current.user`**, parses the local date, and calls **`Habits::RecordCompletion`**.
-3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit).
+3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit). On success it **`touch`**es **`UserHabit`** so **`Habits::MiDayStreakPrefetch`** cache keys (driven by `updated_at`) stay coherent.
 4. **Redirect** back to Mi Día (with `fecha` preserved for past days).
 
 ### 1.3 Clear → pending (delete)
 
 1. **Browser** submits `DELETE /habit_completions/:id`.
 2. Controller loads the row through a join scoped to **`Current.user`**.
-3. **`Habits::ClearCompletion`** verifies owner and active habit, then **`destroy!`** the row (pending = no row).
+3. **`Habits::ClearCompletion`** verifies owner and active habit, then **`destroy!`** the row (pending = no row) and **`touch`**es the parent **`UserHabit`** for the same cache-key coherence as writes.
 
 ### 1.4 Menu grid slot (read + write via Turbo)
 
@@ -89,5 +89,5 @@
 
 ## 3. Caching invalidation
 
-- **Strategy:** None at the application cache layer for Mi Día in the current stack; pages are server-rendered per request.
-- **Critical nodes:** N/A until fragment or HTTP caching is introduced for Mi Día or habit lists.
+- **Mi Día — streak map (`REQ-DAY-004`):** **`Habits::MiDayStreakPrefetch`** stores the per-request `user_habit_id → streak_count` map in **`Rails.cache`**. The cache key includes the user id, the selected local date, and **`user_habits.id` + `updated_at`** tuples for the due habits (see §1.1). **`Habits::RecordCompletion`** and **`Habits::ClearCompletion`** **`touch`** the parent **`UserHabit`** on success so `updated_at` advances and stale streak maps are not reused after writes (§1.2, §1.3).
+- **Elsewhere:** no additional application-cache strategy for Mi Día page HTML or habit lists; responses remain full server-render per request unless fragment/HTTP caching is introduced later.
