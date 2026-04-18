@@ -15,7 +15,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
-| `RPT` | Reporting — **planned** |
+| `RPT` | Reporting — **Phase 7 (in progress)** |
 
 ---
 
@@ -159,7 +159,50 @@ These IDs are reserved for traceability; behavior is **not** fully implemented u
 
 | ID | Requirement | Roadmap phase |
 |----|-------------|----------------|
-| REQ-RPT-001 … REQ-RPT-003 | Habit fulfillment, streak, and weight charts — per roadmap Phase 7. | Phase 7 |
+| REQ-RPT-001 | **Habit fulfillment report:** per habit, fulfillment percentage with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
+| REQ-RPT-002 | **Streak report:** per habit, **current** streak and **all-time longest** streak; `as_of` date rules **match Mi Día** (local date param, max today, no future). See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
+| REQ-RPT-003 | **Weight progress chart:** visual trend of weight over time from `weight_logs`; single efficient query (indexed `user_id` + `logged_at`), not history-list pagination; timezone-consistent display. See **Acceptance criteria — reporting (Phase 7)**. | Phase 7 |
+
+### Acceptance criteria — reporting (Phase 7)
+
+These criteria are **testable**; implementation lives under services (e.g. `Reports::`, `Habits::`, `WeightLogs::`) and a **single** Informes surface per **Decisions log — REQ-RPT** below.
+
+#### REQ-RPT-001 — Habit fulfillment
+
+1. **Authenticated user** can view fulfillment stats derived from **`Habits::DueOnDate`** (due days) and **`HabitCompletion`** (`done` / `failed` / absent).
+2. **Fulfillment ratio:** For a bounded **local** inclusive date range, **denominator** = count of days in range where the habit is **due**; **numerator** = count of those due days with **`status == "done"`**. **`failed`** and **absent** (no row) both count as not fulfilled.
+3. **Weekly breakdown:** The **week** is **Monday through Sunday** in the user’s **current** IANA timezone; stats can be shown for “the week containing” a reference local date (inclusive range).
+4. **Monthly breakdown:** The **month** is the **civil calendar month** (1st through last day) in the user’s timezone.
+5. **Inactive habits:** A habit with **`active: false`** appears in the report for a period **only if** it has **at least one** completion row **in that period**; if it has **no** activity in the period, **omit** that habit for that period.
+6. **Presentation:** UX should make **due vs done** intelligible (e.g. show counts **N/M** or equivalent, not only a bare percentage).
+7. **I18n:** User-visible copy uses `es` default, `en` available.
+
+#### REQ-RPT-002 — Streak report
+
+1. **Current streak** for a habit **matches** **`Habits::Streak`** for the same **`user_habit`**, **`as_of`** local date, and the same completion/due rules as **REQ-DAY-004** (including closed “today” behavior and non-due days).
+2. **`as_of` parity with Mi Día:** Same rules as Mi Día for selecting the local calendar day (query param, cannot be future, cap at **today** in user TZ).
+3. **Longest streak (all-time):** Longest run of **consecutive due days** each marked **done**, using the **same** streak semantics as **REQ-DAY-004** over the habit’s history from activation / lower bound through the evaluated range; **no** persisted aggregate columns are **required** for Phase 7 (optional optimization is backlog).
+4. **Inactive habits:** Same visibility rule as **REQ-RPT-001** (show in a period only if at least one completion in scope where applicable).
+5. **I18n:** User-visible copy uses `es` default, `en` available.
+
+#### REQ-RPT-003 — Weight progress chart
+
+1. **Data:** Series built from the user’s **`weight_logs`**, ordered for display (typically by **`logged_at`** ascending for left-to-right trend).
+2. **Query:** **One** (or minimal) **indexed** read scoped to **`user_id`**, using the existing index pattern from **REQ-WGT-001**; **do not** drive the chart from **`WeightLogs::HistoryPage`** pagination.
+3. **Volume:** Default series is **full history** unless a documented cap/downsample is introduced for performance (if so, document in code and cover with a spec).
+4. **Timezone:** Axis labels and date interpretation for each point are **consistent** with existing weight history (`logged_at` in user TZ as elsewhere).
+5. **Rendering:** **Server-first** or minimal Stimulus (e.g. SVG/polyline); **no** Node bundler unless ADR — see **SYSTEM_ARCHITECTURE.md**.
+6. **I18n:** User-visible copy uses `es` default, `en` available.
+
+#### Decisions log — REQ-RPT (Phase 7, locked)
+
+| ID | Decision |
+|----|----------|
+| Q1 | **Week** boundaries: **Monday–Sunday** in user TZ. |
+| Q2 | **Month** boundaries: **civil month** in user TZ. |
+| Q3 | **Informes navigation:** **Single** route (e.g. **`GET /informes`**) with **tabs or sections** for fulfillment, streaks, and weight — **not** three separate top-level URLs. |
+| Q4 | **Fulfillment** denominator uses **due days** only; numerator uses **`done`** only. |
+| Q5 | **Longest streak** computed in service layer for Phase 7; **materialized** streak columns are **optional future** optimization (see backlog in **ROADMAP.md**). |
 
 ### Scheduling — due-day resolution (Mi Día)
 
