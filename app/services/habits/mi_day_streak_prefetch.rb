@@ -25,10 +25,14 @@ module Habits
       from = lowers.min
       habit_ids = @due_habits.map(&:id)
 
-      by_habit = HabitCompletion
+      rows = HabitCompletion
         .where(user_habit_id: habit_ids, completed_on: from..@local_date)
+        .select(:id, :user_habit_id, :completed_on, :status)
+        .to_a
+
+      by_habit = rows
         .group_by(&:user_habit_id)
-        .transform_values { |rows| rows.index_by(&:completed_on) }
+        .transform_values { |r| r.index_by(&:completed_on) }
 
       @due_habits.each_with_object({}) do |habit, acc|
         acc[habit.id] = Streak.call(

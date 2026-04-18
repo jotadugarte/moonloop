@@ -26,6 +26,23 @@ RSpec.describe "Habits::MiDayStreakPrefetch" do
     end
   end
 
+  # SELECTs only — ignores INSERT/UPDATE during setup.
+  def habit_completion_select_sqls
+    sqls = []
+    subscription = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+      next if payload[:cached]
+
+      sql = payload[:sql].to_s
+      next unless sql.match?(/\bFROM\s+[`"]?habit_completions[`"]?/i)
+
+      sqls << sql
+    end
+    yield
+    sqls
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscription)
+  end
+
   describe ".call" do
     # [REQ-DAY-004]
     it "matches controller streak map for a long run of consecutive done days" do
@@ -136,6 +153,108 @@ RSpec.describe "Habits::MiDayStreakPrefetch" do
         result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
         expect(result).to eq({})
       end
+    end
+  end
+
+  describe "prefetch query contract" do
+    # [REQ-DAY-004]
+    it "uses a single SELECT from habit_completions for all due habits" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      a = create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "A",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+      b = create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "B",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        5.times do |i|
+          create(:habit_completion, user_habit: a, completed_on: local_date - i, status: "done")
+          create(:habit_completion, user_habit: b, completed_on: local_date - i, status: "done")
+        end
+
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        sqls = habit_completion_select_sqls do
+          Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        end
+
+        expect(sqls.size).to eq(1)
+      end
+    end
+
+    # [REQ-DAY-004]
+    it "scopes completed_on to the streak window ending at local_date (not later days)" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 10)
+        create(:habit_completion, user_habit: habit, completed_on: local_date, status: "done")
+        create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 18), status: "done")
+
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        allow(HabitCompletion).to receive(:where).and_wrap_original do |m, *args, **kwargs|
+          hash = args.first.is_a?(Hash) ? args.first.merge(kwargs) : kwargs
+          if hash[:completed_on].is_a?(Range)
+            expect(hash[:completed_on].end).to eq(local_date)
+            expect(hash[:completed_on].cover?(Date.new(2026, 4, 18))).to be(false)
+          end
+          m.call(*args, **kwargs)
+        end
+
+        Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+      end
+    end
+
+    # [REQ-DAY-004]
+    it "selects only columns needed for streak walks (id, user_habit_id, completed_on, status)" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        create(:habit_completion, user_habit: habit, completed_on: local_date, status: "done")
+
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        sqls = habit_completion_select_sqls do
+          Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        end
+
+        sql = sqls.join
+        expect(sql).to match(/"habit_completions"\."id"/i)
+        expect(sql).to match(/"habit_completions"\."user_habit_id"/i)
+        expect(sql).to match(/"habit_completions"\."completed_on"/i)
+        expect(sql).to match(/"habit_completions"\."status"/i)
+        expect(sql).not_to match(/"habit_completions"\."created_at"/i)
+        expect(sql).not_to match(/"habit_completions"\."updated_at"/i)
+      end
+    end
+
+    # [REQ-DAY-004]
+    it "keeps a composite index on user_habit_id and completed_on for lookups" do
+      names = HabitCompletion.connection.indexes("habit_completions").map(&:name)
+      expect(names).to include("index_habit_completions_on_user_habit_and_completed_on")
     end
   end
 end
