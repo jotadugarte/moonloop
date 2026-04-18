@@ -93,6 +93,16 @@ RSpec.describe Habits::DueOnDate do
       expect(described_class.due_on?(habit, Date.new(2026, 6, 1))).to be(false)
     end
 
+    # [REQ-RPT-001]
+    it "when schedule_only is true, applies frequency rules even if the habit is inactive" do
+      habit = create(:user_habit,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        active: false)
+
+      expect(described_class.due_on?(habit, Date.new(2026, 6, 1), schedule_only: true)).to be(true)
+    end
+
     # [REQ-HAB-005]
     it "returns false when local_date is not a Date" do
       habit = create(:user_habit, frequency_type: "daily", activation_date: Date.new(2026, 1, 1))

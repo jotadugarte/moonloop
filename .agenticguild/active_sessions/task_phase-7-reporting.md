@@ -107,7 +107,7 @@ Locked execution contract for `start-task` (TDD-first feature work).
     TDD — Period boundaries: Write failing specs for a service or module (e.g. under Reports:: or Habits::) that, given a user timezone and a reference local Date, returns the inclusive Date range for (a) the Monday–Sunday week containing that date, and (b) the civil month containing that date. Implement until green. Preconditions: valid IANA zone. Postconditions: start less than or equal to end; boundaries are user-local dates.
   </step>
 
-  <step id="3" status="pending">
+  <step id="3" status="complete">
     TDD — REQ-RPT-001 fulfillment: Write failing specs for Habits::FulfillmentForPeriod (or equivalent) that, for a UserHabit and inclusive local Date range, returns due_count, done_count, and derived percentage using Habits::DueOnDate and HabitCompletion (done only counts toward numerator; failed and absent do not). Cover inactive habits: omitted when no completion in range; included when at least one completion exists in range. Implement until green.
   </step>
 
