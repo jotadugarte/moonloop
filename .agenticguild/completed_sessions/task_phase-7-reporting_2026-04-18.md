@@ -26,14 +26,14 @@
 
 ### Decisions locked (product)
 
-1. **Week boundaries:** **Monday–Sunday** (user local week), in the user’s IANA timezone.
-2. **Month boundaries:** **Civil calendar month** (1st through last day of month) in the user’s timezone.
+1. **Week boundaries:** **Monday–Sunday** (user local week), in the user's IANA timezone.
+2. **Month boundaries:** **Civil calendar month** (1st through last day of month) in the user's timezone.
 3. **Streak report `as_of`:** **Parity with Mi Día** — same date selection rules (local date param / max today / no future), same TZ.
 4. **Fulfillment %:** Denominator = **due days** in the chosen period; numerator = **done**; `failed` and absent row both count as **not** fulfilled (aligned with REQ-DAY-004 / streak semantics).
 
 ### Navigation (locked)
 
-- **Opción A — Una sola zona “Informes”:** Una **única ruta** (p. ej. `GET /informes`) con **pestañas o secciones** (Turbo Frames o anclas) para cumplimiento, rachas y peso; sin tres URLs hermanas para cada informe.
+- **Opción A — Una sola zona "Informes":** Una **única ruta** (p. ej. `GET /informes`) con **pestañas o secciones** (Turbo Frames o anclas) para cumplimiento, rachas y peso; sin tres URLs hermanas para cada informe.
 
 ### Weight chart — loading (locked: perceived performance)
 
@@ -47,14 +47,14 @@
 | Risk | Mitigation idea |
 |------|----------------|
 | **Longest streak** requires scanning history (or storing aggregates) | Reuse `DueOnDate` + completions; consider extracted service `Habits::LongestStreak` mirroring `Streak` walk pattern; watch `MAX_CALENDAR_DAY_STEPS`-class limits. |
-| **Fulfillment** over large intervals with sparse due days (e.g. monthly habit) | % still valid but UX may need “N/M due days” not just %. |
+| **Fulfillment** over large intervals with sparse due days (e.g. monthly habit) | % still valid but UX may need "N/M due days" not just %. |
 | **Chart without Node bundler** | Prefer minimal JS (Stimulus + SVG/canvas) or server-rendered sparkline; avoid introducing Webpack/Vite without ADR. |
 | **Double-counting** | One completion row per `(user_habit, completed_on)` — already enforced. |
 
 ### Common implementation mistakes to avoid
 
 - Mixing **UTC** dates with **user-local** dates when aggregating weeks/months.
-- Using **calendar** streak logic inconsistent with **REQ-DAY-004** (closed “today” rules, non-due days skipped).
+- Using **calendar** streak logic inconsistent with **REQ-DAY-004** (closed "today" rules, non-due days skipped).
 - Chart that ignores **timezone** on `WeightLog#logged_at` (use same parsing/display approach as **`WeightLogs::HistoryPage`** / **`LoggedAtParamParser`** family).
 
 ---
@@ -74,8 +74,8 @@
 
 - Fulfillment **denominator** counts only days where **`DueOnDate.due_on?`** is true within the range.
 - Fulfillment **numerator** counts due days with completion **`status == "done"`**.
-- Streak report **current** value must match **`Habits::Streak`** for the same `as_of` as Mi Día’s selected local date.
-- Longest streak uses the **same** due/done/failed rules as REQ-DAY-004 over the habit’s schedulable history.
+- Streak report **current** value must match **`Habits::Streak`** for the same `as_of` as Mi Día's selected local date.
+- Longest streak uses the **same** due/done/failed rules as REQ-DAY-004 over the habit's schedulable history.
 
 ### Value objects / branded types
 
@@ -86,7 +86,7 @@
 
 ## Working notes
 
-- **REQ-RPT-002 longest streak vs backlog:** Phase 7 **must** implement **all-time longest streak** (computation in a service, e.g. `Habits::LongestStreak` or equivalent). The ROADMAP **backlog** item (“materializar racha… si el cálculo en vivo es lento”) is an **optional optimization later**, not the solution that delivers REQ-RPT-002. If profiling shows pain, add persisted counters/columns in a follow-up.
+- **REQ-RPT-002 longest streak vs backlog:** Phase 7 **must** implement **all-time longest streak** (computation in a service, e.g. `Habits::LongestStreak` or equivalent). The ROADMAP **backlog** item ("materializar racha… si el cálculo en vivo es lento") is an **optional optimization later**, not the solution that delivers REQ-RPT-002. If profiling shows pain, add persisted counters/columns in a follow-up.
 - After acceptance criteria are written into SPEC for REQ-RPT-001–003, add `# [REQ-RPT-…]` comments per traceability rules.
 
 ---
