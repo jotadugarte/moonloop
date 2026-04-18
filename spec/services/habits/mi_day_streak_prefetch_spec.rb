@@ -253,7 +253,8 @@ RSpec.describe Habits::MiDayStreakPrefetch do
     # [REQ-DAY-004]
     it "keeps a composite index on user_habit_id and completed_on for lookups" do
       indexes = HabitCompletion.connection.indexes("habit_completions")
-      expect(indexes.any? { |idx| idx.columns == %w[user_habit_id completed_on] }).to be(true)
+      cols = %w[user_habit_id completed_on]
+      expect(indexes.any? { |idx| idx.columns.map(&:to_s) == cols }).to be(true)
     end
   end
 

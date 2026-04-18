@@ -2,7 +2,7 @@
 
 module Habits
   # Builds the same `user_habit_id => streak_count` map as Mi Día uses for streaks (REQ-DAY-004):
-  # one range query for completions, then {Streak} per habit. Results are memoized in +Rails.cache+
+  # one range query for completions, then +Habits::Streak+ per habit. Results are memoized in +Rails.cache+
   # keyed by user, local date, and each due habit's current +updated_at+ (see +RecordCompletion+ / +ClearCompletion+ +touch+).
   class MiDayStreakPrefetch
     def self.call(user:, due_habits:, local_date:)
@@ -41,10 +41,14 @@ module Habits
 
     def persisted_habit_version_tuples(ids)
       tuples = UserHabit.where(user_id: @user.id, id: ids).pluck(:id, :updated_at).sort_by(&:first)
-      if tuples.size != ids.size
-        raise ArgumentError, "due_habits must reference persisted habits for this user"
-      end
+      ensure_all_habits_persisted!(ids, tuples)
       tuples
+    end
+
+    def ensure_all_habits_persisted!(expected_ids, tuples)
+      return if tuples.size == expected_ids.size
+
+      raise ArgumentError, "due_habits must reference persisted habits for this user"
     end
 
     def compute_streak_map
@@ -53,20 +57,21 @@ module Habits
     end
 
     def completion_rows_for_streak_window
+      lower_bound, habit_ids = streak_window_lower_bound_and_habit_ids
       scope = HabitCompletion.where(
-        user_habit_id: due_habit_ids,
-        completed_on: streak_window_start_on..@local_date
+        user_habit_id: habit_ids,
+        completed_on: lower_bound..@local_date
       )
       scope.select(:id, :user_habit_id, :completed_on, :status).to_a
     end
 
-    def due_habit_ids
-      @due_habits.map(&:id)
-    end
-
-    def streak_window_start_on
-      lowers = @due_habits.map { |h| Streak.lower_bound_for(h) }
-      lowers.min
+    def streak_window_lower_bound_and_habit_ids
+      lowers = []
+      ids = @due_habits.map do |h|
+        lowers << Streak.lower_bound_for(h)
+        h.id
+      end
+      [ lowers.min, ids ]
     end
 
     def index_completions_by_habit_and_date(rows)
