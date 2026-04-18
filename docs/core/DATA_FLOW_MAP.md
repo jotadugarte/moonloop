@@ -89,5 +89,5 @@
 
 ## 3. Caching invalidation
 
-- **Strategy:** None at the application cache layer for Mi Día in the current stack; pages are server-rendered per request.
-- **Critical nodes:** N/A until fragment or HTTP caching is introduced for Mi Día or habit lists.
+- **Mi Día — streak map (`REQ-DAY-004`):** **`Habits::MiDayStreakPrefetch`** stores the per-request `user_habit_id → streak_count` map in **`Rails.cache`**. The cache key includes the user id, the selected local date, and **`user_habits.id` + `updated_at`** tuples for the due habits (see §1.1). **`Habits::RecordCompletion`** and **`Habits::ClearCompletion`** **`touch`** the parent **`UserHabit`** on success so `updated_at` advances and stale streak maps are not reused after writes (§1.2, §1.3).
+- **Elsewhere:** no additional application-cache strategy for Mi Día page HTML or habit lists; responses remain full server-render per request unless fragment/HTTP caching is introduced later.
