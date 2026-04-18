@@ -137,6 +137,15 @@ en:
     index:
       title: "Public recipes — Moonloop"
       heading: "Public recipes"
+  public_exercise_routines:
+    index:
+      title: "Public routines — Moonloop"
+      heading: "Public exercise routines"
+    show:
+      title: "%{name} — Public routines — Moonloop"
+      back_to_catalog: "Back to routine catalog"
+    shared:
+      author: "Author #%{id}"
   menus:
     index:
       title: "Menus"

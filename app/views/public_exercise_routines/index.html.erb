@@ -1,0 +1,12 @@
+<% content_for :title, t("public_exercise_routines.index.title") %>
+
+<h1><%= t("public_exercise_routines.index.heading") %></h1>
+
+<ul>
+  <% @routines.each do |routine| %>
+    <li>
+      <%= link_to routine.name, public_exercise_routine_path(routine) %>
+      — <%= t("public_exercise_routines.shared.author", id: routine.user_id) %>
+    </li>
+  <% end %>
+</ul>

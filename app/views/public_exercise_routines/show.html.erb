@@ -1,0 +1,7 @@
+<% content_for :title, t("public_exercise_routines.show.title", name: @routine.name) %>
+
+<h1><%= @routine.name %></h1>
+
+<p><%= t("public_exercise_routines.shared.author", id: @routine.user_id) %></p>
+
+<p><%= link_to t("public_exercise_routines.show.back_to_catalog"), public_exercise_routines_path %></p>

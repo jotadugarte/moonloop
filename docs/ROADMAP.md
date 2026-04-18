@@ -55,11 +55,10 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-*(No items in this section — see **Backlog**.)*
+30. [ ] Exercise routines: catálogo público (opt-in, moderación admin, **mostrar autor**). La **plantilla pública** en el catálogo sigue la **última versión** guardada por el autor. Si otro usuario **adoptó / usa una copia** en su cuenta, **no** se actualiza sola: aviso de que la rutina de origen cambió, puede **revisar** y **aceptar actualizar** su copia — Depends on: Phase 5 (#20–22), Phase 4 **#29**; requiere vínculo origen→copia (o equivalente) y flujo de reconciliación — **Sequence: deliver before #31**
+31. [ ] Menús: página / índice público de catálogo + **misma semántica que rutinas** (#30): adopción solo usuarios logueados, una copia por menú origen por usuario, nombre de copia preservado al adoptar y al aceptar actualizaciones de contenido, aviso si el origen cambia, vínculo “origen ya no disponible” si borran/revocan; listado `publicly_shareable`, paridad UX **Done #29**, moderación admin — Depends on: **#30**; Phase 4 (#15–19, #29); modelo menú/recetas/slots análogo a rutinas (origen→copia)
 
 ## Backlog
-- [ ] Menús: página / índice público de catálogo + **misma semántica que rutinas**: adopción solo usuarios logueados, una copia por menú origen por usuario, nombre de copia preservado al adoptar y al aceptar actualizaciones de contenido, aviso si el origen cambia, vínculo “origen ya no disponible” si borran/revocan; listado `publicly_shareable`, paridad UX **Done #29**, moderación admin — Depends on: Phase 4 (#15–19, #29); modelo menú/recetas/slots análogo a rutinas (origen→copia)
-- [ ] Exercise routines: catálogo público (opt-in, moderación admin, **mostrar autor**). La **plantilla pública** en el catálogo sigue la **última versión** guardada por el autor. Si otro usuario **adoptó / usa una copia** en su cuenta, **no** se actualiza sola: aviso de que la rutina de origen cambió, puede **revisar** y **aceptar actualizar** su copia — Depends on: Phase 5 (#20–22), Phase 4 **#29**; requiere vínculo origen→copia (o equivalente) y flujo de reconciliación
 - [ ] Habit completion values (e.g. glasses of water, minutes of exercise) — Depends on: Phase 3
 - [ ] Multiple completions per day per habit — Depends on: Backlog: Completion values
 - [ ] Imperial units support (lbs) for weight and profile

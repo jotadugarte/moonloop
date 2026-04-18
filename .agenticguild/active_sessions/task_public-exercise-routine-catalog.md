@@ -1,8 +1,8 @@
 # Task: Catálogo público de rutinas de ejercicio
 
-**Origen:** `docs/ROADMAP.md` — Backlog (rutinas públicas + adopción con reconciliación).  
+**Origen:** `docs/ROADMAP.md` — **Pending #30** (catálogo público de rutinas; **#31** = menús después).  
 **SPEC:** Q8 en *Decisions log — REQ-EXR* — al promover desde backlog: patrón **Done #29** + adopción / copia / avisos.  
-**Paridad menús:** Misma semántica de producto para el ítem backlog de menús públicos (adopción, no doble copia, nombre preservado, aviso de cambios, origen indisponible). Esta sesión detalla **rutinas**; menús replican el patrón en otro entregable.
+**Paridad menús:** Misma semántica de producto para menús públicos (**ROADMAP #31**, tras cerrar **#30** / esta sesión). Esta sesión detalla **rutinas**; menús replican el patrón en otro entregable.
 
 ## Objetivo en una frase
 
@@ -74,14 +74,14 @@ Así se evita divergencia de bugs entre dos copiadores paralelos.
 
 ## Handoff
 
-Spec de producto para **rutinas** cerrado. Menús: repetir patrón en tarea aparte tras este entregable o en paralelo con servicios `Menus::*`.
+Spec de producto para **rutinas** cerrado. **Formalizado en roadmap (2026-04-18):** entregar **#30** (esta sesión) primero; **#31** (menús públicos, misma semántica) después. Menús: nueva sesión `start-task` tras cerrar catálogo de rutinas; servicios `Menus::*` análogos a `ExerciseRoutines::*`.
 
 <implementation_plan>
   <classification>Feature</classification>
   <summary>Catálogo público de rutinas con opt-in, moderación admin, autor (solo identidad de usuario), adopción solo para sesión iniciada, una copia por origen y usuario, aviso y aplicación explícita de cambios de contenido desde el origen sin auto-sync ni cambio de nombre de la copia; origen indisponible con copia retenida; validación bloquea guardado si el origen quedaría inválido.</summary>
   <tdd_mandate>All behavior below is implemented test-first: request specs and/or model/service specs fail before implementation, then pass.</tdd_mandate>
   <steps>
-    <step order="1">Write failing RSpec examples for public catalog: `GET` index lists only `publicly_shareable` routines; `GET` show for public id; `404` when not public or revoked pattern; no leak of private routines; author display uses safe user identity only (no email in response body for catalog).</step>
+    <step order="1" status="complete">Write failing RSpec examples for public catalog: `GET` index lists only `publicly_shareable` routines; `GET` show for public id; `404` when not public or revoked pattern; no leak of private routines; author display uses safe user identity only (no email in response body for catalog).</step>
     <step order="2">Write failing specs for adoption: authenticated user can adopt from public origin once; second adopt same origin returns conflict/validation error; unauthenticated cannot adopt; adopted routine has correct `user_id`, preserved chosen name, copied lines, `source_exercise_routine_id` set; unique name rules match existing Menu/routine normalization (failing case duplicate name).</step>
     <step order="3">Write failing specs for sync: when origin content changes, copy shows pending state; accepting update replaces lines only, preserves copy name and assignments on same routine id; idempotence / stale origin version rejected or re-fetched per agreed message; when origin deleted or no longer public, copy shows source unavailable, no 500 on old public URL.</step>
     <step order="4">Write failing spec for admin moderation: revoke sets `publicly_shareable` false on public routine only; scoped like recipes.</step>
