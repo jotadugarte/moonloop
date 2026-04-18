@@ -18,14 +18,14 @@
 
 1. **Browser** submits `POST /habit_completions` with `user_habit_id`, `completed_on`, `status` (`done` or `failed`).
 2. **`HabitCompletionsController`** scopes the habit to **`Current.user`**, parses the local date, and calls **`Habits::RecordCompletion`**.
-3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit).
+3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit). On success it **`touch`**es **`UserHabit`** so **`Habits::MiDayStreakPrefetch`** cache keys (driven by `updated_at`) stay coherent.
 4. **Redirect** back to Mi Día (with `fecha` preserved for past days).
 
 ### 1.3 Clear → pending (delete)
 
 1. **Browser** submits `DELETE /habit_completions/:id`.
 2. Controller loads the row through a join scoped to **`Current.user`**.
-3. **`Habits::ClearCompletion`** verifies owner and active habit, then **`destroy!`** the row (pending = no row).
+3. **`Habits::ClearCompletion`** verifies owner and active habit, then **`destroy!`** the row (pending = no row) and **`touch`**es the parent **`UserHabit`** for the same cache-key coherence as writes.
 
 ### 1.4 Menu grid slot (read + write via Turbo)
 

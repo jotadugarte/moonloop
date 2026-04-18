@@ -257,4 +257,94 @@ RSpec.describe "Habits::MiDayStreakPrefetch" do
       expect(names).to include("index_habit_completions_on_user_habit_and_completed_on")
     end
   end
+
+  describe "caching" do
+    around do |example|
+      previous = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = previous
+    end
+
+    # [REQ-DAY-004]
+    it "does not run a second habit_completions SELECT on cache hit" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        create(:habit_completion, user_habit: habit, completed_on: local_date, status: "done")
+
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        first = habit_completion_select_sqls do
+          Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        end
+        second = habit_completion_select_sqls do
+          Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        end
+
+        expect(first.size).to eq(1)
+        expect(second.size).to eq(0)
+      end
+    end
+
+    # [REQ-DAY-004]
+    it "recomputes after Habits::RecordCompletion updates the streak (cache bust via user_habit touch)" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        expect(Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)[habit.id]).to eq(0)
+        Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+
+        expect(Habits::RecordCompletion.call(
+          user: user,
+          user_habit: habit,
+          local_date: local_date,
+          status: "done"
+        )).to eq(:ok)
+
+        expect(Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)[habit.id]).to eq(1)
+      end
+    end
+
+    # [REQ-DAY-004]
+    it "recomputes after Habits::ClearCompletion (cache bust via user_habit touch)" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1))
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        row = create(:habit_completion, user_habit: habit, completed_on: local_date, status: "done")
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+
+        Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        expect(Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)[habit.id]).to eq(1)
+
+        expect(Habits::ClearCompletion.call(user: user, habit_completion: row)).to eq(:ok)
+
+        expect(Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)[habit.id]).to eq(0)
+      end
+    end
+  end
 end

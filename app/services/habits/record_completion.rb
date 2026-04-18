@@ -25,6 +25,8 @@ module Habits
       completion.status = @status
       return :invalid_record unless completion.save
 
+      @user_habit.touch
+
       :ok
     end
 

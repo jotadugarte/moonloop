@@ -18,6 +18,8 @@ module Habits
       return :inactive unless habit.active?
 
       @habit_completion.destroy!
+      habit.touch
+
       :ok
     end
   end
