@@ -115,7 +115,7 @@ Locked execution contract for `start-task` (TDD-first feature work).
     TDD — REQ-RPT-002 longest streak: Write failing specs for Habits::LongestStreak (or equivalent) that computes all-time longest run of consecutive due days each marked done, per REQ-DAY-004 (aligned with Habits::Streak for closed days and non-due skipping). Reuse or mirror completion prefetch patterns from Habits::Streak / MyDayController; respect lower_bound and activation rules. Implement until green. Do not add persisted streak columns in this phase (backlog optimization only).
   </step>
 
-  <step id="5" status="pending">
+  <step id="5" status="complete">
     TDD — REQ-RPT-002 current streak: Specs proving the report current streak equals Habits::Streak.call for the same user_habit, as_of, and preloaded completions_by_date, with the same date param rules as Mi Día. Avoid N+1 in controller or orchestrating service.
   </step>
 
