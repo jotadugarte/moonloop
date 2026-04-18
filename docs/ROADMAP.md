@@ -63,3 +63,4 @@ Things done and things left to do. Update this when finishing branches; use `roa
 - [ ] Imperial units support (lbs) for weight and profile
 - [ ] Push / email reminders for habits
 - [ ] Reportes de racha (REQ-RPT-002): valorar **materializar** racha (columnas o contadores derivados, p. ej. racha actual / máxima por hábito, actualizados al guardar) si el cálculo en vivo sobre historial largo es lento — Depends on: Phase 7 #26 (done); perfilar en producción si hace falta
+- [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
