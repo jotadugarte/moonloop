@@ -50,7 +50,7 @@
 ### **User** (contexto)
 
 - **Invariants:** `current_weight_kg` / `current_bmi` reflejan el **último** pesaje exitoso vía `LogWeightService` (comportamiento actual).
-- **Implicación UX:** Tras registrar peso, perfil/Mi Día deben verse coherentes con esos campos si el usuario espera “último peso = lo que acabo de guardar”. Con **`logged_at`**, “último” en sentido de producto = entrada con **`logged_at` más reciente** (no necesariamente la fila creada más recientemente si hay backdating).
+- **Implicación UX:** Tras registrar peso, perfil/Mi Día deben verse coherentes con esos campos si el usuario espera "último peso = lo que acabo de guardar". Con **`logged_at`**, "último" en sentido de producto = entrada con **`logged_at` más reciente** (no necesariamente la fila creada más recientemente si hay backdating).
 
 ---
 
@@ -66,25 +66,25 @@
 
 5. **`logged_at` no puede ser futuro — CERRADO.** No permitir que `logged_at` sea **mayor** que el instante actual en la **zona horaria del usuario** (validación en modelo o servicio con `Time.use_zone(user.timezone)` + comparación clara). Sin tolerancia explícita salvo un epsilon mínimo en implementación si hiciera falta por precisión de tipos.
 
-6. **Paginación del historial — CERRADO.** **30** entradas por página desde la primera versión (REQ-WGT-003); enlaces o controles “anterior / siguiente” (o equivalente accesible).
+6. **Paginación del historial — CERRADO.** **30** entradas por página desde la primera versión (REQ-WGT-003); enlaces o controles "anterior / siguiente" (o equivalente accesible).
 
 ---
 
-## Edge cases y “rincones oscuros”
+## Edge cases y "rincones oscuros"
 
 | Tema | Riesgo / comportamiento |
 |------|-------------------------|
-| **Zona horaria** | Construir `logged_at` desde inputs locales + `user.timezone`; mostrar listas en hora local; no mezclar “día” agrupado sin TZ. |
-| **“Último peso” del usuario** | Tras **crear** log, `LogWeightService` actualiza `current_*`. Tras **borrar**, servicio o callback debe **re-sincronizar** desde `MAX(logged_at)` o `nil` si no hay filas. |
+| **Zona horaria** | Construir `logged_at` desde inputs locales + `user.timezone`; mostrar listas en hora local; no mezclar "día" agrupado sin TZ. |
+| **"Último peso" del usuario** | Tras **crear** log, `LogWeightService` actualiza `current_*`. Tras **borrar**, servicio o callback debe **re-sincronizar** desde `MAX(logged_at)` o `nil` si no hay filas. |
 | **Borrar la única fila** | `current_weight_kg` / `current_bmi` → `nil`; UI y perfil deben tolerarlo (REQ-PROF-002 habla de almacenar valores — revisar copy si quedan vacíos). |
 | **Doble envío / Turbo** | Doble POST crea dos filas; idempotencia no existe hoy — mitigar con deshabilitar botón o deduplicación corta ventana (producto). |
 | **Transacción** | `LogWeightService` ya revierte el log si falla `user.update!` — mantener cualquier extensión dentro de la misma transacción. |
 | **Consistencia BMI** | `BmiValue` (servicio) vs `WeightLog#compute_bmi` (Float) — mismos límites numéricos en la práctica; evitar divergencias si se añaden campos calculados. |
-| **Usuario sin altura válida** | `HeightCm` falla si perfil inválido — el flujo debe bloquear con mensaje claro (“completa altura en perfil”). |
+| **Usuario sin altura válida** | `HeightCm` falla si perfil inválido — el flujo debe bloquear con mensaje claro ("completa altura en perfil"). |
 | **Phase 7** | **REQ-RPT-003** — serie temporal por **`logged_at`**. |
 | **Orden del historial** | **`logged_at DESC`, `id DESC`** (desempate estable); **30** por página. |
 | **Alta con `logged_at` en el pasado (retroactivo)** | Tras crear una fila antigua, **`User#current_*` no debe copiar ciegamente la fila nueva**: deben reflejar la entrada con **`logged_at` máximo** (y `id` si empate). El `LogWeightService` actual asigna desde la fila creada — hay que **reconciliar** tras cada alta (misma regla que tras borrado). |
-| **Cambio de TZ del usuario** | Filas guardadas en UTC son correctas; solo cambia la **presentación**. Validación “no futuro” debe usar TZ **actual** del usuario al guardar. |
+| **Cambio de TZ del usuario** | Filas guardadas en UTC son correctas; solo cambia la **presentación**. Validación "no futuro" debe usar TZ **actual** del usuario al guardar. |
 | **Horario de verano (DST)** | Al componer local → UTC, usar APIs que respeten TZ IANA; probar mentalmente transiciones si hay inputs de fecha/hora locales. |
 
 ---
@@ -106,7 +106,7 @@
 - **Múltiples pesajes / día:** permitidos.
 - **Corrección:** sin edición in-place; **borrado** de entrada equivocada **incluido en Phase 6** (confirmación + resync `User` o `nil`).
 - **Altura:** solo perfil; sin campo en formulario de peso.
-- **Futuro:** no `logged_at` posterior a “ahora” (TZ usuario).
+- **Futuro:** no `logged_at` posterior a "ahora" (TZ usuario).
 - **Paginación:** 30 por página en historial.
 
 ---
@@ -119,9 +119,9 @@ Decisiones de producto cerradas. Caso extremo **retroactivo vs `current_*`** doc
   <classification>Feature</classification>
   <tdd_mandate>Every behavior-bearing change is driven by a failing spec first (model, service, or request/system as appropriate), then implemented, then refactored. Tag examples with `# [REQ-WGT-…]` per traceability rules.</tdd_mandate>
 
-  <step id="1" status="complete">Write failing **model** specs for `WeightLog`: `logged_at` required; validation that `logged_at` is not strictly after “now” in the user’s timezone; default scope or class method for ordering `logged_at DESC, id DESC`. Add **migration**: `logged_at` column, backfill `logged_at = created_at`, `null: false`, replace/add index `(user_id, logged_at)` suitable for listing; keep `created_at` for audit. Make specs green. `# [REQ-WGT-001]`</step>
+  <step id="1" status="complete">Write failing **model** specs for `WeightLog`: `logged_at` required; validation that `logged_at` is not strictly after "now" in the user's timezone; default scope or class method for ordering `logged_at DESC, id DESC`. Add **migration**: `logged_at` column, backfill `logged_at = created_at`, `null: false`, replace/add index `(user_id, logged_at)` suitable for listing; keep `created_at` for audit. Make specs green. `# [REQ-WGT-001]`</step>
 
-  <step id="2" status="complete">Write failing **service** specs for **reconciling** `User#current_weight_kg` and `User#current_bmi` from the `weight_logs` row with **maximum `logged_at`** (tie-break `id`), or `nil` if none. Refactor **`LogWeightService`** to accept `logged_at` (and `weight_kg`), persist it on the new row, then call reconciler so a **retroactive** entry does not overwrite “current” when a newer `logged_at` exists. Extend/adjust existing `LogWeightService` specs. `# [REQ-WGT-002]`</step>
+  <step id="2" status="complete">Write failing **service** specs for **reconciling** `User#current_weight_kg` and `User#current_bmi` from the `weight_logs` row with **maximum `logged_at`** (tie-break `id`), or `nil` if none. Refactor **`LogWeightService`** to accept `logged_at` (and `weight_kg`), persist it on the new row, then call reconciler so a **retroactive** entry does not overwrite "current" when a newer `logged_at` exists. Extend/adjust existing `LogWeightService` specs. `# [REQ-WGT-002]`</step>
 
   <step id="3" status="complete">Write failing specs for **destroy**: authenticated user deletes own `WeightLog` only; confirmation flow as per app patterns; after destroy, run same **reconciler** for `User` stats. Implement `destroy` action + thin orchestration (service object under `app/services/` if non-trivial). Transaction safety. `# [REQ-WGT-002]` `# [REQ-WGT-003]`</step>
 
