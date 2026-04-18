@@ -56,6 +56,16 @@
 
 - **Sin nueva entidad obligatoria:** índices, límites de ventana de consulta, o columnas derivadas (`current_streak_cache`, `longest_streak_cache`) actualizadas en `RecordCompletion` / `ClearCompletion`.
 
+## Domain Model
+
+**Alcance:** entrega activa — optimización Mi Día / rachas (backlog #6).  
+**Aprobado:** 2026-04-18.
+
+- **Entidades existentes (sin nuevos value objects / branded types):** `User`, `UserHabit`, `HabitCompletion`; el conteo de racha sigue calculándose únicamente mediante `Habits::Streak` (`REQ-DAY-004`).
+- **Servicio de aplicación:** un objeto bajo `app/services/habits/` (nombre acorde al repositorio; p. ej. orquestación tipo `MiDayStreakPrefetch`) centraliza precarga para la ventana de racha, lecturas acotadas y uso de caché.
+- **Caché:** claves que incluyen identidad del hábito, fecha local consultada y versión del registro (`cache_key_with_version`); invalidación coherente tras escrituras exitosas en `Habits::RecordCompletion` y `Habits::ClearCompletion` (p. ej. `user_habit.touch`).
+- **No incluido en esta entrega:** tipos de dominio nuevos para cantidades/métricas; materialización persistente de rachas en BD.
+
 ---
 
 ## Preguntas abiertas (producto / dominio)
