@@ -9,15 +9,14 @@ RSpec.describe "Habit completions", type: :request do
     post sign_in_path, params: { email: user.email, password: "Password123!" }
   end
 
-  def post_completion!(habit, completed_on:, status:)
-    post habit_completions_path,
-      params: {
-        habit_completion: {
-          user_habit_id: habit.id,
-          completed_on: completed_on,
-          status: status
-        }
-      }
+  def post_completion!(habit, completed_on:, status:, day_progress: :omit)
+    h = {
+      user_habit_id: habit.id,
+      completed_on: completed_on,
+      status: status
+    }
+    h[:day_progress] = day_progress unless day_progress == :omit
+    post habit_completions_path, params: { habit_completion: h }
   end
 
   # [REQ-DAY-002]
@@ -144,6 +143,28 @@ RSpec.describe "Habit completions", type: :request do
 
       expect(flash[:alert]).to eq(I18n.t("habit_completions.flash.inactive"))
       expect(HabitCompletion.count).to eq(0)
+    end
+  end
+
+  # [REQ-DAY-005]
+  it "persists day_progress and syncs status when the target is met" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 4)
+
+      post_completion!(habit, completed_on: "2026-04-16", status: "done", day_progress: "4")
+
+      expect(response).to redirect_to(my_day_path)
+      expect(flash[:notice]).to eq(I18n.t("habit_completions.flash.saved"))
+      row = HabitCompletion.find_by!(user_habit: habit, completed_on: Date.new(2026, 4, 16))
+      expect(row.day_progress).to eq(4)
+      expect(row.status).to eq("done")
     end
   end
 end

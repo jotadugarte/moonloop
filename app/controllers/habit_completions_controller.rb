@@ -30,13 +30,13 @@ class HabitCompletionsController < ApplicationController
     return not_found_redirect unless habit
 
     local_date = Date.iso8601(permitted[:completed_on].to_s)
-    result = record_completion(habit, local_date, permitted[:status].to_s)
+    result = record_completion(habit, local_date, permitted)
 
     redirect_after_result(result, day: local_date)
   end
 
   def habit_completion_params
-    params.require(:habit_completion).permit(:user_habit_id, :completed_on, :status)
+    params.require(:habit_completion).permit(:user_habit_id, :completed_on, :status, :day_progress)
   end
 
   def find_habit(user_habit_id)
@@ -47,13 +47,25 @@ class HabitCompletionsController < ApplicationController
     HabitCompletion.joins(:user_habit).where(user_habits: { user_id: Current.user.id }).find_by(id: params[:id])
   end
 
-  def record_completion(habit, local_date, status)
-    Habits::RecordCompletion.call(
+  def record_completion(habit, local_date, permitted)
+    kwargs = {
       user: Current.user,
       user_habit: habit,
       local_date: local_date,
-      status: status
-    )
+      status: permitted[:status].to_s
+    }
+    if permitted.key?(:day_progress)
+      raw = permitted[:day_progress]
+      kwargs[:day_progress] =
+        if raw.nil? || raw.to_s.strip.empty?
+          0
+        else
+          Integer(raw)
+        end
+    end
+    Habits::RecordCompletion.call(**kwargs)
+  rescue ArgumentError, TypeError
+    :invalid_record
   end
 
   def not_found_redirect

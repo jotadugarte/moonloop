@@ -1,17 +1,27 @@
 # frozen_string_literal: true
 
 module Habits
-  # Persists done/failed for a user-local calendar day (REQ-DAY-002).
+  # Persists done/failed for a user-local calendar day (REQ-DAY-002, REQ-DAY-005).
   class RecordCompletion
-    def self.call(user:, user_habit:, local_date:, status:)
-      new(user: user, user_habit: user_habit, local_date: local_date, status: status.to_s).call
+    DAY_PROGRESS_UNSET = Object.new.freeze
+
+    def self.call(user:, user_habit:, local_date:, status:, day_progress: DAY_PROGRESS_UNSET)
+      new(
+        user: user,
+        user_habit: user_habit,
+        local_date: local_date,
+        status: status.to_s,
+        day_progress: day_progress
+      ).call
     end
 
-    def initialize(user:, user_habit:, local_date:, status:)
+    def initialize(user:, user_habit:, local_date:, status:, day_progress: DAY_PROGRESS_UNSET)
       @user = user
       @user_habit = user_habit
       @local_date = local_date
       @status = status
+      @day_progress_param = day_progress
+      @day_progress_unset = (day_progress == DAY_PROGRESS_UNSET)
     end
 
     def call
@@ -22,16 +32,47 @@ module Habits
       return :invalid_status unless HabitCompletion::STATUSES.include?(@status)
 
       completion = HabitCompletion.find_or_initialize_by(user_habit: @user_habit, completed_on: @local_date)
-      completion.status = @status
+      apply_metric_rules!(completion)
       return :invalid_record unless completion.save
 
-      # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
       @user_habit.touch
 
       :ok
     end
 
     private
+
+    def apply_metric_rules!(completion)
+      if @user_habit.habit_metric_kind == "none"
+        completion.day_progress = 0
+        completion.status = @status
+        return
+      end
+
+      completion.day_progress = resolved_day_progress(completion)
+
+      if @status == "failed"
+        completion.status = "failed"
+        return
+      end
+
+      completion.status =
+        if completion.day_progress >= @user_habit.daily_target
+          "done"
+        else
+          "failed"
+        end
+    end
+
+    def resolved_day_progress(completion)
+      if @day_progress_unset
+        return 0 unless completion.persisted?
+
+        completion.day_progress
+      else
+        @day_progress_param.to_i.clamp(0, HabitCompletion::DAY_PROGRESS_MAX)
+      end
+    end
 
     def user_local_today
       Time.find_zone!(@user.timezone).today
