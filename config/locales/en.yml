@@ -617,6 +617,16 @@ en:
               must_match_user: "must be an exercise routine from your account"
             base:
               range_overlap: "that week range overlaps another assignment"
+        phase_program_assignment:
+          attributes:
+            end_week:
+              before_start_week: "must be greater than or equal to the start week"
+            menu_id:
+              must_match_user: "must be a menu owned by the same user as this program"
+            exercise_routine_id:
+              must_match_user: "must be an exercise routine owned by the same user as this program"
+            base:
+              range_overlap: "that week range overlaps another assignment in this program"
         weight_log:
           attributes:
             logged_at:

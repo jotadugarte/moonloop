@@ -55,6 +55,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
 | Phase program (bundle) | User-owned **named** template that **groups** coordinated menu and exercise routine planning for program weeks under **REQ-PHS-001**; optional public catalog and adopted-copy metadata (fingerprint, origin) in parity with menus and exercise routines. | `PhaseProgram` |
+| Phase program assignment | One row per **contiguous program week range** inside a **`PhaseProgram`**, binding one **`Menu`** and one **`ExerciseRoutine`** owned by the same user; ranges **must not overlap** with other rows of the **same** program (orthogonal to global `phase_assignments` / `exercise_routine_assignments`). | `PhaseProgramAssignment` |
 | Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). Optional **`publicly_shareable`** public catalog (REQ-EXR-006); adopted copies may reference a **source** routine with explicit content sync. | `ExerciseRoutine` (name may match implementation) |
 | Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
 | Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
@@ -109,6 +110,14 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **ExerciseRoutine** (`exercise_routines`)
   - `belongs_to :user`; lines and week-range assignments per **REQ-EXR-001** / **REQ-EXR-002**
   - `publicly_shareable` for the authenticated **public routine catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_exercise_routine_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-EXR-006**).
+
+- **PhaseProgram** (`phase_programs`)
+  - `belongs_to :user`; optional self-reference for catalog adoption; `has_many :phase_program_assignments`, **`dependent: :destroy`** (destroying the program removes bundle rows only; **menus and routines** remain user-owned templates unless deleted separately)
+  - `publicly_shareable` and adoption metadata under **REQ-PHS-001**
+
+- **PhaseProgramAssignment** (`phase_program_assignments`)
+  - `belongs_to :phase_program`, `belongs_to :menu`, `belongs_to :exercise_routine`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
+  - **Menu** and **ExerciseRoutine** must belong to the **same user** as the program; non-overlapping week ranges **within the same `phase_program_id`** enforced in the model
 
 - **PhaseAssignment** (`phase_assignments`)
   - `belongs_to :user`, `belongs_to :menu`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
