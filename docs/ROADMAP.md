@@ -58,14 +58,12 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-*(No items currently pending.)*
+33. [ ] **Programas de Fases Unificadas (Bundles)**: Crear una entidad que agrupe la planificación completa de Menús (#17) y Rutinas (#21) en un solo "Programa" compartible. El usuario define la estructura de semanas (ej. 1–12) y asigna los componentes. Catálogo público de programas con **adopción integral**: al adoptar, el sistema instancia las copias de recetas y ejercicios necesarios. Mantiene paridad con la lógica de sincronización y autoría de **#30** y **#31** (REQ-PHS-001) — Depends on: #30, #31, Phase 4 (#17)
+34. [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (**#33**). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, **#33**
 
 ## Backlog
-- [ ] Multiple completions per day per habit — Depends on: **Done #32** (REQ-DAY-005 habit metrics; single row per day still — this item is *additional* completions semantics)
 - [ ] Imperial units support (lbs) for weight and profile
 - [ ] Push notifications and/or **per-habit** email reminders — **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**). No Web Push / FCM in app yet.
 - [ ] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción
-- [ ] **Programas de Fases Unificadas (Bundles)**: Crear una entidad que agrupe la planificación completa de Menús (#17) y Rutinas (#21) en un solo "Programa" compartible. El usuario define la estructura de semanas (ej. 1–12) y asigna los componentes. Catálogo público de programas con **adopción integral**: al adoptar, el sistema instancia las copias de recetas y ejercicios necesarios. Mantiene paridad con la lógica de sincronización y autoría de **#30** y **#31** (REQ-PHS-001) — Depends on: #30, #31, Phase 4 (#17)
-- [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (#32). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, #32
 - [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
 

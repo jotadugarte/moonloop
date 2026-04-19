@@ -16,6 +16,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
 | `RPT` | Reporting (Informes) — **implemented** (Phase 7) |
+| `PHS` | Unified **phase programs** (bundles): menus + routines under one shareable program — **planned** (`REQ-PHS-001`) |
 
 ---
 
@@ -171,7 +172,9 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When a row is implemented, move it to **Requirement registry (implemented)** above.
 
-*(No planned REQ rows at this time.)*
+| ID | Requirement | Status |
+|----|-------------|--------|
+| REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; public catalog with adoption and source sync semantics **in parity** with **REQ-MENU-006** and **REQ-EXR-006** (fingerprint, unavailable source, admin revoke). Detailed acceptance criteria are filled in as the feature lands (`docs/ROADMAP.md` **#33**). | Planned |
 
 ### Acceptance criteria — reporting (Phase 7)
 
