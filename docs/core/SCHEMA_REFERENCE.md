@@ -77,6 +77,8 @@ See **§1.8 Weight log** in `DATA_FLOW_MAP.md` for write flows and `User` **`cur
 
 Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habit_templates`, `user_habits`, `habit_completions` support Phases 1–3 as described in `SPEC.md` and earlier sections of `DATA_FLOW_MAP.md`. Weight logging is covered above.
 
+**`habit_completions` (habit metrics, REQ-DAY-005):** in addition to `status` (`done` \| `failed`) and optional accumulated **`day_progress`** for measurable habits, **`marked_failed_by_user`** (boolean, default false) records whether the user explicitly chose failure for that day. Streaks and reports still key off persisted **`status`** and the same fulfillment rules as Mi Día; the flag exists so the Mi Día UI can show an **in progress** label when `status` is `failed` only because progress is below the daily target, without conflating that with an explicit user failure. See the *Habit completion* glossary in `SPEC.md`.
+
 ---
 
 ## Foreign keys (excerpt)
