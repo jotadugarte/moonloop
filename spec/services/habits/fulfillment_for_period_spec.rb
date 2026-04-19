@@ -24,6 +24,27 @@ RSpec.describe Habits::FulfillmentForPeriod do
       expect(stats.percentage).to eq(14)
     end
 
+    # [REQ-RPT-001] [REQ-DAY-005]
+    it "counts measurable fulfilled days only when day_progress meets the daily target" do
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 4, 1),
+        habit_metric_kind: "count",
+        daily_target: 5)
+
+      create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 13), status: "done", day_progress: 5)
+      create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 14), status: "done", day_progress: 2)
+
+      stats = described_class.call(user_habit: habit, range: week)
+
+      expect(stats.due_count).to eq(7)
+      expect(stats.done_count).to eq(1)
+      expect(stats.percentage).to eq(14)
+    end
+
     # [REQ-RPT-001]
     it "returns nil for an inactive habit with no completions in the range" do
       habit = create(:user_habit,

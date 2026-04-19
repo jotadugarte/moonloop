@@ -15,6 +15,16 @@ module Habits
         user_habit.created_at.in_time_zone(user_habit.user.timezone).to_date
     end
 
+    # REQ-DAY-005 / REQ-RPT-001: same "fulfilled due day" predicate as walking streaks — shared with
+    # +FulfillmentForPeriod+ and +LongestStreak+ so Informes matches Mi Día.
+    def self.habit_day_done?(user_habit:, completion:)
+      return false if completion.nil?
+      return false unless completion.status == "done"
+      return true if user_habit.habit_metric_kind == "none"
+
+      completion.day_progress.to_i >= user_habit.daily_target.to_i
+    end
+
     def initialize(user_habit:, as_of:, completions_by_date: nil)
       @user_habit = user_habit
       @as_of = as_of
@@ -71,16 +81,8 @@ module Habits
 
     private
 
-    # REQ-DAY-004 + REQ-DAY-005: for measurable habits, "done" for streak requires meeting the daily target.
     def streak_day_done?(comp)
-      return false if comp.nil?
-      return false unless comp.status == "done"
-
-      if @user_habit.habit_metric_kind == "none"
-        true
-      else
-        comp.day_progress.to_i >= @user_habit.daily_target.to_i
-      end
+      self.class.habit_day_done?(user_habit: @user_habit, completion: comp)
     end
 
     def completion_on(date)
