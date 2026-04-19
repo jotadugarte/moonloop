@@ -183,6 +183,10 @@ en:
     edit:
       title: "Edit menu: %{name}"
       back_to_index: "Back to menus"
+      adoption_sync:
+        pending: "The public source menu has new changes. You can apply slot content only; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source menu is no longer available (it was removed or made private). Your copy remains in your account."
     meal_types:
       desayuno: "Breakfast"
       almuerzo: "Lunch"
@@ -202,6 +206,12 @@ en:
         could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
+      source_sync_applied: "Updated content from the source menu was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This menu is not an adopted copy."
+        source_unavailable: "The source menu is no longer available in the catalog."
+        origin_changed_retry: "The source menu changed again. Review and try applying once more."
   exercise_routines:
     flash:
       created: "Routine created."

@@ -158,6 +158,10 @@ es:
     edit:
       title: "Editar menú: %{name}"
       back_to_index: "Volver a menús"
+      adoption_sync:
+        pending: "El menú público de origen tiene cambios nuevos. Puedes aplicar solo el contenido de los casilleros; el nombre de tu copia se mantiene."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El enlace al menú de origen ya no está disponible (se eliminó o dejó de ser público). Tu copia sigue en tu cuenta."
     meal_types:
       desayuno: "Desayuno"
       almuerzo: "Almuerzo"
@@ -177,6 +181,12 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+      source_sync_applied: "Se aplicó el contenido actualizado desde el menú de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Este menú no es una copia adoptada."
+        source_unavailable: "El menú de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "El menú de origen cambió otra vez. Vuelve a revisar antes de aplicar."
   exercise_routines:
     flash:
       created: "Rutina creada."

@@ -32,6 +32,9 @@ Rails.application.routes.draw do
     end
   end
   resources :menus, only: [ :index, :create, :edit ] do
+    member do
+      post :accept_source_update
+    end
     resources :menu_entries, only: [ :create ], module: :menus do
       delete :clear, on: :collection
     end

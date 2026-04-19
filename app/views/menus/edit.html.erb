@@ -1,6 +1,21 @@
 <p style="color: green"><%= notice %></p>
 <p style="color: red"><%= alert %></p>
 
+<% if @adoption_sync_status.key == :pending %>
+  <div class="mb-4 p-3 border border-amber-400 rounded" role="status" aria-live="polite">
+    <p><%= t("menus.edit.adoption_sync.pending") %></p>
+    <%= form_with url: accept_source_update_menu_path(@menu), method: :post, local: true do %>
+      <%= hidden_field_tag :expected_origin_fingerprint, @adoption_sync_status.origin_fingerprint %>
+      <%= submit_tag t("menus.edit.adoption_sync.accept_update"),
+            class: "bg-amber-600 text-white px-3 py-1 rounded cursor-pointer border-0" %>
+    <% end %>
+  </div>
+<% elsif @adoption_sync_status.key == :unavailable %>
+  <div class="mb-4 p-3 border border-gray-400 rounded" role="status" aria-live="polite">
+    <p><%= t("menus.edit.adoption_sync.unavailable") %></p>
+  </div>
+<% end %>
+
 <h1><%= t("menus.edit.title", name: @menu.name) %></h1>
 
 <div class="menu-grid">

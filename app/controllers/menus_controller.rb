@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class MenusController < ApplicationController
-  before_action :set_menu, only: %i[edit]
+  before_action :set_menu, only: %i[edit accept_source_update]
 
   def index
     @menu = Menu.new
@@ -18,13 +20,29 @@ class MenusController < ApplicationController
   end
 
   def edit
+    set_adoption_sync_status
     @meal_types = Menus::MealType::KEYS
     @entries_by_slot = @menu.menu_entries
       .includes(recipe: { image_attachment: :blob })
       .index_by { |e| [ e.weekday, e.meal_type ] }
   end
 
+  def accept_source_update
+    Menus::ApplyAdoptionSourceSync.call(
+      copy: @menu,
+      expected_origin_fingerprint: params[:expected_origin_fingerprint].presence
+    )
+    redirect_to edit_menu_path(@menu), notice: t("menus.flash.source_sync_applied")
+  rescue Menus::ApplyAdoptionSourceSync::Error => e
+    redirect_to edit_menu_path(@menu),
+      alert: t("menus.adoption_sync.errors.#{e.key}")
+  end
+
   private
+
+  def set_adoption_sync_status
+    @adoption_sync_status = Menus::AdoptionSyncStatus.for_menu(@menu)
+  end
 
   def set_menu
     @menu = Current.user.menus.find(params[:id])
