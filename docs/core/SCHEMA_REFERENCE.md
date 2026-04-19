@@ -37,6 +37,14 @@
 
 ---
 
+## Phase programs (bundles)
+
+| Table | Primary keys / constraints | SPEC / notes |
+|--------|----------------------------|--------------|
+| `phase_programs` | `user_id` FK; optional self-FK `source_phase_program_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_phase_program_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-PHS-001**, parity **REQ-MENU-006** / **REQ-EXR-006**) | **REQ-PHS-001** (planned). User-owned named program template; catalog and adopted-copy metadata |
+
+---
+
 ## Exercise routines
 
 | Table | Primary keys / constraints | SPEC / notes |
@@ -83,4 +91,4 @@ Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habi
 
 ## Foreign keys (excerpt)
 
-Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; Active Storage tables per `db/schema.rb`.
+Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `phase_programs` → `users`, `phase_programs` (self, `source_phase_program_id`); `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; Active Storage tables per `db/schema.rb`.

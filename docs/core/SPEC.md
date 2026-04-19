@@ -54,6 +54,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
+| Phase program (bundle) | User-owned **named** template that **groups** coordinated menu and exercise routine planning for program weeks under **REQ-PHS-001**; optional public catalog and adopted-copy metadata (fingerprint, origin) in parity with menus and exercise routines. | `PhaseProgram` |
 | Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). Optional **`publicly_shareable`** public catalog (REQ-EXR-006); adopted copies may reference a **source** routine with explicit content sync. | `ExerciseRoutine` (name may match implementation) |
 | Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
 | Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
@@ -64,7 +65,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 ## Core entities and relationships
 
 - **User** (`users`)
-  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
+  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_programs`, `has_many :phase_reminder_events`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
   - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
   - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_180000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -156,6 +156,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.check_constraint "start_week >= 1", name: "phase_assignments_start_week_gte_one"
   end
 
+  create_table "phase_programs", force: :cascade do |t|
+    t.integer "adoption_catalog_origin_id"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.integer "source_phase_program_id"
+    t.string "source_sync_fingerprint"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["source_phase_program_id"], name: "index_phase_programs_on_source_phase_program_id"
+    t.index ["user_id", "name_normalized"], name: "index_phase_programs_on_user_and_name_normalized", unique: true
+    t.index ["user_id", "source_phase_program_id"], name: "index_phase_programs_adoption_unique_per_user_and_source", unique: true, where: "source_phase_program_id IS NOT NULL"
+    t.index ["user_id"], name: "index_phase_programs_on_user_id"
+  end
+
   create_table "phase_reminder_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "kind", null: false
@@ -253,6 +269,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
   add_foreign_key "phase_assignments", "users"
+  add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
+  add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
