@@ -146,6 +146,15 @@ en:
       back_to_catalog: "Back to menu catalog"
     shared:
       author: "Author #%{id}"
+    adopt:
+      name_label: "Name for your copy"
+      submit: "Adopt menu"
+      success: "Menu adopted. You can edit it now."
+      errors:
+        not_public: "This menu is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own menu."
+        already_adopted: "You already adopted this menu."
+        name_blank: "Name can't be blank."
   public_exercise_routines:
     index:
       title: "Public routines — Moonloop"
