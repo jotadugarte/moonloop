@@ -22,4 +22,17 @@ module MyDayHelper
   def my_day_metric_increment_disabled?(habit, completion)
     completion&.day_progress.to_i >= HabitCompletion::DAY_PROGRESS_MAX
   end
+
+  def my_day_habit_completion_status_label(habit, completion)
+    return "" unless completion
+
+    if habit.habit_metric_kind != "none" &&
+        completion.status == "failed" &&
+        !completion.marked_failed_by_user &&
+        completion.day_progress.to_i < habit.daily_target.to_i
+      t("habit_completions.status.in_progress")
+    else
+      t("habit_completions.status.#{completion.status}")
+    end
+  end
 end

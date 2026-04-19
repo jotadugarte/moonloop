@@ -299,6 +299,33 @@ RSpec.describe "Mi Día (My Day)", type: :request do
       row = HabitCompletion.find_by!(user_habit: habit, completed_on: Date.new(2026, 4, 16))
       expect(row.day_progress).to eq(3)
       expect(row.status).to eq("failed")
+      expect(row.marked_failed_by_user).to be(false)
+    end
+  end
+
+  # [REQ-DAY-005]
+  it "shows in-progress label for measurable habits below target without explicit failure" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "Agua",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 5)
+      create(:habit_completion,
+        user_habit: habit,
+        completed_on: Date.new(2026, 4, 16),
+        status: "failed",
+        day_progress: 2,
+        marked_failed_by_user: false)
+
+      get my_day_path
+
+      expect(response.body).to include(I18n.t("habit_completions.status.in_progress"))
+      expect(response.body).not_to include(I18n.t("habit_completions.status.failed"))
     end
   end
 end

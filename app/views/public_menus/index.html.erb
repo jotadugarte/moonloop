@@ -6,7 +6,7 @@
   <% @menus.each do |menu| %>
     <li>
       <%= link_to menu.name, public_menu_path(menu) %>
-      — <%= t("public_menus.shared.author", id: menu.user_id) %>
+      — <%= t("public_menus.shared.author", code: menu.user.public_catalog_author_code) %>
     </li>
   <% end %>
 </ul>

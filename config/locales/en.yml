@@ -79,14 +79,20 @@ en:
       metric_progress_duration: "Progress: %{current} / %{target} min"
     actions:
       mark_done: "Done"
-      mark_failed: "Failed"
+      mark_failed: "Did not complete today"
       clear: "Clear"
       add_one: "+1"
       meet_target: "Meet target"
+  adoption:
+    invalid_record:
+      name_taken: "That name is already taken. Pick another."
+      could_not_save: "We could not save your copy. Please check the form and try again."
+
   habit_completions:
     status:
       done: "Done"
       failed: "Failed"
+      in_progress: "In progress"
     flash:
       saved: "Completion saved."
       cleared: "Marked as pending again."
@@ -149,7 +155,7 @@ en:
       title: "%{name} — Public menus — Moonloop"
       back_to_catalog: "Back to menu catalog"
     shared:
-      author: "Author #%{id}"
+      author: "Author code %{code}"
     adopt:
       section_label: "Adopt this menu into your account"
       name_label: "Name for your copy"
@@ -168,8 +174,9 @@ en:
       title: "%{name} — Public routines — Moonloop"
       back_to_catalog: "Back to routine catalog"
     shared:
-      author: "Author #%{id}"
+      author: "Author code %{code}"
     adopt:
+      section_label: "Adopt this routine into your account"
       name_label: "Name for your copy"
       submit: "Adopt routine"
       success: "Routine adopted. You can edit it now."

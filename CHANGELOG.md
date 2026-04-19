@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Public catalog adoption: `ActiveRecord::RecordInvalid` on menu and exercise routine adopt flows now surfaces **i18n** flash keys instead of raw `full_messages` (`adoption.invalid_record.*`).
+- Habit metrics: added **`marked_failed_by_user`** on `habit_completions` so Mi Día can show **“In progress”** for partial measurable days while keeping **`status`** aligned with streaks/reports; public catalog author line uses a **stable non-PII code** derived from the user id (not the raw numeric id in copy).
+
 ### Changed
 
 - Mi Día / rachas: `Habits::MiDayStreakPrefetch` loads streak window completions in one query, caches the `user_habit_id => streak_count` map in `Rails.cache`, and relies on `UserHabit#touch` after `Habits::RecordCompletion` / `Habits::ClearCompletion` so cache keys stay coherent (REQ-DAY-004; roadmap #28).

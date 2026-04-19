@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class PublicExerciseRoutinesController < ApplicationController
+  include AdoptionInvalidRecordFlash
+
   before_action :set_public_routine, only: %i[show adopt]
 
   def index
-    @routines = ExerciseRoutine.where(publicly_shareable: true).order(:name)
+    @routines = ExerciseRoutine.includes(:user).where(publicly_shareable: true).order(:name)
   end
 
   def show
@@ -24,7 +26,7 @@ class PublicExerciseRoutinesController < ApplicationController
     redirect_to public_exercise_routine_path(@routine),
       alert: t("public_exercise_routines.adopt.errors.name_blank")
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to public_exercise_routine_path(@routine), alert: e.record.errors.full_messages.to_sentence
+    redirect_to public_exercise_routine_path(@routine), alert: adoption_invalid_alert_for(e.record)
   end
 
   private

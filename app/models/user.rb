@@ -48,6 +48,11 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
+  # Stable, non-PII handle for public catalog attribution (no raw DB id, no email).
+  def public_catalog_author_code
+    Digest::SHA256.hexdigest("moonloop:public_author:v1:#{id}")[0, 10].upcase
+  end
+
   private
 
   def date_of_birth_must_be_in_valid_range

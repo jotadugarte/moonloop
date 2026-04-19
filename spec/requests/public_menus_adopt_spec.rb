@@ -71,8 +71,7 @@ RSpec.describe "Public menus adopt", type: :request do
       post adopt_public_menu_path(origin), params: { name: "Existing" }
 
       expect(response).to have_http_status(:found)
-      expect(flash[:alert]).to be_present
-      expect(flash[:alert]).to include(I18n.t("activerecord.errors.messages.taken"))
+      expect(flash[:alert]).to eq(I18n.t("adoption.invalid_record.name_taken"))
     end
 
     it "rejects adoption of the adopter's own public menu" do

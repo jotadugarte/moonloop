@@ -6,7 +6,7 @@
     <span class="my-day-metric-progress" data-test="my-day-metric-progress"><%= my_day_metric_progress_label(habit, completion) %></span>
   <% end %>
   <% if completion %>
-    <span class="my-day-habit-status"><%= t("habit_completions.status.#{completion.status}") %></span>
+    <span class="my-day-habit-status"><%= my_day_habit_completion_status_label(habit, completion) %></span>
   <% end %>
   <fieldset class="my-day-actions">
     <legend class="my-day-actions-legend"><%= t("my_day.show.actions_legend") %></legend>
@@ -73,7 +73,7 @@
     <% end %>
   </fieldset>
   <% if habit.global_habit_template&.code == "fitness_exercise" %>
-    <div class="my-day-exercise-inline mt-3 pl-2 border-l-2 border-gray-300" data-test="my-day-exercise-inline">
+    <div class="my-day-exercise-inline" data-test="my-day-exercise-inline">
       <p class="text-sm font-medium text-gray-900"><%= t("my_day.show.exercise_inline_heading") %></p>
       <% if @active_exercise_routine %>
         <p class="text-sm text-gray-800"><%= @active_exercise_routine.name %></p>

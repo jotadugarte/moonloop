@@ -2,7 +2,7 @@
 
 <h1><%= @menu.name %></h1>
 
-<p><%= t("public_menus.shared.author", id: @menu.user_id) %></p>
+<p><%= t("public_menus.shared.author", code: @menu.user.public_catalog_author_code) %></p>
 
 <% if Current.user && Current.user.id != @menu.user_id %>
   <section class="mb-4" aria-label="<%= t("public_menus.adopt.section_label") %>">

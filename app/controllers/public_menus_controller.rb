@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class PublicMenusController < ApplicationController
+  include AdoptionInvalidRecordFlash
+
   before_action :set_public_menu, only: %i[show adopt]
 
   def index
-    @menus = Menu.where(publicly_shareable: true).order(:name)
+    @menus = Menu.includes(:user).where(publicly_shareable: true).order(:name)
   end
 
   def show
@@ -24,7 +26,7 @@ class PublicMenusController < ApplicationController
     redirect_to public_menu_path(@menu),
       alert: t("public_menus.adopt.errors.name_blank")
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to public_menu_path(@menu), alert: e.record.errors.full_messages.to_sentence
+    redirect_to public_menu_path(@menu), alert: adoption_invalid_alert_for(e.record)
   end
 
   private

@@ -60,6 +60,14 @@ RSpec.describe HabitCompletion, type: :model do
     end
   end
 
+  describe "marked_failed_by_user" do
+    # [REQ-DAY-005]
+    it "defaults to false" do
+      completion = create(:habit_completion)
+      expect(completion.reload.marked_failed_by_user).to be(false)
+    end
+  end
+
   describe "day_progress" do
     # [REQ-DAY-005]
     it "defaults day_progress to 0" do

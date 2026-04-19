@@ -46,6 +46,7 @@ module Habits
       if @user_habit.habit_metric_kind == "none"
         completion.day_progress = 0
         completion.status = @status
+        completion.marked_failed_by_user = (@status == "failed")
         return
       end
 
@@ -53,9 +54,11 @@ module Habits
 
       if @status == "failed"
         completion.status = "failed"
+        completion.marked_failed_by_user = true
         return
       end
 
+      completion.marked_failed_by_user = false
       completion.status =
         if completion.day_progress >= @user_habit.daily_target
           "done"

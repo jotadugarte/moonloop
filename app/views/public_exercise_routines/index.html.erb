@@ -6,7 +6,7 @@
   <% @routines.each do |routine| %>
     <li>
       <%= link_to routine.name, public_exercise_routine_path(routine) %>
-      — <%= t("public_exercise_routines.shared.author", id: routine.user_id) %>
+      — <%= t("public_exercise_routines.shared.author", code: routine.user.public_catalog_author_code) %>
     </li>
   <% end %>
 </ul>

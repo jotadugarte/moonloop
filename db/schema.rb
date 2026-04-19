@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -105,6 +105,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_120000) do
     t.date "completed_on", null: false
     t.datetime "created_at", null: false
     t.integer "day_progress", default: 0, null: false
+    t.boolean "marked_failed_by_user", default: false, null: false
     t.string "status", null: false
     t.datetime "updated_at", null: false
     t.integer "user_habit_id", null: false

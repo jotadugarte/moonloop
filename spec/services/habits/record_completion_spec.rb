@@ -16,6 +16,22 @@ RSpec.describe Habits::RecordCompletion do
   end
 
   # [REQ-DAY-002]
+  it "records explicit failed for a none-metric habit" do
+    habit = create(:user_habit,
+      user: user,
+      habit_category: category,
+      frequency_type: "daily",
+      activation_date: Date.new(2026, 1, 1),
+      habit_metric_kind: "none",
+      daily_target: 1)
+
+    expect(call!(habit, status: "failed")).to eq(:ok)
+    row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
+    expect(row.status).to eq("failed")
+    expect(row.marked_failed_by_user).to be(true)
+  end
+
+  # [REQ-DAY-002]
   it "records done for a none-metric habit unchanged" do
     habit = create(:user_habit,
       user: user,
@@ -29,6 +45,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.status).to eq("done")
     expect(row.day_progress).to eq(0)
+    expect(row.marked_failed_by_user).to be(false)
   end
 
   # [REQ-DAY-005]
@@ -45,6 +62,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.day_progress).to eq(5)
     expect(row.status).to eq("failed")
+    expect(row.marked_failed_by_user).to be(false)
   end
 
   # [REQ-DAY-005]
@@ -61,6 +79,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.day_progress).to eq(8)
     expect(row.status).to eq("done")
+    expect(row.marked_failed_by_user).to be(false)
   end
 
   # [REQ-DAY-005]
@@ -77,6 +96,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.day_progress).to eq(3)
     expect(row.status).to eq("failed")
+    expect(row.marked_failed_by_user).to be(true)
   end
 
   # [REQ-DAY-005]
@@ -94,6 +114,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.day_progress).to eq(8)
     expect(row.status).to eq("done")
+    expect(row.marked_failed_by_user).to be(false)
   end
 
   # [REQ-DAY-005]
@@ -111,6 +132,7 @@ RSpec.describe Habits::RecordCompletion do
     row = HabitCompletion.find_by!(user_habit: habit, completed_on: local_date)
     expect(row.day_progress).to eq(6)
     expect(row.status).to eq("failed")
+    expect(row.marked_failed_by_user).to be(false)
   end
 
   # [REQ-DAY-004] / touch cache key coherence
