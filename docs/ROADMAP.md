@@ -33,7 +33,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 17. [x] Phase system: user defines a start date for Phase 1 and assigns week ranges to menus (e.g. weeks 1–4 → Menu A, weeks 5–12 → Menu B) (REQ-MENU-003) — 2026-04-17 — Depends on: #15
 18. [x] Phase alerts: warn user if start date is more than 3 days in the future; send reminder on the day a phase begins (REQ-MENU-004) — 2026-04-17 — Depends on: #17
 19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
-29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` also supports `publicly_shareable` for admin revoke; no public menu index yet. (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
+29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` supports `publicly_shareable` for catalog + admin revoke (**REQ-MENU-006**). (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
+31. [x] Menús: catálogo público `public_menus` + adopción/sync con **paridad semántica** a rutinas (**REQ-EXR-006** / **Done #30**): usuarios autenticados, una copia por origen, nombre de copia estable al sincronizar, recetas duplicadas al adoptante en slots con receta, aviso/origen no disponible, moderación admin (REQ-MENU-006) — 2026-04-18 — Depends on: **Done #30**, Phase 4 (#15–19, #29)
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -56,7 +57,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-31. [ ] Menús: página / índice público de catálogo + **misma semántica que rutinas** (**Done #30**): adopción solo usuarios logueados, una copia por menú origen por usuario, nombre de copia preservado al adoptar y al aceptar actualizaciones de contenido, aviso si el origen cambia, vínculo “origen ya no disponible” si borran/revocan; listado `publicly_shareable`, paridad UX **Done #29**, moderación admin — Depends on: **Done #30**; Phase 4 (#15–19, #29); modelo menú/recetas/slots análogo a rutinas (origen→copia)
+*(No items currently pending.)*
 
 ## Backlog
 - [ ] Habit completion values (e.g. glasses of water, minutes of exercise) — Depends on: Phase 3

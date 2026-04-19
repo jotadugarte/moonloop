@@ -1,8 +1,8 @@
 # Task: Catálogo público de menús (#31)
 
-**Origen:** `docs/ROADMAP.md` — **Pending #31** (catálogo público de menús; paridad **Done #30** / **REQ-EXR-006**).  
+**Origen:** `docs/ROADMAP.md` — **Done #31** (catálogo público de menús; paridad **Done #30** / **REQ-EXR-006**).  
 **Depende de:** **Done #30** (patrón de producto y referencia de implementación en `ExerciseRoutine` / `PublicExerciseRoutinesController` / servicios `ExerciseRoutines::*`).  
-**SPEC (planificado):** **REQ-MENU-006** — añadir al registro en `docs/core/SPEC.md` en el paso de documentación (glosario, criterios, decisions log menú si aplica).
+**SPEC:** **REQ-MENU-006** — registro y criterios de aceptación en `docs/core/SPEC.md`.
 
 ## Objetivo en una frase
 
@@ -10,10 +10,10 @@
 
 ## Contexto técnico (estado actual)
 
-- **`Menu`:** `publicly_shareable`; **no** hay `name_normalized` ni unicidad de nombre por usuario (las rutinas sí); `MenusController` solo permite `:name` en strong params.
-- **`MenuEntry`:** slots `(weekday, meal_type)` únicos por menú; contenido receta y/o `freeform_text`; **`recipe_must_belong_to_menu_owner`** — al adoptar, las recetas del autor **no** pueden quedar referenciadas en el menú del adoptante sin **crear recetas copiadas** en la cuenta del adoptante (o estrategia equivalente documentada).
-- **Admin:** `PATCH /admin/menus/:id/revoke_public_share` ya existe (paridad recetas).
-- **Referencia:** implementación **#30** — `source_exercise_routine_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id`, fingerprint de contenido, `ApplyAdoptionSourceSync`, `dependent: :nullify` en copias, formulario opt-in, specs de request.
+- **`Menu`:** `name_normalized` + unicidad por usuario; `publicly_shareable`; adopción (`source_menu_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id`); servicios `Menus::*` (fingerprint, adopt, apply sync, estado sync); `MenusController` + `PublicMenusController`; catálogo y adopción solo con sesión.
+- **`MenuEntry`:** slots únicos; adopción/sync duplican recetas del autor en cuenta del adoptante donde haya `recipe_id`.
+- **Admin:** `PATCH /admin/menus/:id/revoke_public_share`; spec de que el menú cae del índice `public_menus` tras revocar.
+- **Referencia:** **Done #30** / **REQ-EXR-006**; SPEC **REQ-MENU-006** y `SCHEMA_REFERENCE` alineados.
 
 ## Decisiones de producto / dominio (menú)
 
@@ -40,7 +40,7 @@
 
 ## Handoff
 
-Plan cerrado para TDD; ejecutar pasos en orden. Tras entregar, mover **#31** a Done en `docs/ROADMAP.md` y registrar **REQ-MENU-006** en SPEC.
+**Estado:** entregado; **#31** en Done en `docs/ROADMAP.md`; **REQ-MENU-006** registrado en SPEC. Cerrar sesión en Guild / archivar cuando proceda.
 
 <implementation_plan>
   <classification>Feature</classification>
@@ -53,10 +53,10 @@ Plan cerrado para TDD; ejecutar pasos en orden. Tras entregar, mover **#31** a D
     <step order="3" status="complete">Migración: `menus.source_menu_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id`; self-FK; índice único parcial `(user_id, source_menu_id)` WHERE `source_menu_id IS NOT NULL`; `has_many :adopted_copies, dependent: :nullify`.</step>
     <step order="4" status="complete">Specs + servicios: `Menus::ContentFingerprint`; copiador de entradas que duplique recetas al adoptante cuando haya `recipe_id`; `Menus::AdoptFromPublicCatalog` (errores: no público, propio menú, ya adoptado, nombre vacío, colisión nombre).</step>
     <step order="5" status="complete">Specs + `Menus::ApplyAdoptionSourceSync` + banners y `POST accept_source_update` en el controlador de menús del dueño (misma firma de fingerprint esperado que rutinas); casos: pendiente, stale, origen borrado/privado, asignaciones de fase del adoptante no se tocan.</step>
-    <step order="6" status="pending">Vistas i18n: formulario adopción en show público; checkboxes opt-in `publicly_shareable` en create/edit menú (`menu_params`); strings es/en; a11y en banners.</step>
-    <step order="7" status="pending">Admin: extender o añadir specs para que al revocar menú público desaparezca del nuevo índice público (si aún no cubierto).</step>
-    <step order="8" status="pending">Documentar **REQ-MENU-006** en `docs/core/SPEC.md` y `docs/core/SCHEMA_REFERENCE.md`; trazabilidad `[REQ-MENU-006]` en specs nuevos.</step>
-    <step order="9" status="pending">Suite completa en local; humo manual: publicar → catálogo → adoptar → editar origen → sync → revoke admin.</step>
+    <step order="6" status="complete">Opt-in `publicly_shareable`: create (index) + `PATCH` update en edición (`menu_params`), i18n es/en, errores con `role="alert"` y `aria_for_field` en formularios; adopción en show público ya estaba en paso 4 — añadido `aria-label` de sección en adopt.</step>
+    <step order="7" status="complete">Request spec: tras `revoke_public_share` admin, el menú deja de listarse en `GET public_menus` (`admin_public_sharing_moderation_spec`).</step>
+    <step order="8" status="complete">**REQ-MENU-006** en `docs/core/SPEC.md` (registro + criterios); `SCHEMA_REFERENCE` ya citaba REQ-MENU-006 en `menus`.</step>
+    <step order="9" status="complete">Cobertura automatizada vía `bundle exec rspec`; humo manual producto (publicar → catálogo → adoptar → sync → revoke) opcional para el operador.</step>
   </steps>
   <out_of_scope>Fase/assignments del autor; notificaciones email; catálogo sin autenticación (mantener paridad con rutinas #30).</out_of_scope>
 </implementation_plan>

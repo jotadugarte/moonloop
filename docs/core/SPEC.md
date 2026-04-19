@@ -89,7 +89,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 - **Menu** (`menus`)
   - `belongs_to :user`, `has_many :menu_entries`, `has_many :phase_assignments`
-  - `publicly_shareable` for public catalog; admin may revoke sharing (moderation)
+  - `publicly_shareable` for the authenticated **public menu catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_menu_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-MENU-006**).
 
 - **MenuEntry** (`menu_entries`)
   - `belongs_to :menu`, optional `belongs_to :recipe`
@@ -149,6 +149,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
 | REQ-MENU-004 | If anchor is more than three **local** days away, flash warning; **reminder** on phase-start day: in-app banner (dismiss for today) and optional email; independent channel prefs; idempotent `phase_reminder_events` and daily sweep job (`config/recurring.yml`). | Implemented |
 | REQ-MENU-005 | When current week is **past** all assignment ranges, show extension prompt; **repeat last block** (same menu and span) or link to **add a new range**. | Implemented |
+| REQ-MENU-006 | **Public menu catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with slot copy (recipes duplicated for the adopter) and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; **`phase_assignments`** on the copy are unchanged on sync; admin revoke like recipes/routines. See **Acceptance criteria — REQ-MENU-006** below. | Implemented |
 | REQ-EXR-001 | **Exercise routine content model:** user-owned weekly routine; ordered lines per weekday (0–6); CRUD + duplicate; delete with cascade of week-range assignments after confirmation. See **Acceptance criteria — REQ-EXR-001** below. | Implemented |
 | REQ-EXR-002 | **Program weeks → routine:** same anchor and `Phases::WeekNumber` as menus; `exercise_routine_assignments` with non-overlapping ranges per user; resolve active routine; phase plan UI on `/phase`. See **Acceptance criteria — REQ-EXR-002** below. | Implemented |
 | REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
@@ -271,6 +272,15 @@ These criteria are **testable**; implementation may use different model/table na
 4. **Sync:** When the source’s **line content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **lines only** (copy **name** and **`exercise_routine_assignment`** links to the same `exercise_routine_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
 5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed routine id does not **500**.
 6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate as recipes/menus) can **revoke** public sharing on a routine; it disappears from the public catalog.
+
+#### REQ-MENU-006 — Public menu catalog, adoption, and sync (parity REQ-EXR-006)
+
+1. **Opt-in:** The menu owner can set **`publicly_shareable`** on create/update; default **false**; catalog lists only **`publicly_shareable: true`** menus for authenticated users.
+2. **Catalog read:** **Index** and **show** for public menus do not expose private menus; **show** returns **404** when the menu is not public; **author** in HTML is a safe identifier (e.g. numeric id label), **not** email.
+3. **Adoption:** An authenticated user other than the owner may **adopt** a public menu **at most once** per source (one copy per `(adopter, source)`); chosen **copy name** follows the same uniqueness rules as other menus; **menu entries** are copied; slots that reference the author’s recipes get **new `Recipe` rows owned by the adopter**; **`source_menu_id`** and sync metadata are stored.
+4. **Sync:** When the source’s **entry content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **menu entries only** (copy **name** and **`phase_assignments`** to the same `menu_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
+5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed menu id does not **500**.
+6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate) can **revoke** public sharing on a menu; it disappears from the public catalog.
 
 #### Decisions log — REQ-EXR (Phase 5, locked)
 

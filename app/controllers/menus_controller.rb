@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MenusController < ApplicationController
-  before_action :set_menu, only: %i[edit accept_source_update]
+  before_action :set_menu, only: %i[edit update accept_source_update]
 
   def index
     @menu = Menu.new
@@ -21,10 +21,17 @@ class MenusController < ApplicationController
 
   def edit
     set_adoption_sync_status
-    @meal_types = Menus::MealType::KEYS
-    @entries_by_slot = @menu.menu_entries
-      .includes(recipe: { image_attachment: :blob })
-      .index_by { |e| [ e.weekday, e.meal_type ] }
+    load_menu_editor
+  end
+
+  def update
+    if @menu.update(menu_params)
+      redirect_to edit_menu_path(@menu), notice: t("menus.flash.updated")
+    else
+      set_adoption_sync_status
+      load_menu_editor
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def accept_source_update
@@ -48,7 +55,14 @@ class MenusController < ApplicationController
     @menu = Current.user.menus.find(params[:id])
   end
 
+  def load_menu_editor
+    @meal_types = Menus::MealType::KEYS
+    @entries_by_slot = @menu.menu_entries
+      .includes(recipe: { image_attachment: :blob })
+      .index_by { |e| [ e.weekday, e.meal_type ] }
+  end
+
   def menu_params
-    params.require(:menu).permit(:name)
+    params.require(:menu).permit(:name, :publicly_shareable)
   end
 end

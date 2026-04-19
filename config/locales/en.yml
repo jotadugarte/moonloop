@@ -147,6 +147,7 @@ en:
     shared:
       author: "Author #%{id}"
     adopt:
+      section_label: "Adopt this menu into your account"
       name_label: "Name for your copy"
       submit: "Adopt menu"
       success: "Menu adopted. You can edit it now."
@@ -177,11 +178,15 @@ en:
     index:
       title: "Menus"
       name_label: "Name"
+      public_share_label: "Share in the public menu catalog"
       create_submit: "Create menu"
       edit: "Edit"
       recipes_link: "Recipes"
     edit:
       title: "Edit menu: %{name}"
+      name_label: "Name"
+      public_share_label: "Share in the public menu catalog"
+      save_menu: "Save menu settings"
       back_to_index: "Back to menus"
       adoption_sync:
         pending: "The public source menu has new changes. You can apply slot content only; your copy name stays the same."
@@ -206,6 +211,7 @@ en:
         could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
+      updated: "Menu settings updated."
       source_sync_applied: "Updated content from the source menu was applied."
     adoption_sync:
       errors:

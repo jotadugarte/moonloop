@@ -27,6 +27,38 @@ RSpec.describe "Menus CRUD", type: :request do
     expect(Menu.find_by(user: user, name: "Nueva semana")).to be_present
   end
 
+  # [REQ-MENU-001, REQ-MENU-006]
+  it "creates a menu with publicly_shareable when the checkbox is on" do
+    post "/menus", params: { menu: { name: "Catálogo", publicly_shareable: "1" } }
+
+    expect(response).to have_http_status(:found)
+    m = Menu.find_by!(user: user, name: "Catálogo")
+    expect(m.publicly_shareable).to be(true)
+  end
+
+  # [REQ-MENU-001, REQ-MENU-006]
+  it "updates menu name and publicly_shareable from edit" do
+    m = Menu.create!(user: user, name: "Semana", publicly_shareable: false)
+
+    patch menu_path(m), params: { menu: { name: "Semana 2", publicly_shareable: "1" } }
+
+    expect(response).to redirect_to(edit_menu_path(m))
+    m.reload
+    expect(m.name).to eq("Semana 2")
+    expect(m.publicly_shareable).to be(true)
+  end
+
+  # [REQ-MENU-001]
+  it "forbids updating another user's menu" do
+    other = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    foreign = Menu.create!(user: other, name: "Ajeno", publicly_shareable: false)
+
+    patch menu_path(foreign), params: { menu: { name: "Hack", publicly_shareable: "1" } }
+
+    expect(response).to have_http_status(:not_found)
+    expect(foreign.reload.name).to eq("Ajeno")
+  end
+
   # [REQ-MENU-001]
   it "rejects a duplicate menu name for the same user (normalized)" do
     Menu.create!(user: user, name: "Plan")

@@ -18,6 +18,34 @@
 
 <h1><%= t("menus.edit.title", name: @menu.name) %></h1>
 
+<% menu_attrs_err_id = "menu-attrs-form-errors" %>
+<%= form_with model: @menu, url: menu_path(@menu), method: :patch, class: "space-y-3 max-w-lg mb-6" do |f| %>
+  <% if @menu.errors.any? %>
+    <div class="text-red-600 text-sm">
+      <ul id="<%= menu_attrs_err_id %>" class="list-disc pl-5" role="alert">
+        <% @menu.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div>
+    <%= f.label :name, t("menus.edit.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@menu, :name, menu_attrs_err_id) %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@menu, :publicly_shareable, menu_attrs_err_id) %>
+    <%= f.label :publicly_shareable, t("menus.edit.public_share_label"), class: "text-gray-700" %>
+  </div>
+  <div>
+    <%= f.submit t("menus.edit.save_menu"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
+  </div>
+<% end %>
+
 <div class="menu-grid">
   <% @meal_types.each do |meal_type| %>
     <section class="menu-grid__meal-type">

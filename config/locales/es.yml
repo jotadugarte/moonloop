@@ -122,6 +122,7 @@ es:
     shared:
       author: "Autor #%{id}"
     adopt:
+      section_label: "Adoptar este menú en tu cuenta"
       name_label: "Nombre para tu copia"
       submit: "Adoptar menú"
       success: "Menú adoptado. Ya puedes editarlo."
@@ -152,11 +153,15 @@ es:
     index:
       title: "Menús"
       name_label: "Nombre"
+      public_share_label: "Compartir en el catálogo público de menús"
       create_submit: "Crear menú"
       edit: "Editar"
       recipes_link: "Recetas"
     edit:
       title: "Editar menú: %{name}"
+      name_label: "Nombre"
+      public_share_label: "Compartir en el catálogo público de menús"
+      save_menu: "Guardar ajustes del menú"
       back_to_index: "Volver a menús"
       adoption_sync:
         pending: "El menú público de origen tiene cambios nuevos. Puedes aplicar solo el contenido de los casilleros; el nombre de tu copia se mantiene."
@@ -181,6 +186,7 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+      updated: "Ajustes del menú guardados."
       source_sync_applied: "Se aplicó el contenido actualizado desde el menú de origen."
     adoption_sync:
       errors:

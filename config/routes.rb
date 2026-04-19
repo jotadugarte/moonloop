@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       post :accept_source_update
     end
   end
-  resources :menus, only: [ :index, :create, :edit ] do
+  resources :menus, only: [ :index, :create, :edit, :update ] do
     member do
       post :accept_source_update
     end
