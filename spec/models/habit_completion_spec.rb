@@ -59,4 +59,35 @@ RSpec.describe HabitCompletion, type: :model do
       end
     end
   end
+
+  describe "marked_failed_by_user" do
+    # [REQ-DAY-005]
+    it "defaults to false" do
+      completion = create(:habit_completion)
+      expect(completion.reload.marked_failed_by_user).to be(false)
+    end
+  end
+
+  describe "day_progress" do
+    # [REQ-DAY-005]
+    it "defaults day_progress to 0" do
+      completion = create(:habit_completion)
+      expect(completion.reload.day_progress).to eq(0)
+    end
+
+    # [REQ-DAY-005]
+    it "allows positive day_progress for count habits" do
+      habit = create(:user_habit, habit_metric_kind: "count", daily_target: 5)
+      completion = build(:habit_completion, user_habit: habit, day_progress: 3)
+      expect(completion).to be_valid
+    end
+
+    # [REQ-DAY-005]
+    it "rejects non-zero day_progress when habit metric is none" do
+      habit = create(:user_habit, habit_metric_kind: "none")
+      completion = build(:habit_completion, user_habit: habit, day_progress: 1)
+      expect(completion).not_to be_valid
+      expect(completion.errors[:day_progress]).to be_present
+    end
+  end
 end

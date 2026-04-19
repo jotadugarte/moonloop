@@ -50,14 +50,24 @@ es:
       phases_shortcut_heading: "Menús y plan de fases"
       phases_shortcut_intro: "Desde aquí puedes organizar menús por semana, recetas y rangos de fases."
       phases_shortcut_link: "Ir a menús y plan de fases"
+      metric_progress_count: "Progreso: %{current} / %{target}"
+      metric_progress_duration: "Progreso: %{current} / %{target} min"
     actions:
       mark_done: "Hecho"
-      mark_failed: "Fallado"
+      mark_failed: "No cumplí hoy"
       clear: "Quitar marca"
+      add_one: "+1"
+      meet_target: "Cumplir objetivo"
+  adoption:
+    invalid_record:
+      name_taken: "Ese nombre ya está en uso. Elige otro."
+      could_not_save: "No se pudo guardar la copia. Revisa el formulario e inténtalo de nuevo."
+
   habit_completions:
     status:
       done: "Hecho"
       failed: "Fallado"
+      in_progress: "En progreso"
     flash:
       saved: "Cumplimiento guardado."
       cleared: "Volviste a pendiente."
@@ -112,16 +122,62 @@ es:
     index:
       title: "Recetas públicas — Moonloop"
       heading: "Recetas públicas"
+  public_menus:
+    index:
+      title: "Menús públicos — Moonloop"
+      heading: "Menús públicos"
+    show:
+      title: "%{name} — Menús públicos — Moonloop"
+      back_to_catalog: "Volver al catálogo de menús"
+    shared:
+      author: "Código de autor %{code}"
+    adopt:
+      section_label: "Adoptar este menú en tu cuenta"
+      name_label: "Nombre para tu copia"
+      submit: "Adoptar menú"
+      success: "Menú adoptado. Ya puedes editarlo."
+      errors:
+        not_public: "Este menú no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propio menú."
+        already_adopted: "Ya adoptaste este menú."
+        name_blank: "El nombre no puede estar vacío."
+  public_exercise_routines:
+    index:
+      title: "Rutinas públicas — Moonloop"
+      heading: "Rutinas públicas"
+    show:
+      title: "%{name} — Rutinas públicas — Moonloop"
+      back_to_catalog: "Volver al catálogo de rutinas"
+    shared:
+      author: "Código de autor %{code}"
+    adopt:
+      section_label: "Adoptar esta rutina en tu cuenta"
+      name_label: "Nombre para tu copia"
+      submit: "Adoptar rutina"
+      success: "Rutina adoptada. Ya puedes editarla."
+      errors:
+        not_public: "Esta rutina no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propia rutina."
+        already_adopted: "Ya adoptaste esta rutina."
+        name_blank: "El nombre no puede estar vacío."
   menus:
     index:
       title: "Menús"
       name_label: "Nombre"
+      public_share_label: "Compartir en el catálogo público de menús"
       create_submit: "Crear menú"
       edit: "Editar"
       recipes_link: "Recetas"
     edit:
       title: "Editar menú: %{name}"
+      name_label: "Nombre"
+      public_share_label: "Compartir en el catálogo público de menús"
+      save_menu: "Guardar ajustes del menú"
       back_to_index: "Volver a menús"
+      adoption_sync:
+        pending: "El menú público de origen tiene cambios nuevos. Puedes aplicar solo el contenido de los casilleros; el nombre de tu copia se mantiene."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El enlace al menú de origen ya no está disponible (se eliminó o dejó de ser público). Tu copia sigue en tu cuenta."
     meal_types:
       desayuno: "Desayuno"
       almuerzo: "Almuerzo"
@@ -141,6 +197,13 @@ es:
         could_not_save: "No se pudo guardar el casillero."
     flash:
       created: "Menú creado."
+      updated: "Ajustes del menú guardados."
+      source_sync_applied: "Se aplicó el contenido actualizado desde el menú de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Este menú no es una copia adoptada."
+        source_unavailable: "El menú de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "El menú de origen cambió otra vez. Vuelve a revisar antes de aplicar."
   exercise_routines:
     flash:
       created: "Rutina creada."
@@ -148,12 +211,19 @@ es:
       destroyed: "Rutina eliminada."
       duplicated: "Rutina duplicada."
       duplicate_failed: "No se pudo duplicar la rutina."
+      source_sync_applied: "Se aplicó el contenido actualizado desde la rutina de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Esta rutina no es una copia adoptada."
+        source_unavailable: "La rutina de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "La rutina de origen cambió otra vez. Vuelve a revisar antes de aplicar."
     duplicate:
       default_name: "Copia de %{name}"
       collision_name: "%{base} (%{n})"
     index:
       title: "Rutinas de ejercicio"
       my_day_link: "Mi Día"
+      public_share_label: "Compartir en el catálogo público de rutinas"
       name_label: "Nombre"
       first_line_label: "Primer ejercicio (etiqueta)"
       weekday_label: "Día"
@@ -164,6 +234,11 @@ es:
     edit:
       title: "Editar rutina: %{name}"
       back_to_index: "Volver a rutinas"
+      public_share_label: "Compartir en el catálogo público de rutinas"
+      adoption_sync:
+        pending: "La rutina pública de origen tiene cambios nuevos. Puedes aplicar solo el contenido (líneas); el nombre de tu copia no cambiará."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El vínculo con la rutina de origen ya no está disponible (se eliminó o dejó de ser pública). Tu copia sigue en tu cuenta."
       name_label: "Nombre"
       lines_heading: "Ejercicios por día"
       weekday: "Día"
@@ -315,6 +390,8 @@ es:
         revoked_public_share: "Se quitó el estado público de la receta."
       menu:
         revoked_public_share: "Se quitó el estado público del menú."
+      exercise_routine:
+        revoked_public_share: "Se quitó el estado público de la rutina de ejercicio."
   sessions:
     new:
       title: "Iniciar sesión"
@@ -485,6 +562,7 @@ es:
       added_from_template: "Hábito agregado"
       deactivated: "Hábito desactivado"
       activated: "Hábito activado"
+      updated: "Hábito actualizado"
       not_found: "No se encontró esa plantilla o categoría."
     index:
       title: "Hábitos"
@@ -497,6 +575,12 @@ es:
       add_from_template_submit: "Agregar desde plantilla"
       deactivate: "Desactivar"
       activate: "Activar"
+      edit: "Editar"
+    edit:
+      title: "Editar hábito"
+      submit: "Guardar"
+      back: "Volver a hábitos"
+      metric_hint: "Si el tipo es «none», el objetivo diario se normaliza a 1 (hábito binario)."
   habits:
     default_categories:
       nutrition:
@@ -534,6 +618,10 @@ es:
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
+        habit_metric_kind: "Tipo de métrica"
+        daily_target: "Objetivo diario"
+      habit_completion:
+        day_progress: "Progreso del día"
       phase_assignment:
         menu: "Menú"
         start_week: "Semana inicial"
@@ -544,6 +632,7 @@ es:
         freeform_text: "Nota"
       exercise_routine:
         name: "Nombre"
+        publicly_shareable: "Catálogo público"
       exercise_routine_line:
         weekday: "Día"
         position: "Orden"
@@ -573,6 +662,8 @@ es:
           attributes:
             base:
               user_habit_inactive: "no puedes registrar cumplimientos mientras el hábito está inactivo"
+            day_progress:
+              must_be_zero_when_metric_none: "debe ser 0 para hábitos sin métrica de cantidad"
         user_habit:
           attributes:
             activation_date:

@@ -42,7 +42,7 @@ module Habits
       (lower..through).each do |d|
         next unless DueOnDate.due_on?(@user_habit, d, schedule_only: schedule_only)
 
-        done = completions[d]&.status == "done"
+        done = Streak.habit_day_done?(user_habit: @user_habit, completion: completions[d])
         current, best = advance_run_after_due_day(
           day: d,
           user_today: user_today,

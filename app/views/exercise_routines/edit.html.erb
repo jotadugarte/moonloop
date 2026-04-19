@@ -3,6 +3,21 @@
 
 <p><%= link_to t(".back_to_index"), exercise_routines_path %></p>
 
+<% if @adoption_sync_status.key == :pending %>
+  <div class="mb-4 p-3 border border-amber-400 rounded" role="status" aria-live="polite">
+    <p><%= t(".adoption_sync.pending") %></p>
+    <%= form_with url: accept_source_update_exercise_routine_path(@routine), method: :post, local: true do %>
+      <%= hidden_field_tag :expected_origin_fingerprint, @adoption_sync_status.origin_fingerprint %>
+      <%= submit_tag t(".adoption_sync.accept_update"),
+            class: "bg-amber-600 text-white px-3 py-1 rounded cursor-pointer border-0" %>
+    <% end %>
+  </div>
+<% elsif @adoption_sync_status.key == :unavailable %>
+  <div class="mb-4 p-3 border border-gray-400 rounded" role="status" aria-live="polite">
+    <p><%= t(".adoption_sync.unavailable") %></p>
+  </div>
+<% end %>
+
 <%= form_with model: @routine, url: exercise_routine_path(@routine), method: :patch, class: "space-y-4 max-w-lg" do |f| %>
   <% if exercise_routine_form_errors?(@routine) %>
     <div class="text-red-600 text-sm">
@@ -24,6 +39,13 @@
     <%= f.text_field :name,
           class: "border border-gray-300 rounded p-2 w-full",
           aria: aria_for_field(@routine, :name, routine_err_id) %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@routine, :publicly_shareable, routine_err_id) %>
+    <%= f.label :publicly_shareable, t(".public_share_label"), class: "text-gray-700" %>
   </div>
 
   <h2><%= t(".lines_heading") %></h2>

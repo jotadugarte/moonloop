@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [ :index, :show, :destroy ]
   resources :habit_categories, only: [ :index, :create, :edit, :update, :destroy ]
-  resources :user_habits, only: [ :index, :create ] do
+  resources :user_habits, only: [ :index, :create, :edit, :update ] do
     member do
       patch :activate
       patch :deactivate
@@ -28,9 +28,13 @@ Rails.application.routes.draw do
     member do
       get :confirm_destroy
       post :duplicate
+      post :accept_source_update
     end
   end
-  resources :menus, only: [ :index, :create, :edit ] do
+  resources :menus, only: [ :index, :create, :edit, :update ] do
+    member do
+      post :accept_source_update
+    end
     resources :menu_entries, only: [ :create ], module: :menus do
       delete :clear, on: :collection
     end
@@ -44,6 +48,16 @@ Rails.application.routes.draw do
   resources :phase_assignments, only: %i[new create edit update destroy]
   resources :exercise_routine_assignments, only: %i[new create edit update destroy]
   resources :public_recipes, only: [ :index ]
+  resources :public_menus, only: %i[index show] do
+    member do
+      post :adopt
+    end
+  end
+  resources :public_exercise_routines, only: %i[index show] do
+    member do
+      post :adopt
+    end
+  end
   namespace :admin do
     resources :recipes, only: [] do
       member do
@@ -51,6 +65,11 @@ Rails.application.routes.draw do
       end
     end
     resources :menus, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+    resources :exercise_routines, only: [] do
       member do
         patch :revoke_public_share
       end

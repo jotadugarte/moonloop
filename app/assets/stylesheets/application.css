@@ -384,3 +384,23 @@
 .reports-weight-chart__axis {
   fill: #374151;
 }
+
+/* ——— Flash ——— */
+.flash {
+  margin: 0.5rem 0;
+}
+
+.flash--notice {
+  color: #166534;
+}
+
+.flash--alert {
+  color: #b91c1c;
+}
+
+/* ——— Mi Día ——— */
+.my-day-exercise-inline {
+  margin-top: 0.75rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid #d1d5db;
+}

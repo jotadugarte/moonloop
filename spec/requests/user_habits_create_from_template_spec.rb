@@ -30,4 +30,21 @@ RSpec.describe "User habits create_from_template", type: :request do
     expect(response).to redirect_to(user_habits_path)
     expect(flash[:alert]).to eq(I18n.t("user_habits.flash.not_found"))
   end
+
+  # [REQ-HAB-008] [REQ-DAY-005]
+  it "copies suggested metrics from the template onto the new habit" do
+    category = create(:habit_category, user: user)
+    template = create(:global_habit_template,
+      code: "custom_metric_tpl",
+      suggested_habit_metric_kind: "count",
+      suggested_daily_target: 7)
+
+    post create_from_template_user_habits_path,
+      params: { template_id: template.id, habit_category_id: category.id }
+
+    expect(response).to redirect_to(user_habits_path)
+    habit = UserHabit.find_by!(user: user, global_habit_template: template)
+    expect(habit.habit_metric_kind).to eq("count")
+    expect(habit.daily_target).to eq(7)
+  end
 end

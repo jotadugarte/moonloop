@@ -43,6 +43,67 @@ RSpec.describe "Exercise routines CRUD", type: :request do
     expect(r.exercise_routine_lines.first.label).to eq("Press")
   end
 
+  # [REQ-EXR-006]
+  it "creates a routine as publicly shareable when the owner opts in" do
+    post exercise_routines_path,
+      params: {
+        exercise_routine: {
+          name: "Rutina pública",
+          publicly_shareable: "1",
+          exercise_routine_lines_attributes: {
+            "0" => { weekday: 0, position: 0, label: "Run" }
+          }
+        }
+      }
+
+    expect(response).to have_http_status(:found)
+    r = ExerciseRoutine.find_by!(user: user, name: "Rutina pública")
+    expect(r.publicly_shareable).to eq(true)
+  end
+
+  # [REQ-EXR-006]
+  it "allows the owner to toggle publicly_shareable on update" do
+    routine = create_routine!(name: "Toggle", label: "A")
+    line = routine.exercise_routine_lines.sole
+
+    patch exercise_routine_path(routine),
+      params: {
+        exercise_routine: {
+          name: "Toggle",
+          publicly_shareable: "1",
+          exercise_routine_lines_attributes: {
+            "0" => {
+              id: line.id,
+              weekday: line.weekday,
+              position: line.position,
+              label: line.label
+            }
+          }
+        }
+      }
+
+    expect(response).to have_http_status(:found)
+    expect(routine.reload.publicly_shareable).to eq(true)
+
+    patch exercise_routine_path(routine),
+      params: {
+        exercise_routine: {
+          name: "Toggle",
+          publicly_shareable: "0",
+          exercise_routine_lines_attributes: {
+            "0" => {
+              id: line.id,
+              weekday: line.weekday,
+              position: line.position,
+              label: line.label
+            }
+          }
+        }
+      }
+
+    expect(routine.reload.publicly_shareable).to eq(false)
+  end
+
   # [REQ-EXR-001]
   it "forbids editing another user's routine" do
     other = create(:user, password: "Password123!", timezone: "Etc/UTC")

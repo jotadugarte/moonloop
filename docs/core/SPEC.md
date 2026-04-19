@@ -42,7 +42,10 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Weight log | Historical weigh-in: **`logged_at`** (product timeline, UTC in DB), **`weight_kg`**, snapshot **`height_cm`**, derived **`bmi`**; entry form, history list, delete + reconcile | `WeightLog` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
-| Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). | `HabitCompletion` / `habit_completions` |
+| Habit metric kind | Classifies how progress is measured for a **`UserHabit`**: **`none`** (binary: only done/failed semantics as before), **`count`** (discrete units, e.g. glasses), or **`duration_min`** (whole minutes). Closed vocabulary; Mi Día, streaks, and reports use the same definitions (see **REQ-DAY-005**). | `user_habits` (persisted column; exact name per schema) |
+| Daily target (habit) | Positive integer goal for the local day when **habit metric kind** is not **`none`**; user-**editable**; **suggested default** may be copied from **`GlobalHabitTemplate`** at provision time. For **`none`** habits the canonical stored target is **1** or omitted per schema—UI does not expose a quantity. | `user_habits` (persisted column; exact name per schema) |
+| Day progress (habit completion) | Non-negative integer **accumulated** for that user-local calendar day on the **single** `HabitCompletion` row when one exists; multiple UI increments update this running total. Bounded by product validation (same upper bound family as **daily target**). | `habit_completions` (persisted column; exact name per schema) |
+| Habit completion | At most one persisted row per `(user_habit, local calendar day)` with status **done** or **failed**; **pending** means no row (or row removed). For habits with a non-**`none`** **habit metric kind**, the row also stores **day progress** toward the **daily target**; **`marked_failed_by_user`** distinguishes the user’s **explicit failure** from **`status` = failed** that only reflects “below target / not fulfilled yet” so Mi Día can label partial progress without implying intentional failure. **Explicit failed** still means the day is **not** fulfilled for streaks and reports even if progress is partial. Otherwise the day counts as **done** for streaks and reports when **day progress** ≥ **daily target**; persisted **`status`** stays **in sync** with those rules so **`Habits::Streak`**, **`Habits::MiDayStreakPrefetch`**, and reporting share one definition (**REQ-DAY-005**). | `HabitCompletion` / `habit_completions` |
 | Streak (habit) | Count of consecutive **closed** due days ending at a reference day where the habit was **done**; a closed due day without **done** breaks the streak (explicit **failed** and absent completion are equivalent for this rule). | Derived; see REQ-DAY-004 |
 | Menu | User-owned reusable **weekly** meal plan; sparse `menu_entries` for filled slots only. | `Menu` |
 | Menu entry | At most one row per `(menu, weekday, meal_type)`; references optional `Recipe` and/or `freeform_text` when the user allows freeform in profile. | `MenuEntry` |
@@ -50,7 +53,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
-| Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). | `ExerciseRoutine` (name may match implementation) |
+| Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). Optional **`publicly_shareable`** public catalog (REQ-EXR-006); adopted copies may reference a **source** routine with explicit content sync. | `ExerciseRoutine` (name may match implementation) |
 | Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
 | Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
 | Phase reminder event | Idempotent record that a phase-start reminder was processed for a given **local** calendar day and channel kind. | `PhaseReminderEvent` |
@@ -81,6 +84,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **UserHabit** (`user_habits`)
   - `belongs_to :user`, `belongs_to :habit_category`, `belongs_to :global_habit_template` (optional)
   - `frequency_type`, `frequency_params` (JSON), `activation_date` where required by type
+  - **Habit metrics (REQ-DAY-005):** **habit metric kind** (`none` / `count` / `duration_min`) and **daily target** (when kind ≠ `none`), with template-suggested defaults at provision time where applicable
   - Partial unique index: among **active** rows, `(user_id, name_normalized)` unique
   - **`activation_date` edits:** may change only while the habit has **zero** completion rows; if any completion exists, changing `activation_date` is forbidden until all completions are removed (including after a user clears every day back to pending).
 
@@ -89,7 +93,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 - **Menu** (`menus`)
   - `belongs_to :user`, `has_many :menu_entries`, `has_many :phase_assignments`
-  - `publicly_shareable` for public catalog; admin may revoke sharing (moderation)
+  - `publicly_shareable` for the authenticated **public menu catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_menu_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-MENU-006**).
 
 - **MenuEntry** (`menu_entries`)
   - `belongs_to :menu`, optional `belongs_to :recipe`
@@ -100,6 +104,10 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
   - `belongs_to :user`, `has_many :menu_entries`; optional `has_one_attached :image`
   - `publicly_shareable`; admin may revoke sharing
 
+- **ExerciseRoutine** (`exercise_routines`)
+  - `belongs_to :user`; lines and week-range assignments per **REQ-EXR-001** / **REQ-EXR-002**
+  - `publicly_shareable` for the authenticated **public routine catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_exercise_routine_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-EXR-006**).
+
 - **PhaseAssignment** (`phase_assignments`)
   - `belongs_to :user`, `belongs_to :menu`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
   - Non-overlapping week ranges per user enforced in the model
@@ -109,7 +117,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 ---
 
-## Requirement registry (implemented)
+## Requirement registry
 
 | ID | Requirement | Status |
 |----|-------------|--------|
@@ -134,9 +142,10 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-HAB-008 | UI lists habits grouped by category; user can create a personal habit and add a habit from a template. | Implemented |
 | REQ-HAB-009 | `UserHabit#next_occurrence_after` delegates to `Habits::NextOccurrence` for `daily`, `weekdays`, `every_x_days`, and `monthly`. For `monthly`, if the anchor day does not exist in a month, the date **clamps** to the last valid day of that month. `weekdays` and `every_x_days` follow the same calendar rules as `Habits::DueOnDate`. | Implemented |
 | REQ-DAY-001 | “Mi Día” lists **active** habits that are **due** on the selected calendar day, resolved using the user’s **current** timezone. Inactive habits are omitted. For a given day, habits are not listed for dates **before** `activation_date`. A habit due that day stays visible **unmarked** while still pending (clearing completion does not hide the row). | Implemented |
-| REQ-DAY-002 | User marks a habit **done** or **failed** for a calendar day (at least the current day); persistence is per local day and habit. | Implemented |
+| REQ-DAY-002 | User marks a habit **done** or **failed** for a calendar day (at least the current day); persistence is per local day and habit. For **habit metrics** (**REQ-DAY-005**), the product may also record **day progress** and derive or sync **`status`** with the **daily target** per REQ-DAY-005. | Implemented |
 | REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Implemented |
-| REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. **Mi Día** computes the displayed streak map via **`Habits::MiDayStreakPrefetch`** (single bounded **`HabitCompletion`** query + **`Habits::Streak`** per due habit), memoized in **`Rails.cache`**; **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** **`touch`** **`UserHabit`** so cache keys stay coherent (see **`docs/core/DATA_FLOW_MAP.md`** §1.1–1.3, §3). | Implemented |
+| REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. **Mi Día** computes the displayed streak map via **`Habits::MiDayStreakPrefetch`** (single bounded **`HabitCompletion`** query + **`Habits::Streak`** per due habit), memoized in **`Rails.cache`**; **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** **`touch`** **`UserHabit`** so cache keys stay coherent (see **`docs/core/DATA_FLOW_MAP.md`** §1.1–1.3, §3). For measurable habits, **“done” for streak** matches the same fulfillment rule as **REQ-DAY-005** (typically reflected in persisted **`status`**). | Implemented |
+| REQ-DAY-005 | **Habit metrics:** each **`UserHabit`** has a **habit metric kind** (`none`, `count`, `duration_min`) and a user-editable **daily target** when the kind is not **`none`** (templates may supply suggested defaults at provision time). The single **`HabitCompletion`** row for a local day may store **day progress** (non-negative integer, accumulated that day). **Explicit failed** from the user means the day is **not** fulfilled for streaks and reports even if progress is partial. Otherwise the day counts as **fulfilled** when **day progress** ≥ **daily target**. Persisted **`status`** on **`HabitCompletion`** remains **`done`** or **`failed`** and is **kept in sync** with these rules so **`Habits::Streak`**, **`Habits::MiDayStreakPrefetch`**, and **Informes** share one definition (extends **REQ-DAY-002** and **REQ-DAY-004**). | Implemented |
 | REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, BMI, and **`logged_at`** (indexed with `user_id`) for a user. | Implemented |
 | REQ-WGT-002 | **Weight log entry:** authenticated user can record weigh-ins over time via a form (**`weight_kg`**, **`logged_at`** in the user’s timezone; no height field on the form); navigation entry points (e.g. home, profile). | Implemented |
 | REQ-WGT-003 | **History:** authenticated user can view a paginated list (**30** per page) of their weigh-ins ordered by **`logged_at`** descending, with local date/time, weight, height snapshot, BMI, and delete-with-confirmation that reconciles **`current_*`**. | Implemented |
@@ -145,11 +154,13 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
 | REQ-MENU-004 | If anchor is more than three **local** days away, flash warning; **reminder** on phase-start day: in-app banner (dismiss for today) and optional email; independent channel prefs; idempotent `phase_reminder_events` and daily sweep job (`config/recurring.yml`). | Implemented |
 | REQ-MENU-005 | When current week is **past** all assignment ranges, show extension prompt; **repeat last block** (same menu and span) or link to **add a new range**. | Implemented |
+| REQ-MENU-006 | **Public menu catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with slot copy (recipes duplicated for the adopter) and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; **`phase_assignments`** on the copy are unchanged on sync; admin revoke like recipes/routines. See **Acceptance criteria — REQ-MENU-006** below. | Implemented |
 | REQ-EXR-001 | **Exercise routine content model:** user-owned weekly routine; ordered lines per weekday (0–6); CRUD + duplicate; delete with cascade of week-range assignments after confirmation. See **Acceptance criteria — REQ-EXR-001** below. | Implemented |
 | REQ-EXR-002 | **Program weeks → routine:** same anchor and `Phases::WeekNumber` as menus; `exercise_routine_assignments` with non-overlapping ranges per user; resolve active routine; phase plan UI on `/phase`. See **Acceptance criteria — REQ-EXR-002** below. | Implemented |
 | REQ-EXR-003 | **Mi Día + navigation:** active routine context for **`fitness_exercise`** when due; global shortcuts; home and plan entry points. See **Acceptance criteria — REQ-EXR-003** below. | Implemented |
 | REQ-EXR-004 | **Phase alerts (routine lane):** shared anchor warning; phase-start reminders coherent with menus; routine lane visible on `/phase`. See **Acceptance criteria — REQ-EXR-004** below. | Implemented |
 | REQ-EXR-005 | **Routine plan extension:** when current week is past all routine ranges, extension prompt; repeat last routine block or add new range. See **Acceptance criteria — REQ-EXR-005** below. | Implemented |
+| REQ-EXR-006 | **Public exercise routine catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with line copy and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; admin revoke like recipes/menus. See **Acceptance criteria — REQ-EXR-006** below. | Implemented |
 | REQ-RPT-001 | **Habit fulfillment report** on **Informes:** per habit, fulfillment with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-002 | **Streak report** on **Informes:** per habit, **current** streak (parity with **`Habits::Streak`**) and **all-time longest** streak; `as_of` date rules match Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
@@ -258,6 +269,24 @@ These criteria are **testable**; implementation may use different model/table na
 2. **Prompt:** Show an extension prompt for the **routine** lane: user can **repeat the last contiguous routine assignment block** (same routine and span as the last block) or **add a new week range** mapped to a routine.
 3. **Service parity:** Implement the analogue of **`Phases::RepeatLastPhaseAssignment`** for routine assignments (new service under `ExerciseRoutines::` or `Phases::`, consistent with SYSTEM_ARCHITECTURE).
 
+#### REQ-EXR-006 — Public catalog, adoption, and sync
+
+1. **Opt-in:** The routine owner can set **`publicly_shareable`** on create/update; default **false**; catalog lists only **`publicly_shareable: true`** routines for authenticated users.
+2. **Catalog read:** **Index** and **show** for public routines do not expose private routines; **show** returns **404** when the routine is not public; **author** in HTML is a safe identifier (e.g. numeric id label), **not** email.
+3. **Adoption:** An authenticated user other than the owner may **adopt** a public routine **at most once** per source (one copy per `(adopter, source)`); chosen **copy name** follows the same uniqueness rules as other routines; lines are copied; **`source_exercise_routine_id`** and sync metadata are stored.
+4. **Sync:** When the source’s **line content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **lines only** (copy **name** and **`exercise_routine_assignment`** links to the same `exercise_routine_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
+5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed routine id does not **500**.
+6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate as recipes/menus) can **revoke** public sharing on a routine; it disappears from the public catalog.
+
+#### REQ-MENU-006 — Public menu catalog, adoption, and sync (parity REQ-EXR-006)
+
+1. **Opt-in:** The menu owner can set **`publicly_shareable`** on create/update; default **false**; catalog lists only **`publicly_shareable: true`** menus for authenticated users.
+2. **Catalog read:** **Index** and **show** for public menus do not expose private menus; **show** returns **404** when the menu is not public; **author** in HTML is a safe identifier (e.g. numeric id label), **not** email.
+3. **Adoption:** An authenticated user other than the owner may **adopt** a public menu **at most once** per source (one copy per `(adopter, source)`); chosen **copy name** follows the same uniqueness rules as other menus; **menu entries** are copied; slots that reference the author’s recipes get **new `Recipe` rows owned by the adopter**; **`source_menu_id`** and sync metadata are stored.
+4. **Sync:** When the source’s **entry content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **menu entries only** (copy **name** and **`phase_assignments`** to the same `menu_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
+5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed menu id does not **500**.
+6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate) can **revoke** public sharing on a menu; it disappears from the public catalog.
+
 #### Decisions log — REQ-EXR (Phase 5, locked)
 
 | ID | Decision |
@@ -269,7 +298,7 @@ These criteria are **testable**; implementation may use different model/table na
 | Q5 | **Inline** habit-row integration **only when Ejercicio is due** that day. |
 | Q6 | If Ejercicio exists but is **inactive**: show routine block **disabled** + message to reactivate. |
 | Q7 | Routine **week-range assignments** are edited on the **phase plan** (`/phase` family), alongside menu phase assignments. |
-| Q8 | **Public sharing** of routines (like menus/recipes): **not** Phase 5 — see **Backlog** in `docs/ROADMAP.md`. |
+| Q8 | **Public sharing** of routines (catalog, adoption, sync, moderation): **REQ-EXR-006**; parity intent with **Done #29** / recipe catalog (see **ROADMAP** **#30**). |
 | Q9 | **Reuse** existing phase-assignment UX for routine ranges. |
 | Q10 | Mi Día: day preview **plus** link to **full week** view for the active routine. |
 | Q11 | **Parity with menus:** **REQ-MENU-004**-style alerts/reminders and **REQ-MENU-005**-style plan-ended extension apply to the **routine** lane — see **REQ-EXR-004** and **REQ-EXR-005**. |
@@ -289,6 +318,7 @@ These criteria are **testable**; implementation may use different model/table na
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
 6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements the same frequency types as Mi Día scheduling (`daily`, `weekdays`, `every_x_days`, `monthly`), aligned with `Habits::DueOnDate` where applicable. Monthly respects shorter months (end-of-month clamp).
 7. **Informes** — Authenticated user opens **`GET /informes`**, picks a reference local day (same rules as Mi Día), and views habit fulfillment (week + month), current and longest streaks per habit, and a weight trend chart from `weight_logs`.
+8. **Public menu catalog** (**REQ-MENU-006**) — Owner opts in with **`publicly_shareable`** on create/update; authenticated users browse **`public_menus`** and may **adopt** (one copy per source per adopter; recipes duplicated for the adopter); **apply update** syncs slot content only; admin **revoke** removes the menu from the catalog.
 
 ---
 
@@ -298,8 +328,8 @@ Feature-specific docs can be linked here as they are written, for example:
 
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
-- Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
-- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**. See **Acceptance criteria — exercise routines (Phase 5)** and **Decisions log — REQ-EXR** in this file.
+- Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; **`PublicMenusController`**, adoption/sync services (`Menus::AdoptFromPublicCatalog`, `ApplyAdoptionSourceSync`, …); Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS` (**REQ-MENU-006**)
+- Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`, `PublicExerciseRoutinesController`, `Admin::ExerciseRoutinesController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**; public catalog **REQ-EXR-006**. See **Acceptance criteria — exercise routines (Phase 5)**, **REQ-EXR-006**, and **Decisions log — REQ-EXR** in this file.
 - Phase 7 (Informes): `GET /informes` → `ReportsController#show`; services **`Reports::CalendarPeriodBounds`**, **`Habits::FulfillmentForPeriod`**, **`Habits::LongestStreak`**, **`Habits::ReportCurrentStreak`**, **`WeightLogs::ChartSeries`**; **`Habits::DueOnDate`** supports optional **`schedule_only:`** for inactive-habit reporting. See **REQ-RPT-001**–**003** and **Decisions log — REQ-RPT** in this file.
 
 ---

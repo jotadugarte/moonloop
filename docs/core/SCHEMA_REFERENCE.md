@@ -22,7 +22,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `menus` | `user_id` FK | `REQ-MENU-001`. User-owned weekly templates; `publicly_shareable` for catalog |
+| `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**) | `REQ-MENU-001`, **REQ-MENU-006**. Weekly templates; catalog opt-in; adopted-copy metadata |
 | `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `recipes` | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
 | `recipes` | `user_id` FK | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable` |
 
@@ -41,7 +41,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `exercise_routines` | `user_id` FK; unique `(user_id, name_normalized)` | `REQ-EXR-001`. User-owned named routines; not globally empty (≥1 line on ≥1 weekday) |
+| `exercise_routines` | `user_id` FK; optional self-FK `source_exercise_routine_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_exercise_routine_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-EXR-006**) | `REQ-EXR-001`, **REQ-EXR-006**. User-owned named routines; not globally empty (≥1 line on ≥1 weekday); optional public catalog and adopted-copy metadata |
 | `exercise_routine_lines` | FK to `exercise_routines`; unique `(exercise_routine_id, weekday, position)`; `weekday` 0–6; `label` max 500 | `REQ-EXR-001`. Ordered lines per weekday |
 | `exercise_routine_assignments` | `user_id`, `exercise_routine_id` FKs; check `start_week >= 1`, `end_week >= start_week` | `REQ-EXR-002`. Non-overlapping ranges per user among **routine** assignments only (independent from `phase_assignments`) |
 
@@ -76,6 +76,8 @@ See **§1.8 Weight log** in `DATA_FLOW_MAP.md` for write flows and `User` **`cur
 ## Habits, Mi Día, auth (existing)
 
 Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habit_templates`, `user_habits`, `habit_completions` support Phases 1–3 as described in `SPEC.md` and earlier sections of `DATA_FLOW_MAP.md`. Weight logging is covered above.
+
+**`habit_completions` (habit metrics, REQ-DAY-005):** in addition to `status` (`done` \| `failed`) and optional accumulated **`day_progress`** for measurable habits, **`marked_failed_by_user`** (boolean, default false) records whether the user explicitly chose failure for that day. Streaks and reports still key off persisted **`status`** and the same fulfillment rules as Mi Día; the flag exists so the Mi Día UI can show an **in progress** label when `status` is `failed` only because progress is below the daily target, without conflating that with an explicit user failure. See the *Habit completion* glossary in `SPEC.md`.
 
 ---
 

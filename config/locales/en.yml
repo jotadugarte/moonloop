@@ -75,14 +75,24 @@ en:
       phases_shortcut_heading: "Menus & phase plan"
       phases_shortcut_intro: "Plan meals by week, recipes, and phase ranges from here."
       phases_shortcut_link: "Open menus and phase plan"
+      metric_progress_count: "Progress: %{current} / %{target}"
+      metric_progress_duration: "Progress: %{current} / %{target} min"
     actions:
       mark_done: "Done"
-      mark_failed: "Failed"
+      mark_failed: "Did not complete today"
       clear: "Clear"
+      add_one: "+1"
+      meet_target: "Meet target"
+  adoption:
+    invalid_record:
+      name_taken: "That name is already taken. Pick another."
+      could_not_save: "We could not save your copy. Please check the form and try again."
+
   habit_completions:
     status:
       done: "Done"
       failed: "Failed"
+      in_progress: "In progress"
     flash:
       saved: "Completion saved."
       cleared: "Marked as pending again."
@@ -137,16 +147,62 @@ en:
     index:
       title: "Public recipes — Moonloop"
       heading: "Public recipes"
+  public_menus:
+    index:
+      title: "Public menus — Moonloop"
+      heading: "Public menus"
+    show:
+      title: "%{name} — Public menus — Moonloop"
+      back_to_catalog: "Back to menu catalog"
+    shared:
+      author: "Author code %{code}"
+    adopt:
+      section_label: "Adopt this menu into your account"
+      name_label: "Name for your copy"
+      submit: "Adopt menu"
+      success: "Menu adopted. You can edit it now."
+      errors:
+        not_public: "This menu is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own menu."
+        already_adopted: "You already adopted this menu."
+        name_blank: "Name can't be blank."
+  public_exercise_routines:
+    index:
+      title: "Public routines — Moonloop"
+      heading: "Public exercise routines"
+    show:
+      title: "%{name} — Public routines — Moonloop"
+      back_to_catalog: "Back to routine catalog"
+    shared:
+      author: "Author code %{code}"
+    adopt:
+      section_label: "Adopt this routine into your account"
+      name_label: "Name for your copy"
+      submit: "Adopt routine"
+      success: "Routine adopted. You can edit it now."
+      errors:
+        not_public: "This routine is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own routine."
+        already_adopted: "You already adopted this routine."
+        name_blank: "Name can't be blank."
   menus:
     index:
       title: "Menus"
       name_label: "Name"
+      public_share_label: "Share in the public menu catalog"
       create_submit: "Create menu"
       edit: "Edit"
       recipes_link: "Recipes"
     edit:
       title: "Edit menu: %{name}"
+      name_label: "Name"
+      public_share_label: "Share in the public menu catalog"
+      save_menu: "Save menu settings"
       back_to_index: "Back to menus"
+      adoption_sync:
+        pending: "The public source menu has new changes. You can apply slot content only; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source menu is no longer available (it was removed or made private). Your copy remains in your account."
     meal_types:
       desayuno: "Breakfast"
       almuerzo: "Lunch"
@@ -166,6 +222,13 @@ en:
         could_not_save: "Could not save this slot."
     flash:
       created: "Menu created."
+      updated: "Menu settings updated."
+      source_sync_applied: "Updated content from the source menu was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This menu is not an adopted copy."
+        source_unavailable: "The source menu is no longer available in the catalog."
+        origin_changed_retry: "The source menu changed again. Review and try applying once more."
   exercise_routines:
     flash:
       created: "Routine created."
@@ -173,12 +236,19 @@ en:
       destroyed: "Routine deleted."
       duplicated: "Routine duplicated."
       duplicate_failed: "Could not duplicate the routine."
+      source_sync_applied: "Updated content from the source routine was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This routine is not an adopted copy."
+        source_unavailable: "The source routine is no longer available in the catalog."
+        origin_changed_retry: "The source routine changed again. Review and try applying once more."
     duplicate:
       default_name: "Copy of %{name}"
       collision_name: "%{base} (%{n})"
     index:
       title: "Exercise routines"
       my_day_link: "My Day"
+      public_share_label: "Share in the public exercise routine catalog"
       name_label: "Name"
       first_line_label: "First exercise (label)"
       weekday_label: "Day"
@@ -189,6 +259,11 @@ en:
     edit:
       title: "Edit routine: %{name}"
       back_to_index: "Back to routines"
+      public_share_label: "Share in the public exercise routine catalog"
+      adoption_sync:
+        pending: "The public source routine has new changes. You can apply line content only; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source routine is no longer available (it was removed or made private). Your copy remains in your account."
       name_label: "Name"
       lines_heading: "Exercises by weekday"
       weekday: "Day"
@@ -340,6 +415,8 @@ en:
         revoked_public_share: "This recipe is no longer publicly shared."
       menu:
         revoked_public_share: "This menu is no longer publicly shared."
+      exercise_routine:
+        revoked_public_share: "This exercise routine is no longer publicly shared."
   sessions:
     new:
       title: "Sign in"
@@ -414,6 +491,7 @@ en:
       added_from_template: "Habit added"
       deactivated: "Habit deactivated"
       activated: "Habit activated"
+      updated: "Habit updated"
       not_found: "That habit template or category could not be found."
     index:
       title: "User Habits"
@@ -426,6 +504,12 @@ en:
       add_from_template_submit: "Add from template"
       deactivate: "Deactivate"
       activate: "Activate"
+      edit: "Edit"
+    edit:
+      title: "Edit habit"
+      submit: "Save"
+      back: "Back to habits"
+      metric_hint: "When the type is \"none\", the daily target is normalized to 1 (binary habit)."
   habits:
     default_categories:
       nutrition:
@@ -463,6 +547,10 @@ en:
       user_habit:
         name: "Name"
         activation_date: "Activation date"
+        habit_metric_kind: "Metric kind"
+        daily_target: "Daily target"
+      habit_completion:
+        day_progress: "Day progress"
       phase_assignment:
         menu: "Menu"
         start_week: "Start week"
@@ -473,6 +561,7 @@ en:
         freeform_text: "Note"
       exercise_routine:
         name: "Name"
+        publicly_shareable: "Public catalog"
       exercise_routine_line:
         weekday: "Day"
         position: "Order"
@@ -497,6 +586,8 @@ en:
           attributes:
             base:
               user_habit_inactive: "cannot record completions while the habit is inactive"
+            day_progress:
+              must_be_zero_when_metric_none: "must be 0 when the habit has no quantity metric"
         user_habit:
           attributes:
             activation_date:

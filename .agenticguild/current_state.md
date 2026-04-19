@@ -1,7 +1,5 @@
 <agent_state>
-  <active_task_pointer>
-    [NONE]
-  </active_task_pointer>
+  <active_task_pointer>[NONE]</active_task_pointer>
 
   <execution_context>
     <active_skill>[NONE]</active_skill>

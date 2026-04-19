@@ -1,0 +1,28 @@
+<h1><%= t("user_habits.edit.title") %></h1>
+
+<% if @user_habit.errors.any? %>
+  <div id="user_habit_errors" role="alert">
+    <%= @user_habit.errors.full_messages.to_sentence %>
+  </div>
+<% end %>
+
+<%= form_with model: @user_habit, url: user_habit_path(@user_habit), method: :patch do |f| %>
+  <div>
+    <%= f.label :name, t("user_habits.index.name_label") %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :habit_metric_kind, t("activerecord.attributes.user_habit.habit_metric_kind") %>
+    <%= f.select :habit_metric_kind, UserHabit::METRIC_KINDS.map { |k| [k, k] } %>
+  </div>
+  <div>
+    <%= f.label :daily_target, t("activerecord.attributes.user_habit.daily_target") %>
+    <%= f.number_field :daily_target, min: 1, max: UserHabit::DAILY_TARGET_MAX %>
+    <p class="text-sm text-gray-600"><%= t("user_habits.edit.metric_hint") %></p>
+  </div>
+  <div>
+    <%= f.submit t("user_habits.edit.submit") %>
+  </div>
+<% end %>
+
+<p><%= link_to t("user_habits.edit.back"), user_habits_path %></p>

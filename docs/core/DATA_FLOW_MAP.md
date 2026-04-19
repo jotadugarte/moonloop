@@ -9,16 +9,16 @@
 1. **Browser** requests `GET /mi_dia` with optional `fecha` (ISO date, user-local calendar day).
 2. **`MyDayController#show`** resolves “today” and the selected day in the user’s **current** IANA timezone; rejects future dates and invalid `fecha`.
 3. **`Habits::DueHabitsForDay`** loads active `UserHabit` rows for the user and filters to habits **due** on that civil date via **`Habits::DueOnDate`** (inactive habits never appear).
-4. **`HabitCompletion`** rows for `(user_habit_id ∈ due habits, completed_on = selected day)` build the per-habit done/failed/pending UI state (pending = no row).
+4. **`HabitCompletion`** rows for `(user_habit_id ∈ due habits, completed_on = selected day)` build the per-habit done/failed/pending UI state (pending = no row). For measurable habits, **`status`** may be `failed` while the day is only **below target** (not yet fulfilled); **`marked_failed_by_user`** distinguishes that case from an **explicit** user failure so the view can show an **in progress** label without changing streak/report semantics (still driven by **`status`** per **REQ-DAY-005**).
 5. **`Habits::MiDayStreakPrefetch`** loads completion rows for the streak walk window (`user_habit_id ∈ due habits`, `completed_on` from the **min** per-habit lower bound through the selected day, narrow `SELECT`) and runs **`Habits::Streak`** per due habit with that preloaded map (**REQ-DAY-004**). The resulting map is stored in **`Rails.cache`** (key: user id, selected local date, and fresh `user_habits.id` + `updated_at` tuples). **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** **`touch`** the **`UserHabit`** so the cache key advances after writes.
 6. **Exercise context (REQ-EXR-003):** **`Phases::WeekNumber.for_local_date`** yields the program week index (or nil if no anchor / before anchor). **`ExerciseRoutines::ResolveActiveRoutine`** returns the routine mapped to that week via **`exercise_routine_assignments`**, independent of menu assignments.
 7. **Ejercicio habit:** the `UserHabit` joined to **`global_habit_templates.code == "fitness_exercise"`** is loaded separately when needed (e.g. inactive habit not in the due list). Inline routine preview on Mi Día appears only when that habit is **due** and **active**; a global shortcut to **`/exercise_routines`** and **`/phase`** is always shown.
 
 ### 1.2 Mark done / failed (write)
 
-1. **Browser** submits `POST /habit_completions` with `user_habit_id`, `completed_on`, `status` (`done` or `failed`).
+1. **Browser** submits `POST /habit_completions` with `user_habit_id`, `completed_on`, `status` (`done` or `failed`), and optional **`day_progress`** for measurable habits.
 2. **`HabitCompletionsController`** scopes the habit to **`Current.user`**, parses the local date, and calls **`Habits::RecordCompletion`**.
-3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit). On success it **`touch`**es **`UserHabit`** so **`Habits::MiDayStreakPrefetch`** cache keys (driven by `updated_at`) stay coherent.
+3. **`Habits::RecordCompletion`** enforces: owner, habit active, date not in the future, date is a **due** day per `DueOnDate`, status allowed; then **`find_or_initialize_by`** `(user_habit, completed_on)` and saves **`HabitCompletion`** (unique per day per habit), persisting **`day_progress`**, synced **`status`**, and **`marked_failed_by_user`** per **REQ-DAY-005**. On success it **`touch`**es **`UserHabit`** so **`Habits::MiDayStreakPrefetch`** cache keys (driven by `updated_at`) stay coherent.
 4. **Redirect** back to Mi Día (with `fecha` preserved for past days).
 
 ### 1.3 Clear → pending (delete)

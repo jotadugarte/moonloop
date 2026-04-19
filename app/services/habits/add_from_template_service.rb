@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Habits
   class AddFromTemplateService
     def initialize(user:, template:, category:)
@@ -11,6 +13,14 @@ module Habits
       habit.habit_category = @category
       habit.name = I18n.t("habits.templates.#{@template.code}.name", default: @template.code.humanize)
       habit.active = true
+      if habit.new_record?
+        habit.frequency_type = "daily"
+        habit.frequency_params = {}
+        habit.activation_date = nil
+        habit.habit_metric_kind = @template.suggested_habit_metric_kind
+        habit.daily_target =
+          @template.suggested_habit_metric_kind == "none" ? 1 : @template.suggested_daily_target
+      end
       habit.save
       habit
     end

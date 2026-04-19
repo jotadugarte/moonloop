@@ -31,7 +31,7 @@ module Habits
         next unless DueOnDate.due_on?(@user_habit, d, schedule_only: schedule_only)
 
         due_count += 1
-        done_count += 1 if completions[d]&.status == "done"
+        done_count += 1 if Streak.habit_day_done?(user_habit: @user_habit, completion: completions[d])
       end
 
       Stats.new(

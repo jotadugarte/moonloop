@@ -28,6 +28,7 @@
   <% habits.each do |habit| %>
     <div id="<%= dom_id(habit) %>">
       <span><%= habit.name %></span>
+      <%= link_to t("user_habits.index.edit"), edit_user_habit_path(habit), class: "text-blue-600 underline text-sm" %>
       <% if habit.active? %>
         <%= button_to t("user_habits.index.deactivate"), deactivate_user_habit_path(habit), method: :patch %>
       <% else %>

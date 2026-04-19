@@ -1,5 +1,5 @@
 class UserHabitsController < ApplicationController
-  before_action :set_user_habit, only: %i[activate deactivate]
+  before_action :set_user_habit, only: %i[activate deactivate edit update]
 
   def index
     load_habits_index_collections
@@ -42,6 +42,17 @@ class UserHabitsController < ApplicationController
     redirect_to user_habits_path, notice: t("user_habits.flash.activated")
   end
 
+  def edit
+  end
+
+  def update
+    if @user_habit.update(user_habit_update_params)
+      redirect_to user_habits_path, notice: t("user_habits.flash.updated")
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def load_habits_index_collections
@@ -56,5 +67,9 @@ class UserHabitsController < ApplicationController
 
   def user_habit_params
     params.require(:user_habit).permit(:habit_category_id, :name).merge(active: true)
+  end
+
+  def user_habit_update_params
+    params.require(:user_habit).permit(:name, :habit_metric_kind, :daily_target)
   end
 end

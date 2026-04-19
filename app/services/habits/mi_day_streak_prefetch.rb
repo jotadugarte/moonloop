@@ -75,7 +75,7 @@ module Habits
     def completion_rows_for_streak_window
       HabitCompletion
         .where(user_habit_id: @ordered_due_habit_ids, completed_on: @streak_window_lower_bound..@local_date)
-        .select(:id, :user_habit_id, :completed_on, :status)
+        .select(:id, :user_habit_id, :completed_on, :status, :day_progress)
         .to_a
     end
 

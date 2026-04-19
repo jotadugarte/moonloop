@@ -58,6 +58,27 @@ RSpec.describe Habits::LongestStreak do
       end
     end
 
+    # [REQ-RPT-002] [REQ-DAY-005]
+    it "counts consecutive measurable days only when each day meets the daily target" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 4, 1),
+        habit_metric_kind: "count",
+        daily_target: 4)
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 17), status: "done", day_progress: 4)
+        create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 18), status: "done", day_progress: 4)
+        create(:habit_completion, user_habit: habit, completed_on: Date.new(2026, 4, 19), status: "done", day_progress: 2)
+
+        expect(described_class.call(user_habit: habit, through_date: Date.new(2026, 4, 19))).to eq(2)
+      end
+    end
+
     # [REQ-RPT-002]
     it "uses schedule_only due checks when the habit is inactive (historical reporting)" do
       user = create(:user, timezone: "Etc/UTC")

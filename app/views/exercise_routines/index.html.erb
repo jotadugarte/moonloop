@@ -23,6 +23,12 @@
           class: "border border-gray-300 rounded p-2 w-full",
           aria: aria_for_field(@routine, :name, routine_err_id) %>
   </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@routine, :publicly_shareable, routine_err_id) %>
+    <%= f.label :publicly_shareable, t(".public_share_label"), class: "text-gray-700" %>
+  </div>
   <%= f.fields_for :exercise_routine_lines do |lf| %>
     <div class="space-y-2">
       <%= lf.label :weekday, t(".weekday_label"), class: "block font-medium mb-1" %>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExerciseRoutinesController < ApplicationController
-  before_action :set_routine, only: %i[edit update destroy confirm_destroy duplicate]
+  before_action :set_routine, only: %i[edit update destroy confirm_destroy duplicate accept_source_update]
 
   def index
     @routine = Current.user.exercise_routines.new
@@ -22,6 +22,7 @@ class ExerciseRoutinesController < ApplicationController
   end
 
   def edit
+    set_adoption_sync_status
     append_line_from_request
   end
 
@@ -29,6 +30,7 @@ class ExerciseRoutinesController < ApplicationController
     if @routine.update(routine_params)
       redirect_to edit_exercise_routine_path(@routine), notice: t("exercise_routines.flash.updated")
     else
+      set_adoption_sync_status
       render :edit, status: :unprocessable_entity
     end
   end
@@ -49,7 +51,22 @@ class ExerciseRoutinesController < ApplicationController
     redirect_to exercise_routines_path, alert: t("exercise_routines.flash.duplicate_failed")
   end
 
+  def accept_source_update
+    ExerciseRoutines::ApplyAdoptionSourceSync.call(
+      copy: @routine,
+      expected_origin_fingerprint: params[:expected_origin_fingerprint].presence
+    )
+    redirect_to edit_exercise_routine_path(@routine), notice: t("exercise_routines.flash.source_sync_applied")
+  rescue ExerciseRoutines::ApplyAdoptionSourceSync::Error => e
+    redirect_to edit_exercise_routine_path(@routine),
+      alert: t("exercise_routines.adoption_sync.errors.#{e.key}")
+  end
+
   private
+
+  def set_adoption_sync_status
+    @adoption_sync_status = ExerciseRoutines::AdoptionSyncStatus.for_routine(@routine)
+  end
 
   def set_routine
     @routine = Current.user.exercise_routines.find(params[:id])
@@ -67,6 +84,7 @@ class ExerciseRoutinesController < ApplicationController
   def routine_params
     params.require(:exercise_routine).permit(
       :name,
+      :publicly_shareable,
       exercise_routine_lines_attributes: %i[id weekday position label notes _destroy]
     )
   end
