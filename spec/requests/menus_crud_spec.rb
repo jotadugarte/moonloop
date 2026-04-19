@@ -33,7 +33,7 @@ RSpec.describe "Menus CRUD", type: :request do
 
     post "/menus", params: { menu: { name: "  PLAN " } }
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(Menu.where(user: user, name_normalized: "plan").count).to eq(1)
   end
 
