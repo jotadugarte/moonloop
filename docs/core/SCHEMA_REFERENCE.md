@@ -22,7 +22,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `menus` | `user_id` FK | `REQ-MENU-001`. User-owned weekly templates; `publicly_shareable` for catalog |
+| `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**) | `REQ-MENU-001`, **REQ-MENU-006**. Weekly templates; catalog opt-in; adopted-copy metadata |
 | `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `recipes` | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
 | `recipes` | `user_id` FK | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable` |
 

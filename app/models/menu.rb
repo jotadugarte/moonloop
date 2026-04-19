@@ -2,6 +2,8 @@
 
 class Menu < ApplicationRecord
   belongs_to :user
+  belongs_to :source_menu, class_name: "Menu", optional: true, inverse_of: :adopted_copies
+  has_many :adopted_copies, class_name: "Menu", foreign_key: :source_menu_id, inverse_of: :source_menu, dependent: :nullify
   has_many :menu_entries, dependent: :destroy
   has_many :phase_assignments, dependent: :destroy
 

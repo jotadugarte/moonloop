@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_18_220000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -123,13 +123,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_210000) do
   end
 
   create_table "menus", force: :cascade do |t|
+    t.integer "adoption_catalog_origin_id"
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.boolean "publicly_shareable", default: false, null: false
+    t.integer "source_menu_id"
+    t.string "source_sync_fingerprint"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["source_menu_id"], name: "index_menus_on_source_menu_id"
     t.index ["user_id", "name_normalized"], name: "index_menus_on_user_id_and_name_normalized", unique: true
+    t.index ["user_id", "source_menu_id"], name: "index_menus_adoption_unique_per_user_and_source", unique: true, where: "source_menu_id IS NOT NULL"
     t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
@@ -238,6 +243,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_210000) do
   add_foreign_key "habit_completions", "user_habits"
   add_foreign_key "menu_entries", "menus"
   add_foreign_key "menu_entries", "recipes"
+  add_foreign_key "menus", "menus", column: "source_menu_id"
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
   add_foreign_key "phase_assignments", "users"
