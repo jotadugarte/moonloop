@@ -4,6 +4,6 @@
   <execution_context>
     <active_skill>start-task</active_skill>
     <current_phase>3</current_phase>
-    <current_step>TDD 3.1: failing spec for plan step 1 (`spec/docs/habit_completion_metrics_spec_presence_spec.rb`); await approval to implement SPEC.</current_step>
+    <current_step>TDD: plan step 1 complete (SPEC + traceability spec); next 3.1/3.2 cycle for plan step 2 (schema).</current_step>
   </execution_context>
 </agent_state>
