@@ -1,9 +1,9 @@
 <agent_state>
-  <active_task_pointer>(none)</active_task_pointer>
+  <active_task_pointer>task_habit-completion-values.md</active_task_pointer>
 
   <execution_context>
-    <active_skill>—</active_skill>
-    <current_phase>idle</current_phase>
-    <current_step>No active Guild task. ROADMAP #31 (public menus) completed 2026-04-18; see `.agenticguild/completed_sessions/task_public-menu-catalog_2026-04-18.md`. Next: pick a Backlog item in `docs/ROADMAP.md` or run `roadmap-manage`.</current_step>
+    <active_skill>start-task</active_skill>
+    <current_phase>3</current_phase>
+    <current_step>TDD 3.1: failing spec for plan step 1 (`spec/docs/habit_completion_metrics_spec_presence_spec.rb`); await approval to implement SPEC.</current_step>
   </execution_context>
 </agent_state>
