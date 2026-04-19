@@ -52,13 +52,13 @@ module Habits
 
         if cursor == user_today
           comp = completion_on(cursor)
-          streak += 1 if comp&.status == "done"
+          streak += 1 if streak_day_done?(comp)
           cursor -= 1
           next
         end
 
         comp = completion_on(cursor)
-        if comp&.status == "done"
+        if streak_day_done?(comp)
           streak += 1
           cursor -= 1
         else
@@ -70,6 +70,18 @@ module Habits
     end
 
     private
+
+    # REQ-DAY-004 + REQ-DAY-005: for measurable habits, "done" for streak requires meeting the daily target.
+    def streak_day_done?(comp)
+      return false if comp.nil?
+      return false unless comp.status == "done"
+
+      if @user_habit.habit_metric_kind == "none"
+        true
+      else
+        comp.day_progress.to_i >= @user_habit.daily_target.to_i
+      end
+    end
 
     def completion_on(date)
       if @completions_by_date

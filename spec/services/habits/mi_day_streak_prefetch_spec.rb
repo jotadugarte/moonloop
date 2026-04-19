@@ -68,6 +68,31 @@ RSpec.describe Habits::MiDayStreakPrefetch do
       end
     end
 
+    # [REQ-DAY-005]
+    it "matches controller oracle for measurable habits using day_progress in the streak rule" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 5)
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        local_date = Date.new(2026, 4, 19)
+        create(:habit_completion, user_habit: habit, completed_on: local_date - 1, status: "done", day_progress: 5)
+        create(:habit_completion, user_habit: habit, completed_on: local_date, status: "done", day_progress: 5)
+
+        due = Habits::DueHabitsForDay.call(user: user, local_date: local_date)
+        expected = streak_by_habit_id_like_controller(due, local_date)
+        result = Habits::MiDayStreakPrefetch.call(user: user, due_habits: due, local_date: local_date)
+        expect(result).to eq(expected)
+        expect(result[habit.id]).to eq(2)
+      end
+    end
+
     # [REQ-DAY-004]
     it "matches controller streak map when only some due habits have completions" do
       user = create(:user, timezone: "Etc/UTC")
@@ -221,7 +246,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
     end
 
     # [REQ-DAY-004]
-    it "selects only columns needed for streak walks (id, user_habit_id, completed_on, status)" do
+    it "selects only columns needed for streak walks (id, user_habit_id, completed_on, status, day_progress)" do
       user = create(:user, timezone: "Etc/UTC")
       category = create(:habit_category, user: user)
       habit = create(:user_habit,
@@ -245,6 +270,7 @@ RSpec.describe Habits::MiDayStreakPrefetch do
         expect(sql).to match(/"habit_completions"\."user_habit_id"/i)
         expect(sql).to match(/"habit_completions"\."completed_on"/i)
         expect(sql).to match(/"habit_completions"\."status"/i)
+        expect(sql).to match(/"habit_completions"\."day_progress"/i)
         expect(sql).not_to match(/"habit_completions"\."created_at"/i)
         expect(sql).not_to match(/"habit_completions"\."updated_at"/i)
       end

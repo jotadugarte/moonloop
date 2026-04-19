@@ -88,6 +88,59 @@ RSpec.describe "Habits::Streak" do
       end
     end
 
+    # [REQ-DAY-005]
+    it "does not count a measurable day whose row is done but below the daily target" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 8)
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        completion = create(:habit_completion,
+          user_habit: habit,
+          completed_on: Date.new(2026, 4, 19),
+          status: "done",
+          day_progress: 3)
+        idx = { Date.new(2026, 4, 19) => completion }
+
+        expect(Habits::Streak.call(user_habit: habit, as_of: Date.new(2026, 4, 19), completions_by_date: idx)).to eq(0)
+      end
+    end
+
+    # [REQ-DAY-005]
+    it "counts measurable streak days only when progress meets the daily target" do
+      user = create(:user, timezone: "Etc/UTC")
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 4)
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        c18 = create(:habit_completion,
+          user_habit: habit,
+          completed_on: Date.new(2026, 4, 18),
+          status: "done",
+          day_progress: 4)
+        c19 = create(:habit_completion,
+          user_habit: habit,
+          completed_on: Date.new(2026, 4, 19),
+          status: "done",
+          day_progress: 4)
+        idx = { Date.new(2026, 4, 18) => c18, Date.new(2026, 4, 19) => c19 }
+
+        expect(Habits::Streak.call(user_habit: habit, as_of: Date.new(2026, 4, 19), completions_by_date: idx)).to eq(2)
+      end
+    end
+
     # [REQ-DAY-004]
     it "raises ArgumentError when as_of is nil" do
       user = create(:user, timezone: "Etc/UTC")
