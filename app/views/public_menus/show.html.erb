@@ -1,0 +1,7 @@
+<% content_for :title, t("public_menus.show.title", name: @menu.name) %>
+
+<h1><%= @menu.name %></h1>
+
+<p><%= t("public_menus.shared.author", id: @menu.user_id) %></p>
+
+<p><%= link_to t("public_menus.show.back_to_catalog"), public_menus_path %></p>

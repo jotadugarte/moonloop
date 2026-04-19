@@ -112,6 +112,15 @@ es:
     index:
       title: "Recetas públicas — Moonloop"
       heading: "Recetas públicas"
+  public_menus:
+    index:
+      title: "Menús públicos — Moonloop"
+      heading: "Menús públicos"
+    show:
+      title: "%{name} — Menús públicos — Moonloop"
+      back_to_catalog: "Volver al catálogo de menús"
+    shared:
+      author: "Autor #%{id}"
   public_exercise_routines:
     index:
       title: "Rutinas públicas — Moonloop"
