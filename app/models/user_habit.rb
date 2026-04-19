@@ -1,4 +1,7 @@
 class UserHabit < ApplicationRecord
+  METRIC_KINDS = %w[none count duration_min].freeze
+  DAILY_TARGET_MAX = 99_999
+
   belongs_to :user
   belongs_to :habit_category
   belongs_to :global_habit_template, optional: true
@@ -8,11 +11,19 @@ class UserHabit < ApplicationRecord
   validates :name, :name_normalized, presence: true
   validates :frequency_type, presence: true
   validates :frequency_type, inclusion: { in: %w[daily weekdays every_x_days monthly] }
+  validates :habit_metric_kind, inclusion: { in: METRIC_KINDS }
+  validates :daily_target,
+    numericality: {
+      only_integer: true,
+      greater_than_or_equal_to: 1,
+      less_than_or_equal_to: DAILY_TARGET_MAX
+    }
 
   normalizes :name, with: -> { _1.strip }
   normalizes :name_normalized, with: -> { _1.strip.downcase }
 
   before_validation :sync_name_normalized
+  before_validation :normalize_habit_metrics
   validate :active_name_must_be_unique_per_user, if: -> { user_id.present? && active? && name_normalized.present? }
   validate :frequency_params_shape
   validate :frequency_requirements
@@ -23,6 +34,11 @@ class UserHabit < ApplicationRecord
   end
 
   private
+
+  def normalize_habit_metrics
+    self.habit_metric_kind = "none" if habit_metric_kind.blank?
+    self.daily_target = 1 if habit_metric_kind == "none"
+  end
 
   def sync_name_normalized
     return if name.blank?

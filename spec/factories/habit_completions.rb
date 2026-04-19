@@ -5,5 +5,6 @@ FactoryBot.define do
     user_habit
     completed_on { Date.current }
     status { "done" }
+    day_progress { 0 }
   end
 end

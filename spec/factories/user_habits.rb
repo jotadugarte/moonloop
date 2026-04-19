@@ -9,5 +9,7 @@ FactoryBot.define do
     frequency_type { "daily" }
     frequency_params { {} }
     activation_date { nil }
+    habit_metric_kind { "none" }
+    daily_target { 1 }
   end
 end

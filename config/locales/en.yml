@@ -529,6 +529,10 @@ en:
       user_habit:
         name: "Name"
         activation_date: "Activation date"
+        habit_metric_kind: "Metric kind"
+        daily_target: "Daily target"
+      habit_completion:
+        day_progress: "Day progress"
       phase_assignment:
         menu: "Menu"
         start_week: "Start week"
@@ -564,6 +568,8 @@ en:
           attributes:
             base:
               user_habit_inactive: "cannot record completions while the habit is inactive"
+            day_progress:
+              must_be_zero_when_metric_none: "must be 0 when the habit has no quantity metric"
         user_habit:
           attributes:
             activation_date:

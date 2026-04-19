@@ -600,6 +600,10 @@ es:
       user_habit:
         name: "Nombre"
         activation_date: "Fecha de activación"
+        habit_metric_kind: "Tipo de métrica"
+        daily_target: "Objetivo diario"
+      habit_completion:
+        day_progress: "Progreso del día"
       phase_assignment:
         menu: "Menú"
         start_week: "Semana inicial"
@@ -640,6 +644,8 @@ es:
           attributes:
             base:
               user_habit_inactive: "no puedes registrar cumplimientos mientras el hábito está inactivo"
+            day_progress:
+              must_be_zero_when_metric_none: "debe ser 0 para hábitos sin métrica de cantidad"
         user_habit:
           attributes:
             activation_date:

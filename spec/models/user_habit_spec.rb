@@ -94,4 +94,47 @@ RSpec.describe UserHabit, type: :model do
       expect(dupe.errors[:name]).not_to be_empty
     end
   end
+
+  describe "habit metrics" do
+    # [REQ-DAY-005]
+    it "defaults new habits to none metric with daily_target 1" do
+      habit = create(:user_habit)
+      habit.reload
+      expect(habit.habit_metric_kind).to eq("none")
+      expect(habit.daily_target).to eq(1)
+    end
+
+    # [REQ-DAY-005]
+    it "rejects invalid habit_metric_kind" do
+      habit = build(:user_habit, habit_metric_kind: "bogus", daily_target: 1)
+      expect(habit).not_to be_valid
+      expect(habit.errors[:habit_metric_kind]).to be_present
+    end
+
+    # [REQ-DAY-005]
+    it "rejects daily_target below 1 for measurable habits" do
+      habit = build(:user_habit, habit_metric_kind: "count", daily_target: 0)
+      expect(habit).not_to be_valid
+      expect(habit.errors[:daily_target]).to be_present
+    end
+
+    # [REQ-DAY-005]
+    it "coerces none habits to daily_target 1" do
+      habit = create(:user_habit, habit_metric_kind: "none", daily_target: 8)
+      expect(habit.reload.daily_target).to eq(1)
+    end
+
+    # [REQ-DAY-005]
+    it "allows count habits with a positive daily_target" do
+      habit = create(:user_habit, habit_metric_kind: "count", daily_target: 8)
+      expect(habit.reload).to be_valid
+      expect(habit.daily_target).to eq(8)
+    end
+
+    # [REQ-DAY-005]
+    it "rejects daily_target above cap" do
+      habit = build(:user_habit, habit_metric_kind: "count", daily_target: UserHabit::DAILY_TARGET_MAX + 1)
+      expect(habit).not_to be_valid
+    end
+  end
 end

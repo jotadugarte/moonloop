@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_18_230000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -102,6 +102,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_220000) do
   create_table "habit_completions", force: :cascade do |t|
     t.date "completed_on", null: false
     t.datetime "created_at", null: false
+    t.integer "day_progress", default: 0, null: false
     t.string "status", null: false
     t.datetime "updated_at", null: false
     t.integer "user_habit_id", null: false
@@ -185,10 +186,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_220000) do
     t.date "activation_date"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
+    t.integer "daily_target", default: 1, null: false
     t.json "frequency_params", default: {}, null: false
     t.string "frequency_type", default: "daily", null: false
     t.integer "global_habit_template_id"
     t.integer "habit_category_id", null: false
+    t.string "habit_metric_kind", default: "none", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.datetime "updated_at", null: false
