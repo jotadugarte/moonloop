@@ -1,11 +1,11 @@
 # Task: Valores de completado por hábito (Backlog ROADMAP)
 
-**Estado:** descubrimiento / whiteboard (explore-task)  
-**Origen:** `docs/ROADMAP.md` → **Backlog** — primera línea: *Habit completion values*; dependencia explícita: Phase 3 (hecho). Desbloquea *Multiple completions per day*.
+**Estado:** implementación completa (REQ-DAY-005 **Implemented** en SPEC; ROADMAP **Done #32**).  
+**Origen:** `docs/ROADMAP.md` — ítem *Habit completion values* (ahora cerrado). Desbloquea *Multiple completions per day* (backlog; depende de **Done #32**).
 
 **Contexto código / SPEC:** Hoy `HabitCompletion` es **una fila única** por `(user_habit_id, completed_on)` con `status` `done` | `failed` y sin cantidad (`docs/core/SPEC.md` glosario — *Habit completion*). Servicios: `Habits::RecordCompletion`, `Habits::ClearCompletion`; rachas e informes asumen este modelo.
 
-<roadmap_item>docs/ROADMAP.md — Backlog: Habit completion values (e.g. glasses of water, minutes of exercise); depends on Phase 3 (done).</roadmap_item>
+<roadmap_item>docs/ROADMAP.md — Done #32 (REQ-DAY-005); backlog *Multiple completions* actualizado a depender de Done #32.</roadmap_item>
 <classification>Feature</classification>
 
 <implementation_plan>
