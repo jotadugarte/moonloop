@@ -1,3 +1,8 @@
+% Task: public-menu-catalog (ROADMAP **#31**) — **COMPLETED** 2026-04-18
+% Archived from `.agenticguild/active_sessions/task_public-menu-catalog.md`
+
+---
+
 # Task: Catálogo público de menús (#31)
 
 **Origen:** `docs/ROADMAP.md` — **Done #31** (catálogo público de menús; paridad **Done #30** / **REQ-EXR-006**).  

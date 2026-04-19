@@ -313,6 +313,7 @@ These criteria are **testable**; implementation may use different model/table na
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
 6. **Next occurrence (preview)** — For scheduling previews/tests, `Habits::NextOccurrence` implements the same frequency types as Mi Día scheduling (`daily`, `weekdays`, `every_x_days`, `monthly`), aligned with `Habits::DueOnDate` where applicable. Monthly respects shorter months (end-of-month clamp).
 7. **Informes** — Authenticated user opens **`GET /informes`**, picks a reference local day (same rules as Mi Día), and views habit fulfillment (week + month), current and longest streaks per habit, and a weight trend chart from `weight_logs`.
+8. **Public menu catalog** (**REQ-MENU-006**) — Owner opts in with **`publicly_shareable`** on create/update; authenticated users browse **`public_menus`** and may **adopt** (one copy per source per adopter; recipes duplicated for the adopter); **apply update** syncs slot content only; admin **revoke** removes the menu from the catalog.
 
 ---
 
@@ -322,7 +323,7 @@ Feature-specific docs can be linked here as they are written, for example:
 
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
-- Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS`
+- Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; **`PublicMenusController`**, adoption/sync services (`Menus::AdoptFromPublicCatalog`, `ApplyAdoptionSourceSync`, …); Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS` (**REQ-MENU-006**)
 - Phase 5 (Rutinas de ejercicio): models `ExerciseRoutine`, `ExerciseRoutineLine`, `ExerciseRoutineAssignment`; services under `app/services/exercise_routines/`; `ExerciseRoutinesController`, `ExerciseRoutineAssignmentsController`, `PublicExerciseRoutinesController`, `Admin::ExerciseRoutinesController`; Mi Día (`MyDayController`) + `/phase` integration; parity **REQ-EXR-004** / **REQ-EXR-005** with **REQ-MENU-004** / **REQ-MENU-005**; public catalog **REQ-EXR-006**. See **Acceptance criteria — exercise routines (Phase 5)**, **REQ-EXR-006**, and **Decisions log — REQ-EXR** in this file.
 - Phase 7 (Informes): `GET /informes` → `ReportsController#show`; services **`Reports::CalendarPeriodBounds`**, **`Habits::FulfillmentForPeriod`**, **`Habits::LongestStreak`**, **`Habits::ReportCurrentStreak`**, **`WeightLogs::ChartSeries`**; **`Habits::DueOnDate`** supports optional **`schedule_only:`** for inactive-habit reporting. See **REQ-RPT-001**–**003** and **Decisions log — REQ-RPT** in this file.
 

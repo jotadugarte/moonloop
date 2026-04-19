@@ -48,7 +48,7 @@ RSpec.describe "Menus CRUD", type: :request do
     expect(m.publicly_shareable).to be(true)
   end
 
-  # [REQ-MENU-001]
+  # [REQ-MENU-001, REQ-MENU-006]
   it "forbids updating another user's menu" do
     other = create(:user, password: "Password123!", timezone: "Etc/UTC")
     foreign = Menu.create!(user: other, name: "Ajeno", publicly_shareable: false)
