@@ -17,6 +17,35 @@ RSpec.describe "Mi Día (My Day)", type: :request do
     expect(response.body).to include(I18n.t("my_day.show.heading"))
   end
 
+  # [REQ-DAY-001] [REQ-DAY-005]
+  it "shows metric progress and actions for measurable habits" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user, name: "Salud")
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "Vasitos",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 5)
+      create(:habit_completion,
+        user_habit: habit,
+        completed_on: Date.new(2026, 4, 16),
+        status: "failed",
+        day_progress: 2)
+
+      get my_day_path
+
+      expect(response.body).to include('data-test="my-day-metric-progress"')
+      expect(response.body).to include(
+        I18n.t("my_day.show.metric_progress_count", current: 2, target: 5)
+      )
+      expect(response.body).to include(I18n.t("my_day.actions.add_one"))
+      expect(response.body).to include(I18n.t("my_day.actions.meet_target"))
+    end
+  end
+
   # [REQ-DAY-001]
   it "lists active habits that are due on the user's local today" do
     travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
@@ -235,6 +264,41 @@ RSpec.describe "Mi Día (My Day)", type: :request do
 
       expect(response.body).to include('data-test="my-day-exercise-inline"')
       expect(response.body).to include(I18n.t("my_day.show.exercise_no_routine_this_week"))
+    end
+  end
+
+  # [REQ-DAY-005]
+  it "records +1 from Mi Día for a measurable habit" do
+    travel_to Time.utc(2026, 4, 16, 12, 0, 0) do
+      category = create(:habit_category, user: user)
+      habit = create(:user_habit,
+        user: user,
+        habit_category: category,
+        name: "Agua",
+        frequency_type: "daily",
+        activation_date: Date.new(2026, 1, 1),
+        habit_metric_kind: "count",
+        daily_target: 5)
+      create(:habit_completion,
+        user_habit: habit,
+        completed_on: Date.new(2026, 4, 16),
+        status: "failed",
+        day_progress: 2)
+
+      post habit_completions_path,
+        params: {
+          habit_completion: {
+            user_habit_id: habit.id,
+            completed_on: "2026-04-16",
+            status: "done",
+            day_progress: "3"
+          }
+        }
+
+      expect(response).to redirect_to(my_day_path)
+      row = HabitCompletion.find_by!(user_habit: habit, completed_on: Date.new(2026, 4, 16))
+      expect(row.day_progress).to eq(3)
+      expect(row.status).to eq("failed")
     end
   end
 end

@@ -19,68 +19,10 @@
 <% else %>
   <ul class="my-day-habits">
     <% @due_habits.each do |habit| %>
-      <% completion = @completions_by_habit_id[habit.id] %>
-      <li id="<%= dom_id(habit) %>" data-habit-streak="<%= @streak_by_habit_id[habit.id] %>">
-        <span class="my-day-habit-name"><%= habit.name %></span>
-        <span class="my-day-habit-category"><%= habit.habit_category.name %></span>
-        <span class="my-day-habit-streak"><%= t("my_day.show.streak_display", count: @streak_by_habit_id[habit.id]) %></span>
-        <% if completion %>
-          <span class="my-day-habit-status"><%= t("habit_completions.status.#{completion.status}") %></span>
-        <% end %>
-        <fieldset class="my-day-actions">
-          <legend class="my-day-actions-legend"><%= t("my_day.show.actions_legend") %></legend>
-          <%= button_to t("my_day.actions.mark_done"),
-                habit_completions_path,
-                method: :post,
-                params: {
-                  habit_completion: {
-                    user_habit_id: habit.id,
-                    completed_on: @local_date.iso8601,
-                    status: "done"
-                  }
-                } %>
-          <%= button_to t("my_day.actions.mark_failed"),
-                habit_completions_path,
-                method: :post,
-                params: {
-                  habit_completion: {
-                    user_habit_id: habit.id,
-                    completed_on: @local_date.iso8601,
-                    status: "failed"
-                  }
-                } %>
-          <% if completion %>
-            <%= button_to t("my_day.actions.clear"),
-                  habit_completion_path(completion),
-                  method: :delete %>
-          <% end %>
-        </fieldset>
-        <% if habit.global_habit_template&.code == "fitness_exercise" %>
-          <div class="my-day-exercise-inline mt-3 pl-2 border-l-2 border-gray-300" data-test="my-day-exercise-inline">
-            <p class="text-sm font-medium text-gray-900"><%= t("my_day.show.exercise_inline_heading") %></p>
-            <% if @active_exercise_routine %>
-              <p class="text-sm text-gray-800"><%= @active_exercise_routine.name %></p>
-              <% if @exercise_preview_lines.any? %>
-                <ul class="list-disc list-inside text-sm text-gray-700 my-1">
-                  <% @exercise_preview_lines.each do |line| %>
-                    <li><%= line.label %></li>
-                  <% end %>
-                </ul>
-              <% else %>
-                <p class="text-sm text-gray-600"><%= t("my_day.show.exercise_no_lines_this_day") %></p>
-              <% end %>
-              <p class="mt-1">
-                <%= link_to t("my_day.show.exercise_full_week_link"),
-                      edit_exercise_routine_path(@active_exercise_routine),
-                      class: "text-blue-600 underline text-sm font-medium",
-                      data: { turbo_action: "advance" } %>
-              </p>
-            <% else %>
-              <p class="text-sm text-gray-600"><%= t("my_day.show.exercise_no_routine_this_week") %></p>
-            <% end %>
-          </div>
-        <% end %>
-      </li>
+      <%= render "habit_row",
+            habit: habit,
+            completion: @completions_by_habit_id[habit.id],
+            local_date: @local_date %>
     <% end %>
   </ul>
 <% end %>
