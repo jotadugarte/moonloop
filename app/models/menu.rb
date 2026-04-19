@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Menu < ApplicationRecord
   belongs_to :user
   has_many :menu_entries, dependent: :destroy
@@ -6,4 +8,22 @@ class Menu < ApplicationRecord
   validates :name, presence: true
 
   normalizes :name, with: -> { _1.strip }
+
+  before_validation :sync_name_normalized
+
+  validate :name_must_be_unique_for_user
+
+  private
+
+  def sync_name_normalized
+    self.name_normalized = name.to_s.strip.downcase
+  end
+
+  def name_must_be_unique_for_user
+    return if user_id.blank? || name_normalized.blank?
+
+    scope = self.class.where(user_id: user_id, name_normalized: name_normalized)
+    scope = scope.where.not(id: id) if persisted?
+    errors.add(:name, :taken) if scope.exists?
+  end
 end

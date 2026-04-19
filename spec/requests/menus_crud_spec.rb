@@ -28,6 +28,16 @@ RSpec.describe "Menus CRUD", type: :request do
   end
 
   # [REQ-MENU-001]
+  it "rejects a duplicate menu name for the same user (normalized)" do
+    Menu.create!(user: user, name: "Plan")
+
+    post "/menus", params: { menu: { name: "  PLAN " } }
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(Menu.where(user: user, name_normalized: "plan").count).to eq(1)
+  end
+
+  # [REQ-MENU-001]
   it "forbids accessing another user's menu editor" do
     other = create(:user, password: "Password123!", timezone: "Etc/UTC")
     foreign = Menu.create!(user: other, name: "Ajeno")

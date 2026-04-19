@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_18_210000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -125,9 +125,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_160000) do
   create_table "menus", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.string "name_normalized", null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["user_id", "name_normalized"], name: "index_menus_on_user_id_and_name_normalized", unique: true
     t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
