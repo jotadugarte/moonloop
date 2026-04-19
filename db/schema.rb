@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_18_230000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -85,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_18_230000) do
     t.boolean "active", default: true, null: false
     t.string "code", null: false
     t.datetime "created_at", null: false
+    t.integer "suggested_daily_target", default: 1, null: false
+    t.string "suggested_habit_metric_kind", default: "none", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_global_habit_templates_on_code", unique: true
   end

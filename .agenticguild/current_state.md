@@ -4,6 +4,6 @@
   <execution_context>
     <active_skill>start-task</active_skill>
     <current_phase>3</current_phase>
-    <current_step>TDD: plan step 6 complete (Mi Día metric UI); next plan step 7 (template defaults / provisioning).</current_step>
+    <current_step>TDD: habit metrics plan steps 1–7 complete; consider REQ-DAY-005 → Implemented in SPEC + roadmap when shipping branch.</current_step>
   </execution_context>
 </agent_state>

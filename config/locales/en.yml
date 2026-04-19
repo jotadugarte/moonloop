@@ -484,6 +484,7 @@ en:
       added_from_template: "Habit added"
       deactivated: "Habit deactivated"
       activated: "Habit activated"
+      updated: "Habit updated"
       not_found: "That habit template or category could not be found."
     index:
       title: "User Habits"
@@ -496,6 +497,12 @@ en:
       add_from_template_submit: "Add from template"
       deactivate: "Deactivate"
       activate: "Activate"
+      edit: "Edit"
+    edit:
+      title: "Edit habit"
+      submit: "Save"
+      back: "Back to habits"
+      metric_hint: "When the type is \"none\", the daily target is normalized to 1 (binary habit)."
   habits:
     default_categories:
       nutrition:

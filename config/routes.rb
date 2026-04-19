@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [ :index, :show, :destroy ]
   resources :habit_categories, only: [ :index, :create, :edit, :update, :destroy ]
-  resources :user_habits, only: [ :index, :create ] do
+  resources :user_habits, only: [ :index, :create, :edit, :update ] do
     member do
       patch :activate
       patch :deactivate

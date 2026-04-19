@@ -17,6 +17,11 @@ class ProvisionDefaultHabitsJob < ApplicationJob
     "emotional_pet" => "emotional"
   }.freeze
 
+  SUGGESTED_METRICS_BY_TEMPLATE_CODE = {
+    "fitness_water" => { kind: "count", target: 8 },
+    "fitness_exercise" => { kind: "duration_min", target: 30 }
+  }.freeze
+
   def self.default_template_codes
     DEFAULT_TEMPLATE_CATALOG.keys
   end
@@ -34,8 +39,20 @@ class ProvisionDefaultHabitsJob < ApplicationJob
 
   def provision_templates!
     self.class.default_template_codes.index_with do |code|
-      GlobalHabitTemplate.find_or_create_by!(code: code)
+      template = GlobalHabitTemplate.find_or_create_by!(code: code)
+      sync_suggested_metrics_from_catalog!(template)
+      template
     end
+  end
+
+  def sync_suggested_metrics_from_catalog!(template)
+    cfg = SUGGESTED_METRICS_BY_TEMPLATE_CODE[template.code]
+    return unless cfg
+
+    template.update!(
+      suggested_habit_metric_kind: cfg[:kind],
+      suggested_daily_target: cfg[:target]
+    )
   end
 
   def provision_user_habits!(user, templates)
@@ -65,6 +82,9 @@ class ProvisionDefaultHabitsJob < ApplicationJob
       habit.frequency_type = "daily"
       habit.frequency_params = {}
       habit.activation_date = nil
+      habit.habit_metric_kind = template.suggested_habit_metric_kind
+      habit.daily_target =
+        template.suggested_habit_metric_kind == "none" ? 1 : template.suggested_daily_target
     end
   rescue ActiveRecord::RecordNotUnique
     UserHabit.find_by!(user: user, global_habit_template: template)

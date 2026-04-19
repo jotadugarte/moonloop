@@ -38,6 +38,26 @@ RSpec.describe ProvisionDefaultHabitsJob, type: :job do
       .and change(HabitCategory, :count).by(3)
   end
 
+  # [REQ-HAB-002] [REQ-DAY-005]
+  it "copies suggested metric defaults from templates onto provisioned habits" do
+    stub_default_catalog!
+
+    described_class.perform_now(user_id: user.id)
+
+    water_template = GlobalHabitTemplate.find_by!(code: "fitness_water")
+    exercise_template = GlobalHabitTemplate.find_by!(code: "fitness_exercise")
+    expect(water_template.suggested_habit_metric_kind).to eq("count")
+    expect(water_template.suggested_daily_target).to eq(8)
+
+    water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
+    expect(water_habit.habit_metric_kind).to eq("count")
+    expect(water_habit.daily_target).to eq(8)
+
+    exercise_habit = UserHabit.find_by!(user: user, global_habit_template: exercise_template)
+    expect(exercise_habit.habit_metric_kind).to eq("duration_min")
+    expect(exercise_habit.daily_target).to eq(30)
+  end
+
   # [REQ-HAB-002]
   it "retries on transient failures without creating duplicates" do
     stub_default_catalog!
