@@ -7,7 +7,7 @@
 | **Tipo** | Feature (cierre de circuito sobre MVP existente) |
 | **Origen** | `docs/ROADMAP.md` / `docs/core/SPEC.md` **REQ-HAB-013** (Implemented); **ADR-0001** (estrategia Web Push + nota de implementación). |
 | **Contexto previo** | Sesión archivada `.agenticguild/completed_sessions/task_habit-reminders_2026-04-19.md` (prefs, sweep, `habit_reminder_events`, suscripciones, mailer sin cablear). |
-| **Código ancla** | `Habits::ProcessHabitReminderForUserHabit` hoy crea `HabitReminderEvent` y no despacha canales. Paridad deseada con `Phases::ProcessPhaseStartReminderForUser` (evento idempotente primero, luego correo). |
+| **Código ancla** | `Habits::ProcessHabitReminderForUserHabit`: idempotencia con `habit_reminder_events` + `RecordNotUnique`; tras `create!` exitoso despacha **email** (`HabitReminderMailer#notify`, `deliver_now`) y/o **Web Push** (`Habits::DeliverHabitReminderWebPush`) según toggles; el contexto previo al insert usa **`ReminderProcessingContext`**. Misma idea que `Phases::ProcessPhaseStartReminderForUser`: evento primero, luego canales. |
 
 ## Decision log
 
