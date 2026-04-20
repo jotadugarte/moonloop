@@ -52,9 +52,7 @@ RSpec.describe Habits::RecordCompletion do
 
     allow(Habits::RecomputeStreakCounters).to receive(:call).and_call_original
 
-    travel_to now do
-      expect(call!(habit, now: now, local_date: today, status: "done")).to eq(:ok)
-    end
+    expect(call!(habit, now: now, local_date: today, status: "done")).to eq(:ok)
 
     expect(Habits::RecomputeStreakCounters).to have_received(:call).with(user_habit: habit)
     habit.reload
