@@ -100,7 +100,7 @@
 
   <step id="11" status="complete">UI en creación/edición de hábito: escribir **fallando** system/request specs que verifiquen que el recordatorio aparece en el formulario, por defecto apagado, y al habilitarlo permite escoger hora local y canales (email/push) y persiste. Implementar vistas y strong params hasta **verde** (sin in-app banners).</step>
 
-  <step id="12" status="pending">Actualizar `docs/core/SPEC.md` con nuevos `REQ-*` (config por hábito, sweep + idempotencia, email, Web Push) y añadir trazabilidad `# [REQ-…]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`. Actualizar `docs/core/SCHEMA_REFERENCE.md` si se agregan tablas/columnas nuevas.</step>
+  <step id="12" status="complete">Actualizar `docs/core/SPEC.md` con nuevos `REQ-*` (config por hábito, sweep + idempotencia, email, Web Push) y añadir trazabilidad `# [REQ-…]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`. Actualizar `docs/core/SCHEMA_REFERENCE.md` si se agregan tablas/columnas nuevas.</step>
 
   <step id="13" status="pending">Pase final: suite completa en verde; revisar que no se mezcló con recordatorios de fase; preparar para `finish-branch` cuando corresponda.</step>
 </implementation_plan>

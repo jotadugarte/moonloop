@@ -37,6 +37,26 @@
 
 ---
 
+## Habit reminders (per-habit)
+
+| Table | Primary keys / constraints | SPEC / notes |
+|--------|----------------------------|--------------|
+| `habit_reminder_events` | Unique `(user_id, user_habit_id, local_date)` | **REQ-HAB-011**. Idempotent “logical reminder attempted” bookkeeping per **user-local day** |
+| `web_push_subscriptions` | Unique `(user_id, endpoint)`; required `endpoint`, `p256dh`, `auth` | **REQ-HAB-012**. Multiple device/browser subscriptions per user; unsubscribe by endpoint |
+
+### `user_habits` reminder columns
+
+`user_habits` stores per-habit reminder configuration (MVP):
+
+- `reminder_enabled` (boolean, default false)
+- `reminder_time_of_day` (string `HH:MM`, interpreted in the user’s IANA timezone)
+- `reminder_email` (boolean, default false)
+- `reminder_web_push` (boolean, default false)
+
+See **REQ-HAB-010** for validation rules and eligibility (inactive habits are not eligible).
+
+---
+
 ## Phase programs (bundles)
 
 | Table | Primary keys / constraints | SPEC / notes |
