@@ -35,6 +35,7 @@ module Habits
       apply_metric_rules!(completion)
       return :invalid_record unless completion.save
 
+      mark_streak_counters_stale_if_retroactive!
       @user_habit.touch
 
       :ok
@@ -79,6 +80,13 @@ module Habits
 
     def user_local_today
       Time.find_zone!(@user.timezone).today
+    end
+
+    def mark_streak_counters_stale_if_retroactive!
+      return unless @user_habit.respond_to?(:streak_counters_stale)
+      return unless @local_date < user_local_today
+
+      @user_habit.update!(streak_counters_stale: true)
     end
   end
 end
