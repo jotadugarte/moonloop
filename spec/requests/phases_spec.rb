@@ -9,6 +9,12 @@ RSpec.describe "Phases dashboard", type: :request do
     post sign_in_path, params: { email: user.email, password: "Password123!" }
   end
 
+  # [REQ-PHS-001]
+  it "links to bundled phase programs from the phase dashboard" do
+    get phase_path
+    expect(response.body).to include(phase_programs_path)
+  end
+
   # [REQ-MENU-003]
   it "shows the phase plan with current week when anchor is set" do
     user.update!(phase_one_starts_on: Date.new(2026, 4, 10))

@@ -1,0 +1,65 @@
+<% assignment_err_id = "phase-program-assignment-form-errors" %>
+<%= form_with model: [ @phase_program, @assignment ], class: "space-y-4 max-w-md", data: { turbo_frame: "_top" } do |f| %>
+  <% if @assignment.errors.any? %>
+    <div class="text-red-600 text-sm">
+      <ul id="<%= assignment_err_id %>" class="list-disc pl-5" role="alert">
+        <% @assignment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :menu_id, t("phase_program_assignments.form.menu_label"), class: "block font-medium mb-1" %>
+    <%= f.collection_select :menu_id,
+          Current.user.menus.order(:name),
+          :id,
+          :name,
+          { include_blank: t("phase_program_assignments.form.menu_blank") },
+          {
+            required: true,
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@assignment, :menu_id, assignment_err_id)
+          } %>
+  </div>
+
+  <div>
+    <%= f.label :exercise_routine_id, t("phase_program_assignments.form.routine_label"), class: "block font-medium mb-1" %>
+    <%= f.collection_select :exercise_routine_id,
+          Current.user.exercise_routines.order(:name),
+          :id,
+          :name,
+          { include_blank: t("phase_program_assignments.form.routine_blank") },
+          {
+            required: true,
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@assignment, :exercise_routine_id, assignment_err_id)
+          } %>
+  </div>
+
+  <div>
+    <%= f.label :start_week, t("phase_program_assignments.form.start_week_label"), class: "block font-medium mb-1" %>
+    <%= f.number_field :start_week,
+          min: 1,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@assignment, :start_week, assignment_err_id) %>
+  </div>
+
+  <div>
+    <%= f.label :end_week, t("phase_program_assignments.form.end_week_label"), class: "block font-medium mb-1" %>
+    <%= f.number_field :end_week,
+          min: 1,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@assignment, :end_week, assignment_err_id) %>
+  </div>
+
+  <div>
+    <%= f.submit(
+          @assignment.new_record? ? t("phase_program_assignments.form.create_submit") : t("phase_program_assignments.form.update_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0"
+        ) %>
+  </div>
+<% end %>

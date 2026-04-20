@@ -328,6 +328,7 @@ es:
       my_day_link: "Mi Día"
       menus_link: "Menús"
       exercise_routines_link: "Rutinas de ejercicio"
+      programs_link: "Programas (menú + rutina)"
       phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."
       phase_start_reminder_dismiss: "Ocultar por hoy"
       menu_plan_ended_message: "Tus rangos de menú terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo de menú."
@@ -384,6 +385,64 @@ es:
       created: "Asignación de rutina creada."
       updated: "Asignación de rutina actualizada."
       destroyed: "Asignación de rutina eliminada."
+  phase_programs:
+    index:
+      title: "Programas — Moonloop"
+      heading: "Programas (menú + rutina)"
+      name_label: "Nombre del programa"
+      public_share_label: "Visible en catálogo público (cuando exista el listado)"
+      create_submit: "Crear programa"
+      edit: "Editar"
+      back_phase: "Volver al plan de fases"
+    edit:
+      title: "Programa %{name} — Moonloop"
+      heading: "Programa: %{name}"
+      name_label: "Nombre"
+      public_share_label: "Visible en catálogo público (cuando exista el listado)"
+      save_submit: "Guardar"
+      segments_heading: "Rangos de semanas (menú + rutina)"
+      segments_hint: "Cada rango enlaza un menú y una rutina de ejercicio para esas semanas del programa."
+      segment_line: "%{menu} + %{routine} — semanas %{start}–%{end}"
+      no_segments: "Aún no hay rangos. Añade al menos uno antes de aplicar al plan."
+      add_segment: "Añadir rango"
+      edit_segment: "Editar"
+      delete_segment: "Eliminar"
+      delete_segment_confirm: "¿Eliminar este rango del programa?"
+      apply_heading: "Aplicar al plan de fases"
+      apply_warning: "Esto sustituye todas tus asignaciones actuales de menú y de rutina por las de este programa."
+      apply_submit: "Aplicar al plan ahora"
+      destroy_program: "Eliminar programa"
+      destroy_confirm: "¿Eliminar este programa y todos sus rangos? Los menús y rutinas no se borran."
+      back_index: "Lista de programas"
+      back_phase: "Plan de fases"
+    flash:
+      created: "Programa creado."
+      updated: "Programa actualizado."
+      destroyed: "Programa eliminado."
+      applied: "Plan aplicado: tus asignaciones de menú y rutina ahora coinciden con este programa."
+      apply_failed: "No se pudo aplicar el programa."
+  phase_program_assignments:
+    new:
+      title: "Nuevo rango — Moonloop"
+      heading: "Nuevo rango (menú + rutina)"
+      back: "Volver al programa"
+    edit:
+      title: "Editar rango — Moonloop"
+      heading: "Editar rango"
+      back: "Volver al programa"
+    form:
+      menu_label: "Menú"
+      menu_blank: "Elige un menú"
+      routine_label: "Rutina de ejercicio"
+      routine_blank: "Elige una rutina"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Añadir rango"
+      update_submit: "Guardar rango"
+    flash:
+      created: "Rango añadido al programa."
+      updated: "Rango actualizado."
+      destroyed: "Rango eliminado."
   admin:
     moderation:
       recipe:

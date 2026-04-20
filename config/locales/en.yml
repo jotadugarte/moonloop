@@ -353,6 +353,7 @@ en:
       my_day_link: "My Day"
       menus_link: "Menus"
       exercise_routines_link: "Exercise routines"
+      programs_link: "Programs (menu + routine)"
       phase_start_reminder_banner: "Today is the first day of your Phase 1 plan — review menus and exercise routines by week below."
       phase_start_reminder_dismiss: "Hide for today"
       menu_plan_ended_message: "Your menu week ranges end before the current program week. Extend your plan or add a new menu range."
@@ -409,6 +410,64 @@ en:
       created: "Routine assignment created."
       updated: "Routine assignment updated."
       destroyed: "Routine assignment removed."
+  phase_programs:
+    index:
+      title: "Programs — Moonloop"
+      heading: "Programs (menu + routine)"
+      name_label: "Program name"
+      public_share_label: "Public catalog (when listing exists)"
+      create_submit: "Create program"
+      edit: "Edit"
+      back_phase: "Back to phase plan"
+    edit:
+      title: "Program %{name} — Moonloop"
+      heading: "Program: %{name}"
+      name_label: "Name"
+      public_share_label: "Public catalog (when listing exists)"
+      save_submit: "Save"
+      segments_heading: "Week ranges (menu + routine)"
+      segments_hint: "Each range links one menu and one exercise routine for those program weeks."
+      segment_line: "%{menu} + %{routine} — weeks %{start}–%{end}"
+      no_segments: "No ranges yet. Add at least one before applying to the plan."
+      add_segment: "Add range"
+      edit_segment: "Edit"
+      delete_segment: "Remove"
+      delete_segment_confirm: "Remove this range from the program?"
+      apply_heading: "Apply to phase plan"
+      apply_warning: "This replaces all of your current menu and routine week assignments with this program."
+      apply_submit: "Apply to plan now"
+      destroy_program: "Delete program"
+      destroy_confirm: "Delete this program and all its ranges? Menus and routines are not deleted."
+      back_index: "Program list"
+      back_phase: "Phase plan"
+    flash:
+      created: "Program created."
+      updated: "Program updated."
+      destroyed: "Program deleted."
+      applied: "Plan applied: your menu and routine assignments now match this program."
+      apply_failed: "Could not apply the program."
+  phase_program_assignments:
+    new:
+      title: "New range — Moonloop"
+      heading: "New range (menu + routine)"
+      back: "Back to program"
+    edit:
+      title: "Edit range — Moonloop"
+      heading: "Edit range"
+      back: "Back to program"
+    form:
+      menu_label: "Menu"
+      menu_blank: "Choose a menu"
+      routine_label: "Exercise routine"
+      routine_blank: "Choose a routine"
+      start_week_label: "Start week (≥ 1)"
+      end_week_label: "End week"
+      create_submit: "Add range"
+      update_submit: "Save range"
+    flash:
+      created: "Range added to the program."
+      updated: "Range updated."
+      destroyed: "Range removed."
   admin:
     moderation:
       recipe:
