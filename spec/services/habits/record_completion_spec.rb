@@ -36,6 +36,32 @@ RSpec.describe Habits::RecordCompletion do
     expect(habit.reload.streak_counters_stale).to be(true)
   end
 
+  # [REQ-RPT-002]
+  it "recomputes streak counters when recording a completion for today" do
+    today = Date.new(2026, 4, 20)
+    now = Time.utc(2026, 4, 20, 12, 0, 0)
+    habit = create(:user_habit,
+      user: user,
+      habit_category: category,
+      frequency_type: "daily",
+      activation_date: Date.new(2026, 1, 1),
+      habit_metric_kind: "none",
+      daily_target: 1,
+      streak_counters_stale: true,
+      streak_counters_as_of: nil)
+
+    allow(Habits::RecomputeStreakCounters).to receive(:call).and_call_original
+
+    travel_to now do
+      expect(call!(habit, now: now, local_date: today, status: "done")).to eq(:ok)
+    end
+
+    expect(Habits::RecomputeStreakCounters).to have_received(:call).with(user_habit: habit)
+    habit.reload
+    expect(habit.streak_counters_stale).to be(false)
+    expect(habit.streak_counters_as_of).to eq(today)
+  end
+
   # [REQ-DAY-002]
   it "records explicit failed for a none-metric habit" do
     local_date = Date.new(2026, 4, 16)
