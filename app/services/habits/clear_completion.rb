@@ -21,7 +21,26 @@ module Habits
       # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
       habit.touch
 
+      mark_streak_counters_stale_if_retroactive!(habit)
+      recompute_streak_counters_if_today!(habit)
+
       :ok
+    end
+
+    private
+
+    def recompute_streak_counters_if_today!(habit)
+      today = Time.find_zone!(@user.timezone).today
+      return unless @habit_completion.completed_on == today
+
+      Habits::RecomputeStreakCounters.call(user_habit: habit)
+    end
+
+    def mark_streak_counters_stale_if_retroactive!(habit)
+      today = Time.find_zone!(@user.timezone).today
+      return unless @habit_completion.completed_on < today
+
+      habit.update!(streak_counters_stale: true)
     end
   end
 end
