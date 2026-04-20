@@ -172,6 +172,16 @@ es:
       no_segments: "Este programa no tiene rangos publicados."
     shared:
       author: "Código de autor %{code}"
+    adopt:
+      section_label: "Adoptar este programa en tu cuenta"
+      name_label: "Nombre para tu copia"
+      submit: "Adoptar programa"
+      success: "Programa adoptado. Ya puedes editarlo y aplicarlo a tu plan."
+      errors:
+        not_public: "Este programa no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propio programa."
+        already_adopted: "Ya adoptaste este programa."
+        name_blank: "El nombre no puede estar vacío."
   menus:
     index:
       title: "Menús"

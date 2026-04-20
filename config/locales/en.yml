@@ -197,6 +197,16 @@ en:
       no_segments: "This program has no published ranges."
     shared:
       author: "Author code %{code}"
+    adopt:
+      section_label: "Adopt this program into your account"
+      name_label: "Name for your copy"
+      submit: "Adopt program"
+      success: "Program adopted. You can edit it and apply it to your plan."
+      errors:
+        not_public: "This program is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own program."
+        already_adopted: "You already adopted this program."
+        name_blank: "Name can't be blank."
   menus:
     index:
       title: "Menus"

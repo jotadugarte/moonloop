@@ -64,7 +64,11 @@ Rails.application.routes.draw do
       post :adopt
     end
   end
-  resources :public_phase_programs, only: %i[index show]
+  resources :public_phase_programs, only: %i[index show] do
+    member do
+      post :adopt
+    end
+  end
   namespace :admin do
     resources :recipes, only: [] do
       member do

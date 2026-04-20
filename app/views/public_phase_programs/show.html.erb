@@ -4,6 +4,21 @@
 
 <p><%= t("public_phase_programs.shared.author", code: @program.user.public_catalog_author_code) %></p>
 
+<% if Current.user && Current.user.id != @program.user_id %>
+  <section class="mb-4" aria-label="<%= t("public_phase_programs.adopt.section_label") %>">
+    <%= form_with url: adopt_public_phase_program_path(@program), method: :post, local: true do |f| %>
+      <p>
+        <%= label_tag "adopt_program_copy_name", t("public_phase_programs.adopt.name_label") %>
+        <%= text_field_tag :name, params[:name].presence || @program.name,
+              id: "adopt_program_copy_name",
+              required: true,
+              aria: { required: true } %>
+      </p>
+      <p><%= f.submit t("public_phase_programs.adopt.submit") %></p>
+    <% end %>
+  </section>
+<% end %>
+
 <section class="mb-6" aria-labelledby="public-program-segments-heading">
   <h2 id="public-program-segments-heading" class="text-lg font-semibold mb-2">
     <%= t("public_phase_programs.show.segments_heading") %>
