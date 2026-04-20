@@ -33,7 +33,15 @@ Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
-  abort e.to_s.strip
+  hint = <<~HINT.strip
+
+    If `bin/rails db:migrate` opens an editor on Windows, use instead:
+      bundle exec rails db:migrate
+    or:
+      ruby .\\bin\\rails db:migrate
+    Then re-run specs (test DB is updated via maintain_test_schema! or `bundle exec rails db:test:prepare`).
+  HINT
+  abort [ e.to_s.strip, hint ].join("\n")
 end
 RSpec.configure do |config|
   config.fixture_paths = [ Rails.root.join('spec/fixtures') ]

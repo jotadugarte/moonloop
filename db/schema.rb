@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_190000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_203000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -70,6 +70,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_190000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.integer "source_exercise_routine_id"
     t.string "source_sync_fingerprint"
@@ -131,6 +133,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_190000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.integer "source_menu_id"
     t.string "source_sync_fingerprint"
@@ -177,6 +181,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_190000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.integer "source_phase_program_id"
     t.string "source_sync_fingerprint"
