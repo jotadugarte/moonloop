@@ -41,8 +41,8 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `habit_reminder_events` | Unique `(user_id, user_habit_id, local_date)` | **REQ-HAB-011**. Idempotent “logical reminder attempted” bookkeeping per **user-local day** |
-| `web_push_subscriptions` | Unique `(user_id, endpoint)`; required `endpoint`, `p256dh`, `auth` | **REQ-HAB-012**. Multiple device/browser subscriptions per user; unsubscribe by endpoint |
+| `habit_reminder_events` | Unique `(user_id, user_habit_id, local_date)` | **REQ-HAB-011**. Idempotent bookkeeping that the per-habit reminder pipeline ran for that **user-local day** (prevents duplicate processing on retries); does not assert email delivery or push receipt |
+| `web_push_subscriptions` | Unique `(user_id, endpoint)`; required `endpoint`, `p256dh`, `auth` | **REQ-HAB-012** (persistence). Multiple device/browser subscriptions per user; unsubscribe by endpoint. **Delivery** (VAPID keys, service worker UX, sending pushes when reminders fire) is documented as follow-up work — see **`docs/core/ADRs/0001-habit-reminders-web-push.md`** |
 
 ### `user_habits` reminder columns
 
@@ -61,8 +61,8 @@ See **REQ-HAB-010** for validation rules and eligibility (inactive habits are no
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `phase_programs` | `user_id` FK; optional self-FK `source_phase_program_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_phase_program_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-PHS-001**, parity **REQ-MENU-006** / **REQ-EXR-006**); **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | **REQ-PHS-001** (planned), **REQ-CAT-001**. User-owned named program template; catalog and adopted-copy metadata; template-level catalog popularity metrics |
-| `phase_program_assignments` | FKs to `phase_programs`, `menus`, `exercise_routines`; check `start_week >= 1`, `end_week >= start_week`; index `(phase_program_id, start_week, end_week)` | **REQ-PHS-001** (planned). Week-range rows pairing menu + routine **within one program**; non-overlapping ranges enforced in the model (independent from global `phase_assignments` / `exercise_routine_assignments`) |
+| `phase_programs` | `user_id` FK; optional self-FK `source_phase_program_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_phase_program_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-PHS-001**, parity **REQ-MENU-006** / **REQ-EXR-006**); **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | **REQ-PHS-001**, **REQ-CAT-001**. User-owned named program template; catalog and adopted-copy metadata; template-level catalog popularity metrics |
+| `phase_program_assignments` | FKs to `phase_programs`, `menus`, `exercise_routines`; check `start_week >= 1`, `end_week >= start_week`; index `(phase_program_id, start_week, end_week)` | **REQ-PHS-001**. Week-range rows pairing menu + routine **within one program**; non-overlapping ranges enforced in the model (independent from global `phase_assignments` / `exercise_routine_assignments`) |
 
 ---
 
@@ -111,7 +111,7 @@ See `REQ-MENU-001`, `REQ-MENU-003`, `REQ-MENU-004`.
 |--------|----------------------------|--------------|
 | `weight_logs` | `user_id` FK; `logged_at` **NOT NULL** (product timeline, stored in UTC); `weight_kg`, `height_cm`, `bmi` snapshots; `created_at` / `updated_at` for audit | `REQ-WGT-001`–`003`. Index **`(user_id, logged_at)`** for listing; ordering for history is **`logged_at DESC`, `id DESC`**. `weight_kg` / `height_cm` are **readonly** after create (corrections via delete + new entry). |
 
-See **§1.8 Weight log** in `DATA_FLOW_MAP.md` for write flows and `User` **`current_weight_kg` / `current_bmi`** reconciliation.
+See **§1.9 Weight log** in `DATA_FLOW_MAP.md` for write flows and `User` **`current_weight_kg` / `current_bmi`** reconciliation.
 
 ---
 
@@ -125,4 +125,4 @@ Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habi
 
 ## Foreign keys (excerpt)
 
-Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `phase_program_assignments` → `phase_programs`, `menus`, `exercise_routines`; `phase_programs` → `users`, `phase_programs` (self, `source_phase_program_id`); `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; Active Storage tables per `db/schema.rb`.
+Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `phase_program_assignments` → `phase_programs`, `menus`, `exercise_routines`; `phase_programs` → `users`, `phase_programs` (self, `source_phase_program_id`); `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; `habit_reminder_events` → `users`, `user_habits`; `web_push_subscriptions` → `users`; Active Storage tables per `db/schema.rb`.

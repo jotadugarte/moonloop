@@ -8,6 +8,7 @@ class UserHabit < ApplicationRecord
   belongs_to :global_habit_template, optional: true
 
   has_many :habit_completions, dependent: :destroy
+  has_many :habit_reminder_events, dependent: :destroy
 
   validates :name, :name_normalized, presence: true
   validates :frequency_type, presence: true

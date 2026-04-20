@@ -23,6 +23,7 @@ class User < ApplicationRecord
   has_many :phase_assignments, dependent: :destroy
   has_many :phase_programs, dependent: :destroy
   has_many :phase_reminder_events, dependent: :destroy
+  has_many :habit_reminder_events, dependent: :destroy
   has_many :web_push_subscriptions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
