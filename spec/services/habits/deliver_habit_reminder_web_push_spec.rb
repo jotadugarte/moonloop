@@ -71,7 +71,7 @@ RSpec.describe Habits::DeliverHabitReminderWebPush do
   it "destroys a subscription when the push service reports it as invalid" do
     sub_dead = create(:web_push_subscription, user: user, endpoint: "https://gone.test/ep")
     sub_live = create(:web_push_subscription, user: user, endpoint: "https://ok.test/ep")
-    response = instance_double(Net::HTTPResponse)
+    response = instance_double(Net::HTTPResponse, body: "")
 
     allow(push_client).to receive(:payload_send) do |**kwargs|
       if kwargs[:endpoint] == sub_dead.endpoint
