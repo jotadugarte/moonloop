@@ -79,6 +79,7 @@
 | `phase_reminder_email` | Email phase-start reminder enabled |
 | `phase_reminder_dismissed_on` | Local date for which in-app banner was dismissed |
 | `allow_menu_freeform` | When false, UI hides freeform slot input (legacy freeform may still display read-only) |
+| `body_unit_system` | Closed vocabulary **`metric`** \| **`imperial_us`**, NOT NULL, default **`metric`** (**REQ-PROF-003**, planned); canonical `height_cm` / `weight_kg` unchanged |
 
 See `REQ-MENU-001`, `REQ-MENU-003`, `REQ-MENU-004`.
 

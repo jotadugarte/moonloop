@@ -659,6 +659,7 @@ en:
         password_challenge: "Current password"
         date_of_birth: "Date of birth"
         height_cm: "Height cm"
+        body_unit_system: "Body units"
         timezone: "Timezone"
         allow_menu_freeform: "Free-form menu notes"
       user_habit:
@@ -695,6 +696,8 @@ en:
               too_old: "must be at most 120 years ago"
             timezone:
               invalid: "is not a valid timezone"
+            body_unit_system:
+              inclusion: "must be metric or US imperial"
         habit_category:
           attributes:
             base:

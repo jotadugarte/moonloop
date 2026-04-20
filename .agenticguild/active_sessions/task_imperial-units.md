@@ -98,7 +98,7 @@ En uso **habitual** en Estados Unidos:
 
   <step id="2" status="complete">Implementar el módulo/servicio de conversión hasta **verde**; mantener cálculos BMI y reconciliación (`WeightLogs::ReconcileUserCurrentStats`, etc.) basados **únicamente** en columnas canónicas **kg/cm**.</step>
 
-  <step id="3" status="pending">Escribir **fallando** ejemplos de modelo/migración: columna persistida en **`users`** (p. ej. `body_unit_system` o equivalente) con valores **`metric` | `imperial_us`**, **default `metric`**, **NOT NULL**; validación de vocabulario cerrado. Aplicar migración y modelo hasta **verde**.</step>
+  <step id="3" status="complete">Escribir **fallando** ejemplos de modelo/migración: columna persistida en **`users`** (p. ej. `body_unit_system` o equivalente) con valores **`metric` | `imperial_us`**, **default `metric`**, **NOT NULL**; validación de vocabulario cerrado. Aplicar migración y modelo hasta **verde**.</step>
 
   <step id="4" status="pending">Actualizar **`docs/core/SPEC.md`** (y glosario si aplica) con **`REQ-PROF-003`**, **`REQ-WGT-004`**, y criterios añadidos a **`REQ-RPT-003`**; enlazar **`docs/core/SCHEMA_REFERENCE.md`** / **`DATA_FLOW_MAP.md`** si el repo los mantiene sincronizados tras el cambio de esquema.</step>
 

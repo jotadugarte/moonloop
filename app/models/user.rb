@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  BODY_UNIT_SYSTEMS = %w[metric imperial_us].freeze
+
   has_secure_password
 
   generates_token_for :email_verification, expires_in: 2.days do
@@ -27,6 +29,7 @@ class User < ApplicationRecord
 
   validates :date_of_birth, :height_cm, :timezone, presence: true
   validates :height_cm, numericality: { greater_than_or_equal_to: 50, less_than_or_equal_to: 300 }, allow_nil: true
+  validates :body_unit_system, inclusion: { in: BODY_UNIT_SYSTEMS }
 
   validate :date_of_birth_must_be_in_valid_range
   validate :timezone_must_be_valid

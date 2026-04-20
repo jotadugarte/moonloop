@@ -63,6 +63,29 @@ RSpec.describe User, type: :model do
       end
     end
 
+    describe 'body_unit_system validation' do
+      # [REQ-PROF-003]
+      it 'defaults to metric when creating a user' do
+        user = create(:user)
+        expect(user.body_unit_system).to eq("metric")
+      end
+
+      # [REQ-PROF-003]
+      it 'accepts imperial_us' do
+        user = build(:user, body_unit_system: "imperial_us")
+        expect(user).to be_valid
+      end
+
+      # [REQ-PROF-003]
+      it 'rejects values outside the closed vocabulary' do
+        user = build(:user, body_unit_system: "stone")
+        expect(user).not_to be_valid
+        expect(user.errors[:body_unit_system]).to include(
+          I18n.t("activerecord.errors.models.user.attributes.body_unit_system.inclusion")
+        )
+      end
+    end
+
     describe 'timezone validation' do
       # [REQ-PROF-001]
       it 'is valid for an IANA timezone' do

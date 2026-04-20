@@ -730,6 +730,7 @@ es:
         password_challenge: "Contraseña actual"
         date_of_birth: "Fecha de nacimiento"
         height_cm: "Altura (cm)"
+        body_unit_system: "Unidades corporales"
         timezone: "Zona horaria"
         allow_menu_freeform: "Notas libres en menús"
       user_habit:
@@ -771,6 +772,8 @@ es:
               too_old: "debe ser una fecha de hace como máximo 120 años"
             timezone:
               invalid: "no es una zona horaria válida"
+            body_unit_system:
+              inclusion: "debe ser métrico o imperial estadounidense"
         habit_category:
           attributes:
             base:

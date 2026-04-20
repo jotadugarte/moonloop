@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_230000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -260,6 +260,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_210000) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "allow_menu_freeform", default: true, null: false
+    t.string "body_unit_system", default: "metric", null: false
     t.datetime "created_at", null: false
     t.decimal "current_bmi", precision: 4, scale: 2
     t.decimal "current_weight_kg", precision: 5, scale: 2
