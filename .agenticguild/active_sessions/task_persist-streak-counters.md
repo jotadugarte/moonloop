@@ -159,6 +159,7 @@ Agregar un job (Solid Queue) “recompute streak counters”:
 - Aceptación: “hoy” debe mejorar claramente; “fecha pasada” mantiene correctitud, performance puede quedar igual por ahora.
 
 <implementation_plan>
+  <roadmap_item>Backlog — Reportes / escalado: columnas o contadores persistidos en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de Done #28 (prefetch + Rails.cache en Mi Día), el coste en Informes u otros lectores sigue siendo alto.</roadmap_item>
   <classification>Feature</classification>
   <constraints>
     <constraint>Must preserve exactness for `/informes?fecha=` past dates (no “through today” counters for historical pages).</constraint>
