@@ -47,6 +47,7 @@ RSpec.describe Habits::ProcessHabitReminderForUserHabit do
   # [REQ-HAB-013]
   it "creates an event but skips email when reminder_email is disabled" do
     habit.update!(reminder_email: false, reminder_web_push: true)
+    allow(Habits::DeliverHabitReminderWebPush).to receive(:call).and_return(:ok)
     madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
     travel_to(madrid) do
       expect {
@@ -54,6 +55,47 @@ RSpec.describe Habits::ProcessHabitReminderForUserHabit do
       }.to change(HabitReminderEvent, :count).by(1)
     end
     expect(ActionMailer::Base.deliveries).to be_empty
+  end
+
+  # [REQ-HAB-013]
+  it "dispatches Web Push after inserting the reminder event when reminder_web_push is enabled" do
+    habit.update!(reminder_email: false, reminder_web_push: true)
+    create(:web_push_subscription, user: user)
+    madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
+    travel_to(madrid) do
+      reloaded = habit.reload
+      expect(Habits::DeliverHabitReminderWebPush).to receive(:call).with(
+        user: user,
+        user_habit: reloaded
+      ).and_return(:ok)
+
+      expect {
+        described_class.call(user_habit: reloaded)
+      }.to change(HabitReminderEvent, :count).by(1)
+    end
+  end
+
+  # [REQ-HAB-013]
+  it "does not dispatch Web Push when reminder_web_push is disabled" do
+    create(:web_push_subscription, user: user)
+    madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
+    travel_to(madrid) do
+      expect(Habits::DeliverHabitReminderWebPush).not_to receive(:call)
+      described_class.call(user_habit: habit.reload)
+    end
+  end
+
+  # [REQ-HAB-013]
+  it "is idempotent for Web Push when the job runs twice the same local day" do
+    habit.update!(reminder_email: false, reminder_web_push: true)
+    create(:web_push_subscription, user: user)
+    allow(Habits::DeliverHabitReminderWebPush).to receive(:call).and_return(:ok)
+    madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
+    travel_to(madrid) do
+      2.times { described_class.call(user_habit: habit.reload) }
+      expect(HabitReminderEvent.where(user_habit: habit).count).to eq(1)
+    end
+    expect(Habits::DeliverHabitReminderWebPush).to have_received(:call).once
   end
 
   # [REQ-HAB-010, REQ-HAB-011]

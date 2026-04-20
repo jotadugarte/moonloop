@@ -32,6 +32,7 @@ module Habits
 
       # [REQ-HAB-013]
       HabitReminderMailer.notify(user: user, user_habit: user_habit).deliver_now if user_habit.reminder_email?
+      Habits::DeliverHabitReminderWebPush.call(user: user, user_habit: user_habit) if user_habit.reminder_web_push?
 
       :ok
     end

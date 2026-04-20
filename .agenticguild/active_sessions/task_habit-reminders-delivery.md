@@ -66,9 +66,9 @@
 
   <step id="5" status="complete">Implementar `Habits::DeliverHabitReminderWebPush` hasta verde: construir payload I18n (título/cuerpo con nombre de hábito), leer `VapidConfig` desde Rails application config alimentada por credentials, manejar respuestas 404/410 (u excepciones documentadas por la gem) con `destroy` de la suscripción afectada.</step>
 
-  <step id="6" status="pending">Escribir **fallando** spec de integración en el processor: con `reminder_web_push: true`, suscripción de fábrica y cliente Web Push stubbeado, tras procesar se intenta envío; con `reminder_web_push: false` no se llama al servicio de push. Integrar la llamada al servicio en `Habits::ProcessHabitReminderForUserHabit` tras insert exitoso del evento.</step>
+  <step id="6" status="complete">Escribir **fallando** spec de integración en el processor: con `reminder_web_push: true`, suscripción de fábrica y cliente Web Push stubbeado, tras procesar se intenta envío; con `reminder_web_push: false` no se llama al servicio de push. Integrar la llamada al servicio en `Habits::ProcessHabitReminderForUserHabit` tras insert exitoso del evento.</step>
 
-  <step id="7">Actualizar documentación: `docs/core/SPEC.md` (**REQ-HAB-013** a Implemented con criterios de wiring), `docs/core/ADRs/0001-habit-reminders-web-push.md` (nota de que el envío en reminder está implementado), `docs/core/DATA_FLOW_MAP.md` §1.8, `docs/ROADMAP.md` (cerrar o acotar ítem In Progress), `CHANGELOG.md` si el repo lo usa para releases. Añadir/ajustar comentarios `# [REQ-HAB-013]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`.</step>
+  <step id="7" status="pending">Actualizar documentación: `docs/core/SPEC.md` (**REQ-HAB-013** a Implemented con criterios de wiring), `docs/core/ADRs/0001-habit-reminders-web-push.md` (nota de que el envío en reminder está implementado), `docs/core/DATA_FLOW_MAP.md` §1.8, `docs/ROADMAP.md` (cerrar o acotar ítem In Progress), `CHANGELOG.md` si el repo lo usa para releases. Añadir/ajustar comentarios `# [REQ-HAB-013]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`.</step>
 
   <step id="8">Pase final: `bundle exec rspec` (o equivalente del proyecto) en verde; revisar que no se dupliquen envíos bajo reentrada del job y que sigan cumpliéndose **REQ-HAB-010**–**012**.</step>
 </implementation_plan>
