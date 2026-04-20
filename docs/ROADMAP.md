@@ -62,7 +62,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, **Done #33**
 
 ## Backlog
-- [ ] Imperial units support (lbs) for weight and profile
+- [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
 - [ ] Push notifications and/or **per-habit** email reminders — **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**). No Web Push / FCM in app yet.
 - [ ] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción
 - [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)

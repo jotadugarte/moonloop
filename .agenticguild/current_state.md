@@ -4,7 +4,7 @@
   <execution_context>
     <active_skill>start-task</active_skill>
     <current_phase>3</current_phase>
-    <current_step>3.3</current_step>
-    <awaiting>next_plan_step_or_finish</awaiting>
+    <current_step>complete</current_step>
+    <note>Imperial-units plan steps 1–11 complete; use finish-branch to wrap up the branch.</note>
   </execution_context>
 </agent_state>

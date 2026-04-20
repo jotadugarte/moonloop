@@ -114,6 +114,6 @@ En uso **habitual** en Estados Unidos:
 
   <step id="10" status="complete">**Mailers:** auditar `app/mailers` y vistas asociadas; cualquier texto futuro o actual que muestre peso/altura debe obtener formato vía helper que lea la preferencia del **`User`**. Escribir **fallando** ejemplo (mailer spec o preview contract) donde aplique; si hoy no hay contenido afectado, dejar spec de **regresión** (p. ej. helper) que falle si se introduce un mailer con métricas sin pasar por el formateador.</step>
 
-  <step id="11" status="pending">Pase final: suite completa en verde; revisar **`# [REQ-…]`** en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`; marcar ítem de backlog en **`docs/ROADMAP.md`** cuando el branch esté listo (fuera de este documento si usas `finish-branch`).</step>
+  <step id="11" status="complete">Pase final: suite completa en verde; revisar **`# [REQ-…]`** en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`; marcar ítem de backlog en **`docs/ROADMAP.md`** cuando el branch esté listo (fuera de este documento si usas `finish-branch`).</step>
 </implementation_plan>
 
