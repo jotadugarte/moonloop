@@ -159,4 +159,59 @@ RSpec.describe "Admin moderation of public sharing", type: :request do
 
     expect(response.body).not_to include("Listado luego revocado")
   end
+
+  # [REQ-PHS-001]
+  it "allows an admin to revoke public sharing on a phase program" do
+    admin = create(:user, email: "admin-pp@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    program = PhaseProgram.create!(user: owner, name: "Programa spam", publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
+
+    post sign_in_path, params: { email: admin.email, password: "Password123!" }
+
+    patch revoke_public_share_admin_phase_program_path(program)
+
+    expect(response).to have_http_status(:found)
+    expect(program.reload.publicly_shareable).to eq(false)
+  end
+
+  # [REQ-PHS-001]
+  it "removes a phase program from the public catalog index after admin revoke" do
+    admin = create(:user, email: "admin-pp2@example.com", password: "Password123!", timezone: "Etc/UTC")
+    viewer = create(:user, email: "viewer-pp@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    program = PhaseProgram.create!(user: owner, name: "Listado programa revocado", publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
+
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+    get public_phase_programs_path
+    expect(response.body).to include("Listado programa revocado")
+
+    post sign_in_path, params: { email: admin.email, password: "Password123!" }
+    patch revoke_public_share_admin_phase_program_path(program)
+    expect(response).to have_http_status(:found)
+
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+    get public_phase_programs_path
+
+    expect(response.body).not_to include("Listado programa revocado")
+  end
+
+  # [REQ-PHS-001]
+  it "rejects phase program moderation for non-admin users" do
+    viewer = create(:user, email: "viewer-pp3@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    program = PhaseProgram.create!(user: owner, name: "No tocar programa", publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = "admin@example.com"
+
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+
+    patch revoke_public_share_admin_phase_program_path(program)
+
+    expect(response).to have_http_status(:forbidden)
+    expect(program.reload.publicly_shareable).to eq(true)
+  end
 end

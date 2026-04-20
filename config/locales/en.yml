@@ -185,6 +185,18 @@ en:
         cannot_adopt_own: "You cannot adopt your own routine."
         already_adopted: "You already adopted this routine."
         name_blank: "Name can't be blank."
+  public_phase_programs:
+    index:
+      title: "Public programs — Moonloop"
+      heading: "Public programs (menu + routine)"
+    show:
+      title: "%{name} — Public programs — Moonloop"
+      back_to_catalog: "Back to program catalog"
+      segments_heading: "Published ranges"
+      segment_line: "%{menu} + %{routine} — weeks %{start}–%{end}"
+      no_segments: "This program has no published ranges."
+    shared:
+      author: "Author code %{code}"
   menus:
     index:
       title: "Menus"
@@ -419,6 +431,7 @@ en:
       create_submit: "Create program"
       edit: "Edit"
       back_phase: "Back to phase plan"
+      catalog_link: "Public program catalog"
     edit:
       title: "Program %{name} — Moonloop"
       heading: "Program: %{name}"
@@ -476,6 +489,8 @@ en:
         revoked_public_share: "This menu is no longer publicly shared."
       exercise_routine:
         revoked_public_share: "This exercise routine is no longer publicly shared."
+      phase_program:
+        revoked_public_share: "This program is no longer publicly shared."
   sessions:
     new:
       title: "Sign in"

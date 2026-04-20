@@ -64,6 +64,7 @@ Rails.application.routes.draw do
       post :adopt
     end
   end
+  resources :public_phase_programs, only: %i[index show]
   namespace :admin do
     resources :recipes, only: [] do
       member do
@@ -76,6 +77,11 @@ Rails.application.routes.draw do
       end
     end
     resources :exercise_routines, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+    resources :phase_programs, only: [] do
       member do
         patch :revoke_public_share
       end

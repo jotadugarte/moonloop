@@ -184,7 +184,7 @@ Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; public catalog with adoption and source sync semantics **in parity** with **REQ-MENU-006** and **REQ-EXR-006** (fingerprint, unavailable source, admin revoke). **Apply to user:** `Programs::ApplyBundleToUser` **replaces** all of that user’s existing **`phase_assignments`** and **`exercise_routine_assignments`** with rows copied from the program’s **`phase_program_assignments`** (same week ranges, same menu and routine IDs), in **one transaction** — explicit product choice for MVP (`docs/ROADMAP.md` **#33**). | Planned |
+| REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; **public catalog** `public_phase_programs` (authenticated index/show, owner **`publicly_shareable`** opt-in); admin **revoke** scopes to currently-public rows (parity with menus/routines). Adoption + source sync **in parity** with **REQ-MENU-006** / **REQ-EXR-006** (fingerprint, unavailable source) — **in progress**. **Apply to user:** `Programs::ApplyBundleToUser` **replaces** all of that user’s existing **`phase_assignments`** and **`exercise_routine_assignments`** with rows copied from the program’s **`phase_program_assignments`** (same week ranges, same menu and routine IDs), in **one transaction** — explicit product choice for MVP (`docs/ROADMAP.md` **#33**). | Planned |
 
 ### Acceptance criteria — reporting (Phase 7)
 
