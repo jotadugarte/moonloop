@@ -59,6 +59,19 @@ RSpec.describe "Public phase programs catalog", type: :request do
     expect(response).to have_http_status(:not_found)
   end
 
+  # [REQ-CAT-001]
+  it "orders the catalog index by name by default and by popularity when sort=popular" do
+    PhaseProgram.create!(user: author, name: "Aaa", publicly_shareable: true)
+    z = PhaseProgram.create!(user: author, name: "Zzz", publicly_shareable: true)
+    z.update_columns(public_catalog_adoptions_count: 30, public_catalog_distinct_adopters_count: 3)
+
+    get public_phase_programs_path
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+
+    get public_phase_programs_path(sort: "popular")
+    expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
+  end
+
   # [REQ-PHS-001]
   it "does not expose author email in index or show HTML" do
     program = PhaseProgram.create!(user: author, name: "Shared program", publicly_shareable: true)

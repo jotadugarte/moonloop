@@ -2,11 +2,12 @@
 
 class PublicExerciseRoutinesController < ApplicationController
   include AdoptionInvalidRecordFlash
+  include CatalogPublicIndexSort
 
   before_action :set_public_routine, only: %i[show adopt]
 
   def index
-    @routines = ExerciseRoutine.includes(:user).where(publicly_shareable: true).order(:name)
+    @routines = ExerciseRoutine.includes(:user).where(publicly_shareable: true).order(catalog_public_index_order)
   end
 
   def show

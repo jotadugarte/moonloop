@@ -2,11 +2,12 @@
 
 class PublicPhaseProgramsController < ApplicationController
   include AdoptionInvalidRecordFlash
+  include CatalogPublicIndexSort
 
   before_action :set_public_program, only: %i[show adopt]
 
   def index
-    @programs = PhaseProgram.includes(:user).where(publicly_shareable: true).order(:name)
+    @programs = PhaseProgram.includes(:user).where(publicly_shareable: true).order(catalog_public_index_order)
   end
 
   def show

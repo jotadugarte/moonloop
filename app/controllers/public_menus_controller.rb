@@ -2,11 +2,12 @@
 
 class PublicMenusController < ApplicationController
   include AdoptionInvalidRecordFlash
+  include CatalogPublicIndexSort
 
   before_action :set_public_menu, only: %i[show adopt]
 
   def index
-    @menus = Menu.includes(:user).where(publicly_shareable: true).order(:name)
+    @menus = Menu.includes(:user).where(publicly_shareable: true).order(catalog_public_index_order)
   end
 
   def show

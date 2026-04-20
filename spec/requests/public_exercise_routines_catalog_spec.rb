@@ -55,6 +55,19 @@ RSpec.describe "Public exercise routines catalog", type: :request do
     expect(response).to have_http_status(:not_found)
   end
 
+  # [REQ-CAT-001]
+  it "orders the catalog index by name by default and by popularity when sort=popular" do
+    create_routine(user: author, name: "Aaa", publicly_shareable: true)
+    z = create_routine(user: author, name: "Zzz", publicly_shareable: true)
+    z.update_columns(public_catalog_adoptions_count: 40, public_catalog_distinct_adopters_count: 4)
+
+    get public_exercise_routines_path
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+
+    get public_exercise_routines_path(sort: "popular")
+    expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
+  end
+
   it "does not expose author email in index or show HTML" do
     routine = create_routine(user: author, name: "Shared plan", publicly_shareable: true)
     expect(author.email).to be_present

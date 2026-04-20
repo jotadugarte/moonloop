@@ -55,6 +55,36 @@ RSpec.describe "Public menus catalog", type: :request do
     expect(response).to have_http_status(:not_found)
   end
 
+  # [REQ-CAT-001]
+  it "orders the catalog index by name by default, for sort=name, and for unknown sort values" do
+    create_menu(user: author, name: "Aaa", publicly_shareable: true)
+    z = create_menu(user: author, name: "Zzz", publicly_shareable: true)
+    z.update_columns(public_catalog_adoptions_count: 50, public_catalog_distinct_adopters_count: 5)
+
+    get public_menus_path
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+
+    get public_menus_path(sort: "name")
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+
+    get public_menus_path(sort: "  NAME ")
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+
+    get public_menus_path(sort: "not-a-real-sort")
+    expect(response.body.index("Aaa")).to be < response.body.index("Zzz")
+  end
+
+  # [REQ-CAT-001]
+  it "orders the catalog index by popularity when sort=popular" do
+    create_menu(user: author, name: "Aaa", publicly_shareable: true)
+    z = create_menu(user: author, name: "Zzz", publicly_shareable: true)
+    z.update_columns(public_catalog_adoptions_count: 50, public_catalog_distinct_adopters_count: 5)
+
+    get public_menus_path(sort: "popular")
+
+    expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
+  end
+
   # [REQ-MENU-006]
   it "does not expose author email in index or show HTML" do
     menu = create_menu(user: author, name: "Shared menu", publicly_shareable: true)
