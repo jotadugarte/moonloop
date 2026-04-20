@@ -35,6 +35,16 @@ RSpec.describe Habits::ProcessHabitReminderForUserHabit do
   end
 
   # [REQ-HAB-013]
+  it "is idempotent for email when the job runs twice the same local day" do
+    madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
+    travel_to(madrid) do
+      2.times { described_class.call(user_habit: habit.reload) }
+      expect(HabitReminderEvent.where(user_habit: habit).count).to eq(1)
+      expect(ActionMailer::Base.deliveries.size).to eq(1)
+    end
+  end
+
+  # [REQ-HAB-013]
   it "creates an event but skips email when reminder_email is disabled" do
     habit.update!(reminder_email: false, reminder_web_push: true)
     madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)

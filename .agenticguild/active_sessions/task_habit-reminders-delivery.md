@@ -60,9 +60,9 @@
 
   <step id="2" status="complete">Implementar en `Habits::ProcessHabitReminderForUserHabit` la llamada a `HabitReminderMailer.notify(user:, user_habit:).deliver_now` **solo** tras `create!` exitoso y si `user_habit.reminder_email?`. Mantener el `rescue RecordNotUnique` sin envíos. Verificar specs en verde.</step>
 
-  <step id="3" status="pending">Escribir **fallando** ejemplo de idempotencia de email: dos invocaciones el mismo día local solo producen **un** correo (misma línea base que evento único). Ajustar implementación si hiciera falta hasta verde.</step>
+  <step id="3" status="complete">Escribir **fallando** ejemplo de idempotencia de email: dos invocaciones el mismo día local solo producen **un** correo (misma línea base que evento único). Ajustar implementación si hiciera falta hasta verde.</step>
 
-  <step id="4">Añadir dependencia **`web-push`** al Gemfile (versión acotada), `bundle install`, y documentar en el plan de credenciales las claves VAPID (sin commitear secretos). Escribir **fallando** specs para un servicio nuevo, p. ej. `Habits::DeliverHabitReminderWebPush`, que: con `user_habit` y `user` con suscripciones, invoca el cliente de envío una vez por suscripción; con lista vacía no levanta error; ante error simulado de suscripción inválida elimina esa fila. Usar stubs/doubles en unit tests para no llamar la red.</step>
+  <step id="4" status="pending">Añadir dependencia **`web-push`** al Gemfile (versión acotada), `bundle install`, y documentar en el plan de credenciales las claves VAPID (sin commitear secretos). Escribir **fallando** specs para un servicio nuevo, p. ej. `Habits::DeliverHabitReminderWebPush`, que: con `user_habit` y `user` con suscripciones, invoca el cliente de envío una vez por suscripción; con lista vacía no levanta error; ante error simulado de suscripción inválida elimina esa fila. Usar stubs/doubles en unit tests para no llamar la red.</step>
 
   <step id="5">Implementar `Habits::DeliverHabitReminderWebPush` hasta verde: construir payload I18n (título/cuerpo con nombre de hábito), leer `VapidConfig` desde Rails application config alimentada por credentials, manejar respuestas 404/410 (u excepciones documentadas por la gem) con `destroy` de la suscripción afectada.</step>
 
