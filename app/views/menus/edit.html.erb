@@ -23,6 +23,9 @@
         <% @menu.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
+        <% @menu.catalog_listing_facet&.errors&.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -38,6 +41,9 @@
           aria: aria_for_field(@menu, :publicly_shareable, menu_attrs_err_id) %>
     <%= f.label :publicly_shareable, t("menus.edit.public_share_label"), class: "text-gray-700" %>
   </div>
+  <%= f.fields_for(:catalog_listing_facet, @menu.catalog_listing_facet || @menu.build_catalog_listing_facet) do |cf| %>
+    <%= render "shared/catalog_listing_facet_fields", cf: cf %>
+  <% end %>
   <div>
     <%= f.submit t("menus.edit.save_menu"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
   </div>

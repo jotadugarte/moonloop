@@ -71,6 +71,12 @@ class PhaseProgramsController < ApplicationController
   end
 
   def phase_program_params
-    params.require(:phase_program).permit(:name, :publicly_shareable)
+    params.require(:phase_program).permit(
+      :name,
+      :publicly_shareable,
+      catalog_listing_facet_attributes: %i[
+        id goal_phrase difficulty_level normalized_tags duration_weeks_min duration_weeks_max
+      ]
+    )
   end
 end

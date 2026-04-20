@@ -24,6 +24,9 @@
       <% @phase_program.errors.each do |error| %>
         <li><%= error.full_message %></li>
       <% end %>
+      <% @phase_program.catalog_listing_facet&.errors&.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
     </ul>
   <% end %>
   <div>
@@ -38,6 +41,9 @@
           aria: aria_for_field(@phase_program, :publicly_shareable, prog_attrs_err_id) %>
     <%= f.label :publicly_shareable, t("phase_programs.edit.public_share_label"), class: "text-gray-700" %>
   </div>
+  <%= f.fields_for(:catalog_listing_facet, @phase_program.catalog_listing_facet || @phase_program.build_catalog_listing_facet) do |cf| %>
+    <%= render "shared/catalog_listing_facet_fields", cf: cf %>
+  <% end %>
   <div>
     <%= f.submit t("phase_programs.edit.save_submit"),
           class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>

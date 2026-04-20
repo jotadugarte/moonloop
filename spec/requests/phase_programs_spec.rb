@@ -73,6 +73,32 @@ RSpec.describe "Phase programs (bundles)", type: :request do
     )
   end
 
+  # [REQ-CAT-001]
+  it "lets the owner save optional catalog listing facet fields from edit" do
+    program = PhaseProgram.create!(user: user, name: "Prog facet", publicly_shareable: true)
+
+    patch phase_program_path(program),
+      params: {
+        phase_program: {
+          name: "Prog facet",
+          publicly_shareable: "1",
+          catalog_listing_facet_attributes: {
+            goal_phrase: "recomposición",
+            difficulty_level: "advanced",
+            normalized_tags: "cutting",
+            duration_weeks_min: "1",
+            duration_weeks_max: "8"
+          }
+        }
+      }
+
+    expect(response).to redirect_to(edit_phase_program_path(program))
+    facet = program.reload.catalog_listing_facet
+    expect(facet).to be_present
+    expect(facet.goal_phrase).to eq("recomposición")
+    expect(facet.difficulty_level).to eq("advanced")
+  end
+
   # [REQ-PHS-001]
   it "returns not found when editing another user's program" do
     other = create(:user, password: "Password123!")

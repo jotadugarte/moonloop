@@ -1,0 +1,37 @@
+<%# locals: (cf) — fields_for Catalog::ListingFacet %>
+<fieldset class="border border-gray-200 rounded p-3 mt-4 max-w-lg" aria-labelledby="catalog-listing-facet-legend">
+  <legend id="catalog-listing-facet-legend" class="font-medium text-gray-900">
+    <%= t("catalog_listing_facet.legend") %>
+  </legend>
+  <p class="text-gray-600 text-sm mb-3"><%= t("catalog_listing_facet.hint") %></p>
+  <% if cf.object.persisted? %>
+    <%= cf.hidden_field :id %>
+  <% end %>
+  <div class="mb-2">
+    <%= cf.label :goal_phrase, t("catalog_listing_facet.goal_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
+    <%= cf.text_field :goal_phrase, class: "border border-gray-300 rounded p-2 w-full" %>
+  </div>
+  <div class="mb-2">
+    <%= cf.label :difficulty_level, t("catalog_listing_facet.difficulty_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
+    <%= cf.select :difficulty_level,
+          [ [ t("catalog_listing_facet.difficulty_blank"), "" ] ] + Catalog::ListingFacet::DIFFICULTY_LEVELS.map { |d|
+                [ t("catalog_listing_facet.difficulties.#{d}"), d ]
+              },
+          {},
+          class: "border border-gray-300 rounded p-2 w-full" %>
+  </div>
+  <div class="mb-2">
+    <%= cf.label :normalized_tags, t("catalog_listing_facet.tags_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
+    <%= cf.text_field :normalized_tags, class: "border border-gray-300 rounded p-2 w-full" %>
+  </div>
+  <div class="flex flex-wrap gap-3 mb-1">
+    <div>
+      <%= cf.label :duration_weeks_min, t("catalog_listing_facet.duration_min_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
+      <%= cf.number_field :duration_weeks_min, min: 1, step: 1, class: "border border-gray-300 rounded p-2 w-28" %>
+    </div>
+    <div>
+      <%= cf.label :duration_weeks_max, t("catalog_listing_facet.duration_max_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
+      <%= cf.number_field :duration_weeks_max, min: 1, step: 1, class: "border border-gray-300 rounded p-2 w-28" %>
+    </div>
+  </div>
+</fieldset>

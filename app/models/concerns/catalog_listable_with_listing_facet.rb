@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+# Optional public-catalog discovery row (REQ-CAT-001) for Menu, ExerciseRoutine, PhaseProgram.
+module CatalogListableWithListingFacet
+  extend ActiveSupport::Concern
+
+  included do
+    has_one :catalog_listing_facet,
+      class_name: "Catalog::ListingFacet",
+      as: :listable,
+      dependent: :destroy
+
+    accepts_nested_attributes_for :catalog_listing_facet,
+      reject_if: lambda { |attrs|
+        h = attrs.stringify_keys
+        h["id"].blank? &&
+          %w[goal_phrase difficulty_level normalized_tags duration_weeks_min duration_weeks_max].all? { |k| h[k].blank? }
+      }
+
+    validates_associated :catalog_listing_facet
+    after_save :_prune_blank_catalog_listing_facet
+  end
+
+  private
+
+  def _prune_blank_catalog_listing_facet
+    f = catalog_listing_facet
+    return unless f&.persisted?
+
+    f.destroy! if _facet_all_blank?(f)
+  end
+
+  def _facet_all_blank?(f)
+    f.goal_phrase.blank? &&
+      f.difficulty_level.blank? &&
+      f.normalized_tags.blank? &&
+      f.duration_weeks_min.nil? &&
+      f.duration_weeks_max.nil?
+  end
+end

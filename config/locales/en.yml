@@ -94,6 +94,20 @@ en:
       distinct_adopters: "Distinct adopters: %{count}"
       aria_group: "Metrics for %{name}: %{adoptions} catalog adoptions, %{adopters} distinct adopters"
 
+  catalog_listing_facet:
+    legend: "Public catalog — optional discovery fields"
+    hint: "Not required to share in the catalog. Tags: lowercase slugs separated by commas (e.g. hypertrophy, running)."
+    goal_label: "Goal (short text)"
+    difficulty_label: "Difficulty"
+    difficulty_blank: "(unspecified)"
+    difficulties:
+      beginner: "Beginner"
+      intermediate: "Intermediate"
+      advanced: "Advanced"
+    tags_label: "Tags"
+    duration_min_label: "Min weeks (plan duration)"
+    duration_max_label: "Max weeks"
+
   habit_completions:
     status:
       done: "Done"

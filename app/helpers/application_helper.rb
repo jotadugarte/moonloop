@@ -5,6 +5,7 @@ module ApplicationHelper
 
   def exercise_routine_form_errors?(routine)
     return true if routine.errors.any?
+    return true if routine.catalog_listing_facet&.errors&.any?
 
     routine.exercise_routine_lines.any? { |line| line.errors.any? }
   end

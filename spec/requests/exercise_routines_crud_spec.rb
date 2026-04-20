@@ -104,6 +104,41 @@ RSpec.describe "Exercise routines CRUD", type: :request do
     expect(routine.reload.publicly_shareable).to eq(false)
   end
 
+  # [REQ-CAT-001]
+  it "lets the owner save optional catalog listing facet fields from edit" do
+    routine = create_routine!(name: "Facet rutina", label: "Press")
+    line = routine.exercise_routine_lines.sole
+
+    patch exercise_routine_path(routine),
+      params: {
+        exercise_routine: {
+          name: "Facet rutina",
+          publicly_shareable: "1",
+          exercise_routine_lines_attributes: {
+            "0" => {
+              id: line.id,
+              weekday: line.weekday,
+              position: line.position,
+              label: line.label
+            }
+          },
+          catalog_listing_facet_attributes: {
+            goal_phrase: "resistencia",
+            difficulty_level: "beginner",
+            normalized_tags: "cardio",
+            duration_weeks_min: "2",
+            duration_weeks_max: "6"
+          }
+        }
+      }
+
+    expect(response).to redirect_to(edit_exercise_routine_path(routine))
+    facet = routine.reload.catalog_listing_facet
+    expect(facet).to be_present
+    expect(facet.goal_phrase).to eq("resistencia")
+    expect(facet.normalized_tags).to eq("cardio")
+  end
+
   # [REQ-EXR-001]
   it "forbids editing another user's routine" do
     other = create(:user, password: "Password123!", timezone: "Etc/UTC")

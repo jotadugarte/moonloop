@@ -63,6 +63,12 @@ class MenusController < ApplicationController
   end
 
   def menu_params
-    params.require(:menu).permit(:name, :publicly_shareable)
+    params.require(:menu).permit(
+      :name,
+      :publicly_shareable,
+      catalog_listing_facet_attributes: %i[
+        id goal_phrase difficulty_level normalized_tags duration_weeks_min duration_weeks_max
+      ]
+    )
   end
 end

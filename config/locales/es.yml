@@ -69,6 +69,20 @@ es:
       distinct_adopters: "Adoptantes distintos: %{count}"
       aria_group: "Métricas de %{name}: %{adoptions} adopciones desde el catálogo, %{adopters} adoptantes distintos"
 
+  catalog_listing_facet:
+    legend: "Catálogo público — datos opcionales de descubrimiento"
+    hint: "No son obligatorios para compartir en el catálogo. Etiquetas: slugs en minúsculas separadas por comas (p. ej. hipertrofia, running)."
+    goal_label: "Objetivo (texto breve)"
+    difficulty_label: "Dificultad"
+    difficulty_blank: "(sin indicar)"
+    difficulties:
+      beginner: "Principiante"
+      intermediate: "Intermedio"
+      advanced: "Avanzado"
+    tags_label: "Etiquetas"
+    duration_min_label: "Semanas mín. (duración del plan)"
+    duration_max_label: "Semanas máx."
+
   habit_completions:
     status:
       done: "Hecho"
