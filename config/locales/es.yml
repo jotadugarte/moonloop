@@ -82,6 +82,7 @@ es:
     tags_label: "Etiquetas"
     duration_min_label: "Semanas mín. (duración del plan)"
     duration_max_label: "Semanas máx."
+    duration_phase_program_hint: "La duración para el catálogo se toma automáticamente de los segmentos del programa (semana inicial más baja y semana final más alta)."
 
   habit_completions:
     status:

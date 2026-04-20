@@ -84,6 +84,7 @@
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
 | **`Programs::ApplyBundleToUser`** | Replaces **all** of the user’s **`phase_assignments`** and **`exercise_routine_assignments`** with rows derived from a owned **`PhaseProgram`**’s segments | Service (single transaction) |
+| **`PhaseProgram`** save or **`PhaseProgramAssignment`** commit | If a **`catalog_listing_facets`** row exists for that program, **`duration_weeks_min`** / **`duration_weeks_max`** reflect **min** `start_week` and **max** `end_week` on **`phase_program_assignments`** (or **NULL** if none) | **`Catalog::MaterializePhaseProgramFacetDuration`** (**REQ-CAT-001**) |
 | **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
 | **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | HTTP create: **`WeightLogs::LoggedAtParamParser`** then **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; delete: **`WeightLogs::DestroyLog`** |
 | **`GET /informes`** | **Read-only**; must not create/update/delete domain rows | **`Reports::ShowPage`** + query objects only |

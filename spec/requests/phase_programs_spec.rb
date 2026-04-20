@@ -85,9 +85,7 @@ RSpec.describe "Phase programs (bundles)", type: :request do
           catalog_listing_facet_attributes: {
             goal_phrase: "recomposición",
             difficulty_level: "advanced",
-            normalized_tags: "cutting",
-            duration_weeks_min: "1",
-            duration_weeks_max: "8"
+            normalized_tags: "cutting"
           }
         }
       }
@@ -97,6 +95,40 @@ RSpec.describe "Phase programs (bundles)", type: :request do
     expect(facet).to be_present
     expect(facet.goal_phrase).to eq("recomposición")
     expect(facet.difficulty_level).to eq("advanced")
+  end
+
+  # [REQ-CAT-001]
+  it "materializes catalog facet duration from program segments (not the facet form)" do
+    menu_a = Menu.create!(user: user, name: "Ma")
+    routine_a = routine_for(user, "Ra")
+    program = PhaseProgram.create!(user: user, name: "Seg dura", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: program, goal_phrase: "plan")
+
+    post phase_program_phase_program_assignments_path(program),
+      params: {
+        phase_program_assignment: {
+          menu_id: menu_a.id,
+          exercise_routine_id: routine_a.id,
+          start_week: 1,
+          end_week: 4
+        }
+      }
+    expect(response).to have_http_status(:found)
+
+    post phase_program_phase_program_assignments_path(program),
+      params: {
+        phase_program_assignment: {
+          menu_id: menu_a.id,
+          exercise_routine_id: routine_a.id,
+          start_week: 5,
+          end_week: 12
+        }
+      }
+    expect(response).to have_http_status(:found)
+
+    facet = program.reload.catalog_listing_facet
+    expect(facet.duration_weeks_min).to eq(1)
+    expect(facet.duration_weeks_max).to eq(12)
   end
 
   # [REQ-PHS-001]

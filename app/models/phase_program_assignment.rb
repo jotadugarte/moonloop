@@ -13,7 +13,14 @@ class PhaseProgramAssignment < ApplicationRecord
   validate :exercise_routine_must_belong_to_program_owner
   validate :ranges_must_not_overlap
 
+  after_commit :_materialize_phase_program_catalog_facet_duration
+
   private
+
+  def _materialize_phase_program_catalog_facet_duration
+    Catalog::MaterializePhaseProgramFacetDuration.call(phase_program)
+  end
+
 
   def end_week_gte_start_week
     return if start_week.blank? || end_week.blank?

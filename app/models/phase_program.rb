@@ -17,7 +17,13 @@ class PhaseProgram < ApplicationRecord
 
   validate :name_must_be_unique_for_user
 
+  after_save :_materialize_catalog_listing_facet_duration_from_assignments
+
   private
+
+  def _materialize_catalog_listing_facet_duration_from_assignments
+    Catalog::MaterializePhaseProgramFacetDuration.call(self)
+  end
 
   def sync_name_normalized
     self.name_normalized = name.to_s.strip.downcase

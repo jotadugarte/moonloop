@@ -107,6 +107,7 @@ en:
     tags_label: "Tags"
     duration_min_label: "Min weeks (plan duration)"
     duration_max_label: "Max weeks"
+    duration_phase_program_hint: "Catalog duration is filled automatically from program segments (lowest start week and highest end week)."
 
   habit_completions:
     status:
