@@ -46,6 +46,10 @@ en:
       subject: "Reminder: %{habit_name}"
       body_html: "Reminder for your habit: %{habit_name}"
       body_text: "Reminder for your habit: %{habit_name}"
+  habit_reminder_web_push:
+    notify:
+      title: "Reminder: %{habit_name}"
+      body: "Reminder for your habit: %{habit_name}"
   date:
     formats:
       long: "%B %d, %Y"
