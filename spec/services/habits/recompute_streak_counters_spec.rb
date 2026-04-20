@@ -35,4 +35,3 @@ RSpec.describe Habits::RecomputeStreakCounters do
     end
   end
 end
-

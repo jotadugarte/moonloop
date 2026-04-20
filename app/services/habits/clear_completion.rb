@@ -17,11 +17,12 @@ module Habits
       return :not_owner unless habit.user_id == @user.id
       return :inactive unless habit.active?
 
-      recompute_streak_counters_if_today!(habit)
-      mark_streak_counters_stale_if_retroactive!(habit)
       @habit_completion.destroy!
       # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
       habit.touch
+
+      mark_streak_counters_stale_if_retroactive!(habit)
+      recompute_streak_counters_if_today!(habit)
 
       :ok
     end
@@ -29,8 +30,6 @@ module Habits
     private
 
     def recompute_streak_counters_if_today!(habit)
-      return unless habit.respond_to?(:streak_counters_stale)
-
       today = Time.find_zone!(@user.timezone).today
       return unless @habit_completion.completed_on == today
 
@@ -38,8 +37,6 @@ module Habits
     end
 
     def mark_streak_counters_stale_if_retroactive!(habit)
-      return unless habit.respond_to?(:streak_counters_stale)
-
       today = Time.find_zone!(@user.timezone).today
       return unless @habit_completion.completed_on < today
 

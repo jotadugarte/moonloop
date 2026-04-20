@@ -11,4 +11,3 @@ class AddStreakCountersToUserHabits < ActiveRecord::Migration[8.1]
       name: "index_user_habits_on_streak_counters_freshness"
   end
 end
-

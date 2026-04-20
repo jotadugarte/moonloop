@@ -26,4 +26,3 @@ RSpec.describe Habits::RecomputeStreakCountersJob, type: :job do
     expect(Habits::RecomputeStreakCounters).not_to have_received(:call)
   end
 end
-

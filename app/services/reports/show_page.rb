@@ -148,7 +148,6 @@ module Reports
 
     def use_persisted_streak_counters?(habit, local_date:, today:)
       return false unless local_date == today
-      return false unless habit.respond_to?(:streak_counters_stale)
 
       habit.streak_counters_stale == false && habit.streak_counters_as_of == today
     end

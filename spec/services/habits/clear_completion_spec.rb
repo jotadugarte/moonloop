@@ -58,4 +58,3 @@ RSpec.describe Habits::ClearCompletion do
     end
   end
 end
-
