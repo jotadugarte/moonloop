@@ -78,9 +78,9 @@
     Mantener paridad conceptual con recordatorios de fase: sweep recurrente + evento idempotente por día local.
   </mandate>
 
-  <step id="1" status="pending">Escribir **fallando** specs de modelo/servicio para el **modelo de configuración por hábito**: persistir (en `UserHabit` o tabla nueva) `reminder_enabled=false` por defecto, `reminder_time_of_day` (hora+minuto), y flags de canal (email/push) solo aplicables cuando está habilitado. Cubrir validaciones mínimas y que un hábito desactivado no sea elegible.</step>
+  <step id="1" status="complete">Escribir **fallando** specs de modelo/servicio para el **modelo de configuración por hábito**: persistir (en `UserHabit` o tabla nueva) `reminder_enabled=false` por defecto, `reminder_time_of_day` (hora+minuto), y flags de canal (email/push) solo aplicables cuando está habilitado. Cubrir validaciones mínimas y que un hábito desactivado no sea elegible.</step>
 
-  <step id="2" status="pending">Implementar migraciones/modelos hasta **verde** (incluyendo índices que ayuden al sweep por hora/minuto si aplica). Mantener el diseño centrado en prefs por hábito; no introducir defaults globales en `User` salvo necesidad de UI.</step>
+  <step id="2" status="complete">Implementar migraciones/modelos hasta **verde** (incluyendo índices que ayuden al sweep por hora/minuto si aplica). Mantener el diseño centrado en prefs por hábito; no introducir defaults globales en `User` salvo necesidad de UI.</step>
 
   <step id="3" status="pending">Escribir **fallando** specs para **idempotencia**: crear entidad tipo `HabitReminderEvent` con unicidad por `(user_id, user_habit_id, local_date)` (y canal/kind solo si se justifica). Confirmar que ante reintentos o ejecución repetida no duplica envíos lógicos.</step>
 
