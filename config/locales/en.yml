@@ -633,6 +633,12 @@ en:
       submit: "Save"
       back: "Back to habits"
       metric_hint: "When the type is \"none\", the daily target is normalized to 1 (binary habit)."
+      reminder_heading: "Reminder"
+      reminder_enabled_label: "Enable reminder"
+      reminder_time_label: "Time"
+      reminder_channels_label: "Channels"
+      reminder_channel_email: "Email"
+      reminder_channel_web_push: "Web Push"
   habits:
     default_categories:
       nutrition:

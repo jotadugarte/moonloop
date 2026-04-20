@@ -20,6 +20,28 @@
     <%= f.number_field :daily_target, min: 1, max: UserHabit::DAILY_TARGET_MAX %>
     <p class="text-sm text-gray-600"><%= t("user_habits.edit.metric_hint") %></p>
   </div>
+  <fieldset class="mt-6">
+    <legend><%= t("user_habits.edit.reminder_heading") %></legend>
+    <div>
+      <%= f.check_box :reminder_enabled %>
+      <%= f.label :reminder_enabled, t("user_habits.edit.reminder_enabled_label") %>
+    </div>
+    <div>
+      <%= f.label :reminder_time_of_day, t("user_habits.edit.reminder_time_label") %>
+      <%= f.time_field :reminder_time_of_day, step: 60 %>
+    </div>
+    <div>
+      <div><%= t("user_habits.edit.reminder_channels_label") %></div>
+      <div>
+        <%= f.check_box :reminder_email %>
+        <%= f.label :reminder_email, t("user_habits.edit.reminder_channel_email") %>
+      </div>
+      <div>
+        <%= f.check_box :reminder_web_push %>
+        <%= f.label :reminder_web_push, t("user_habits.edit.reminder_channel_web_push") %>
+      </div>
+    </div>
+  </fieldset>
   <div>
     <%= f.submit t("user_habits.edit.submit") %>
   </div>

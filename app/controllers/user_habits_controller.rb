@@ -70,6 +70,14 @@ class UserHabitsController < ApplicationController
   end
 
   def user_habit_update_params
-    params.require(:user_habit).permit(:name, :habit_metric_kind, :daily_target)
+    params.require(:user_habit).permit(
+      :name,
+      :habit_metric_kind,
+      :daily_target,
+      :reminder_enabled,
+      :reminder_time_of_day,
+      :reminder_email,
+      :reminder_web_push
+    )
   end
 end

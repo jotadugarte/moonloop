@@ -728,6 +728,12 @@ es:
       submit: "Guardar"
       back: "Volver a hábitos"
       metric_hint: "Si el tipo es «none», el objetivo diario se normaliza a 1 (hábito binario)."
+      reminder_heading: "Recordatorio"
+      reminder_enabled_label: "Activar recordatorio"
+      reminder_time_label: "Hora"
+      reminder_channels_label: "Canales"
+      reminder_channel_email: "Email"
+      reminder_channel_web_push: "Web Push"
   habits:
     default_categories:
       nutrition:
