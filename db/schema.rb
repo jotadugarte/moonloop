@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_093000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -251,18 +251,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_093000) do
     t.date "activation_date"
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
+    t.integer "current_streak_today", default: 0, null: false
     t.integer "daily_target", default: 1, null: false
     t.json "frequency_params", default: {}, null: false
     t.string "frequency_type", default: "daily", null: false
     t.integer "global_habit_template_id"
     t.integer "habit_category_id", null: false
     t.string "habit_metric_kind", default: "none", null: false
+    t.integer "longest_streak_through_today", default: 0, null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.boolean "reminder_email", default: false, null: false
     t.boolean "reminder_enabled", default: false, null: false
     t.string "reminder_time_of_day"
     t.boolean "reminder_web_push", default: false, null: false
+    t.date "streak_counters_as_of"
+    t.boolean "streak_counters_stale", default: true, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["activation_date"], name: "index_user_habits_on_activation_date"
@@ -270,6 +274,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_093000) do
     t.index ["global_habit_template_id"], name: "index_user_habits_on_global_habit_template_id"
     t.index ["habit_category_id"], name: "index_user_habits_on_habit_category_id"
     t.index ["reminder_enabled", "reminder_time_of_day"], name: "idx_user_habits_reminder_slot"
+    t.index ["streak_counters_stale", "streak_counters_as_of"], name: "index_user_habits_on_streak_counters_freshness"
     t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "active = 1"
     t.index ["user_id"], name: "index_user_habits_on_user_id"
   end

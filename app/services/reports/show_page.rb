@@ -53,6 +53,7 @@ module Reports
           streak_rows: streak_rows(
             habits,
             local_date,
+            today,
             combined_from,
             combined_to,
             completions_by_habit
@@ -108,7 +109,7 @@ module Reports
       end
     end
 
-    def streak_rows(habits, local_date, combined_from, combined_to, completions_by_habit)
+    def streak_rows(habits, local_date, today, combined_from, combined_to, completions_by_habit)
       return [] if habits.empty?
 
       window = combined_from..combined_to
@@ -121,6 +122,14 @@ module Reports
 
       eligible.sort_by { |h| [ h.habit_category.name.downcase, h.name.downcase ] }.map do |habit|
         idx = completions_by_habit[habit.id] || {}
+        if use_persisted_streak_counters?(habit, local_date: local_date, today: today)
+          next({
+            habit: habit,
+            current: habit.current_streak_today,
+            longest: habit.longest_streak_through_today
+          })
+        end
+
         {
           habit: habit,
           current: Habits::ReportCurrentStreak.call(
@@ -135,6 +144,13 @@ module Reports
           )
         }
       end
+    end
+
+    def use_persisted_streak_counters?(habit, local_date:, today:)
+      return false unless local_date == today
+      return false unless habit.respond_to?(:streak_counters_stale)
+
+      habit.streak_counters_stale == false && habit.streak_counters_as_of == today
     end
   end
 end
