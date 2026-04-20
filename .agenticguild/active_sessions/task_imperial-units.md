@@ -106,9 +106,9 @@ En uso **habitual** en Estados Unidos:
 
   <step id="6" status="complete">Implementar formularios, strong params, y vistas hasta **verde**; strings vía **I18n** (`es` / `en`) para etiquetas y unidades.</step>
 
-  <step id="7" status="pending">Escribir **fallando** specs para **registro de peso** (`LogWeightService` / controlador según el código actual) e **`WeightLogs::HistoryPage`**: entrada en lb o kg según usuario; listado con snapshot de altura y peso formateados según preferencia **actual**; borrar/reconciliar sin regresión.</step>
+  <step id="7" status="complete">Escribir **fallando** specs para **registro de peso** (`LogWeightService` / controlador según el código actual) e **`WeightLogs::HistoryPage`**: entrada en lb o kg según usuario; listado con snapshot de altura y peso formateados según preferencia **actual**; borrar/reconciliar sin regresión.</step>
 
-  <step id="8" status="pending">Implementar capa de presentación y parámetros hasta **verde**; reutilizar el mismo formateador/helper que perfil para evitar divergencia.</step>
+  <step id="8" status="complete">Implementar capa de presentación y parámetros hasta **verde**; reutilizar el mismo formateador/helper que perfil para evitar divergencia.</step>
 
   <step id="9" status="pending">Escribir **fallando** spec para **Informes / gráfico de peso** (`WeightLogs::ChartSeries` + vista SVG): eje Y, leyenda y tooltip en unidades del usuario; serie interna sigue derivada de **`weight_kg`**. Implementar hasta **verde**.</step>
 

@@ -32,6 +32,18 @@ RSpec.describe "Weight logs", type: :request do
         end
       end
 
+      # [REQ-WGT-003, REQ-WGT-004]
+      it "formats weights and snapshot height using the viewer's current unit preference" do
+        imperial = create(:user, password: "Password123!", timezone: "Etc/UTC", body_unit_system: "imperial_us", height_cm: 175)
+        post sign_in_path, params: { email: imperial.email, password: "Password123!" }
+        create(:weight_log, user: imperial, weight_kg: 70.0, height_cm: 180, logged_at: Time.utc(2026, 4, 10, 12, 0, 0))
+
+        get weight_logs_path
+
+        expect(response.body).to include("154.3")
+        expect(response.body).to include(I18n.t("body_metrics.height_ft_in", feet: 5, inches: 11))
+      end
+
       # [REQ-WGT-003]
       it "shows 30 entries per page and a link to the next page when there are more" do
         travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
@@ -93,6 +105,17 @@ RSpec.describe "Weight logs", type: :request do
         expect(response.body).to include("weight_log_weight_kg")
         expect(response.body).to include("weight_log_logged_at")
       end
+
+      # [REQ-WGT-002, REQ-WGT-004]
+      it "renders pounds field when the user prefers imperial US" do
+        imperial = create(:user, password: "Password123!", timezone: "Etc/UTC", body_unit_system: "imperial_us")
+        post sign_in_path, params: { email: imperial.email, password: "Password123!" }
+
+        get new_weight_log_path
+
+        expect(response.body).to include("weight_log_weight_lb")
+        expect(response.body).not_to include("weight_log_weight_kg")
+      end
     end
 
     # [REQ-WGT-002]
@@ -122,13 +145,57 @@ RSpec.describe "Weight logs", type: :request do
               }
           }.to change(WeightLog, :count).by(1)
 
-          expect(response).to redirect_to(profile_path)
+          expect(response).to redirect_to(edit_profile_path)
           expect(flash[:notice]).to eq(I18n.t("weight_logs.flash.created"))
 
           log = WeightLog.order(:id).last
           expect(log.weight_kg).to eq(78.2)
           user.reload
           expect(user.current_weight_kg).to eq(78.2)
+        end
+      end
+
+      # [REQ-WGT-002, REQ-WGT-004]
+      it "accepts pounds and persists canonical kg for imperial users" do
+        imperial = create(:user, password: "Password123!", timezone: "Etc/UTC", height_cm: 180, body_unit_system: "imperial_us")
+        post sign_in_path, params: { email: imperial.email, password: "Password123!" }
+
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          expect {
+            post weight_logs_path,
+              params: {
+                weight_log: {
+                  weight_lb: "176.37",
+                  logged_at: "2026-04-16T10:30"
+                }
+              }
+          }.to change(WeightLog, :count).by(1)
+
+          log = WeightLog.order(:id).last
+          expect(log.weight_kg).to be_within(0.02).of(80.0)
+          imperial.reload
+          expect(imperial.current_weight_kg).to be_within(0.02).of(80.0)
+        end
+      end
+
+      # [REQ-WGT-002, REQ-WGT-004]
+      it "re-renders when weight_lb is blank for imperial users" do
+        imperial = create(:user, password: "Password123!", timezone: "Etc/UTC", body_unit_system: "imperial_us")
+        post sign_in_path, params: { email: imperial.email, password: "Password123!" }
+
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          expect {
+            post weight_logs_path,
+              params: {
+                weight_log: {
+                  weight_lb: "",
+                  logged_at: "2026-04-16T10:30"
+                }
+              }
+          }.not_to change(WeightLog, :count)
+
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(response.body).to include(I18n.t("weight_logs.errors.weight_blank"))
         end
       end
 

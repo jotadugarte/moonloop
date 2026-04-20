@@ -581,6 +581,11 @@ es:
       new_password: "Contraseña nueva"
       confirm_new_password: "Confirmar contraseña nueva"
       password_hint: "Mínimo 12 caracteres."
+  body_metrics:
+    unit_kg: "kg"
+    unit_lb: "lb"
+    unit_cm: "cm"
+    height_ft_in: "%{feet} pies %{inches} pulg"
   weight_logs:
     flash:
       created: "Peso registrado"
@@ -593,6 +598,8 @@ es:
       empty: "Aún no hay mediciones. Registra la primera."
       columns:
         logged_at: "Fecha y hora"
+        weight: "Peso"
+        height_snapshot: "Altura (en el pesaje)"
         weight_kg: "Peso (kg)"
         height_cm: "Altura (cm)"
         bmi: "IMC"
@@ -607,11 +614,14 @@ es:
     new:
       title: "Registrar peso"
       weight_kg_label: "Peso (kg)"
+      weight_lb_label: "Peso (lb)"
+      weight_lb_hint: "Un decimal es lo habitual; se guarda en kilogramos."
       logged_at_label: "Fecha y hora del pesaje"
       submit: "Guardar"
       back: "Volver al perfil"
       history_link: "Ver historial"
     errors:
+      weight_blank: "Ingresa tu peso para guardar el pesaje."
       user_stats_update_failed: "No se pudo actualizar tu peso actual. Inténtalo de nuevo."
     confirm_destroy:
       title: "Eliminar entrada de peso"
