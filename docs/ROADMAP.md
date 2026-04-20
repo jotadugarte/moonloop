@@ -36,6 +36,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
 29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` supports `publicly_shareable` for catalog + admin revoke (**REQ-MENU-006**). (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
 31. [x] Menús: catálogo público `public_menus` + adopción/sync con **paridad semántica** a rutinas (**REQ-EXR-006** / **Done #30**): usuarios autenticados, una copia por origen, nombre de copia estable al sincronizar, recetas duplicadas al adoptante en slots con receta, aviso/origen no disponible, moderación admin (REQ-MENU-006) — 2026-04-18 — Depends on: **Done #30**, Phase 4 (#15–19, #29)
+33. [x] **Programas de Fases Unificadas (Bundles)**: entidad `PhaseProgram` con segmentos menú+rutina por rango de semanas, aplicación atómica al plan (`Programs::ApplyBundleToUser`), catálogo público, adopción integral y sincronización con origen en paridad con menús/rutinas (REQ-PHS-001); entrada en `/phase` y mapa de datos actualizado — 2026-04-19 — Depends on: **Done** #30, #31, Phase 4 (#17)
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -58,8 +59,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-33. [ ] **Programas de Fases Unificadas (Bundles)**: Crear una entidad que agrupe la planificación completa de Menús (#17) y Rutinas (#21) en un solo "Programa" compartible. El usuario define la estructura de semanas (ej. 1–12) y asigna los componentes. Catálogo público de programas con **adopción integral**: al adoptar, el sistema instancia las copias de recetas y ejercicios necesarios. Mantiene paridad con la lógica de sincronización y autoría de **#30** y **#31** (REQ-PHS-001) — Depends on: #30, #31, Phase 4 (#17)
-34. [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (**#33**). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, **#33**
+34. [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (**Done #33**). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, **Done #33**
 
 ## Backlog
 - [ ] Imperial units support (lbs) for weight and profile
