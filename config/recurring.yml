@@ -5,8 +5,14 @@ development:
   sweep_phase_start_reminders:
     class: Phases::SweepPhaseStartRemindersJob
     schedule: every day at 6am
+  sweep_habit_reminders:
+    class: Habits::SweepHabitRemindersJob
+    schedule: every 1 minute
 
 production:
   sweep_phase_start_reminders:
     class: Phases::SweepPhaseStartRemindersJob
     schedule: every day at 6am
+  sweep_habit_reminders:
+    class: Habits::SweepHabitRemindersJob
+    schedule: every 1 minute
