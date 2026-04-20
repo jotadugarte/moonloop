@@ -17,11 +17,23 @@ module Habits
       return :not_owner unless habit.user_id == @user.id
       return :inactive unless habit.active?
 
+      mark_streak_counters_stale_if_retroactive!(habit)
       @habit_completion.destroy!
       # Busts +Habits::MiDayStreakPrefetch+ cache keys (see +UserHabit#cache_key_with_version+).
       habit.touch
 
       :ok
+    end
+
+    private
+
+    def mark_streak_counters_stale_if_retroactive!(habit)
+      return unless habit.respond_to?(:streak_counters_stale)
+
+      today = Time.find_zone!(@user.timezone).today
+      return unless @habit_completion.completed_on < today
+
+      habit.update!(streak_counters_stale: true)
     end
   end
 end
