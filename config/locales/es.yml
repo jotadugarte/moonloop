@@ -132,6 +132,7 @@ es:
       weight_heading: "Evolución del peso"
       weight_empty: "Aún no hay registros de peso para graficar."
       weight_chart_aria: "Gráfico de peso en el tiempo"
+      weight_chart_legend: "Escala: %{unit}"
       col_category: "Categoría"
       col_habit: "Hábito"
       col_week: "Semana"

@@ -157,6 +157,7 @@ en:
       weight_heading: "Weight trend"
       weight_empty: "No weight entries to chart yet."
       weight_chart_aria: "Weight over time chart"
+      weight_chart_legend: "Scale: %{unit}"
       col_category: "Category"
       col_habit: "Habit"
       col_week: "Week"

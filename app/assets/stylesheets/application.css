@@ -385,6 +385,11 @@
   fill: #374151;
 }
 
+.reports-weight-chart__y-tick,
+.reports-weight-chart__legend {
+  fill: #4b5563;
+}
+
 /* ——— Flash ——— */
 .flash {
   margin: 0.5rem 0;

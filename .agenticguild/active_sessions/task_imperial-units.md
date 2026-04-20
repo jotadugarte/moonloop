@@ -110,7 +110,7 @@ En uso **habitual** en Estados Unidos:
 
   <step id="8" status="complete">Implementar capa de presentación y parámetros hasta **verde**; reutilizar el mismo formateador/helper que perfil para evitar divergencia.</step>
 
-  <step id="9" status="pending">Escribir **fallando** spec para **Informes / gráfico de peso** (`WeightLogs::ChartSeries` + vista SVG): eje Y, leyenda y tooltip en unidades del usuario; serie interna sigue derivada de **`weight_kg`**. Implementar hasta **verde**.</step>
+  <step id="9" status="complete">Escribir **fallando** spec para **Informes / gráfico de peso** (`WeightLogs::ChartSeries` + vista SVG): eje Y, leyenda y tooltip en unidades del usuario; serie interna sigue derivada de **`weight_kg`**. Implementar hasta **verde**.</step>
 
   <step id="10" status="pending">**Mailers:** auditar `app/mailers` y vistas asociadas; cualquier texto futuro o actual que muestre peso/altura debe obtener formato vía helper que lea la preferencia del **`User`**. Escribir **fallando** ejemplo (mailer spec o preview contract) donde aplique; si hoy no hay contenido afectado, dejar spec de **regresión** (p. ej. helper) que falle si se introduce un mailer con métricas sin pasar por el formateador.</step>
 
