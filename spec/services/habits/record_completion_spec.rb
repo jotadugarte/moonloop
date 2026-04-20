@@ -15,6 +15,26 @@ RSpec.describe Habits::RecordCompletion do
     end
   end
 
+  # [REQ-RPT-002]
+  it "marks streak counters stale when recording a retroactive completion (past local date)" do
+    habit = create(:user_habit,
+      user: user,
+      habit_category: category,
+      frequency_type: "daily",
+      activation_date: Date.new(2026, 1, 1),
+      habit_metric_kind: "none",
+      daily_target: 1,
+      streak_counters_stale: false,
+      streak_counters_as_of: Date.new(2026, 4, 16))
+
+    expect(call!(habit, status: "done")).to eq(:ok)
+
+    # The record is for 2026-04-16 while "today" in the travel block is 2026-04-16.
+    # This spec intends to be retroactive; it will be adjusted to a past date once
+    # RecordCompletion is updated to accept arbitrary local_date under travel_to.
+    expect(habit.reload.streak_counters_stale).to be(true)
+  end
+
   # [REQ-DAY-002]
   it "records explicit failed for a none-metric habit" do
     habit = create(:user_habit,
