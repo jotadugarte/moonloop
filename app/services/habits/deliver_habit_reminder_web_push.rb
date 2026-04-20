@@ -40,6 +40,11 @@ module Habits
       )
     rescue WebPush::InvalidSubscription, WebPush::ExpiredSubscription
       subscription.destroy!
+    rescue StandardError => e
+      Rails.logger.warn(
+        "[#{self.class.name}] subscription id=#{subscription.id} " \
+        "endpoint=#{subscription.endpoint}: #{e.class}: #{e.message}"
+      )
     end
   end
 end

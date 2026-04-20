@@ -11,6 +11,24 @@ module Habits
     end
 
     def call
+      context = reminder_processing_context
+      return context if context.is_a?(Symbol)
+
+      user, local_date = context
+      return :already_done if habit_done_on_local_date?(local_date)
+
+      return :ok unless insert_reminder_event!(user, local_date)
+
+      # [REQ-HAB-013]
+      deliver_reminder_channels(user)
+      :ok
+    end
+
+    private
+
+    attr_reader :user_habit
+
+    def reminder_processing_context
       return :inactive unless user_habit.active?
       return :reminder_disabled unless user_habit.reminder_enabled?
 
@@ -22,24 +40,25 @@ module Habits
       return :invalid_timezone unless tz
 
       local_date = tz.at(Time.current).to_date
-      return :already_done if habit_done_on_local_date?(local_date)
-
-      begin
-        HabitReminderEvent.create!(user: user, user_habit: user_habit, local_date: local_date)
-      rescue ActiveRecord::RecordNotUnique
-        return :ok
-      end
-
-      # [REQ-HAB-013]
-      HabitReminderMailer.notify(user: user, user_habit: user_habit).deliver_now if user_habit.reminder_email?
-      Habits::DeliverHabitReminderWebPush.call(user: user, user_habit: user_habit) if user_habit.reminder_web_push?
-
-      :ok
+      [ user, local_date ]
     end
 
-    private
+    def insert_reminder_event!(user, local_date)
+      HabitReminderEvent.create!(user: user, user_habit: user_habit, local_date: local_date)
+      true
+    rescue ActiveRecord::RecordNotUnique
+      false
+    end
 
-    attr_reader :user_habit
+    def deliver_reminder_channels(user)
+      if user_habit.reminder_email?
+        HabitReminderMailer.notify(user: user, user_habit: user_habit).deliver_now
+      end
+
+      if user_habit.reminder_web_push?
+        Habits::DeliverHabitReminderWebPush.call(user: user, user_habit: user_habit)
+      end
+    end
 
     def habit_done_on_local_date?(local_date)
       completion = user_habit.habit_completions.find_by(completed_on: local_date)

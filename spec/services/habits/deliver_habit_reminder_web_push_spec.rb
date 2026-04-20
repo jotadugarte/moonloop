@@ -68,6 +68,26 @@ RSpec.describe Habits::DeliverHabitReminderWebPush do
   end
 
   # [REQ-HAB-013]
+  it "destroys a subscription when the push service reports it as expired" do
+    sub_dead = create(:web_push_subscription, user: user, endpoint: "https://expired.test/ep")
+    sub_live = create(:web_push_subscription, user: user, endpoint: "https://ok-expired.test/ep")
+    response = instance_double(Net::HTTPResponse, body: "")
+
+    allow(push_client).to receive(:payload_send) do |**kwargs|
+      if kwargs[:endpoint] == sub_dead.endpoint
+        raise WebPush::ExpiredSubscription.new(response, "push.test")
+      end
+    end
+
+    expect {
+      described_class.call(user: user, user_habit: habit, web_push: push_client)
+    }.to change { WebPushSubscription.exists?(sub_dead.id) }.from(true).to(false)
+
+    expect(WebPushSubscription.exists?(sub_live.id)).to be(true)
+    expect(push_client).to have_received(:payload_send).twice
+  end
+
+  # [REQ-HAB-013]
   it "destroys a subscription when the push service reports it as invalid" do
     sub_dead = create(:web_push_subscription, user: user, endpoint: "https://gone.test/ep")
     sub_live = create(:web_push_subscription, user: user, endpoint: "https://ok.test/ep")
@@ -85,5 +105,22 @@ RSpec.describe Habits::DeliverHabitReminderWebPush do
 
     expect(WebPushSubscription.exists?(sub_live.id)).to be(true)
     expect(push_client).to have_received(:payload_send).twice
+  end
+
+  # [REQ-HAB-013]
+  it "logs and continues when one subscription raises an unexpected error" do
+    sub_err = create(:web_push_subscription, user: user, endpoint: "https://err.test/ep")
+    sub_ok = create(:web_push_subscription, user: user, endpoint: "https://after-err.test/ep")
+    allow(push_client).to receive(:payload_send) do |**kwargs|
+      raise StandardError, "timeout" if kwargs[:endpoint] == sub_err.endpoint
+    end
+    allow(Rails.logger).to receive(:warn)
+
+    described_class.call(user: user, user_habit: habit, web_push: push_client)
+
+    expect(push_client).to have_received(:payload_send).twice
+    expect(Rails.logger).to have_received(:warn).with(
+      a_string_matching(/DeliverHabitReminderWebPush.*subscription id=#{sub_err.id}/)
+    )
   end
 end
