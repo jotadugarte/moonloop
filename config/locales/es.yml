@@ -17,6 +17,10 @@ es:
       subject: "Recordatorio: %{habit_name}"
       body_html: "Recordatorio para tu hábito: %{habit_name}"
       body_text: "Recordatorio para tu hábito: %{habit_name}"
+  habit_reminder_web_push:
+    notify:
+      title: "Recordatorio: %{habit_name}"
+      body: "Recordatorio para tu hábito: %{habit_name}"
   date:
     formats:
       long: "%d de %B de %Y"

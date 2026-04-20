@@ -27,6 +27,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 13. [x] Retroactive editing: mark or edit habits for past days (REQ-DAY-003) — 2026-04-16 — Depends on: #12
 14. [x] Streak calculation per habit (consecutive days completed without failure) (REQ-DAY-004) — 2026-04-16 — Depends on: #12
 32. [x] Habit completion values: `habit_metric_kind` + `daily_target` on `UserHabit`, `day_progress` on `HabitCompletion`; `Habits::RecordCompletion` syncs `status` with target / explicit failed; Streak, prefetch, fulfillment, and longest streak use **`Habits::Streak.habit_day_done?`**; Mi Día **+1** / **meet target** / failed; `GlobalHabitTemplate` suggested defaults + provision/copy + **edit habit** (**REQ-DAY-005**) — 2026-04-19 — Depends on: Phase 3 #11–#14
+35. [x] Per-habit reminder **delivery:** after idempotent `habit_reminder_events` insert, `Habits::ProcessHabitReminderForUserHabit` sends email and/or Web Push (`Habits::DeliverHabitReminderWebPush`, `web-push` + VAPID) per channel toggles (**REQ-HAB-013**) — 2026-04-19 — Depends on: **REQ-HAB-010**–**012**, sweep (**REQ-HAB-011**)
 
 ### Phase 4 — Menus & Recipes (Alimentación)
 15. [x] Menu model: weekly plan with one meal entry per day-of-week per meal type (Desayuno, Almuerzo, etc.) (REQ-MENU-001) — 2026-04-17 — Depends on: Phase 2
@@ -58,7 +59,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
 
 ## In Progress
-- [ ] Push notifications and/or **per-habit** email reminders — **MVP (2026-04-19):** prefs por hábito + sweep/idempotencia (`habit_reminder_events`) + persistencia de suscripciones Web Push; **pendiente:** orquestar envío email/push desde el processor/job (**REQ-HAB-013** y entrega Web Push completa). **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**).
+*(No items currently in progress.)*
 
 ## Pending (by priority)
 *(No items currently pending.)*

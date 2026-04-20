@@ -42,7 +42,7 @@
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
 | `habit_reminder_events` | Unique `(user_id, user_habit_id, local_date)` | **REQ-HAB-011**. Idempotent bookkeeping that the per-habit reminder pipeline ran for that **user-local day** (prevents duplicate processing on retries); does not assert email delivery or push receipt |
-| `web_push_subscriptions` | Unique `(user_id, endpoint)`; required `endpoint`, `p256dh`, `auth` | **REQ-HAB-012** (persistence). Multiple device/browser subscriptions per user; unsubscribe by endpoint. **Delivery** (VAPID keys, service worker UX, sending pushes when reminders fire) is documented as follow-up work — see **`docs/core/ADRs/0001-habit-reminders-web-push.md`** |
+| `web_push_subscriptions` | Unique `(user_id, endpoint)`; required `endpoint`, `p256dh`, `auth` | **REQ-HAB-012** (persistence + HTTP subscribe/unsubscribe). **REQ-HAB-013** sends encrypted payloads to each row when a habit reminder fires; dead endpoints are deleted. See **`docs/core/ADRs/0001-habit-reminders-web-push.md`** |
 
 ### `user_habits` reminder columns
 
