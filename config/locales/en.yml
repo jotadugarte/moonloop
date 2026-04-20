@@ -846,6 +846,11 @@ en:
       title: "Edit Profile"
       submit: "Update Profile"
       allow_menu_freeform: "Allow free-form notes in menu slots"
+      body_unit_system_legend: "Body measurement units"
+      body_unit_system_hint: "Applies to how weight and height are shown and entered across the app. Stored values remain kg and cm."
+      units:
+        metric: "Metric (cm, kg)"
+        imperial_us: "US customary (ft / in, lb)"
       prohibited:
         one: "1 error prohibited your profile from being saved:"
         other: "%{count} errors prohibited your profile from being saved:"
@@ -856,6 +861,15 @@ en:
       title: "Sign up"
       submit: "Sign up"
       password_hint: "12 characters minimum."
+      body_unit_system_legend: "Body measurement units"
+      body_unit_system_hint: "Choose how you want to enter height. Weight elsewhere in the app uses the same preference."
+      units:
+        metric: "Metric (cm)"
+        imperial_us: "US customary (ft / in)"
+      height_cm_hint_metric: "Use this when Metric is selected (stored as cm)."
+      height_feet: "Height — feet"
+      height_inches: "Height — inches (0–11)"
+      height_imperial_hint: "Use feet and whole inches when US customary is selected; stored as cm."
       prohibited:
         one: "1 error prohibited this user from being saved:"
         other: "%{count} errors prohibited this user from being saved:"

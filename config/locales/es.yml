@@ -533,6 +533,15 @@ es:
       title: "Registrarse"
       submit: "Registrarse"
       password_hint: "Mínimo 12 caracteres."
+      body_unit_system_legend: "Unidades corporales"
+      body_unit_system_hint: "Elige cómo ingresar la altura. El peso en el resto de la app usará la misma preferencia."
+      units:
+        metric: "Métrico (cm)"
+        imperial_us: "Estados Unidos (pies / pulgadas)"
+      height_cm_hint_metric: "Úsalo cuando Métrico esté seleccionado (se guarda en cm)."
+      height_feet: "Altura — pies"
+      height_inches: "Altura — pulgadas (0–11)"
+      height_imperial_hint: "Pies y pulgadas enteras si eliges US; se guarda en cm."
       prohibited:
         one: "1 error impidió guardar este usuario:"
         other: "%{count} errores impidieron guardar este usuario:"
@@ -616,6 +625,11 @@ es:
       title: "Editar perfil"
       submit: "Actualizar perfil"
       allow_menu_freeform: "Permitir notas libres en los casilleros del menú"
+      body_unit_system_legend: "Unidades corporales"
+      body_unit_system_hint: "Afecta cómo se muestran e ingresan peso y altura; en base de datos siguen kg y cm."
+      units:
+        metric: "Métrico (cm, kg)"
+        imperial_us: "US (pies / pulgadas, lb)"
       prohibited:
         one: "1 error impidió guardar tu perfil:"
         other: "%{count} errores impidieron guardar tu perfil:"

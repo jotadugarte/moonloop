@@ -102,9 +102,9 @@ En uso **habitual** en Estados Unidos:
 
   <step id="4" status="complete">Actualizar **`docs/core/SPEC.md`** (y glosario si aplica) con **`REQ-PROF-003`**, **`REQ-WGT-004`**, y criterios añadidos a **`REQ-RPT-003`**; enlazar **`docs/core/SCHEMA_REFERENCE.md`** / **`DATA_FLOW_MAP.md`** si el repo los mantiene sincronizados tras el cambio de esquema.</step>
 
-  <step id="5" status="pending">Escribir **fallando** specs de **request o sistema** para **perfil y alta de usuario**: selector único de unidades; campos de peso/altura en **métrico o imperial US** según preferencia; persistencia siempre **kg/cm**; mensajes y `aria-*` coherentes con validaciones existentes sobre `height_cm` tras conversión.</step>
+  <step id="5" status="complete">Escribir **fallando** specs de **request o sistema** para **perfil y alta de usuario**: selector único de unidades; campos de peso/altura en **métrico o imperial US** según preferencia; persistencia siempre **kg/cm**; mensajes y `aria-*` coherentes con validaciones existentes sobre `height_cm` tras conversión.</step>
 
-  <step id="6" status="pending">Implementar formularios, strong params, y vistas hasta **verde**; strings vía **I18n** (`es` / `en`) para etiquetas y unidades.</step>
+  <step id="6" status="complete">Implementar formularios, strong params, y vistas hasta **verde**; strings vía **I18n** (`es` / `en`) para etiquetas y unidades.</step>
 
   <step id="7" status="pending">Escribir **fallando** specs para **registro de peso** (`LogWeightService` / controlador según el código actual) e **`WeightLogs::HistoryPage`**: entrada en lb o kg según usuario; listado con snapshot de altura y peso formateados según preferencia **actual**; borrar/reconciliar sin regresión.</step>
 
