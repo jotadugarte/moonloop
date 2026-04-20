@@ -5,6 +5,7 @@
 # [REQ-RPT-003, REQ-WGT-004]
 module ReportsChartHelper
   include BodyMetricsHelper
+  include ReportsChartAxisHelper
 
   def reports_weight_chart_tag(series, timezone:, width: 400, height: 160)
     user = Current.user
@@ -67,10 +68,6 @@ module ReportsChartHelper
     ) { text }
   end
 
-  def pad_x_legend_inset
-    8
-  end
-
   def chart_y_axis_labels_tag(user, w_min, w_max, w_span, pad_y, inner_h)
     ticks = weight_axis_ticks(w_min, w_max)
     tag.g(class: "reports-weight-chart__y-axis", "aria-hidden": true) do
@@ -85,15 +82,6 @@ module ReportsChartHelper
           "font-size": "9"
         ) { label }
       end)
-    end
-  end
-
-  def weight_axis_ticks(w_min, w_max)
-    if (w_max - w_min).abs < 0.01
-      [ w_min ]
-    else
-      mid = (w_min + w_max) / 2.0
-      [ w_min, mid, w_max ].uniq.sort
     end
   end
 
@@ -141,31 +129,6 @@ module ReportsChartHelper
         axis_label_tag(pad_x_left, height - 2, "start") { chart_axis_start_label(series.first.logged_at, timezone) },
         axis_label_tag(pad_x_left + inner_w, height - 2, "end") { chart_axis_end_label(series.last.logged_at, timezone) }
       ])
-    end
-  end
-
-  def axis_label_tag(x, y, anchor)
-    opts = {
-      x: x,
-      y: y,
-      class: "reports-weight-chart__axis",
-      "font-size": "10",
-      "aria-hidden": true
-    }
-    opts["text-anchor"] = "end" if anchor == "end"
-
-    tag.text(**opts) { yield }
-  end
-
-  def chart_axis_start_label(time_utc, timezone)
-    Time.use_zone(timezone) do
-      l(time_utc.in_time_zone, format: :reports_chart_axis)
-    end
-  end
-
-  def chart_axis_end_label(time_utc, timezone)
-    Time.use_zone(timezone) do
-      l(time_utc.in_time_zone, format: :reports_chart_axis)
     end
   end
 end
