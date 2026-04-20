@@ -59,7 +59,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 
-34. [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (**Done #33**). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, **Done #33**
+34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, **Done #33**
 
 ## Backlog
 - [ ] Imperial units support (lbs) for weight and profile
