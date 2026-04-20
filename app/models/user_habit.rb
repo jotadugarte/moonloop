@@ -26,6 +26,7 @@ class UserHabit < ApplicationRecord
 
   before_validation :sync_name_normalized
   before_validation :normalize_habit_metrics
+  before_update :mark_streak_counters_stale_on_metrics_change
   validate :active_name_must_be_unique_per_user, if: -> { user_id.present? && active? && name_normalized.present? }
   validate :frequency_params_shape
   validate :frequency_requirements
@@ -46,6 +47,14 @@ class UserHabit < ApplicationRecord
   def sync_name_normalized
     return if name.blank?
     self.name_normalized = name.strip.downcase
+  end
+
+  def mark_streak_counters_stale_on_metrics_change
+    return unless respond_to?(:streak_counters_stale)
+
+    return unless will_save_change_to_daily_target? || will_save_change_to_habit_metric_kind?
+
+    self.streak_counters_stale = true
   end
 
   def frequency_params_shape
