@@ -351,6 +351,8 @@ es:
       menus_link: "Menús"
       exercise_routines_link: "Rutinas de ejercicio"
       programs_link: "Programas (menú + rutina)"
+      programs_intro_heading: "Programas (menú + rutina)"
+      programs_intro_body: "Puedes seguir editando rangos de menú y de rutina por separado abajo, o definir un programa que una ambos y aplicarlo al plan: la semana actual del programa sigue calculándose solo con la fecha de inicio de fase 1 y no se duplica la lógica en otro sitio."
       phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."
       phase_start_reminder_dismiss: "Ocultar por hoy"
       menu_plan_ended_message: "Tus rangos de menú terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo de menú."

@@ -72,6 +72,18 @@
   <% end %>
 </section>
 
+<section class="mb-6 max-w-2xl text-sm text-gray-700 border border-gray-200 rounded p-4 bg-gray-50" aria-labelledby="phase-programs-intro-heading">
+  <h2 id="phase-programs-intro-heading" class="text-base font-semibold text-gray-900 mb-2">
+    <%= t("phases.show.programs_intro_heading") %>
+  </h2>
+  <p class="mb-2"><%= t("phases.show.programs_intro_body") %></p>
+  <p>
+    <%= link_to t("phases.show.programs_link"), phase_programs_path,
+          class: "text-blue-600 font-medium underline",
+          data: { turbo_frame: "_top" } %>
+  </p>
+</section>
+
 <section class="mb-8 max-w-md">
   <h2 class="text-lg font-semibold mb-2"><%= t("phases.show.anchor_heading") %></h2>
   <% phase_user_err_id = "phase-user-form-errors" %>

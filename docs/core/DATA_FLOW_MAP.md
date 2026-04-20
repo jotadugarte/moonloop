@@ -42,6 +42,7 @@
 4. **Routine assignments CRUD:** **`ExerciseRoutineAssignmentsController`**, scoped to **`Current.user`**; overlaps rejected among **routine** assignments only.
 5. **Plan extension (menus):** **`Phases::RepeatLastPhaseAssignment`** duplicates the last contiguous menu assignment block forward when the user confirms.
 6. **Plan extension (routines):** **`ExerciseRoutines::RepeatLastAssignment`** duplicates the last contiguous **routine** assignment block forward when the user confirms.
+7. **Phase program bundles (`REQ-PHS-001`):** **`PhaseProgramsController`** / **`PhaseProgramAssignmentsController`** manage a user-owned **`PhaseProgram`** and its **`phase_program_assignments`** (one menu + one exercise routine per contiguous week range; non-overlapping ranges **within** the program). **`Programs::ApplyBundleToUser`** **replaces** the user’s global **`phase_assignments`** and **`exercise_routine_assignments`** in one transaction from those segments. **`GET /phase`** still resolves the active menu and routine only via **`Phases::WeekNumber`** + **`Phases::ResolveActiveMenu`** + **`ExerciseRoutines::ResolveActiveRoutine`** on the **same** assignment tables — there is no parallel week-index path. Public catalog, adopt, and source sync use **`PublicPhaseProgramsController`**, **`Programs::AdoptFromPublicCatalog`**, **`Programs::AdoptionSyncStatus`**, **`Programs::ApplyAdoptionSourceSync`**, and **`Programs::PopulateAssignmentsFromSource`** (see SPEC).
 
 ### 1.6 Exercise routines (CRUD, duplicate, destroy)
 
@@ -82,6 +83,7 @@
 | **`MenuEntry`** save | Recipe (if present) must belong to same user as menu; freeform gated by **`allow_menu_freeform`** | Model + **`Menus::UpsertEntry`** |
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
+| **`Programs::ApplyBundleToUser`** | Replaces **all** of the user’s **`phase_assignments`** and **`exercise_routine_assignments`** with rows derived from a owned **`PhaseProgram`**’s segments | Service (single transaction) |
 | **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
 | **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | HTTP create: **`WeightLogs::LoggedAtParamParser`** then **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; delete: **`WeightLogs::DestroyLog`** |
 | **`GET /informes`** | **Read-only**; must not create/update/delete domain rows | **`Reports::ShowPage`** + query objects only |

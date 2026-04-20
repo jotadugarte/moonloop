@@ -376,6 +376,8 @@ en:
       menus_link: "Menus"
       exercise_routines_link: "Exercise routines"
       programs_link: "Programs (menu + routine)"
+      programs_intro_heading: "Programs (menu + routine)"
+      programs_intro_body: "You can keep editing menu and routine week ranges separately below, or define a program that pairs both and apply it to the plan. The current program week still comes only from your Phase 1 start date — week math is not duplicated elsewhere."
       phase_start_reminder_banner: "Today is the first day of your Phase 1 plan — review menus and exercise routines by week below."
       phase_start_reminder_dismiss: "Hide for today"
       menu_plan_ended_message: "Your menu week ranges end before the current program week. Extend your plan or add a new menu range."
