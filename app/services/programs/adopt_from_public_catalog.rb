@@ -41,6 +41,7 @@ module Programs
           name_prefix: name
         )
 
+        Catalog::IncrementTemplateAdoptionMetrics.call(source)
         copy
       end
     end

@@ -40,6 +40,7 @@ module Menus
         )
         CopyMenuEntriesFromSource.call(target_menu: copy, source_menu: source, recipe_map: recipe_map)
         copy.save!
+        Catalog::IncrementTemplateAdoptionMetrics.call(source)
         copy
       end
     end
