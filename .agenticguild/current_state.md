@@ -4,7 +4,7 @@
   <execution_context>
     <active_skill>finish-branch</active_skill>
     <current_phase>4</current_phase>
-    <current_step>4.3</current_step>
-    <note>harvest-rules complete: rules 18–20 in .cursorrules; review_ledger cleared. Next: PR spackle + pr-description (4.3).</note>
+    <current_step>4.4</current_step>
+    <note>PR description drafted (4.3). Next: confirm clear/archive active task (4.4–4.5).</note>
   </execution_context>
 </agent_state>
