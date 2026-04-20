@@ -6,6 +6,7 @@ class PhaseProgram < ApplicationRecord
   belongs_to :source_phase_program, class_name: "PhaseProgram", optional: true, inverse_of: :adopted_copies
   has_many :adopted_copies, class_name: "PhaseProgram", foreign_key: :source_phase_program_id, inverse_of: :source_phase_program, dependent: :nullify
   has_many :phase_program_assignments, dependent: :destroy
+  has_one :catalog_listing_facet, class_name: "Catalog::ListingFacet", as: :listable, dependent: :destroy
 
   validates :name, presence: true
 

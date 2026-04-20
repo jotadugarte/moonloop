@@ -35,11 +35,10 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   hint = <<~HINT.strip
 
-    If `bin/rails db:migrate` opens an editor on Windows, use instead:
-      bundle exec rails db:migrate
-    or:
-      ruby .\\bin\\rails db:migrate
-    Then re-run specs (test DB is updated via maintain_test_schema! or `bundle exec rails db:test:prepare`).
+    `db:migrate` updates the **development** DB by default. RSpec uses the **test** DB, which must see the same migrations.
+
+    Refresh the **test** DB from `db/schema.rb` (recommended after dev migrate):
+      bundle exec rails db:test:prepare
   HINT
   abort [ e.to_s.strip, hint ].join("\n")
 end

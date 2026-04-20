@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_203000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_210000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_203000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "catalog_listing_facets", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "difficulty_level", limit: 32
+    t.integer "duration_weeks_max"
+    t.integer "duration_weeks_min"
+    t.string "goal_phrase", limit: 255
+    t.integer "listable_id", null: false
+    t.string "listable_type", null: false
+    t.string "normalized_tags", limit: 500
+    t.datetime "updated_at", null: false
+    t.index ["listable_type", "listable_id"], name: "index_catalog_listing_facets_on_listable", unique: true
   end
 
   create_table "exercise_routine_assignments", force: :cascade do |t|

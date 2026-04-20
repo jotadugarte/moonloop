@@ -8,6 +8,7 @@ class ExerciseRoutine < ApplicationRecord
   has_many :adopted_copies, class_name: "ExerciseRoutine", foreign_key: :source_exercise_routine_id, inverse_of: :source_exercise_routine, dependent: :nullify
   has_many :exercise_routine_lines, -> { order(:weekday, :position) }, dependent: :destroy, inverse_of: :exercise_routine
   has_many :exercise_routine_assignments, dependent: :destroy
+  has_one :catalog_listing_facet, class_name: "Catalog::ListingFacet", as: :listable, dependent: :destroy
 
   accepts_nested_attributes_for :exercise_routine_lines, allow_destroy: true
 

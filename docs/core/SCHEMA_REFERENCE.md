@@ -60,11 +60,11 @@
 
 ## Public catalog metrics & discovery (REQ-CAT-001)
 
-**Status:** template **counter** columns are on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see those sections). The **`catalog_listing_facets`** table remains **planned** until its migration lands. Definitions: **`docs/core/SPEC.md`** (`#### REQ-CAT-001`).
+**Status:** template **counter** columns are on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see those sections). **`catalog_listing_facets`** stores optional discovery metadata per listable. Definitions: **`docs/core/SPEC.md`** (`#### REQ-CAT-001`).
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `catalog_listing_facets` | Planned polymorphic **`listable_type`** / **`listable_id`** with **unique** `(listable_type, listable_id)`; owner-authored discovery fields (goal phrase, difficulty, normalized tags, optional week bounds); **REQ-CAT-001** | **REQ-CAT-001** (planned). At most one facet row per catalog listable (`Menu`, `ExerciseRoutine`, `PhaseProgram`); public queries only join **public** templates |
+| `catalog_listing_facets` | Polymorphic **`listable_type`** / **`listable_id`**, **NOT NULL**; **unique** `(listable_type, listable_id)`; `goal_phrase` (255), `difficulty_level` (32, closed vocabulary in **`Catalog::ListingFacet`**), `normalized_tags` (500, comma-separated slugs), `duration_weeks_min` / `duration_weeks_max` (nullable integers); timestamps | **REQ-CAT-001**. At most one facet row per catalog listable (`Menu`, `ExerciseRoutine`, `PhaseProgram`); owner-only writes in app code; public catalog reads join only **public** templates |
 
 **Template counters:** **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`** on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see rows in **Menus and recipes**, **Phase programs**, and **Exercise routines** above).
 
