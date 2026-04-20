@@ -24,9 +24,15 @@ module Habits
       local_date = tz.at(Time.current).to_date
       return :already_done if habit_done_on_local_date?(local_date)
 
-      HabitReminderEvent.create!(user: user, user_habit: user_habit, local_date: local_date)
-      :ok
-    rescue ActiveRecord::RecordNotUnique
+      begin
+        HabitReminderEvent.create!(user: user, user_habit: user_habit, local_date: local_date)
+      rescue ActiveRecord::RecordNotUnique
+        return :ok
+      end
+
+      # [REQ-HAB-013]
+      HabitReminderMailer.notify(user: user, user_habit: user_habit).deliver_now if user_habit.reminder_email?
+
       :ok
     end
 

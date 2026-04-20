@@ -58,9 +58,9 @@
 
   <step id="1" status="complete">Escribir **fallando** ejemplos en `spec/services/habits/process_habit_reminder_for_user_habit_spec.rb`: cuando el processor crea el evento y `reminder_email` es true, debe incrementarse `ActionMailer::Base.deliveries` en exactamente 1 y el correo debe ser `HabitReminderMailer#notify` con `user` y `user_habit` esperados (mismo estilo que `ProcessPhaseStartReminderForUser`). Incluir caso `reminder_email: false` sin entregas.</step>
 
-  <step id="2" status="pending">Implementar en `Habits::ProcessHabitReminderForUserHabit` la llamada a `HabitReminderMailer.notify(user:, user_habit:).deliver_now` **solo** tras `create!` exitoso y si `user_habit.reminder_email?`. Mantener el `rescue RecordNotUnique` sin envíos. Verificar specs en verde.</step>
+  <step id="2" status="complete">Implementar en `Habits::ProcessHabitReminderForUserHabit` la llamada a `HabitReminderMailer.notify(user:, user_habit:).deliver_now` **solo** tras `create!` exitoso y si `user_habit.reminder_email?`. Mantener el `rescue RecordNotUnique` sin envíos. Verificar specs en verde.</step>
 
-  <step id="3">Escribir **fallando** ejemplo de idempotencia de email: dos invocaciones el mismo día local solo producen **un** correo (misma línea base que evento único). Ajustar implementación si hiciera falta hasta verde.</step>
+  <step id="3" status="pending">Escribir **fallando** ejemplo de idempotencia de email: dos invocaciones el mismo día local solo producen **un** correo (misma línea base que evento único). Ajustar implementación si hiciera falta hasta verde.</step>
 
   <step id="4">Añadir dependencia **`web-push`** al Gemfile (versión acotada), `bundle install`, y documentar en el plan de credenciales las claves VAPID (sin commitear secretos). Escribir **fallando** specs para un servicio nuevo, p. ej. `Habits::DeliverHabitReminderWebPush`, que: con `user_habit` y `user` con suscripciones, invoca el cliente de envío una vez por suscripción; con lista vacía no levanta error; ante error simulado de suscripción inválida elimina esa fila. Usar stubs/doubles en unit tests para no llamar la red.</step>
 

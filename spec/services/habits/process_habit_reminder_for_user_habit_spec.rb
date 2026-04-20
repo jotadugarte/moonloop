@@ -36,7 +36,7 @@ RSpec.describe Habits::ProcessHabitReminderForUserHabit do
 
   # [REQ-HAB-013]
   it "creates an event but skips email when reminder_email is disabled" do
-    habit.update!(reminder_email: false)
+    habit.update!(reminder_email: false, reminder_web_push: true)
     madrid = ActiveSupport::TimeZone["Europe/Madrid"].local(2026, 6, 2, 8, 30, 0)
     travel_to(madrid) do
       expect {
