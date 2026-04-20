@@ -463,12 +463,22 @@ en:
       destroy_confirm: "Delete this program and all its ranges? Menus and routines are not deleted."
       back_index: "Program list"
       back_phase: "Phase plan"
+      adoption_sync:
+        pending: "The public source program has new changes. Applying will rebuild ranges (duplicated menus and routines) from the current template; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source program is no longer available (it was removed or is no longer public). Your copy remains in your account."
     flash:
       created: "Program created."
       updated: "Program updated."
       destroyed: "Program deleted."
       applied: "Plan applied: your menu and routine assignments now match this program."
       apply_failed: "Could not apply the program."
+      source_sync_applied: "Updated template applied from the source program."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This program is not an adopted copy."
+        source_unavailable: "The source program is no longer available in the catalog."
+        origin_changed_retry: "The source program changed again. Review before applying."
   phase_program_assignments:
     new:
       title: "New range — Moonloop"

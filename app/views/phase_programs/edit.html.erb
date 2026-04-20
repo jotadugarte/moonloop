@@ -2,6 +2,21 @@
 
 <h1 class="text-2xl font-bold mb-4"><%= t("phase_programs.edit.heading", name: @phase_program.name) %></h1>
 
+<% if @adoption_sync_status.key == :pending %>
+  <div class="mb-4 p-3 border border-amber-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("phase_programs.edit.adoption_sync.pending") %></p>
+    <%= form_with url: accept_source_update_phase_program_path(@phase_program), method: :post, local: true do %>
+      <%= hidden_field_tag :expected_origin_fingerprint, @adoption_sync_status.origin_fingerprint %>
+      <%= submit_tag t("phase_programs.edit.adoption_sync.accept_update"),
+            class: "bg-amber-600 text-white px-3 py-1 rounded cursor-pointer border-0" %>
+    <% end %>
+  </div>
+<% elsif @adoption_sync_status.key == :unavailable %>
+  <div class="mb-4 p-3 border border-gray-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("phase_programs.edit.adoption_sync.unavailable") %></p>
+  </div>
+<% end %>
+
 <% prog_attrs_err_id = "phase-program-attrs-errors" %>
 <%= form_with model: @phase_program, url: phase_program_path(@phase_program), method: :patch, class: "space-y-3 max-w-lg mb-8" do |f| %>
   <% if @phase_program.errors.any? %>

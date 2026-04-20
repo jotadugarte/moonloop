@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   resources :phase_programs, only: %i[index create edit update destroy] do
     member do
       post :apply
+      post :accept_source_update
     end
     resources :phase_program_assignments, only: %i[new create edit update destroy]
   end

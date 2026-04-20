@@ -438,12 +438,22 @@ es:
       destroy_confirm: "¿Eliminar este programa y todos sus rangos? Los menús y rutinas no se borran."
       back_index: "Lista de programas"
       back_phase: "Plan de fases"
+      adoption_sync:
+        pending: "El programa público de origen tiene cambios nuevos. Al aplicar se vuelven a generar los rangos (menús y rutinas duplicados) según la plantilla actual; el nombre de tu copia no cambia."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El vínculo con el programa de origen ya no está disponible (se eliminó o dejó de ser público). Tu copia sigue en tu cuenta."
     flash:
       created: "Programa creado."
       updated: "Programa actualizado."
       destroyed: "Programa eliminado."
       applied: "Plan aplicado: tus asignaciones de menú y rutina ahora coinciden con este programa."
       apply_failed: "No se pudo aplicar el programa."
+      source_sync_applied: "Se aplicó la plantilla actualizada desde el programa de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Este programa no es una copia adoptada."
+        source_unavailable: "El programa de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "El programa de origen cambió otra vez. Vuelve a revisar antes de aplicar."
   phase_program_assignments:
     new:
       title: "Nuevo rango — Moonloop"

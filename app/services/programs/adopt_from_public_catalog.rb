@@ -24,25 +24,6 @@ module Programs
       fp = ContentFingerprint.for_program(source)
 
       ApplicationRecord.transaction do
-        menu_map = {}
-        routine_map = {}
-
-        source.phase_program_assignments.order(:start_week, :id).each do |seg|
-          menu_base = "#{name} — #{seg.menu.name}"
-          menu_map[seg.menu_id] ||= Menus::CopyMenuForAdopter.call(
-            source_menu: seg.menu,
-            adopter: adopter,
-            base_name: menu_base
-          )
-
-          routine_base = "#{name} — #{seg.exercise_routine.name}"
-          routine_map[seg.exercise_routine_id] ||= ExerciseRoutines::CopyRoutineForAdopter.call(
-            source: seg.exercise_routine,
-            adopter: adopter,
-            base_name: routine_base
-          )
-        end
-
         copy = PhaseProgram.new(
           user: adopter,
           name: name,
@@ -53,14 +34,12 @@ module Programs
         )
         copy.save!
 
-        source.phase_program_assignments.order(:start_week, :id).each do |seg|
-          copy.phase_program_assignments.create!(
-            menu_id: menu_map[seg.menu_id].id,
-            exercise_routine_id: routine_map[seg.exercise_routine_id].id,
-            start_week: seg.start_week,
-            end_week: seg.end_week
-          )
-        end
+        PopulateAssignmentsFromSource.call(
+          program: copy,
+          source: source,
+          adopter: adopter,
+          name_prefix: name
+        )
 
         copy
       end

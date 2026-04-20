@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PhaseProgramsController < ApplicationController
-  before_action :set_phase_program, only: %i[edit update destroy apply]
+  before_action :set_phase_program, only: %i[edit update destroy apply accept_source_update]
 
   def index
     @phase_programs = Current.user.phase_programs.order(:name)
@@ -19,13 +19,16 @@ class PhaseProgramsController < ApplicationController
   end
 
   def edit
-    @assignments = @phase_program.phase_program_assignments.order(:start_week, :id)
+    set_adoption_sync_status
+    load_edit_assignments
   end
 
   def update
     if @phase_program.update(phase_program_params)
       redirect_to edit_phase_program_path(@phase_program), notice: t("phase_programs.flash.updated")
     else
+      set_adoption_sync_status
+      load_edit_assignments
       render :edit, status: :unprocessable_entity
     end
   end
@@ -42,7 +45,26 @@ class PhaseProgramsController < ApplicationController
     redirect_to edit_phase_program_path(@phase_program), alert: t("phase_programs.flash.apply_failed")
   end
 
+  def accept_source_update
+    Programs::ApplyAdoptionSourceSync.call(
+      copy: @phase_program,
+      expected_origin_fingerprint: params[:expected_origin_fingerprint].presence
+    )
+    redirect_to edit_phase_program_path(@phase_program), notice: t("phase_programs.flash.source_sync_applied")
+  rescue Programs::ApplyAdoptionSourceSync::Error => e
+    redirect_to edit_phase_program_path(@phase_program),
+      alert: t("phase_programs.adoption_sync.errors.#{e.key}")
+  end
+
   private
+
+  def set_adoption_sync_status
+    @adoption_sync_status = Programs::AdoptionSyncStatus.for_program(@phase_program)
+  end
+
+  def load_edit_assignments
+    @assignments = @phase_program.phase_program_assignments.order(:start_week, :id)
+  end
 
   def set_phase_program
     @phase_program = Current.user.phase_programs.find(params[:id])
