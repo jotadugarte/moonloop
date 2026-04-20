@@ -15,7 +15,7 @@ RSpec.describe HabitReminderEvent, type: :model do
     it { should validate_presence_of(:local_date) }
 
     # [REQ-HAB-011]
-    it "is idempotent per user, habit, and local_date" do
+    it "rejects duplicate rows per user, habit, and local_date at the database" do
       existing = create(:habit_reminder_event)
 
       dupe = build(:habit_reminder_event,
@@ -23,7 +23,8 @@ RSpec.describe HabitReminderEvent, type: :model do
         user_habit: existing.user_habit,
         local_date: existing.local_date)
 
-      expect(dupe).not_to be_valid
+      expect(dupe).to be_valid
+      expect { dupe.save! }.to raise_error(ActiveRecord::RecordNotUnique)
     end
   end
 end

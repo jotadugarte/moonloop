@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# [REQ-HAB-013]
 # VAPID material for Web Push (RFC 8030). Prefer Rails credentials under `web_push:`;
 # optional ENV overrides. In test, keys are generated at boot. In non-production, missing
 # keys fall back to ephemeral keys so local dev can exercise delivery without committing secrets.

@@ -5,7 +5,7 @@
 | Campo | Valor |
 |--------|--------|
 | **Tipo** | Feature (cierre de circuito sobre MVP existente) |
-| **Origen** | `docs/ROADMAP.md` — *pendiente:* orquestar envío email/push desde processor/job; `docs/core/SPEC.md` **REQ-HAB-013** (Planned); **ADR-0001** (envío explícitamente follow-up). |
+| **Origen** | `docs/ROADMAP.md` / `docs/core/SPEC.md` **REQ-HAB-013** (Implemented); **ADR-0001** (estrategia Web Push + nota de implementación). |
 | **Contexto previo** | Sesión archivada `.agenticguild/completed_sessions/task_habit-reminders_2026-04-19.md` (prefs, sweep, `habit_reminder_events`, suscripciones, mailer sin cablear). |
 | **Código ancla** | `Habits::ProcessHabitReminderForUserHabit` hoy crea `HabitReminderEvent` y no despacha canales. Paridad deseada con `Phases::ProcessPhaseStartReminderForUser` (evento idempotente primero, luego correo). |
 
@@ -18,6 +18,7 @@
 | 2026-04-19 | **Email:** usar **`deliver_now`** tras el insert exitoso, en línea con `PhaseStartReminderMailer` y specs que miden `ActionMailer::Base.deliveries` (evita ambigüedad de cola en tests sin perfilar `deliver_later`). |
 | 2026-04-19 | **Web Push:** estándar **VAPID** + gem **`web-push`** (o equivalente mantenido) para cifrado/payload; claves en **Rails credentials**; suscripciones inválidas (**HTTP 404/410** u errores de “gone”) → **eliminar** fila `web_push_subscriptions` para no reintentar en vano. |
 | 2026-04-19 | **Payload:** título/cuerpo mínimos con **I18n** (`es`/`en`), coherentes con el mailer (nombre del hábito); sin FCM en app. |
+| 2026-04-19 | **Docs (paso 7):** `SPEC.md`, `SYSTEM_ARCHITECTURE.md`, `DATA_FLOW_MAP.md` §1.8, `ADRs/0001`, `SCHEMA_REFERENCE.md`, `ROADMAP.md` (**Done #35**), `CHANGELOG.md` alineados con entrega **REQ-HAB-013**. |
 | 2026-04-19 | **Domain Model (Phase 3.0):** tipos y responsabilidades del bloque *Domain Model (CbC)* **aprobados** por el usuario; sin cambios de nombres ni invariantes. |
 
 ## Domain Model (CbC)
@@ -68,7 +69,7 @@
 
   <step id="6" status="complete">Escribir **fallando** spec de integración en el processor: con `reminder_web_push: true`, suscripción de fábrica y cliente Web Push stubbeado, tras procesar se intenta envío; con `reminder_web_push: false` no se llama al servicio de push. Integrar la llamada al servicio en `Habits::ProcessHabitReminderForUserHabit` tras insert exitoso del evento.</step>
 
-  <step id="7" status="pending">Actualizar documentación: `docs/core/SPEC.md` (**REQ-HAB-013** a Implemented con criterios de wiring), `docs/core/ADRs/0001-habit-reminders-web-push.md` (nota de que el envío en reminder está implementado), `docs/core/DATA_FLOW_MAP.md` §1.8, `docs/ROADMAP.md` (cerrar o acotar ítem In Progress), `CHANGELOG.md` si el repo lo usa para releases. Añadir/ajustar comentarios `# [REQ-HAB-013]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`.</step>
+  <step id="7" status="complete">Actualizar documentación: `docs/core/SPEC.md` (**REQ-HAB-013** a Implemented con criterios de wiring), `docs/core/ADRs/0001-habit-reminders-web-push.md` (nota de que el envío en reminder está implementado), `docs/core/DATA_FLOW_MAP.md` §1.8, `docs/ROADMAP.md` (cerrar o acotar ítem In Progress), `CHANGELOG.md` si el repo lo usa para releases. Añadir/ajustar comentarios `# [REQ-HAB-013]` en archivos tocados según `.cursor/rules/spec-req-traceability.mdc`.</step>
 
-  <step id="8">Pase final: `bundle exec rspec` (o equivalente del proyecto) en verde; revisar que no se dupliquen envíos bajo reentrada del job y que sigan cumpliéndose **REQ-HAB-010**–**012**.</step>
+  <step id="8" status="pending">Pase final: `bundle exec rspec` (o equivalente del proyecto) en verde; revisar que no se dupliquen envíos bajo reentrancia del job y que sigan cumpliéndose **REQ-HAB-010**–**012**.</step>
 </implementation_plan>

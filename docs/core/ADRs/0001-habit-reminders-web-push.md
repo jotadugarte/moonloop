@@ -23,7 +23,7 @@ Moonloop is adding **per-habit reminders** with optional **email** and **browser
 
 **Chosen option:** **Browser Web Push (Push API) + VAPID** as the architectural direction for “Web Push” in Moonloop.
 
-**Current implementation note (as of this ADR):** the application persists **`web_push_subscriptions`** and exposes authenticated subscribe/unsubscribe endpoints. **Sending** push notifications tied to reminder firing (VAPID key management, service worker registration UX, retry/dead subscription handling) is explicitly **follow-up work** and must not be implied as complete by persistence alone.
+**Implementation note:** the application persists **`web_push_subscriptions`** and exposes authenticated subscribe/unsubscribe endpoints (**REQ-HAB-012**). **Sending** on per-habit reminder fire is implemented in **`Habits::DeliverHabitReminderWebPush`**, invoked from **`Habits::ProcessHabitReminderForUserHabit`** after an idempotent **`habit_reminder_events`** insert, using the **`web-push`** gem + VAPID configuration (**`config/initializers/habit_web_push.rb`**) and removing dead subscriptions on **`WebPush::InvalidSubscription`** / **`WebPush::ExpiredSubscription`** (**REQ-HAB-013**). Service worker registration and permission UX remain a **client/browser** concern.
 
 ### Positive consequences
 
@@ -37,6 +37,6 @@ Moonloop is adding **per-habit reminders** with optional **email** and **browser
 
 ## More information
 
-- Requirements: **`docs/core/SPEC.md`** (**REQ-HAB-010**–**012**, **REQ-HAB-013** planned).
+- Requirements: **`docs/core/SPEC.md`** (**REQ-HAB-010**–**013**).
 - Data mapping: **`docs/core/SCHEMA_REFERENCE.md`** (`web_push_subscriptions`, `habit_reminder_events`).
 - Runtime flow: **`docs/core/DATA_FLOW_MAP.md`** (§1.8).
