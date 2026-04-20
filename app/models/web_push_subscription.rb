@@ -6,4 +6,3 @@ class WebPushSubscription < ApplicationRecord
   validates :endpoint, :p256dh, :auth, presence: true
   validates :endpoint, uniqueness: { scope: :user_id }
 end
-

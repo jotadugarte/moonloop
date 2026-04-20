@@ -5,4 +5,3 @@ FactoryBot.define do
     local_date { Date.new(2026, 4, 19) }
   end
 end
-

@@ -27,4 +27,3 @@ RSpec.describe HabitReminderEvent, type: :model do
     end
   end
 end
-

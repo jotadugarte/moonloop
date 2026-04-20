@@ -16,7 +16,7 @@ module MyDayHelper
 
   def my_day_metric_next_progress(habit, completion)
     p = completion&.day_progress.to_i
-    [p + 1, HabitCompletion::DAY_PROGRESS_MAX].min
+    [ p + 1, HabitCompletion::DAY_PROGRESS_MAX ].min
   end
 
   def my_day_metric_increment_disabled?(habit, completion)

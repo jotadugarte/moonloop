@@ -40,4 +40,3 @@ module Habits
     end
   end
 end
-

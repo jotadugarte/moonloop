@@ -6,4 +6,3 @@ FactoryBot.define do
     auth { "auth-key" }
   end
 end
-

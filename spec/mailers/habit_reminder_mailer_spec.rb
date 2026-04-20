@@ -16,4 +16,3 @@ RSpec.describe HabitReminderMailer do
     end
   end
 end
-

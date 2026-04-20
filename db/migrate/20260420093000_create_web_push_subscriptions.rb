@@ -16,4 +16,3 @@ class CreateWebPushSubscriptions < ActiveRecord::Migration[8.1]
               name: "index_web_push_subscriptions_uniqueness"
   end
 end
-

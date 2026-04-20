@@ -11,4 +11,3 @@ class HabitReminderMailer < ApplicationMailer
     )
   end
 end
-

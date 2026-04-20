@@ -45,4 +45,3 @@ RSpec.describe Habits::ProcessHabitReminderForUserHabit do
     end
   end
 end
-

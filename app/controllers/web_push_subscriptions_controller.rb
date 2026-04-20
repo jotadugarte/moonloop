@@ -22,4 +22,3 @@ class WebPushSubscriptionsController < ApplicationController
     params.require(:subscription).permit(:endpoint, :p256dh, :auth)
   end
 end
-

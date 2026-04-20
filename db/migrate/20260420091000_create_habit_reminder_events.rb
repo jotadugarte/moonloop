@@ -15,4 +15,3 @@ class CreateHabitReminderEvents < ActiveRecord::Migration[8.1]
               name: "index_habit_reminder_events_uniqueness"
   end
 end
-

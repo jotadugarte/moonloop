@@ -27,4 +27,3 @@ RSpec.describe "User habit reminder settings", type: :system do
     expect(habit.reminder_email).to be(true)
   end
 end
-

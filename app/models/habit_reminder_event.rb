@@ -7,4 +7,3 @@ class HabitReminderEvent < ApplicationRecord
   validates :local_date, presence: true
   validates :local_date, uniqueness: { scope: %i[user_id user_habit_id] }
 end
-

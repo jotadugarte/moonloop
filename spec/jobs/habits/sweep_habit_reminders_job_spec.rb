@@ -45,4 +45,3 @@ RSpec.describe Habits::SweepHabitRemindersJob, type: :job do
     expect(Habits::ProcessHabitReminderForUserHabit).not_to have_received(:call).with(user_habit: inactive_habit)
   end
 end
-

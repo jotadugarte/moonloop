@@ -34,14 +34,14 @@ module Catalog
       return if q.blank? || q.length > MAX_Q_CHARS
 
       pat = "%#{ActiveRecord::Base.sanitize_sql_like(q)}%"
-      clauses << ["LOWER(catalog_listing_facets.goal_phrase) LIKE LOWER(?)", pat]
+      clauses << [ "LOWER(catalog_listing_facets.goal_phrase) LIKE LOWER(?)", pat ]
     end
 
     def add_difficulty_clause(clauses)
       d = @params[:difficulty].to_s.strip.downcase
       return unless ListingFacet::DIFFICULTY_LEVELS.include?(d)
 
-      clauses << ["catalog_listing_facets.difficulty_level = ?", d]
+      clauses << [ "catalog_listing_facets.difficulty_level = ?", d ]
     end
 
     def add_tag_clauses(clauses)
@@ -53,7 +53,7 @@ module Catalog
 
         needle = ",#{tag},"
         sql = "instr(',' || COALESCE(catalog_listing_facets.normalized_tags, '') || ',', ?) > 0"
-        clauses << [sql, needle]
+        clauses << [ sql, needle ]
       end
     end
 
@@ -74,8 +74,8 @@ module Catalog
 
       eff_max = "COALESCE(catalog_listing_facets.duration_weeks_max, catalog_listing_facets.duration_weeks_min)"
       eff_min = "COALESCE(catalog_listing_facets.duration_weeks_min, catalog_listing_facets.duration_weeks_max)"
-      clauses << ["#{eff_max} >= ?", min_b] if min_b
-      clauses << ["#{eff_min} <= ?", max_b] if max_b
+      clauses << [ "#{eff_max} >= ?", min_b ] if min_b
+      clauses << [ "#{eff_min} <= ?", max_b ] if max_b
     end
 
     def parse_week_bound(key)
