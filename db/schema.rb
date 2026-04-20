@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_091000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_093000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -294,6 +294,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_091000) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "web_push_subscriptions", force: :cascade do |t|
+    t.string "auth", null: false
+    t.datetime "created_at", null: false
+    t.string "endpoint", null: false
+    t.string "p256dh", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "endpoint"], name: "index_web_push_subscriptions_uniqueness", unique: true
+    t.index ["user_id"], name: "index_web_push_subscriptions_on_user_id"
+  end
+
   create_table "weight_logs", force: :cascade do |t|
     t.decimal "bmi", precision: 4, scale: 2, null: false
     t.datetime "created_at", null: false
@@ -334,5 +345,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_091000) do
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
   add_foreign_key "user_habits", "users"
+  add_foreign_key "web_push_subscriptions", "users"
   add_foreign_key "weight_logs", "users"
 end

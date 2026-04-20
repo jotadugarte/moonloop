@@ -96,7 +96,7 @@
 
   <step id="9" status="complete">Email: escribir **fallando** specs para el mailer de recordatorio por hábito (I18n `es`/`en`, subject y cuerpo con nombre de hábito/categoría). Implementar mailer/vistas hasta **verde**.</step>
 
-  <step id="10" status="pending">Web Push: escribir **fallando** specs para el flujo de **suscripción** (guardar endpoint + p256dh + auth por usuario, permitir múltiples dispositivos) y para el servicio de envío. Implementar service worker/JS mínimo bajo importmap/stimulus (sin Node), endpoints de subscribe/unsubscribe, y servicio de envío Web Push con claves VAPID configurables. Mantenerlo apagado por defecto hasta que el usuario conceda permiso en el navegador.</step>
+  <step id="10" status="complete">Web Push: escribir **fallando** specs para el flujo de **suscripción** (guardar endpoint + p256dh + auth por usuario, permitir múltiples dispositivos) y para el servicio de envío. Implementar service worker/JS mínimo bajo importmap/stimulus (sin Node), endpoints de subscribe/unsubscribe, y servicio de envío Web Push con claves VAPID configurables. Mantenerlo apagado por defecto hasta que el usuario conceda permiso en el navegador.</step>
 
   <step id="11" status="pending">UI en creación/edición de hábito: escribir **fallando** system/request specs que verifiquen que el recordatorio aparece en el formulario, por defecto apagado, y al habilitarlo permite escoger hora local y canales (email/push) y persiste. Implementar vistas y strong params hasta **verde** (sin in-app banners).</step>
 

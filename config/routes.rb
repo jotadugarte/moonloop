@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get "mi_dia", to: "my_day#show", as: :my_day
   get "informes", to: "reports#show", as: :informes
   resources :habit_completions, only: [ :create, :destroy ]
+  resource :web_push_subscription, only: %i[create destroy]
   resources :exercise_routines, only: %i[index create edit update destroy] do
     member do
       get :confirm_destroy
