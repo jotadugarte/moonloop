@@ -22,7 +22,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**) | `REQ-MENU-001`, **REQ-MENU-006**. Weekly templates; catalog opt-in; adopted-copy metadata |
+| `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**); planned **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | `REQ-MENU-001`, **REQ-MENU-006**, **REQ-CAT-001** (planned). Weekly templates; catalog opt-in; adopted-copy metadata; template-level catalog popularity metrics |
 | `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `recipes` | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
 | `recipes` | `user_id` FK | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable` |
 
@@ -41,7 +41,7 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `phase_programs` | `user_id` FK; optional self-FK `source_phase_program_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_phase_program_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-PHS-001**, parity **REQ-MENU-006** / **REQ-EXR-006**) | **REQ-PHS-001** (planned). User-owned named program template; catalog and adopted-copy metadata |
+| `phase_programs` | `user_id` FK; optional self-FK `source_phase_program_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_phase_program_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-PHS-001**, parity **REQ-MENU-006** / **REQ-EXR-006**); planned **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | **REQ-PHS-001** (planned), **REQ-CAT-001** (planned). User-owned named program template; catalog and adopted-copy metadata; template-level catalog popularity metrics |
 | `phase_program_assignments` | FKs to `phase_programs`, `menus`, `exercise_routines`; check `start_week >= 1`, `end_week >= start_week`; index `(phase_program_id, start_week, end_week)` | **REQ-PHS-001** (planned). Week-range rows pairing menu + routine **within one program**; non-overlapping ranges enforced in the model (independent from global `phase_assignments` / `exercise_routine_assignments`) |
 
 ---
@@ -50,11 +50,23 @@
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
-| `exercise_routines` | `user_id` FK; optional self-FK `source_exercise_routine_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_exercise_routine_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-EXR-006**) | `REQ-EXR-001`, **REQ-EXR-006**. User-owned named routines; not globally empty (≥1 line on ≥1 weekday); optional public catalog and adopted-copy metadata |
+| `exercise_routines` | `user_id` FK; optional self-FK `source_exercise_routine_id` (nullable); unique `(user_id, name_normalized)`; partial unique `(user_id, source_exercise_routine_id)` where source present; `publicly_shareable` (default false); `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-EXR-006**); planned **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | `REQ-EXR-001`, **REQ-EXR-006**, **REQ-CAT-001** (planned). User-owned named routines; not globally empty (≥1 line on ≥1 weekday); optional public catalog and adopted-copy metadata; template-level catalog popularity metrics |
 | `exercise_routine_lines` | FK to `exercise_routines`; unique `(exercise_routine_id, weekday, position)`; `weekday` 0–6; `label` max 500 | `REQ-EXR-001`. Ordered lines per weekday |
 | `exercise_routine_assignments` | `user_id`, `exercise_routine_id` FKs; check `start_week >= 1`, `end_week >= start_week` | `REQ-EXR-002`. Non-overlapping ranges per user among **routine** assignments only (independent from `phase_assignments`) |
 
 **Semantics:** Program week index and anchor are shared with menus via `users.phase_one_starts_on` and `Phases::WeekNumber` (`REQ-EXR-002`). Deleting a routine after confirmation removes dependent `exercise_routine_assignment` rows then the routine in one transaction (`REQ-EXR-001` Q12).
+
+---
+
+## Public catalog metrics & discovery (REQ-CAT-001)
+
+**Status:** columns and table below are **planned** until migrations land; counters and facets are defined in **`docs/core/SPEC.md`** (`#### REQ-CAT-001`).
+
+| Table | Primary keys / constraints | SPEC / notes |
+|--------|----------------------------|--------------|
+| `catalog_listing_facets` | Planned polymorphic **`listable_type`** / **`listable_id`** with **unique** `(listable_type, listable_id)`; owner-authored discovery fields (goal phrase, difficulty, normalized tags, optional week bounds); **REQ-CAT-001** | **REQ-CAT-001** (planned). At most one facet row per catalog listable (`Menu`, `ExerciseRoutine`, `PhaseProgram`); public queries only join **public** templates |
+
+**Template counters:** **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`** on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see rows in **Menus and recipes**, **Phase programs**, and **Exercise routines** above).
 
 ---
 

@@ -16,6 +16,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
 | `RPT` | Reporting (Informes) — **implemented** (Phase 7) |
+| `CAT` | Public authenticated **catalogs** (menus, routines, phase programs): adoption **metrics**, **sort by popularity**, optional **discovery** facets and filters — **planned** (`REQ-CAT-001`) |
 | `PHS` | Unified **phase programs** (bundles): menus + routines under one shareable program — **planned** (`REQ-PHS-001`) |
 
 ---
@@ -185,6 +186,7 @@ Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When
 | ID | Requirement | Status |
 |----|-------------|--------|
 | REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; **public catalog** `public_phase_programs` (authenticated index/show, owner **`publicly_shareable`** opt-in); admin **revoke** scopes to currently-public rows (parity with menus/routines). **Adopt:** `Programs::AdoptFromPublicCatalog` + `Programs::ContentFingerprint` duplicate nested menus/routines (via `Menus::CopyMenuForAdopter`, `ExerciseRoutines::CopyRoutineForAdopter`) and segment rows; one copy per adopter per source. **Sync:** `Programs::AdoptionSyncStatus` + `Programs::ApplyAdoptionSourceSync` (fingerprint + expected-origin retry); applying rebuilds segment rows from the current source template via `Programs::PopulateAssignmentsFromSource` (prior duplicated menus/routines may remain orphaned on the account — acceptable MVP). **Apply to user:** `Programs::ApplyBundleToUser` **replaces** all of that user’s existing **`phase_assignments`** and **`exercise_routine_assignments`** with rows copied from the program’s **`phase_program_assignments`** (same week ranges, same menu and routine IDs), in **one transaction** — explicit product choice for MVP (`docs/ROADMAP.md` **#33**). | Planned |
+| REQ-CAT-001 | **Public catalog metrics & discovery:** authenticated **`public_menus`**, **`public_exercise_routines`**, and **`public_phase_programs`** surfaces expose **template-level** adoption metrics (**`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`**) on **`Menu`**, **`ExerciseRoutine`**, and **`PhaseProgram`** owner rows; counters advance only on **successful** catalog adoption (not page views); **distinct adopters** increments at most once per **(adopter, source template)** consistent with the existing **one copy per adopter per source** rule. **Sort:** catalog index supports at least **`sort=name`** and **`sort=popular`** (exact default documented in implementation; request specs lock the contract). **Discovery:** optional owner-authored metadata via polymorphic **`catalog_listing_facets`** (at most **one** facet row per listable); public catalog queries **ignore** facets when the template is not **`publicly_shareable`**. **Filters:** documented query params (e.g. goal text, difficulty, tags, plan duration in weeks) with testable semantics (AND of tags, partial goal match, closed difficulty vocabulary). **Revoke / moderation:** when **`publicly_shareable`** becomes false, the template leaves the public index; counters and facet rows may remain in the database — behavior documented and covered by scopes. See **`#### REQ-CAT-001`** below. | Planned |
 
 ### Acceptance criteria — reporting (Phase 7)
 
@@ -299,6 +301,20 @@ These criteria are **testable**; implementation may use different model/table na
 4. **Sync:** When the source’s **entry content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **menu entries only** (copy **name** and **`phase_assignments`** to the same `menu_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
 5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed menu id does not **500**.
 6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate) can **revoke** public sharing on a menu; it disappears from the public catalog.
+
+#### REQ-CAT-001 — Public catalog metrics, popularity sort, and discovery
+
+**Scope:** Extends **REQ-MENU-006**, **REQ-EXR-006**, and **REQ-PHS-001** public catalog **read** and **adoption** flows (`docs/ROADMAP.md` **#34**). No anonymous catalog; no view-hit analytics.
+
+1. **Metrics on templates:** Each **`Menu`**, **`ExerciseRoutine`**, and **`PhaseProgram`** that can be listed as a catalog **source** carries **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`**, both integers **≥ 0**, **NOT NULL**, default **0** (see **`docs/core/SCHEMA_REFERENCE.md`**).
+2. **When counters move:** On **successful** completion of **`Menus::AdoptFromPublicCatalog`**, **`ExerciseRoutines::AdoptFromPublicCatalog`**, or **`Programs::AdoptFromPublicCatalog`**, inside the same **database transaction**, increment **`public_catalog_adoptions_count`** on the **source template** by **1**. Increment **`public_catalog_distinct_adopters_count`** by **1** only when the adoption establishes the adopter’s **first** copy from that source (the service already rejects **`:already_adopted`** — a second attempt must **not** double-count).
+3. **Concurrency:** Counter updates must be **race-safe** for concurrent adopters (row lock or atomic increment on the template row — implementation detail; integration or unit coverage as agreed in tests).
+4. **Catalog sort:** Each public index accepts a **sanitized** sort parameter; **`sort=name`** and **`sort=popular`** are supported (**popular** uses the adoption counters; tie-breaker **deterministic**, e.g. `id` or `name`). Default sort is **explicit** in code and **locked by request specs**.
+5. **Catalog UI:** Public index markup shows **both** metrics per item with **I18n** (`es` / `en`) and is **accessible** (not color-only).
+6. **`catalog_listing_facets`:** Optional **one** row per listable (`Menu` / `ExerciseRoutine` / `PhaseProgram`); **unique** `(listable_type, listable_id)`; fields support discovery (e.g. goal phrase, closed difficulty, normalized tags, optional week-range bounds for duration filters). Only the **listable owner** may create or update the facet; public reads join only **public** templates.
+7. **Filters:** Public indexes accept documented query parameters; combined filters use **AND** semantics where applicable; behavior for **unknown** or **invalid** params is **safe** (ignored or 400 — pick one per surface and document; tests fix the contract).
+8. **Phase programs — duration:** For bundles, **duration** used in discovery may be **derived** from **`phase_program_assignments`** (e.g. max `end_week`) and optionally **materialized** into the facet row — exact rule documented once implementation lands.
+9. **Revoke:** Admin or owner making a template **non-public** removes it from catalog listings; persisted counters and facet rows may remain but **must not** affect public queries.
 
 #### Decisions log — REQ-EXR (Phase 5, locked)
 
