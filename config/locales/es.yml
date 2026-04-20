@@ -12,6 +12,11 @@ es:
       body_html: "Hola — hoy es el primer día de tu plan de fase 1 (%{email}). Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
       body_text: "Hoy es el primer día de tu plan de fase 1. Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
       cta: "Abrir tu plan de fases"
+  habit_reminder_mailer:
+    notify:
+      subject: "Recordatorio: %{habit_name}"
+      body_html: "Recordatorio para tu hábito: %{habit_name}"
+      body_text: "Recordatorio para tu hábito: %{habit_name}"
   date:
     formats:
       long: "%d de %B de %Y"
