@@ -82,7 +82,7 @@
 
   <step id="2" status="complete">Implementar migraciones/modelos hasta **verde** (incluyendo índices que ayuden al sweep por hora/minuto si aplica). Mantener el diseño centrado en prefs por hábito; no introducir defaults globales en `User` salvo necesidad de UI.</step>
 
-  <step id="3" status="pending">Escribir **fallando** specs para **idempotencia**: crear entidad tipo `HabitReminderEvent` con unicidad por `(user_id, user_habit_id, local_date)` (y canal/kind solo si se justifica). Confirmar que ante reintentos o ejecución repetida no duplica envíos lógicos.</step>
+  <step id="3" status="complete">Escribir **fallando** specs para **idempotencia**: crear entidad tipo `HabitReminderEvent` con unicidad por `(user_id, user_habit_id, local_date)` (y canal/kind solo si se justifica). Confirmar que ante reintentos o ejecución repetida no duplica envíos lógicos.</step>
 
   <step id="4" status="pending">Implementar `HabitReminderEvent` y su uso hasta **verde**.</step>
 
