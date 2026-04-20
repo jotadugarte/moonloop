@@ -30,9 +30,9 @@ RSpec.describe Habits::SweepHabitRemindersJob, type: :job do
       create(:user_habit,
         user: madrid_user,
         active: false,
-        reminder_enabled: true,
-        reminder_time_of_day: "08:30",
-        reminder_email: true,
+        reminder_enabled: false,
+        reminder_time_of_day: nil,
+        reminder_email: false,
         reminder_web_push: false)
 
     allow(Habits::ProcessHabitReminderForUserHabit).to receive(:call)

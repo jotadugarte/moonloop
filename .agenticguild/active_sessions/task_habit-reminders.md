@@ -90,7 +90,7 @@
 
   <step id="6" status="complete">Implementar el job y el servicio orquestador (p. ej. `Habits::SweepHabitRemindersJob` + `Habits::ProcessHabitReminderForUserHabit`) hasta **verde**. Seguir el patrón existente de `Phases::ProcessPhaseStartReminderForUser` (incluyendo rescue de `RecordNotUnique`).</step>
 
-  <step id="7" status="pending">Escribir **fallando** specs para la regla MVP “**no enviar si ya cumplido**”: si el `UserHabit` está marcado como **done** para ese `local_date` antes de la hora programada, no crear evento ni enviar (email/push). Usar el mismo criterio de “done” que Mi Día/rachas (servicio existente a localizar y reutilizar).</step>
+  <step id="7" status="complete">Escribir **fallando** specs para la regla MVP “**no enviar si ya cumplido**”: si el `UserHabit` está marcado como **done** para ese `local_date` antes de la hora programada, no crear evento ni enviar (email/push). Usar el mismo criterio de “done” que Mi Día/rachas (servicio existente a localizar y reutilizar).</step>
 
   <step id="8" status="pending">Implementar la consulta de “done para día local” hasta **verde**, evitando N+1. Documentar en `docs/core/DATA_FLOW_MAP.md` si introduce nuevas lecturas/caches.</step>
 
