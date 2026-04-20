@@ -7,6 +7,7 @@
     <li>
       <%= link_to routine.name, public_exercise_routine_path(routine) %>
       — <%= t("public_exercise_routines.shared.author", code: routine.user.public_catalog_author_code) %>
+      <%= render "shared/catalog_index_metrics", record: routine %>
     </li>
   <% end %>
 </ul>

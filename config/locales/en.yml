@@ -88,6 +88,12 @@ en:
       name_taken: "That name is already taken. Pick another."
       could_not_save: "We could not save your copy. Please check the form and try again."
 
+  public_catalog:
+    metrics:
+      total_adoptions: "Catalog adoptions: %{count}"
+      distinct_adopters: "Distinct adopters: %{count}"
+      aria_group: "Metrics for %{name}: %{adoptions} catalog adoptions, %{adopters} distinct adopters"
+
   habit_completions:
     status:
       done: "Done"

@@ -68,6 +68,18 @@ RSpec.describe "Public exercise routines catalog", type: :request do
     expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
   end
 
+  # [REQ-CAT-001]
+  it "shows catalog adoption metrics on each routine index row" do
+    r = create_routine(user: author, name: "R stats", publicly_shareable: true)
+    r.update_columns(public_catalog_adoptions_count: 4, public_catalog_distinct_adopters_count: 2)
+
+    get public_exercise_routines_path
+
+    expect(response.body).to include(I18n.t("public_catalog.metrics.total_adoptions", count: 4, locale: :es))
+    expect(response.body).to include(I18n.t("public_catalog.metrics.distinct_adopters", count: 2, locale: :es))
+    expect(response.body).to include("catalog-index-metrics")
+  end
+
   it "does not expose author email in index or show HTML" do
     routine = create_routine(user: author, name: "Shared plan", publicly_shareable: true)
     expect(author.email).to be_present

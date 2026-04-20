@@ -1,0 +1,10 @@
+<%# Partial: local record (Menu, ExerciseRoutine, PhaseProgram). REQ-CAT-001. %>
+<%= tag.span(
+  class: "catalog-index-metrics",
+  role: "group",
+  aria: { label: t("public_catalog.metrics.aria_group", name: record.name, adoptions: record.public_catalog_adoptions_count, adopters: record.public_catalog_distinct_adopters_count) }
+) do %>
+  <span class="catalog-index-metrics__adoptions"><%= t("public_catalog.metrics.total_adoptions", count: record.public_catalog_adoptions_count) %></span>
+  <span class="catalog-index-metrics__sep" aria-hidden="true"><%= t("ui.inline_sep") %></span>
+  <span class="catalog-index-metrics__adopters"><%= t("public_catalog.metrics.distinct_adopters", count: record.public_catalog_distinct_adopters_count) %></span>
+<% end %>

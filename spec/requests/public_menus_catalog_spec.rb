@@ -75,6 +75,32 @@ RSpec.describe "Public menus catalog", type: :request do
   end
 
   # [REQ-CAT-001]
+  it "shows catalog adoption metrics on each index row (Spanish default)" do
+    m = create_menu(user: author, name: "Con stats", publicly_shareable: true)
+    m.update_columns(public_catalog_adoptions_count: 3, public_catalog_distinct_adopters_count: 2)
+
+    get public_menus_path
+
+    expect(response.body).to include(I18n.t("public_catalog.metrics.total_adoptions", count: 3, locale: :es))
+    expect(response.body).to include(I18n.t("public_catalog.metrics.distinct_adopters", count: 2, locale: :es))
+    expect(response.body).to include("role=\"group\"")
+    expect(response.body).to include("catalog-index-metrics")
+  end
+
+  # [REQ-CAT-001]
+  it "shows catalog adoption metrics in English when I18n.locale is :en" do
+    m = create_menu(user: author, name: "Stats", publicly_shareable: true)
+    m.update_columns(public_catalog_adoptions_count: 1, public_catalog_distinct_adopters_count: 1)
+    prev = I18n.locale
+    I18n.locale = :en
+    get public_menus_path
+    expect(response.body).to include(I18n.t("public_catalog.metrics.total_adoptions", count: 1, locale: :en))
+    expect(response.body).to include(I18n.t("public_catalog.metrics.distinct_adopters", count: 1, locale: :en))
+  ensure
+    I18n.locale = prev
+  end
+
+  # [REQ-CAT-001]
   it "orders the catalog index by popularity when sort=popular" do
     create_menu(user: author, name: "Aaa", publicly_shareable: true)
     z = create_menu(user: author, name: "Zzz", publicly_shareable: true)

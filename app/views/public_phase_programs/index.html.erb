@@ -7,6 +7,7 @@
     <li>
       <%= link_to program.name, public_phase_program_path(program) %>
       — <%= t("public_phase_programs.shared.author", code: program.user.public_catalog_author_code) %>
+      <%= render "shared/catalog_index_metrics", record: program %>
     </li>
   <% end %>
 </ul>

@@ -72,6 +72,18 @@ RSpec.describe "Public phase programs catalog", type: :request do
     expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
   end
 
+  # [REQ-CAT-001]
+  it "shows catalog adoption metrics on each program index row" do
+    p = PhaseProgram.create!(user: author, name: "Prog stats", publicly_shareable: true)
+    p.update_columns(public_catalog_adoptions_count: 5, public_catalog_distinct_adopters_count: 3)
+
+    get public_phase_programs_path
+
+    expect(response.body).to include(I18n.t("public_catalog.metrics.total_adoptions", count: 5, locale: :es))
+    expect(response.body).to include(I18n.t("public_catalog.metrics.distinct_adopters", count: 3, locale: :es))
+    expect(response.body).to include("catalog-index-metrics")
+  end
+
   # [REQ-PHS-001]
   it "does not expose author email in index or show HTML" do
     program = PhaseProgram.create!(user: author, name: "Shared program", publicly_shareable: true)
