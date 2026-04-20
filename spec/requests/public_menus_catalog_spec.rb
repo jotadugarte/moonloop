@@ -111,6 +111,82 @@ RSpec.describe "Public menus catalog", type: :request do
     expect(response.body.index("Zzz")).to be < response.body.index("Aaa")
   end
 
+  # [REQ-CAT-001]
+  it "filters the index by partial goal phrase (q), case-insensitive" do
+    m_hit = create_menu(user: author, name: "Menu hit", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_hit, goal_phrase: "Ganancia muscular")
+    m_miss = create_menu(user: author, name: "Menu miss", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_miss, goal_phrase: "Pérdida de peso")
+
+    get public_menus_path(q: "MUSCULAR")
+
+    expect(response.body).to include("Menu hit")
+    expect(response.body).not_to include("Menu miss")
+  end
+
+  # [REQ-CAT-001]
+  it "filters by difficulty and combines with q using AND semantics" do
+    m_ok = create_menu(user: author, name: "Ok menu", publicly_shareable: true)
+    Catalog::ListingFacet.create!(
+      listable: m_ok,
+      goal_phrase: "Hipertrofia",
+      difficulty_level: "intermediate"
+    )
+    m_wrong_level = create_menu(user: author, name: "Wrong level", publicly_shareable: true)
+    Catalog::ListingFacet.create!(
+      listable: m_wrong_level,
+      goal_phrase: "Hipertrofia",
+      difficulty_level: "beginner"
+    )
+    m_wrong_goal = create_menu(user: author, name: "Wrong goal", publicly_shareable: true)
+    Catalog::ListingFacet.create!(
+      listable: m_wrong_goal,
+      goal_phrase: "Cardio",
+      difficulty_level: "intermediate"
+    )
+
+    get public_menus_path(q: "hipertrofia", difficulty: "intermediate")
+
+    expect(response.body).to include("Ok menu")
+    expect(response.body).not_to include("Wrong level")
+    expect(response.body).not_to include("Wrong goal")
+  end
+
+  # [REQ-CAT-001]
+  it "filters by tags with AND semantics (all tags must appear)" do
+    m_both = create_menu(user: author, name: "Both tags", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_both, normalized_tags: "strength,hypertrophy")
+    m_one = create_menu(user: author, name: "One tag", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_one, normalized_tags: "strength,endurance")
+
+    get public_menus_path(tags: "strength, hypertrophy")
+
+    expect(response.body).to include("Both tags")
+    expect(response.body).not_to include("One tag")
+  end
+
+  # [REQ-CAT-001]
+  it "filters by min_weeks against facet duration span" do
+    m_short = create_menu(user: author, name: "Short menu", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_short, duration_weeks_min: 2, duration_weeks_max: 4)
+    m_long = create_menu(user: author, name: "Long menu", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: m_long, duration_weeks_min: 8, duration_weeks_max: 12)
+
+    get public_menus_path(min_weeks: 6)
+
+    expect(response.body).to include("Long menu")
+    expect(response.body).not_to include("Short menu")
+  end
+
+  # [REQ-CAT-001]
+  it "ignores invalid difficulty and non-positive week params (still lists unfiltered catalogs)" do
+    plain = create_menu(user: author, name: "Plain menu", publicly_shareable: true)
+
+    get public_menus_path(difficulty: "not-a-level", min_weeks: "0", max_weeks: "-1")
+
+    expect(response.body).to include("Plain menu")
+  end
+
   # [REQ-MENU-006]
   it "does not expose author email in index or show HTML" do
     menu = create_menu(user: author, name: "Shared menu", publicly_shareable: true)

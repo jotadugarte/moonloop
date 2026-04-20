@@ -84,6 +84,19 @@ RSpec.describe "Public phase programs catalog", type: :request do
     expect(response.body).to include("catalog-index-metrics")
   end
 
+  # [REQ-CAT-001]
+  it "applies discovery filters on the public index" do
+    p_keep = PhaseProgram.create!(user: author, name: "Program keep", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: p_keep, difficulty_level: "advanced")
+    p_drop = PhaseProgram.create!(user: author, name: "Program drop", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: p_drop, difficulty_level: "beginner")
+
+    get public_phase_programs_path(difficulty: "advanced")
+
+    expect(response.body).to include("Program keep")
+    expect(response.body).not_to include("Program drop")
+  end
+
   # [REQ-PHS-001]
   it "does not expose author email in index or show HTML" do
     program = PhaseProgram.create!(user: author, name: "Shared program", publicly_shareable: true)

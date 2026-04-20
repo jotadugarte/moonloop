@@ -80,6 +80,19 @@ RSpec.describe "Public exercise routines catalog", type: :request do
     expect(response.body).to include("catalog-index-metrics")
   end
 
+  # [REQ-CAT-001]
+  it "applies discovery filters on the public index" do
+    r_keep = create_routine(user: author, name: "Routine keep", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: r_keep, goal_phrase: "Fuerza máxima")
+    r_drop = create_routine(user: author, name: "Routine drop", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: r_drop, goal_phrase: "Movilidad")
+
+    get public_exercise_routines_path(q: "fuerza")
+
+    expect(response.body).to include("Routine keep")
+    expect(response.body).not_to include("Routine drop")
+  end
+
   it "does not expose author email in index or show HTML" do
     routine = create_routine(user: author, name: "Shared plan", publicly_shareable: true)
     expect(author.email).to be_present

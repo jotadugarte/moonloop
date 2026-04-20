@@ -7,7 +7,9 @@ class PublicMenusController < ApplicationController
   before_action :set_public_menu, only: %i[show adopt]
 
   def index
-    @menus = Menu.includes(:user).where(publicly_shareable: true).order(catalog_public_index_order)
+    base = Menu.where(publicly_shareable: true)
+    filtered = Catalog::ApplyPublicListingFilters.call(base, params)
+    @menus = filtered.includes(:user).order(catalog_public_index_order)
   end
 
   def show

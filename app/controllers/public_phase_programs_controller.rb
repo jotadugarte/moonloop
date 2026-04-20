@@ -7,7 +7,9 @@ class PublicPhaseProgramsController < ApplicationController
   before_action :set_public_program, only: %i[show adopt]
 
   def index
-    @programs = PhaseProgram.includes(:user).where(publicly_shareable: true).order(catalog_public_index_order)
+    base = PhaseProgram.where(publicly_shareable: true)
+    filtered = Catalog::ApplyPublicListingFilters.call(base, params)
+    @programs = filtered.includes(:user).order(catalog_public_index_order)
   end
 
   def show
