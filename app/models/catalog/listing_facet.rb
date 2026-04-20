@@ -11,7 +11,7 @@ module Catalog
     MAX_TAG_SLUG_LENGTH = 32
     TAG_SLUG_PATTERN = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/.freeze
 
-    belongs_to :listable, polymorphic: true, inverse_of: :catalog_listing_facet
+    belongs_to :listable, polymorphic: true
 
     validates :listable_type, inclusion: { in: LISTABLE_TYPES }
     validates :listable_id, uniqueness: { scope: :listable_type }
@@ -23,6 +23,11 @@ module Catalog
     before_validation :strip_goal_phrase
     before_validation :coerce_blank_difficulty_to_nil
     before_validation :normalize_tag_slugs
+
+    def self.difficulty_select_options
+      [ [ I18n.t("catalog_listing_facet.difficulty_blank"), "" ] ] +
+        DIFFICULTY_LEVELS.map { |level| [ I18n.t("catalog_listing_facet.difficulties.#{level}"), level ] }
+    end
 
     private
 

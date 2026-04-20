@@ -5,16 +5,15 @@ module CatalogListableWithListingFacet
   extend ActiveSupport::Concern
 
   included do
-    # FK lives on catalog_listing_facets; scope listable_type explicitly so dependent :destroy
-    # finds the row (has_one ... as: :listable can miss it with namespaced class_name).
     listable_type_for_catalog_facet = name
+
+    # Scoped has_one + polymorphic listable: Rails may skip dependent: :destroy; delete explicitly.
+    before_destroy :_destroy_catalog_listing_facet_row, prepend: true
 
     has_one :catalog_listing_facet,
       -> { where(listable_type: listable_type_for_catalog_facet) },
       class_name: "Catalog::ListingFacet",
-      foreign_key: :listable_id,
-      inverse_of: :listable,
-      dependent: :destroy
+      foreign_key: :listable_id
 
     accepts_nested_attributes_for :catalog_listing_facet,
       reject_if: lambda { |attrs|
@@ -28,6 +27,11 @@ module CatalogListableWithListingFacet
   end
 
   private
+
+  def _destroy_catalog_listing_facet_row
+    row = Catalog::ListingFacet.find_by(listable_type: self.class.name, listable_id: id)
+    row&.destroy!
+  end
 
   def _prune_blank_catalog_listing_facet
     f = catalog_listing_facet

@@ -1,4 +1,1 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-config/credentials/*.yml.enc diff=rails_credentials
-config/credentials.yml.enc diff=rails_credentials
+*.erb text eol=lf

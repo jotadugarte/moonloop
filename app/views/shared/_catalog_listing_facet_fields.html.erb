@@ -1,4 +1,3 @@
-<%# locals: (cf) — fields_for Catalog::ListingFacet %>
 <fieldset class="border border-gray-200 rounded p-3 mt-4 max-w-lg" aria-labelledby="catalog-listing-facet-legend">
   <legend id="catalog-listing-facet-legend" class="font-medium text-gray-900">
     <%= t("catalog_listing_facet.legend") %>
@@ -13,12 +12,7 @@
   </div>
   <div class="mb-2">
     <%= cf.label :difficulty_level, t("catalog_listing_facet.difficulty_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
-    <%= cf.select :difficulty_level,
-          [ [ t("catalog_listing_facet.difficulty_blank"), "" ] ] + Catalog::ListingFacet::DIFFICULTY_LEVELS.map { |d|
-                [ t("catalog_listing_facet.difficulties.#{d}"), d ]
-              },
-          {},
-          class: "border border-gray-300 rounded p-2 w-full" %>
+    <%= cf.select :difficulty_level, Catalog::ListingFacet.difficulty_select_options, {}, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
   <div class="mb-2">
     <%= cf.label :normalized_tags, t("catalog_listing_facet.tags_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
