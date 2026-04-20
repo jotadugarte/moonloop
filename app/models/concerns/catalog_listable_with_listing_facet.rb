@@ -5,9 +5,15 @@ module CatalogListableWithListingFacet
   extend ActiveSupport::Concern
 
   included do
+    # FK lives on catalog_listing_facets; scope listable_type explicitly so dependent :destroy
+    # finds the row (has_one ... as: :listable can miss it with namespaced class_name).
+    listable_type_for_catalog_facet = name
+
     has_one :catalog_listing_facet,
+      -> { where(listable_type: listable_type_for_catalog_facet) },
       class_name: "Catalog::ListingFacet",
-      as: :listable,
+      foreign_key: :listable_id,
+      inverse_of: :listable,
       dependent: :destroy
 
     accepts_nested_attributes_for :catalog_listing_facet,

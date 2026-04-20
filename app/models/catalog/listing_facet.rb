@@ -11,7 +11,7 @@ module Catalog
     MAX_TAG_SLUG_LENGTH = 32
     TAG_SLUG_PATTERN = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/.freeze
 
-    belongs_to :listable, polymorphic: true
+    belongs_to :listable, polymorphic: true, inverse_of: :catalog_listing_facet
 
     validates :listable_type, inclusion: { in: LISTABLE_TYPES }
     validates :listable_id, uniqueness: { scope: :listable_type }
