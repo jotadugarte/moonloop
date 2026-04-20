@@ -27,6 +27,7 @@ class UserHabit < ApplicationRecord
   before_validation :sync_name_normalized
   before_validation :normalize_habit_metrics
   before_update :mark_streak_counters_stale_on_metrics_change
+  after_update_commit :enqueue_recompute_streak_counters_if_stale
   validate :active_name_must_be_unique_per_user, if: -> { user_id.present? && active? && name_normalized.present? }
   validate :frequency_params_shape
   validate :frequency_requirements
@@ -55,6 +56,14 @@ class UserHabit < ApplicationRecord
     return unless will_save_change_to_daily_target? || will_save_change_to_habit_metric_kind?
 
     self.streak_counters_stale = true
+  end
+
+  def enqueue_recompute_streak_counters_if_stale
+    return unless respond_to?(:streak_counters_stale)
+    return unless saved_change_to_streak_counters_stale?
+    return unless streak_counters_stale?
+
+    Habits::RecomputeStreakCountersJob.perform_later(user_habit_id: id)
   end
 
   def frequency_params_shape

@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Habits::ClearCompletion do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user, timezone: "Etc/UTC") }
   let(:category) { create(:habit_category, user: user) }
 
@@ -22,7 +24,9 @@ RSpec.describe Habits::ClearCompletion do
     completion = create(:habit_completion, user_habit: habit, completed_on: retro_date, status: "done")
 
     travel_to now do
-      expect(described_class.call(user: user, habit_completion: completion)).to eq(:ok)
+      expect {
+        expect(described_class.call(user: user, habit_completion: completion)).to eq(:ok)
+      }.to have_enqueued_job(Habits::RecomputeStreakCountersJob).with(user_habit_id: habit.id)
       expect(habit.reload.streak_counters_stale).to be(true)
     end
   end

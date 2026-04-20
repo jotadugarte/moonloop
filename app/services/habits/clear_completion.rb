@@ -34,6 +34,7 @@ module Habits
       return unless @habit_completion.completed_on < today
 
       habit.update!(streak_counters_stale: true)
+      Habits::RecomputeStreakCountersJob.perform_later(user_habit_id: habit.id)
     end
   end
 end

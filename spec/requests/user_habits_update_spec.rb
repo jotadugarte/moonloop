@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "User habits update", type: :request do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user, password: "Password123!") }
 
   before do
@@ -21,14 +23,16 @@ RSpec.describe "User habits update", type: :request do
       streak_counters_stale: false,
       streak_counters_as_of: Date.new(2026, 4, 20))
 
-    patch user_habit_path(habit),
-      params: {
-        user_habit: {
-          name: "Agua",
-          habit_metric_kind: "count",
-          daily_target: "9"
+    expect {
+      patch user_habit_path(habit),
+        params: {
+          user_habit: {
+            name: "Agua",
+            habit_metric_kind: "count",
+            daily_target: "9"
+          }
         }
-      }
+    }.to have_enqueued_job(Habits::RecomputeStreakCountersJob).with(user_habit_id: habit.id)
 
     expect(response).to redirect_to(user_habits_path)
     expect(habit.reload.daily_target).to eq(9)

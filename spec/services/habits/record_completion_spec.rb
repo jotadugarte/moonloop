@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Habits::RecordCompletion do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user, timezone: "Etc/UTC") }
   let(:category) { create(:habit_category, user: user) }
 
@@ -28,7 +30,9 @@ RSpec.describe Habits::RecordCompletion do
       streak_counters_stale: false,
       streak_counters_as_of: Date.new(2026, 4, 20))
 
-    expect(call!(habit, now: now, local_date: retro_date, status: "done")).to eq(:ok)
+    expect {
+      expect(call!(habit, now: now, local_date: retro_date, status: "done")).to eq(:ok)
+    }.to have_enqueued_job(Habits::RecomputeStreakCountersJob).with(user_habit_id: habit.id)
     expect(habit.reload.streak_counters_stale).to be(true)
   end
 

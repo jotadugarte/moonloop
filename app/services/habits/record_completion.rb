@@ -87,6 +87,7 @@ module Habits
       return unless @local_date < user_local_today
 
       @user_habit.update!(streak_counters_stale: true)
+      Habits::RecomputeStreakCountersJob.perform_later(user_habit_id: @user_habit.id)
     end
   end
 end
