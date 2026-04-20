@@ -1,0 +1,105 @@
+<% content_for :title, t("phase_programs.edit.title", name: @phase_program.name) %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("phase_programs.edit.heading", name: @phase_program.name) %></h1>
+
+<% if @adoption_sync_status.key == :pending %>
+  <div class="mb-4 p-3 border border-amber-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("phase_programs.edit.adoption_sync.pending") %></p>
+    <%= form_with url: accept_source_update_phase_program_path(@phase_program), method: :post, local: true do %>
+      <%= hidden_field_tag :expected_origin_fingerprint, @adoption_sync_status.origin_fingerprint %>
+      <%= submit_tag t("phase_programs.edit.adoption_sync.accept_update"),
+            class: "bg-amber-600 text-white px-3 py-1 rounded cursor-pointer border-0" %>
+    <% end %>
+  </div>
+<% elsif @adoption_sync_status.key == :unavailable %>
+  <div class="mb-4 p-3 border border-gray-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("phase_programs.edit.adoption_sync.unavailable") %></p>
+  </div>
+<% end %>
+
+<% prog_attrs_err_id = "phase-program-attrs-errors" %>
+<%= form_with model: @phase_program, url: phase_program_path(@phase_program), method: :patch, class: "space-y-3 max-w-lg mb-8" do |f| %>
+  <% if @phase_program.errors.any? %>
+    <ul id="<%= prog_attrs_err_id %>" class="text-red-600 text-sm list-disc pl-5" role="alert">
+      <% @phase_program.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+      <% @phase_program.catalog_listing_facet&.errors&.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <div>
+    <%= f.label :name, t("phase_programs.edit.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@phase_program, :name, prog_attrs_err_id) %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@phase_program, :publicly_shareable, prog_attrs_err_id) %>
+    <%= f.label :publicly_shareable, t("phase_programs.edit.public_share_label"), class: "text-gray-700" %>
+  </div>
+  <%= f.fields_for(:catalog_listing_facet, @phase_program.catalog_listing_facet || @phase_program.build_catalog_listing_facet) do |cf| %>
+    <%= render "shared/catalog_listing_facet_fields", cf: cf %>
+  <% end %>
+  <div>
+    <%= f.submit t("phase_programs.edit.save_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
+  </div>
+<% end %>
+
+<section class="mb-8 max-w-2xl">
+  <h2 class="text-lg font-semibold mb-2"><%= t("phase_programs.edit.segments_heading") %></h2>
+  <p class="text-gray-600 text-sm mb-3"><%= t("phase_programs.edit.segments_hint") %></p>
+  <% if @assignments.any? %>
+    <ul class="list-disc pl-5 space-y-1 mb-4">
+      <% @assignments.each do |a| %>
+        <li>
+          <%= t("phase_programs.edit.segment_line",
+                menu: a.menu.name,
+                routine: a.exercise_routine.name,
+                start: a.start_week,
+                end: a.end_week) %>
+          <%= link_to t("phase_programs.edit.edit_segment"), edit_phase_program_phase_program_assignment_path(@phase_program, a), class: "text-blue-600 underline ml-1" %>
+          <%= button_to t("phase_programs.edit.delete_segment"),
+                phase_program_phase_program_assignment_path(@phase_program, a),
+                method: :delete,
+                form: { data: { turbo_confirm: t("phase_programs.edit.delete_segment_confirm") } },
+                class: "text-sm text-red-700 underline ml-2 bg-transparent border-0 cursor-pointer p-0 inline" %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600 mb-4"><%= t("phase_programs.edit.no_segments") %></p>
+  <% end %>
+  <p>
+    <%= link_to t("phase_programs.edit.add_segment"),
+          new_phase_program_phase_program_assignment_path(@phase_program),
+          class: "text-blue-600 underline" %>
+  </p>
+</section>
+
+<section class="mb-8 max-w-lg rounded border border-amber-200 bg-amber-50 p-4">
+  <h2 class="text-lg font-semibold mb-2"><%= t("phase_programs.edit.apply_heading") %></h2>
+  <p class="text-sm text-gray-800 mb-3"><%= t("phase_programs.edit.apply_warning") %></p>
+  <%= button_to t("phase_programs.edit.apply_submit"),
+        apply_phase_program_path(@phase_program),
+        method: :post,
+        class: "bg-amber-700 text-white px-4 py-2 rounded cursor-pointer hover:bg-amber-800 border-0" %>
+</section>
+
+<section class="mb-8">
+  <%= button_to t("phase_programs.edit.destroy_program"),
+        phase_program_path(@phase_program),
+        method: :delete,
+        form: { data: { turbo_confirm: t("phase_programs.edit.destroy_confirm") } },
+        class: "text-sm bg-red-700 text-white px-3 py-2 rounded cursor-pointer hover:bg-red-800 border-0" %>
+</section>
+
+<p>
+  <%= link_to t("phase_programs.edit.back_index"), phase_programs_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t("phase_programs.edit.back_phase"), phase_path, class: "text-blue-600 underline" %>
+</p>

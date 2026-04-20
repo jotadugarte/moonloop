@@ -42,6 +42,7 @@
 4. **Routine assignments CRUD:** **`ExerciseRoutineAssignmentsController`**, scoped to **`Current.user`**; overlaps rejected among **routine** assignments only.
 5. **Plan extension (menus):** **`Phases::RepeatLastPhaseAssignment`** duplicates the last contiguous menu assignment block forward when the user confirms.
 6. **Plan extension (routines):** **`ExerciseRoutines::RepeatLastAssignment`** duplicates the last contiguous **routine** assignment block forward when the user confirms.
+7. **Phase program bundles (`REQ-PHS-001`):** **`PhaseProgramsController`** / **`PhaseProgramAssignmentsController`** manage a user-owned **`PhaseProgram`** and its **`phase_program_assignments`** (one menu + one exercise routine per contiguous week range; non-overlapping ranges **within** the program). **`Programs::ApplyBundleToUser`** **replaces** the user’s global **`phase_assignments`** and **`exercise_routine_assignments`** in one transaction from those segments. **`GET /phase`** still resolves the active menu and routine only via **`Phases::WeekNumber`** + **`Phases::ResolveActiveMenu`** + **`ExerciseRoutines::ResolveActiveRoutine`** on the **same** assignment tables — there is no parallel week-index path. Public catalog, adopt, and source sync use **`PublicPhaseProgramsController`**, **`Programs::AdoptFromPublicCatalog`**, **`Programs::AdoptionSyncStatus`**, **`Programs::ApplyAdoptionSourceSync`**, and **`Programs::PopulateAssignmentsFromSource`** (see SPEC).
 
 ### 1.6 Exercise routines (CRUD, duplicate, destroy)
 
@@ -54,14 +55,23 @@
 2. For each user whose **local today** is a phase-start day and prefs allow, **`Phases::ProcessPhaseStartReminderForUser`** creates idempotent **`PhaseReminderEvent`** rows and sends mail when email is enabled.
 3. **In-app banner:** rendered on **`PhasesController#show`** when an event applies and the user has not dismissed for that local day (`phase_reminder_dismissed_on`); **`POST /phase/dismiss_reminder`** sets dismissal to local today.
 
-### 1.8 Weight log (create, list, delete, reconcile)
+### 1.8 Per-habit reminders (async, MVP)
 
-1. **Entry form (`REQ-WGT-002`):** **`GET /weight_logs/new`** → **`POST /weight_logs`** with **`weight_kg`** and **`logged_at`** (datetime-local string). **`WeightLogs::LoggedAtParamParser`** turns the raw field into a **`Time`** in the user’s **IANA timezone** (blank input → **`Time.current`**; invalid parse → validation error on **`logged_at`**). Height is **not** edited on this form; each persisted row snapshots **`User#height_cm`** at save time. **`LogWeightService`** creates **`WeightLog`** (BMI computed on the model) inside a transaction, then **`WeightLogs::ReconcileUserCurrentStats`**, which sets **`users.current_weight_kg`** and **`users.current_bmi`** from the **`WeightLog`** row with **maximum `logged_at`** (tie-break **`id` DESC**), or **`nil`** if no logs remain. A **retroactive** `logged_at` must not overwrite “current” if a newer weigh-in already exists.
-2. **History (`REQ-WGT-003`):** **`GET /weight_logs`** lists the signed-in user’s logs with that ordering. **`WeightLogs::HistoryPage`** applies **30 rows per page** and the **`page`** query param (offset/limit on the ordered scope). Columns: local **`logged_at`**, weight, height snapshot, BMI, and a **Delete** link per row.
+1. **Solid Queue** runs **`Habits::SweepHabitRemindersJob`** on the schedule in **`config/recurring.yml`** (currently **every minute** in `development` / `production` — tune per ops constraints).
+2. The sweep selects **active** `UserHabit` rows with **`reminder_enabled`** and a non-blank **`reminder_time_of_day`**, then filters to habits whose owner has a valid IANA timezone and whose **current local `HH:MM`** matches the configured time.
+3. For each match, **`Habits::ProcessHabitReminderForUserHabit`** computes the habit owner’s **local date** from **`Time.current`** in that timezone, returns early when the habit is inactive/disabled, timezone is missing/invalid, or the habit is already considered **done for that local day** via **`Habits::Streak.habit_day_done?`** (same “done” notion as Mi Día / streaks for measurable habits).
+4. **Idempotency:** on success it inserts **`habit_reminder_events`** for `(user_id, user_habit_id, local_date)`; **`ActiveRecord::RecordNotUnique`** is treated as success so retries do not duplicate logical processing (**REQ-HAB-011**).
+5. **Channels:** `UserHabit` stores **`reminder_email`** / **`reminder_web_push`** preferences (**REQ-HAB-010**), but **this MVP processor does not dispatch email or push yet** — see **`docs/core/SPEC.md`** (**REQ-HAB-013** planned; Web Push delivery ADR **`docs/core/ADRs/0001-habit-reminders-web-push.md`**).
+6. **Web Push material (persistence only):** authenticated clients may **`POST /web_push_subscription`** to upsert **`web_push_subscriptions`** (scoped to **`Current.user`**) and **`DELETE /web_push_subscription`** to remove a row by `endpoint` (**REQ-HAB-012** persistence).
+
+### 1.9 Weight log (create, list, delete, reconcile)
+
+1. **Entry form (`REQ-WGT-002`):** **`GET /weight_logs/new`** → **`POST /weight_logs`** with **`weight_kg`** and **`logged_at`** (datetime-local string). **`WeightLogs::LoggedAtParamParser`** turns the raw field into a **`Time`** in the user’s **IANA timezone** (blank input → **`Time.current`**; invalid parse → validation error on **`logged_at`**). Height is **not** edited on this form; each persisted row snapshots **`User#height_cm`** at save time. **`LogWeightService`** creates **`WeightLog`** (BMI computed on the model) inside a transaction, then **`WeightLogs::ReconcileUserCurrentStats`**, which sets **`users.current_weight_kg`** and **`users.current_bmi`** from the **`WeightLog`** row with **maximum `logged_at`** (tie-break **`id` DESC**), or **`nil`** if no logs remain. A **retroactive** `logged_at` must not overwrite “current” if a newer weigh-in already exists. **Display and form input units** follow **`User#body_unit_system`** (**REQ-PROF-003**, **REQ-WGT-004**): persistence remains **`weight_kg`** / **`height_cm`** only; **`BodyMetrics`** handles conversion where the UI accepts or shows lb / ft-in.
+2. **History (`REQ-WGT-003`):** **`GET /weight_logs`** lists the signed-in user’s logs with that ordering. **`WeightLogs::HistoryPage`** applies **30 rows per page** and the **`page`** query param (offset/limit on the ordered scope). Columns: local **`logged_at`**, weight, height snapshot, BMI, and a **Delete** link per row. **Presentation** of weight and height snapshot respects **`User#body_unit_system`** while rows stay canonical (**REQ-WGT-004**).
 3. **Delete:** **`GET /weight_logs/:id/confirm_destroy`** (warning) → **`DELETE /weight_logs/:id`** via **`WeightLogs::DestroyLog`** (transaction: **`destroy!`** the log, then **`ReconcileUserCurrentStats`**). Scoped to **`Current.user.weight_logs`**; other users’ IDs → **404**.
 4. **Navigation:** Home and profile expose links to history and the entry form (`REQ-WGT-002`).
 
-### 1.9 Informes / reporting (read only, `REQ-RPT-001`–`003`)
+### 1.10 Informes / reporting (read only, `REQ-RPT-001`–`003`)
 
 1. **Browser** requests **`GET /informes`** with optional **`fecha`** (ISO date), same validity rules as Mi Día (not after local today; invalid → redirect + flash).
 2. **`ReportsController#show`** delegates assembly to **`Reports::ShowPage`**, which runs entirely **read-only** (no writes to `HabitCompletion`, `WeightLog`, or habits).
@@ -69,7 +79,7 @@
 4. **Completions preload:** one **`HabitCompletion`** query spans from **`min`**(each habit’s streak lower bound, start of the combined week/month window) through **`max`**(end of that window, reference date), grouped by `user_habit_id` and indexed by `completed_on` — used both for fulfillment slices and for streak walks (`REQ-RPT-001` / `REQ-RPT-002`).
 5. **Fulfillment:** for each `UserHabit`, **`Habits::FulfillmentForPeriod`** runs on the week slice and month slice (via **`Habits::DueOnDate`**, including **`schedule_only:`** for inactive habits with activity in-range per **REQ-RPT-001**). Rows are omitted when both week and month stats are absent.
 6. **Streaks:** habits **inactive** with **no** completion in the **union** of that week and month are **omitted** from the streak table; for each remaining habit, **`Habits::ReportCurrentStreak`** (wraps **`Habits::Streak`**) and **`Habits::LongestStreak`** consume the preloaded completion map from each habit’s lower bound through **`as_of`**.
-7. **Weight chart:** **`WeightLogs::ChartSeries`** loads the user’s full ordered `weight_logs` projection (not **`WeightLogs::HistoryPage`** pagination); the view renders server-side SVG (helper), axis labels in user TZ like history.
+7. **Weight chart (`REQ-RPT-003`):** **`WeightLogs::ChartSeries`** loads the user’s full ordered `weight_logs` projection (not **`WeightLogs::HistoryPage`** pagination); the view renders server-side SVG (helper), axis labels in user TZ like history. **Y-axis, legend, and tooltips** use the same **`User#body_unit_system`** as elsewhere (**REQ-PROF-003**, **REQ-WGT-004**); the polyline still reflects canonical **`weight_kg`** values.
 
 ## 2. Cascading side effects and invariants
 
@@ -82,10 +92,13 @@
 | **`MenuEntry`** save | Recipe (if present) must belong to same user as menu; freeform gated by **`allow_menu_freeform`** | Model + **`Menus::UpsertEntry`** |
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
+| **`Programs::ApplyBundleToUser`** | Replaces **all** of the user’s **`phase_assignments`** and **`exercise_routine_assignments`** with rows derived from a owned **`PhaseProgram`**’s segments | Service (single transaction) |
+| **`PhaseProgram`** save or **`PhaseProgramAssignment`** commit | If a **`catalog_listing_facets`** row exists for that program, **`duration_weeks_min`** / **`duration_weeks_max`** reflect **min** `start_week` and **max** `end_week` on **`phase_program_assignments`** (or **NULL** if none) | **`Catalog::MaterializePhaseProgramFacetDuration`** (**REQ-CAT-001**) |
 | **Confirmed delete** of **`ExerciseRoutine`** with assignments | All **`exercise_routine_assignments`** for that routine removed, then routine deleted | **`ExerciseRoutines::DestroyRoutine`** (transaction) |
 | **`WeightLog`** create or delete | **`User#current_weight_kg`** / **`current_bmi`** reflect latest row by **`logged_at`** (or **`nil`** if none) | HTTP create: **`WeightLogs::LoggedAtParamParser`** then **`LogWeightService`** + **`WeightLogs::ReconcileUserCurrentStats`**; delete: **`WeightLogs::DestroyLog`** |
 | **`GET /informes`** | **Read-only**; must not create/update/delete domain rows | **`Reports::ShowPage`** + query objects only |
 | Phase-start **reminder** sweep | At most one logical send per `(user, kind, local_date)` | Unique index on **`phase_reminder_events`** |
+| Per-habit **reminder** sweep | At most one logical processing attempt per `(user, user_habit, local_date)` | Unique index on **`habit_reminder_events`** |
 
 ## 3. Caching invalidation
 

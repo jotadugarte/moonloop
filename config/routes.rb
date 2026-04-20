@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get "mi_dia", to: "my_day#show", as: :my_day
   get "informes", to: "reports#show", as: :informes
   resources :habit_completions, only: [ :create, :destroy ]
+  resource :web_push_subscription, only: %i[create destroy]
   resources :exercise_routines, only: %i[index create edit update destroy] do
     member do
       get :confirm_destroy
@@ -47,6 +48,13 @@ Rails.application.routes.draw do
   end
   resources :phase_assignments, only: %i[new create edit update destroy]
   resources :exercise_routine_assignments, only: %i[new create edit update destroy]
+  resources :phase_programs, only: %i[index create edit update destroy] do
+    member do
+      post :apply
+      post :accept_source_update
+    end
+    resources :phase_program_assignments, only: %i[new create edit update destroy]
+  end
   resources :public_recipes, only: [ :index ]
   resources :public_menus, only: %i[index show] do
     member do
@@ -54,6 +62,11 @@ Rails.application.routes.draw do
     end
   end
   resources :public_exercise_routines, only: %i[index show] do
+    member do
+      post :adopt
+    end
+  end
+  resources :public_phase_programs, only: %i[index show] do
     member do
       post :adopt
     end
@@ -70,6 +83,11 @@ Rails.application.routes.draw do
       end
     end
     resources :exercise_routines, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
+    resources :phase_programs, only: [] do
       member do
         patch :revoke_public_share
       end

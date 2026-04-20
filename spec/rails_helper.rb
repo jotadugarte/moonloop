@@ -33,7 +33,14 @@ Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
-  abort e.to_s.strip
+  hint = <<~HINT.strip
+
+    `db:migrate` updates the **development** DB by default. RSpec uses the **test** DB, which must see the same migrations.
+
+    Refresh the **test** DB from `db/schema.rb` (recommended after dev migrate):
+      bundle exec rails db:test:prepare
+  HINT
+  abort [ e.to_s.strip, hint ].join("\n")
 end
 RSpec.configure do |config|
   config.fixture_paths = [ Rails.root.join('spec/fixtures') ]

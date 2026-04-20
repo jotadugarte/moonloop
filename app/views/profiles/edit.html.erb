@@ -36,6 +36,18 @@
           aria: aria_for_field(@user, :timezone, profile_err_id) %>
   </div>
 
+  <fieldset class="border border-gray-200 rounded p-3 space-y-2">
+    <legend class="font-medium text-gray-800 px-1"><%= t(".body_unit_system_legend") %></legend>
+    <% User::BODY_UNIT_SYSTEMS.each do |system| %>
+      <div class="flex items-center gap-2">
+        <%= form.radio_button :body_unit_system, system,
+              aria: { describedby: "profile-body-units-hint" } %>
+        <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
+      </div>
+    <% end %>
+    <p id="profile-body-units-hint" class="text-sm text-gray-500"><%= t(".body_unit_system_hint") %></p>
+  </fieldset>
+
   <div class="flex items-start gap-2">
     <%= form.check_box :allow_menu_freeform,
           class: "mt-1",

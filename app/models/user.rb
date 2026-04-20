@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  BODY_UNIT_SYSTEMS = %w[metric imperial_us].freeze
+
   has_secure_password
 
   generates_token_for :email_verification, expires_in: 2.days do
@@ -19,13 +21,17 @@ class User < ApplicationRecord
   has_many :exercise_routine_assignments, dependent: :destroy
   has_many :recipes, dependent: :destroy
   has_many :phase_assignments, dependent: :destroy
+  has_many :phase_programs, dependent: :destroy
   has_many :phase_reminder_events, dependent: :destroy
+  has_many :habit_reminder_events, dependent: :destroy
+  has_many :web_push_subscriptions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, allow_nil: true, length: { minimum: 12 }
 
   validates :date_of_birth, :height_cm, :timezone, presence: true
   validates :height_cm, numericality: { greater_than_or_equal_to: 50, less_than_or_equal_to: 300 }, allow_nil: true
+  validates :body_unit_system, inclusion: { in: BODY_UNIT_SYSTEMS }
 
   validate :date_of_birth_must_be_in_valid_range
   validate :timezone_must_be_valid

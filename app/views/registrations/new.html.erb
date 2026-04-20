@@ -50,14 +50,47 @@
           aria: aria_for_field(@user, :date_of_birth, registration_err_id) %>
   </div>
 
+  <fieldset class="border border-gray-200 rounded p-3 space-y-2">
+    <legend class="font-medium text-gray-800 px-1"><%= t(".body_unit_system_legend") %></legend>
+    <% User::BODY_UNIT_SYSTEMS.each do |system| %>
+      <div class="flex items-center gap-2">
+        <%= form.radio_button :body_unit_system, system,
+              aria: { describedby: "registration-body-units-hint" } %>
+        <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
+      </div>
+    <% end %>
+    <p id="registration-body-units-hint" class="text-sm text-gray-500"><%= t(".body_unit_system_hint") %></p>
+  </fieldset>
+
+  <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
   <div>
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
-          required: true,
           min: 50,
           max: 300,
           class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :height_cm, registration_err_id) %>
+          aria: height_cm_aria %>
+    <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
+  </div>
+
+  <div>
+    <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= number_field_tag "user[height_feet]", @reg_height_feet,
+          id: "user_registration_height_feet",
+          min: 0,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: height_cm_aria %>
+  </div>
+
+  <div>
+    <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= number_field_tag "user[height_inches]", @reg_height_inches,
+          id: "user_registration_height_inches",
+          min: 0,
+          max: 11,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: height_cm_aria %>
+    <p class="text-sm text-gray-500 mt-1"><%= t(".height_imperial_hint") %></p>
   </div>
 
   <div data-controller="timezone">

@@ -16,8 +16,8 @@
       <thead class="bg-gray-50">
         <tr>
           <th class="text-left p-2 border-b"><%= t(".columns.logged_at") %></th>
-          <th class="text-left p-2 border-b"><%= t(".columns.weight_kg") %></th>
-          <th class="text-left p-2 border-b"><%= t(".columns.height_cm") %></th>
+          <th class="text-left p-2 border-b"><%= t(".columns.weight") %></th>
+          <th class="text-left p-2 border-b"><%= t(".columns.height_snapshot") %></th>
           <th class="text-left p-2 border-b"><%= t(".columns.bmi") %></th>
           <th class="text-left p-2 border-b" scope="col"><%= t(".columns.actions") %></th>
         </tr>
@@ -29,8 +29,8 @@
             <td class="p-2 whitespace-nowrap">
               <%= l(log.logged_at.in_time_zone(tz), format: :weight_log) %>
             </td>
-            <td class="p-2"><%= number_with_precision(log.weight_kg, precision: 2, strip_insignificant_zeros: true) %></td>
-            <td class="p-2"><%= log.height_cm %></td>
+            <td class="p-2"><%= format_body_weight(Current.user, log.weight_kg) %></td>
+            <td class="p-2"><%= format_body_height_snapshot(Current.user, log.height_cm) %></td>
             <td class="p-2"><%= number_with_precision(log.bmi, precision: 2, strip_insignificant_zeros: true) %></td>
             <td class="p-2">
               <%= link_to t(".actions.delete"), confirm_destroy_weight_log_path(log), class: "text-red-600 underline" %>

@@ -10,12 +10,14 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `AUTH` | Registration, session, email verification, password reset |
 | `PROF` | User profile, BMI / weight on profile |
 | `HAB` | Habit templates, categories, user habits, provisioning, scheduling helpers |
-| `WGT` | Weight log — persistence, entry flow, history, reconciliation (`REQ-WGT-001`–`003`) |
+| `WGT` | Weight log — persistence, entry flow, history, reconciliation, UI units (`REQ-WGT-001`–`004`) |
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
 | `EXR` | Exercise routines — **implemented** (Phase 5; acceptance criteria below) |
 | `RPT` | Reporting (Informes) — **implemented** (Phase 7) |
+| `CAT` | Public authenticated **catalogs** (menus, routines, phase programs): adoption **metrics**, **sort by popularity**, optional **discovery** facets and filters — **implemented** (`REQ-CAT-001`) |
+| `PHS` | Unified **phase programs** (bundles): menus + routines under one shareable program — **implemented** (`REQ-PHS-001`) |
 
 ---
 
@@ -40,6 +42,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Active habit | Habit with `active: true`; inactive habits do not consume the “unique name among active” rule | `user_habits.active` |
 | Provisioning | Idempotent job that ensures default templates/categories/habits exist for a user | `ProvisionDefaultHabitsJob`, sign-in hook |
 | Weight log | Historical weigh-in: **`logged_at`** (product timeline, UTC in DB), **`weight_kg`**, snapshot **`height_cm`**, derived **`bmi`**; entry form, history list, delete + reconcile | `WeightLog` |
+| Body unit system | User preference **`metric`** (kg/cm in UI) or **`imperial_us`** (lb, ft/in in UI). Canonical storage is always **`weight_kg`** / **`height_cm`**; conversion for display and form parsing uses **`BodyMetrics`** (**REQ-PROF-003**). | `users.body_unit_system` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
 | Habit metric kind | Classifies how progress is measured for a **`UserHabit`**: **`none`** (binary: only done/failed semantics as before), **`count`** (discrete units, e.g. glasses), or **`duration_min`** (whole minutes). Closed vocabulary; Mi Día, streaks, and reports use the same definitions (see **REQ-DAY-005**). | `user_habits` (persisted column; exact name per schema) |
@@ -53,19 +56,24 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Phase 1 anchor | Civil date when the user’s program “week 1” begins; interpreted in the user’s timezone for week index math. | `users.phase_one_starts_on` |
 | Program week index | Integer ≥ 1: `floor((local_date − anchor) / 7) + 1` for `local_date ≥ anchor`; `nil` before anchor. | `Phases::WeekNumber` |
 | Phase assignment | Contiguous inclusive week range `[start_week..end_week]` mapped to one `Menu` per user; ranges must not overlap (gaps allowed). | `PhaseAssignment` |
+| Phase program (bundle) | User-owned **named** template that **groups** coordinated menu and exercise routine planning for program weeks under **REQ-PHS-001**; optional public catalog and adopted-copy metadata (fingerprint, origin) in parity with menus and exercise routines. | `PhaseProgram` |
+| Phase program assignment | One row per **contiguous program week range** inside a **`PhaseProgram`**, binding one **`Menu`** and one **`ExerciseRoutine`** owned by the same user; ranges **must not overlap** with other rows of the **same** program (orthogonal to global `phase_assignments` / `exercise_routine_assignments`). | `PhaseProgramAssignment` |
 | Exercise routine | User-owned reusable **weekly** exercise plan; **not** valid if totally empty across the week (see REQ-EXR-001). Display name uniqueness per user matches **menus** (normalized name, same collision rules as `Menu`). Optional **`publicly_shareable`** public catalog (REQ-EXR-006); adopted copies may reference a **source** routine with explicit content sync. | `ExerciseRoutine` (name may match implementation) |
-| Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | TBD table name (e.g. `exercise_routine_assignments`) |
-| Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | TBD model name |
+| Exercise routine assignment | Same shape as phase assignment: maps `[start_week..end_week]` to one exercise routine **for that user**; ranges must not overlap with **other routine assignments** (gaps allowed). Independent from menu `phase_assignments`. **CRUD UI** lives on the **phase plan** screen (`/phase`): same program as menus/fases (product decision). | `exercise_routine_assignments` |
+| Exercise routine line | One **ordered** line in the list for a given `(routine, weekday)`; `position` defines order within that day. Weekday 0–6 (Sunday..Saturday), aligned with menu weekday convention. A weekday may have zero lines **only if** the routine still has ≥1 line somewhere else (routine not globally empty). | `exercise_routine_lines` |
 | Phase reminder event | Idempotent record that a phase-start reminder was processed for a given **local** calendar day and channel kind. | `PhaseReminderEvent` |
+| Habit reminder (per habit) | Optional daily reminder for an **active** `UserHabit` at a fixed **local time-of-day** in the user’s IANA timezone, with independent channel toggles (**email** / **web push**). MVP schedules **one** firing per habit per local day (job matches `HH:MM` in the user zone). | `UserHabit` reminder columns; `Habits::SweepHabitRemindersJob` |
+| Habit reminder event | Idempotent bookkeeping that the per-habit reminder pipeline ran for `(user, user_habit, local_date)` — it prevents duplicate processing on retries; it does **not** assert successful email delivery or push receipt. | `habit_reminder_events` |
+| Web push subscription | Browser push subscription material persisted for a user (endpoint + `p256dh` + `auth`) so multiple devices can be registered; unsubscribe deletes the row for that endpoint. | `web_push_subscriptions` |
 
 ---
 
 ## Core entities and relationships
 
 - **User** (`users`)
-  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_reminder_events`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
+  - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_programs`, `has_many :phase_reminder_events`, `has_many :habit_reminder_events`, `has_many :web_push_subscriptions`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
-  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
+  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `body_unit_system` (**`metric`** \| **`imperial_us`**, default **`metric`**, **REQ-PROF-003**), `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
   - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)
 
 - **Session** (`sessions`)
@@ -85,6 +93,8 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
   - `belongs_to :user`, `belongs_to :habit_category`, `belongs_to :global_habit_template` (optional)
   - `frequency_type`, `frequency_params` (JSON), `activation_date` where required by type
   - **Habit metrics (REQ-DAY-005):** **habit metric kind** (`none` / `count` / `duration_min`) and **daily target** (when kind ≠ `none`), with template-suggested defaults at provision time where applicable
+  - **Per-habit reminders (REQ-HAB-010):** `reminder_enabled` (default false), `reminder_time_of_day` (`HH:MM` in the user’s timezone), `reminder_email`, `reminder_web_push` (defaults false). When enabled: habit must be **active**, time must be present/valid, and **at least one** channel must be selected.
+  - `has_many :habit_reminder_events` (idempotent per-day bookkeeping per **REQ-HAB-011**)
   - Partial unique index: among **active** rows, `(user_id, name_normalized)` unique
   - **`activation_date` edits:** may change only while the habit has **zero** completion rows; if any completion exists, changing `activation_date` is forbidden until all completions are removed (including after a user clears every day back to pending).
 
@@ -107,6 +117,14 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **ExerciseRoutine** (`exercise_routines`)
   - `belongs_to :user`; lines and week-range assignments per **REQ-EXR-001** / **REQ-EXR-002**
   - `publicly_shareable` for the authenticated **public routine catalog**; owner toggles on create/edit; **admin** may revoke sharing (moderation). Adopted copies: optional `source_exercise_routine_id`, `source_sync_fingerprint`, `adoption_catalog_origin_id` for drift and unavailable-source UX (**REQ-EXR-006**).
+
+- **PhaseProgram** (`phase_programs`)
+  - `belongs_to :user`; optional self-reference for catalog adoption; `has_many :phase_program_assignments`, **`dependent: :destroy`** (destroying the program removes bundle rows only; **menus and routines** remain user-owned templates unless deleted separately)
+  - `publicly_shareable` and adoption metadata under **REQ-PHS-001**
+
+- **PhaseProgramAssignment** (`phase_program_assignments`)
+  - `belongs_to :phase_program`, `belongs_to :menu`, `belongs_to :exercise_routine`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
+  - **Menu** and **ExerciseRoutine** must belong to the **same user** as the program; non-overlapping week ranges **within the same `phase_program_id`** enforced in the model
 
 - **PhaseAssignment** (`phase_assignments`)
   - `belongs_to :user`, `belongs_to :menu`; `start_week`, `end_week` with DB check constraints (`start_week ≥ 1`, `end_week ≥ start_week`)
@@ -132,6 +150,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-AUTH-007 | When password changes, sessions other than the current one are invalidated. | Implemented |
 | REQ-PROF-001 | Profile enforces presence and validity of `date_of_birth`, `height_cm`, and `timezone` (IANA name set). | Implemented |
 | REQ-PROF-002 | User stores `current_weight_kg` and `current_bmi`; BMI is derived from weight and height per application rules. | Implemented |
+| REQ-PROF-003 | **Body unit preference and conversion:** `users.body_unit_system` is **`metric`** \| **`imperial_us`** (US customary), NOT NULL, default **`metric`**. Canonical storage remains **`weight_kg`** / **`height_cm`**. **`BodyMetrics`** (`app/services/body_metrics.rb`) and **`BodyMetricsHelper`** format and parse display units; registration and profile include a single unit selector; imperial height uses ft + in on sign-up; **`ApplicationMailer`** includes **`BodyMetricsHelper`** with a contract spec so templates never interpolate raw canonical columns. Out of scope per product: stone/UK, public API export formats. | Implemented |
 | REQ-HAB-001 | System stores `global_habit_templates` with unique stable `code` values. | Implemented |
 | REQ-HAB-002 | After sign-in, provisioning runs so each user gains default categories and habits from templates **idempotently** (safe to repeat). | Implemented |
 | REQ-HAB-003 | User can create, update, and delete habit categories; names are unique per user ignoring case; category delete is forbidden if habits reference it. | Implemented |
@@ -146,9 +165,14 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-DAY-003 | User may change completion **retroactively** for any **past** local day (no upper bound); **future** days cannot be marked. User may switch between done, failed, and **pending** (pending = no completion row). | Implemented |
 | REQ-DAY-004 | **Streak** per habit: longest run of consecutive **due** days where each day is **done**, evaluated only on **closed** days (before “today” in the user’s TZ, the streak does not treat an open today as a failure). A closed due day without **done** breaks the streak (**failed** and absent row are equivalent for streak). Reactivation keeps existing completion history. **Mi Día** computes the displayed streak map via **`Habits::MiDayStreakPrefetch`** (single bounded **`HabitCompletion`** query + **`Habits::Streak`** per due habit), memoized in **`Rails.cache`**; **`Habits::RecordCompletion`** / **`Habits::ClearCompletion`** **`touch`** **`UserHabit`** so cache keys stay coherent (see **`docs/core/DATA_FLOW_MAP.md`** §1.1–1.3, §3). For measurable habits, **“done” for streak** matches the same fulfillment rule as **REQ-DAY-005** (typically reflected in persisted **`status`**). | Implemented |
 | REQ-DAY-005 | **Habit metrics:** each **`UserHabit`** has a **habit metric kind** (`none`, `count`, `duration_min`) and a user-editable **daily target** when the kind is not **`none`** (templates may supply suggested defaults at provision time). The single **`HabitCompletion`** row for a local day may store **day progress** (non-negative integer, accumulated that day). **Explicit failed** from the user means the day is **not** fulfilled for streaks and reports even if progress is partial. Otherwise the day counts as **fulfilled** when **day progress** ≥ **daily target**. Persisted **`status`** on **`HabitCompletion`** remains **`done`** or **`failed`** and is **kept in sync** with these rules so **`Habits::Streak`**, **`Habits::MiDayStreakPrefetch`**, and **Informes** share one definition (extends **REQ-DAY-002** and **REQ-DAY-004**). | Implemented |
+| REQ-HAB-010 | **Per-habit reminders — configuration:** a `UserHabit` may store an optional reminder configuration with **`reminder_enabled`** default **false**, a **local time-of-day** `HH:MM` (interpreted using the owner’s IANA **`users.timezone`**), and independent channel toggles **`reminder_email`** and **`reminder_web_push`**. If enabled, the habit must be **active**, the time must be present and valid, and **at least one** channel must be selected. | Implemented |
+| REQ-HAB-011 | **Per-habit reminders — idempotency:** the sweep creates at most one **`habit_reminder_events`** row per `(user_id, user_habit_id, local_date)`; retries / repeated job runs must not create duplicates (DB uniqueness + `RecordNotUnique` tolerance in the processor). | Implemented |
+| REQ-HAB-012 | **Web Push subscriptions (persistence):** authenticated users can **create or update** a subscription row (`endpoint`, `p256dh`, `auth`) and **unsubscribe** by `endpoint`, scoped to **`Current.user`**. Uniqueness is enforced per `(user_id, endpoint)`. **Note:** delivery/orchestration (VAPID material, service worker registration UX, and sending pushes when a reminder fires) is **not** part of the current application loop yet — see **`docs/core/ADRs/0001-habit-reminders-web-push.md`**. | Implemented |
+| REQ-HAB-013 | **Habit reminder email:** when the email channel is enabled, send an I18n’d reminder email for the habit, respecting the same “already fulfilled for local day” gate as the processor and the idempotency rules. **Status:** mailer + templates exist, but **no production orchestration** wires sending to the sweep/processor yet (email is not dispatched from `Habits::ProcessHabitReminderForUserHabit` today). | Planned |
 | REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, BMI, and **`logged_at`** (indexed with `user_id`) for a user. | Implemented |
 | REQ-WGT-002 | **Weight log entry:** authenticated user can record weigh-ins over time via a form (**`weight_kg`**, **`logged_at`** in the user’s timezone; no height field on the form); navigation entry points (e.g. home, profile). | Implemented |
 | REQ-WGT-003 | **History:** authenticated user can view a paginated list (**30** per page) of their weigh-ins ordered by **`logged_at`** descending, with local date/time, weight, height snapshot, BMI, and delete-with-confirmation that reconciles **`current_*`**. | Implemented |
+| REQ-WGT-004 | **Weight log UI units:** weigh-in entry (**`weight_lb`** or **`weight_kg`** by preference), history table, and Informes weight chart (Y-axis, legend, point tooltips) present weight and snapshot height using the viewer’s **`User#body_unit_system`** while persisting only **`weight_kg`** / **`height_cm`**. | Implemented |
 | REQ-MENU-001 | Weekly **menu** plan: at most one persisted slot per `(menu, weekday, meal_type)`; slot holds a user-owned **recipe** and/or optional freeform text per profile preference; validations and Hotwire grid editor. | Implemented |
 | REQ-MENU-002 | **Recipe** model: name, instructions, optional **ActiveStorage** image; in menu slots, fallback image by meal type when the recipe has no image. | Implemented |
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
@@ -163,7 +187,9 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-EXR-006 | **Public exercise routine catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with line copy and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; admin revoke like recipes/menus. See **Acceptance criteria — REQ-EXR-006** below. | Implemented |
 | REQ-RPT-001 | **Habit fulfillment report** on **Informes:** per habit, fulfillment with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-002 | **Streak report** on **Informes:** per habit, **current** streak (parity with **`Habits::Streak`**) and **all-time longest** streak; `as_of` date rules match Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
-| REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
+| REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. **Extended (imperial/metric):** Y-axis, legend, and tooltips respect **`User#body_unit_system`** while the series stays **`weight_kg`**-based (acceptance criterion 7 below). See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
+| REQ-CAT-001 | **Public catalog metrics & discovery:** authenticated **`public_menus`**, **`public_exercise_routines`**, **`public_phase_programs`**: template **`public_catalog_adoptions_count`** / **`public_catalog_distinct_adopters_count`** (increment on successful adoption only); **`sort=name`** / **`sort=popular`**; optional **`catalog_listing_facets`**; filters via **`Catalog::ApplyPublicListingFilters`** (`q`, **`difficulty`**, **`tags`**, **`min_weeks`**, **`max_weeks`**); **`PhaseProgram`** facet week span materialized by **`Catalog::MaterializePhaseProgramFacetDuration`** from **`phase_program_assignments`**. Revoke public sharing removes template from index. See **`#### REQ-CAT-001`**. | Implemented |
+| REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; **public catalog** `public_phase_programs` (authenticated index/show, owner **`publicly_shareable`** opt-in); admin **revoke** scopes to currently-public rows (parity with menus/routines). **Adopt:** `Programs::AdoptFromPublicCatalog` + `Programs::ContentFingerprint` duplicate nested menus/routines (via `Menus::CopyMenuForAdopter`, `ExerciseRoutines::CopyRoutineForAdopter`) and segment rows; one copy per adopter per source. **Sync:** `Programs::AdoptionSyncStatus` + `Programs::ApplyAdoptionSourceSync` (fingerprint + expected-origin retry); applying rebuilds segment rows from the current source template via `Programs::PopulateAssignmentsFromSource` (prior duplicated menus/routines may remain orphaned on the account — acceptable MVP). **Apply to user:** `Programs::ApplyBundleToUser` **replaces** all of that user’s existing **`phase_assignments`** and **`exercise_routine_assignments`** with rows copied from the program’s **`phase_program_assignments`** (same week ranges, same menu and routine IDs), in **one transaction** — explicit product choice for MVP (`docs/ROADMAP.md` **#33**). | Implemented |
 
 ---
 
@@ -171,7 +197,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 
 Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When a row is implemented, move it to **Requirement registry (implemented)** above.
 
-*(No planned REQ rows at this time.)*
+*(No planned REQ rows in this table right now.)*
 
 ### Acceptance criteria — reporting (Phase 7)
 
@@ -203,6 +229,7 @@ These criteria are **testable**; implementation lives under services (e.g. `Repo
 4. **Timezone:** Axis labels and date interpretation for each point are **consistent** with existing weight history (`logged_at` in user TZ as elsewhere).
 5. **Rendering:** **Server-first** or minimal Stimulus (e.g. SVG/polyline); **no** Node bundler unless ADR — see **SYSTEM_ARCHITECTURE.md**.
 6. **I18n:** User-visible copy uses `es` default, `en` available.
+7. **Body units (extends REQ-PROF-003 / REQ-WGT-004):** The chart’s **Y-axis scale**, **tick labels**, **legend**, and **point tooltips** show weight in the authenticated user’s **`body_unit_system`** ( **`metric`** → kg with the app’s display precision; **`imperial_us`** → lb with **display-only** rounding per **REQ-PROF-003**). The plotted series and backend queries remain driven by canonical **`weight_kg`** (no alternate stored series).
 
 #### Decisions log — REQ-RPT (Phase 7, locked)
 
@@ -286,6 +313,20 @@ These criteria are **testable**; implementation may use different model/table na
 4. **Sync:** When the source’s **entry content** changes, the adopter’s **edit** screen shows a **pending update** state; **apply update** replaces **menu entries only** (copy **name** and **`phase_assignments`** to the same `menu_id` unchanged). **Stale apply** (source changed again after the form was rendered) is rejected with a clear message.
 5. **Unavailable source:** If the source is **deleted** or **no longer public**, the copy shows an **unavailable** message; the copy remains owned by the adopter. **Public show** for a removed menu id does not **500**.
 6. **Moderation:** An **admin** (same **`MOONLOOP_ADMIN_EMAILS`** gate) can **revoke** public sharing on a menu; it disappears from the public catalog.
+
+#### REQ-CAT-001 — Public catalog metrics, popularity sort, and discovery
+
+**Scope:** Extends **REQ-MENU-006**, **REQ-EXR-006**, and **REQ-PHS-001** public catalog **read** and **adoption** flows (`docs/ROADMAP.md` **#34**). No anonymous catalog; no view-hit analytics.
+
+1. **Metrics on templates:** Each **`Menu`**, **`ExerciseRoutine`**, and **`PhaseProgram`** that can be listed as a catalog **source** carries **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`**, both integers **≥ 0**, **NOT NULL**, default **0** (see **`docs/core/SCHEMA_REFERENCE.md`**).
+2. **When counters move:** On **successful** completion of **`Menus::AdoptFromPublicCatalog`**, **`ExerciseRoutines::AdoptFromPublicCatalog`**, or **`Programs::AdoptFromPublicCatalog`**, inside the same **database transaction**, increment **`public_catalog_adoptions_count`** on the **source template** by **1**. Increment **`public_catalog_distinct_adopters_count`** by **1** only when the adoption establishes the adopter’s **first** copy from that source (the service already rejects **`:already_adopted`** — a second attempt must **not** double-count).
+3. **Concurrency:** Counter updates must be **race-safe** for concurrent adopters (row lock or atomic increment on the template row — implementation detail; integration or unit coverage as agreed in tests).
+4. **Catalog sort:** Each public index accepts a **sanitized** sort parameter; **`sort=name`** and **`sort=popular`** are supported (**popular** uses the adoption counters; tie-breaker **deterministic**, e.g. `id` or `name`). Default sort is **explicit** in code and **locked by request specs**.
+5. **Catalog UI:** Public index markup shows **both** metrics per item with **I18n** (`es` / `en`) and is **accessible** (not color-only).
+6. **`catalog_listing_facets`:** Optional **one** row per listable (`Menu` / `ExerciseRoutine` / `PhaseProgram`); **unique** `(listable_type, listable_id)`; fields support discovery (e.g. goal phrase, closed difficulty, normalized tags, optional week-range bounds for duration filters). Only the **listable owner** may create or update the facet; public reads join only **public** templates.
+7. **Filters:** On **`public_menus`**, **`public_exercise_routines`**, and **`public_phase_programs`** index actions, optional query params (all ignored when absent, empty, or invalid; **no 400**): **`q`** — case-insensitive substring match on facet **`goal_phrase`** (max length 255); **`difficulty`** — exact match on **`Catalog::ListingFacet::DIFFICULTY_LEVELS`**; **`tags`** — comma- or array-valued list of tag slugs; **AND** semantics (every listed slug must appear in **`normalized_tags`**); **`min_weeks`** / **`max_weeks`** — positive integers constraining the facet duration span using **`COALESCE(duration_weeks_max, duration_weeks_min)`** and **`COALESCE(duration_weeks_min, duration_weeks_max)`** so a template matches when its span overlaps the requested bounds (each bound applies only when parseable). Any filter requires an **inner join** to **`catalog_listing_facets`**, so listables **without** a facet row are **excluded** when at least one filter is active. Combined filters use **AND**. Implementation: **`Catalog::ApplyPublicListingFilters`**.
+8. **Phase programs — duration:** For **`PhaseProgram`** listables, **`catalog_listing_facets.duration_weeks_min`** / **`duration_weeks_max`** are **materialized** from **`phase_program_assignments`**: **minimum** `start_week` and **maximum** `end_week` across segments (no segments → both **NULL**). **`Catalog::MaterializePhaseProgramFacetDuration`** runs after **`PhaseProgram`** save and after **`PhaseProgramAssignment`** commit. The program edit UI does **not** collect manual week bounds for the facet (menus/routines still do). **`Catalog::ApplyPublicListingFilters`** unchanged (reads facet columns).
+9. **Revoke:** Admin or owner making a template **non-public** removes it from catalog listings; persisted counters and facet rows may remain but **must not** affect public queries.
 
 #### Decisions log — REQ-EXR (Phase 5, locked)
 

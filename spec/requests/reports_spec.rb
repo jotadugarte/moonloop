@@ -93,5 +93,37 @@ RSpec.describe "Reports (Informes)", type: :request do
         expect(streaks).not_to include(habit.name)
       end
     end
+
+    # [REQ-RPT-003, REQ-WGT-004]
+    it "charts weight axis and tooltips in pounds for imperial users" do
+      imperial = create(:user, password: password, timezone: "Etc/UTC", height_cm: 180, body_unit_system: "imperial_us")
+      post sign_in_path, params: { email: imperial.email, password: password }
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        create(:weight_log, user: imperial, weight_kg: 70.0, height_cm: 180, logged_at: Time.utc(2026, 4, 10, 10, 0, 0))
+        create(:weight_log, user: imperial, weight_kg: 80.0, height_cm: 180, logged_at: Time.utc(2026, 4, 18, 10, 0, 0))
+
+        get informes_path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("154.3")
+        expect(response.body).to include("176.4")
+        expect(response.body).to include(I18n.t("reports.show.weight_chart_legend", unit: I18n.t("body_metrics.unit_lb")))
+      end
+    end
+
+    # [REQ-RPT-003, REQ-WGT-004]
+    it "charts weight axis in kilograms for metric users" do
+      post sign_in_path, params: { email: user.email, password: password }
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        create(:weight_log, user: user, weight_kg: 70.5, height_cm: 175, logged_at: Time.utc(2026, 4, 10, 10, 0, 0))
+
+        get informes_path
+
+        expect(response.body).to include("70.5")
+        expect(response.body).to include(I18n.t("reports.show.weight_chart_legend", unit: I18n.t("body_metrics.unit_kg")))
+      end
+    end
   end
 end

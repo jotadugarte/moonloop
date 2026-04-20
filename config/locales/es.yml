@@ -12,6 +12,11 @@ es:
       body_html: "Hola — hoy es el primer día de tu plan de fase 1 (%{email}). Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
       body_text: "Hoy es el primer día de tu plan de fase 1. Desde el plan de fases puedes ver menús y rutinas de ejercicio por semana."
       cta: "Abrir tu plan de fases"
+  habit_reminder_mailer:
+    notify:
+      subject: "Recordatorio: %{habit_name}"
+      body_html: "Recordatorio para tu hábito: %{habit_name}"
+      body_text: "Recordatorio para tu hábito: %{habit_name}"
   date:
     formats:
       long: "%d de %B de %Y"
@@ -63,6 +68,27 @@ es:
       name_taken: "Ese nombre ya está en uso. Elige otro."
       could_not_save: "No se pudo guardar la copia. Revisa el formulario e inténtalo de nuevo."
 
+  public_catalog:
+    metrics:
+      total_adoptions: "Adopciones desde el catálogo: %{count}"
+      distinct_adopters: "Adoptantes distintos: %{count}"
+      aria_group: "Métricas de %{name}: %{adoptions} adopciones desde el catálogo, %{adopters} adoptantes distintos"
+
+  catalog_listing_facet:
+    legend: "Catálogo público — datos opcionales de descubrimiento"
+    hint: "No son obligatorios para compartir en el catálogo. Etiquetas: slugs en minúsculas separadas por comas (p. ej. hipertrofia, running)."
+    goal_label: "Objetivo (texto breve)"
+    difficulty_label: "Dificultad"
+    difficulty_blank: "(sin indicar)"
+    difficulties:
+      beginner: "Principiante"
+      intermediate: "Intermedio"
+      advanced: "Avanzado"
+    tags_label: "Etiquetas"
+    duration_min_label: "Semanas mín. (duración del plan)"
+    duration_max_label: "Semanas máx."
+    duration_phase_program_hint: "La duración para el catálogo se toma automáticamente de los segmentos del programa (semana inicial más baja y semana final más alta)."
+
   habit_completions:
     status:
       done: "Hecho"
@@ -111,6 +137,7 @@ es:
       weight_heading: "Evolución del peso"
       weight_empty: "Aún no hay registros de peso para graficar."
       weight_chart_aria: "Gráfico de peso en el tiempo"
+      weight_chart_legend: "Escala: %{unit}"
       col_category: "Categoría"
       col_habit: "Hábito"
       col_week: "Semana"
@@ -159,6 +186,28 @@ es:
         not_public: "Esta rutina no está disponible en el catálogo público."
         cannot_adopt_own: "No puedes adoptar tu propia rutina."
         already_adopted: "Ya adoptaste esta rutina."
+        name_blank: "El nombre no puede estar vacío."
+  public_phase_programs:
+    index:
+      title: "Programas públicos — Moonloop"
+      heading: "Programas públicos (menú + rutina)"
+    show:
+      title: "%{name} — Programas públicos — Moonloop"
+      back_to_catalog: "Volver al catálogo de programas"
+      segments_heading: "Rangos publicados"
+      segment_line: "%{menu} + %{routine} — semanas %{start}–%{end}"
+      no_segments: "Este programa no tiene rangos publicados."
+    shared:
+      author: "Código de autor %{code}"
+    adopt:
+      section_label: "Adoptar este programa en tu cuenta"
+      name_label: "Nombre para tu copia"
+      submit: "Adoptar programa"
+      success: "Programa adoptado. Ya puedes editarlo y aplicarlo a tu plan."
+      errors:
+        not_public: "Este programa no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propio programa."
+        already_adopted: "Ya adoptaste este programa."
         name_blank: "El nombre no puede estar vacío."
   menus:
     index:
@@ -328,6 +377,9 @@ es:
       my_day_link: "Mi Día"
       menus_link: "Menús"
       exercise_routines_link: "Rutinas de ejercicio"
+      programs_link: "Programas (menú + rutina)"
+      programs_intro_heading: "Programas (menú + rutina)"
+      programs_intro_body: "Puedes seguir editando rangos de menú y de rutina por separado abajo, o definir un programa que una ambos y aplicarlo al plan: la semana actual del programa sigue calculándose solo con la fecha de inicio de fase 1 y no se duplica la lógica en otro sitio."
       phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."
       phase_start_reminder_dismiss: "Ocultar por hoy"
       menu_plan_ended_message: "Tus rangos de menú terminan antes de la semana actual del programa. Amplía el plan o añade un rango nuevo de menú."
@@ -384,6 +436,75 @@ es:
       created: "Asignación de rutina creada."
       updated: "Asignación de rutina actualizada."
       destroyed: "Asignación de rutina eliminada."
+  phase_programs:
+    index:
+      title: "Programas — Moonloop"
+      heading: "Programas (menú + rutina)"
+      name_label: "Nombre del programa"
+      public_share_label: "Visible en catálogo público (cuando exista el listado)"
+      create_submit: "Crear programa"
+      edit: "Editar"
+      back_phase: "Volver al plan de fases"
+      catalog_link: "Catálogo público de programas"
+    edit:
+      title: "Programa %{name} — Moonloop"
+      heading: "Programa: %{name}"
+      name_label: "Nombre"
+      public_share_label: "Visible en catálogo público (cuando exista el listado)"
+      save_submit: "Guardar"
+      segments_heading: "Rangos de semanas (menú + rutina)"
+      segments_hint: "Cada rango enlaza un menú y una rutina de ejercicio para esas semanas del programa."
+      segment_line: "%{menu} + %{routine} — semanas %{start}–%{end}"
+      no_segments: "Aún no hay rangos. Añade al menos uno antes de aplicar al plan."
+      add_segment: "Añadir rango"
+      edit_segment: "Editar"
+      delete_segment: "Eliminar"
+      delete_segment_confirm: "¿Eliminar este rango del programa?"
+      apply_heading: "Aplicar al plan de fases"
+      apply_warning: "Esto sustituye todas tus asignaciones actuales de menú y de rutina por las de este programa."
+      apply_submit: "Aplicar al plan ahora"
+      destroy_program: "Eliminar programa"
+      destroy_confirm: "¿Eliminar este programa y todos sus rangos? Los menús y rutinas no se borran."
+      back_index: "Lista de programas"
+      back_phase: "Plan de fases"
+      adoption_sync:
+        pending: "El programa público de origen tiene cambios nuevos. Al aplicar se vuelven a generar los rangos (menús y rutinas duplicados) según la plantilla actual; el nombre de tu copia no cambia."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El vínculo con el programa de origen ya no está disponible (se eliminó o dejó de ser público). Tu copia sigue en tu cuenta."
+    flash:
+      created: "Programa creado."
+      updated: "Programa actualizado."
+      destroyed: "Programa eliminado."
+      applied: "Plan aplicado: tus asignaciones de menú y rutina ahora coinciden con este programa."
+      apply_failed: "No se pudo aplicar el programa."
+      source_sync_applied: "Se aplicó la plantilla actualizada desde el programa de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Este programa no es una copia adoptada."
+        source_unavailable: "El programa de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "El programa de origen cambió otra vez. Vuelve a revisar antes de aplicar."
+  phase_program_assignments:
+    new:
+      title: "Nuevo rango — Moonloop"
+      heading: "Nuevo rango (menú + rutina)"
+      back: "Volver al programa"
+    edit:
+      title: "Editar rango — Moonloop"
+      heading: "Editar rango"
+      back: "Volver al programa"
+    form:
+      menu_label: "Menú"
+      menu_blank: "Elige un menú"
+      routine_label: "Rutina de ejercicio"
+      routine_blank: "Elige una rutina"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Añadir rango"
+      update_submit: "Guardar rango"
+    flash:
+      created: "Rango añadido al programa."
+      updated: "Rango actualizado."
+      destroyed: "Rango eliminado."
   admin:
     moderation:
       recipe:
@@ -392,6 +513,8 @@ es:
         revoked_public_share: "Se quitó el estado público del menú."
       exercise_routine:
         revoked_public_share: "Se quitó el estado público de la rutina de ejercicio."
+      phase_program:
+        revoked_public_share: "Se quitó el estado público del programa."
   sessions:
     new:
       title: "Iniciar sesión"
@@ -416,6 +539,15 @@ es:
       title: "Registrarse"
       submit: "Registrarse"
       password_hint: "Mínimo 12 caracteres."
+      body_unit_system_legend: "Unidades corporales"
+      body_unit_system_hint: "Elige cómo ingresar la altura. El peso en el resto de la app usará la misma preferencia."
+      units:
+        metric: "Métrico (cm)"
+        imperial_us: "Estados Unidos (pies / pulgadas)"
+      height_cm_hint_metric: "Úsalo cuando Métrico esté seleccionado (se guarda en cm)."
+      height_feet: "Altura — pies"
+      height_inches: "Altura — pulgadas (0–11)"
+      height_imperial_hint: "Pies y pulgadas enteras si eliges US; se guarda en cm."
       prohibited:
         one: "1 error impidió guardar este usuario:"
         other: "%{count} errores impidieron guardar este usuario:"
@@ -455,6 +587,11 @@ es:
       new_password: "Contraseña nueva"
       confirm_new_password: "Confirmar contraseña nueva"
       password_hint: "Mínimo 12 caracteres."
+  body_metrics:
+    unit_kg: "kg"
+    unit_lb: "lb"
+    unit_cm: "cm"
+    height_ft_in: "%{feet} pies %{inches} pulg"
   weight_logs:
     flash:
       created: "Peso registrado"
@@ -467,6 +604,8 @@ es:
       empty: "Aún no hay mediciones. Registra la primera."
       columns:
         logged_at: "Fecha y hora"
+        weight: "Peso"
+        height_snapshot: "Altura (en el pesaje)"
         weight_kg: "Peso (kg)"
         height_cm: "Altura (cm)"
         bmi: "IMC"
@@ -481,11 +620,14 @@ es:
     new:
       title: "Registrar peso"
       weight_kg_label: "Peso (kg)"
+      weight_lb_label: "Peso (lb)"
+      weight_lb_hint: "Un decimal es lo habitual; se guarda en kilogramos."
       logged_at_label: "Fecha y hora del pesaje"
       submit: "Guardar"
       back: "Volver al perfil"
       history_link: "Ver historial"
     errors:
+      weight_blank: "Ingresa tu peso para guardar el pesaje."
       user_stats_update_failed: "No se pudo actualizar tu peso actual. Inténtalo de nuevo."
     confirm_destroy:
       title: "Eliminar entrada de peso"
@@ -499,6 +641,11 @@ es:
       title: "Editar perfil"
       submit: "Actualizar perfil"
       allow_menu_freeform: "Permitir notas libres en los casilleros del menú"
+      body_unit_system_legend: "Unidades corporales"
+      body_unit_system_hint: "Afecta cómo se muestran e ingresan peso y altura; en base de datos siguen kg y cm."
+      units:
+        metric: "Métrico (cm, kg)"
+        imperial_us: "US (pies / pulgadas, lb)"
       prohibited:
         one: "1 error impidió guardar tu perfil:"
         other: "%{count} errores impidieron guardar tu perfil:"
@@ -581,6 +728,12 @@ es:
       submit: "Guardar"
       back: "Volver a hábitos"
       metric_hint: "Si el tipo es «none», el objetivo diario se normaliza a 1 (hábito binario)."
+      reminder_heading: "Recordatorio"
+      reminder_enabled_label: "Activar recordatorio"
+      reminder_time_label: "Hora"
+      reminder_channels_label: "Canales"
+      reminder_channel_email: "Email"
+      reminder_channel_web_push: "Web Push"
   habits:
     default_categories:
       nutrition:
@@ -613,6 +766,7 @@ es:
         password_challenge: "Contraseña actual"
         date_of_birth: "Fecha de nacimiento"
         height_cm: "Altura (cm)"
+        body_unit_system: "Unidades corporales"
         timezone: "Zona horaria"
         allow_menu_freeform: "Notas libres en menús"
       user_habit:
@@ -654,6 +808,8 @@ es:
               too_old: "debe ser una fecha de hace como máximo 120 años"
             timezone:
               invalid: "no es una zona horaria válida"
+            body_unit_system:
+              inclusion: "debe ser métrico o imperial estadounidense"
         habit_category:
           attributes:
             base:
@@ -693,6 +849,16 @@ es:
               must_match_user: "debe ser una rutina de tu cuenta"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
+        phase_program_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            menu_id:
+              must_match_user: "debe ser un menú del mismo usuario que el programa"
+            exercise_routine_id:
+              must_match_user: "debe ser una rutina del mismo usuario que el programa"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación del programa"
         weight_log:
           attributes:
             logged_at:

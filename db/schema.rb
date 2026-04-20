@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_093000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -37,6 +37,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "catalog_listing_facets", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "difficulty_level", limit: 32
+    t.integer "duration_weeks_max"
+    t.integer "duration_weeks_min"
+    t.string "goal_phrase", limit: 255
+    t.integer "listable_id", null: false
+    t.string "listable_type", null: false
+    t.string "normalized_tags", limit: 500
+    t.datetime "updated_at", null: false
+    t.index ["listable_type", "listable_id"], name: "index_catalog_listing_facets_on_listable", unique: true
   end
 
   create_table "exercise_routine_assignments", force: :cascade do |t|
@@ -70,6 +83,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.integer "source_exercise_routine_id"
     t.string "source_sync_fingerprint"
@@ -113,6 +128,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.index ["user_habit_id"], name: "index_habit_completions_on_user_habit_id"
   end
 
+  create_table "habit_reminder_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "local_date", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_habit_id", null: false
+    t.integer "user_id", null: false
+    t.index ["user_habit_id"], name: "index_habit_reminder_events_on_user_habit_id"
+    t.index ["user_id", "user_habit_id", "local_date"], name: "index_habit_reminder_events_uniqueness", unique: true
+    t.index ["user_id"], name: "index_habit_reminder_events_on_user_id"
+  end
+
   create_table "menu_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "freeform_text"
@@ -131,6 +157,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.integer "source_menu_id"
     t.string "source_sync_fingerprint"
@@ -154,6 +182,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.index ["user_id"], name: "index_phase_assignments_on_user_id"
     t.check_constraint "end_week >= start_week", name: "phase_assignments_end_gte_start"
     t.check_constraint "start_week >= 1", name: "phase_assignments_start_week_gte_one"
+  end
+
+  create_table "phase_program_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.integer "exercise_routine_id", null: false
+    t.integer "menu_id", null: false
+    t.integer "phase_program_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_routine_id"], name: "index_phase_program_assignments_on_exercise_routine_id"
+    t.index ["menu_id"], name: "index_phase_program_assignments_on_menu_id"
+    t.index ["phase_program_id", "start_week", "end_week"], name: "index_phase_program_assignments_on_program_and_range"
+    t.index ["phase_program_id"], name: "index_phase_program_assignments_on_phase_program_id"
+    t.check_constraint "end_week >= start_week", name: "phase_program_assignments_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "phase_program_assignments_start_week_gte_one"
+  end
+
+  create_table "phase_programs", force: :cascade do |t|
+    t.integer "adoption_catalog_origin_id"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.integer "source_phase_program_id"
+    t.string "source_sync_fingerprint"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["source_phase_program_id"], name: "index_phase_programs_on_source_phase_program_id"
+    t.index ["user_id", "name_normalized"], name: "index_phase_programs_on_user_and_name_normalized", unique: true
+    t.index ["user_id", "source_phase_program_id"], name: "index_phase_programs_adoption_unique_per_user_and_source", unique: true, where: "source_phase_program_id IS NOT NULL"
+    t.index ["user_id"], name: "index_phase_programs_on_user_id"
   end
 
   create_table "phase_reminder_events", force: :cascade do |t|
@@ -197,18 +259,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.string "habit_metric_kind", default: "none", null: false
     t.string "name", null: false
     t.string "name_normalized", null: false
+    t.boolean "reminder_email", default: false, null: false
+    t.boolean "reminder_enabled", default: false, null: false
+    t.string "reminder_time_of_day"
+    t.boolean "reminder_web_push", default: false, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["activation_date"], name: "index_user_habits_on_activation_date"
     t.index ["frequency_type"], name: "index_user_habits_on_frequency_type"
     t.index ["global_habit_template_id"], name: "index_user_habits_on_global_habit_template_id"
     t.index ["habit_category_id"], name: "index_user_habits_on_habit_category_id"
+    t.index ["reminder_enabled", "reminder_time_of_day"], name: "idx_user_habits_reminder_slot"
     t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "active = 1"
     t.index ["user_id"], name: "index_user_habits_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.boolean "allow_menu_freeform", default: true, null: false
+    t.string "body_unit_system", default: "metric", null: false
     t.datetime "created_at", null: false
     t.decimal "current_bmi", precision: 4, scale: 2
     t.decimal "current_weight_kg", precision: 5, scale: 2
@@ -224,6 +292,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
     t.datetime "updated_at", null: false
     t.boolean "verified", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "web_push_subscriptions", force: :cascade do |t|
+    t.string "auth", null: false
+    t.datetime "created_at", null: false
+    t.string "endpoint", null: false
+    t.string "p256dh", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "endpoint"], name: "index_web_push_subscriptions_uniqueness", unique: true
+    t.index ["user_id"], name: "index_web_push_subscriptions_on_user_id"
   end
 
   create_table "weight_logs", force: :cascade do |t|
@@ -247,17 +326,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_140000) do
   add_foreign_key "exercise_routines", "users"
   add_foreign_key "habit_categories", "users"
   add_foreign_key "habit_completions", "user_habits"
+  add_foreign_key "habit_reminder_events", "user_habits"
+  add_foreign_key "habit_reminder_events", "users"
   add_foreign_key "menu_entries", "menus"
   add_foreign_key "menu_entries", "recipes"
   add_foreign_key "menus", "menus", column: "source_menu_id"
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
   add_foreign_key "phase_assignments", "users"
+  add_foreign_key "phase_program_assignments", "exercise_routines"
+  add_foreign_key "phase_program_assignments", "menus"
+  add_foreign_key "phase_program_assignments", "phase_programs"
+  add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
+  add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
   add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
   add_foreign_key "user_habits", "users"
+  add_foreign_key "web_push_subscriptions", "users"
   add_foreign_key "weight_logs", "users"
 end

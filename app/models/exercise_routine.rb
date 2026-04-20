@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExerciseRoutine < ApplicationRecord
+  include CatalogListableWithListingFacet
+
   MAX_LINES_PER_WEEKDAY = 100
 
   belongs_to :user

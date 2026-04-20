@@ -1,0 +1,9 @@
+<% content_for :title, t("phase_program_assignments.new.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("phase_program_assignments.new.heading") %></h1>
+
+<%= render "form" %>
+
+<p class="mt-6">
+  <%= link_to t("phase_program_assignments.new.back"), edit_phase_program_path(@phase_program), class: "text-blue-600 underline" %>
+</p>

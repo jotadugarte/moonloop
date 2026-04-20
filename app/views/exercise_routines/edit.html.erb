@@ -30,6 +30,9 @@
             <li><%= error.full_message %></li>
           <% end %>
         <% end %>
+        <% @routine.catalog_listing_facet&.errors&.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -47,6 +50,10 @@
           aria: aria_for_field(@routine, :publicly_shareable, routine_err_id) %>
     <%= f.label :publicly_shareable, t(".public_share_label"), class: "text-gray-700" %>
   </div>
+
+  <%= f.fields_for(:catalog_listing_facet, @routine.catalog_listing_facet || @routine.build_catalog_listing_facet) do |cf| %>
+    <%= render "shared/catalog_listing_facet_fields", cf: cf %>
+  <% end %>
 
   <h2><%= t(".lines_heading") %></h2>
 

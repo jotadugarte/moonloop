@@ -33,5 +33,19 @@ RSpec.describe 'Profile Editing', type: :system do
     user.reload
     expect(user.date_of_birth.to_s).to eq('1985-11-20')
     expect(user.timezone).to eq('Europe/Madrid')
+    expect(user.body_unit_system).to eq("metric")
+  end
+
+  # [REQ-PROF-003, REQ-AUTH-002]
+  it "permite actualizar la preferencia de unidades sin exponer altura editable" do
+    visit edit_profile_path
+
+    expect(page).not_to have_field("Altura (cm)")
+
+    choose "user_body_unit_system_imperial_us"
+    click_button "Actualizar perfil"
+
+    expect(page).to have_content("Perfil actualizado correctamente")
+    expect(user.reload.body_unit_system).to eq("imperial_us")
   end
 end

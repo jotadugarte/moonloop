@@ -137,4 +137,36 @@ RSpec.describe UserHabit, type: :model do
       expect(habit).not_to be_valid
     end
   end
+
+  describe "per-habit reminders configuration" do
+    # [REQ-HAB-010]
+    it "defaults reminders to disabled" do
+      habit = create(:user_habit)
+      expect(habit.reminder_enabled).to eq(false)
+    end
+
+    # [REQ-HAB-010]
+    it "rejects enabling reminders without a time of day" do
+      habit = build(:user_habit,
+        reminder_enabled: true,
+        reminder_time_of_day: nil,
+        reminder_email: true,
+        reminder_web_push: false)
+
+      expect(habit).not_to be_valid
+      expect(habit.errors[:reminder_time_of_day]).to be_present
+    end
+
+    # [REQ-HAB-010]
+    it "rejects enabling reminders without any channel selected" do
+      habit = build(:user_habit,
+        reminder_enabled: true,
+        reminder_time_of_day: "08:30",
+        reminder_email: false,
+        reminder_web_push: false)
+
+      expect(habit).not_to be_valid
+      expect(habit.errors[:base]).to be_present
+    end
+  end
 end

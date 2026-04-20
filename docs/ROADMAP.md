@@ -36,6 +36,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 19. [x] Phase extension: when the current plan ends, prompt user to repeat the last phase or add a new week (REQ-MENU-005) — 2026-04-17 — Depends on: #17
 29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` supports `publicly_shareable` for catalog + admin revoke (**REQ-MENU-006**). (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
 31. [x] Menús: catálogo público `public_menus` + adopción/sync con **paridad semántica** a rutinas (**REQ-EXR-006** / **Done #30**): usuarios autenticados, una copia por origen, nombre de copia estable al sincronizar, recetas duplicadas al adoptante en slots con receta, aviso/origen no disponible, moderación admin (REQ-MENU-006) — 2026-04-18 — Depends on: **Done #30**, Phase 4 (#15–19, #29)
+33. [x] **Programas de Fases Unificadas (Bundles)**: entidad `PhaseProgram` con segmentos menú+rutina por rango de semanas, aplicación atómica al plan (`Programs::ApplyBundleToUser`), catálogo público, adopción integral y sincronización con origen en paridad con menús/rutinas (REQ-PHS-001); entrada en `/phase` y mapa de datos actualizado — 2026-04-19 — Depends on: **Done** #30, #31, Phase 4 (#17)
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -53,19 +54,17 @@ Things done and things left to do. Update this when finishing branches; use `roa
 27. [x] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — 2026-04-17 — Depends on: Phase 6
 28. [x] Mi Día / rachas: prefetch de completados acotado (`Habits::MiDayStreakPrefetch`), caché (`Rails.cache`) e invalidación vía `UserHabit#touch` tras completar o borrar día (REQ-DAY-004) — 2026-04-18 — Depends on: Phase 3 #11–#14
 
+### Phase 8 — Catalogs
+34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
+
 ## In Progress
-*(No items currently in progress.)*
+- [ ] Push notifications and/or **per-habit** email reminders — **MVP (2026-04-19):** prefs por hábito + sweep/idempotencia (`habit_reminder_events`) + persistencia de suscripciones Web Push; **pendiente:** orquestar envío email/push desde el processor/job (**REQ-HAB-013** y entrega Web Push completa). **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**).
 
 ## Pending (by priority)
-
 *(No items currently pending.)*
 
 ## Backlog
-- [ ] Multiple completions per day per habit — Depends on: **Done #32** (REQ-DAY-005 habit metrics; single row per day still — this item is *additional* completions semantics)
-- [ ] Imperial units support (lbs) for weight and profile
-- [ ] Push notifications and/or **per-habit** email reminders — **Not** phase-start reminders: those are **Done #18** (REQ-MENU-004) with routine lane coherence (**REQ-EXR-004**). No Web Push / FCM in app yet.
+- [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
 - [ ] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción
-- [ ] **Programas de Fases Unificadas (Bundles)**: Crear una entidad que agrupe la planificación completa de Menús (#17) y Rutinas (#21) en un solo "Programa" compartible. El usuario define la estructura de semanas (ej. 1–12) y asigna los componentes. Catálogo público de programas con **adopción integral**: al adoptar, el sistema instancia las copias de recetas y ejercicios necesarios. Mantiene paridad con la lógica de sincronización y autoría de **#30** y **#31** (REQ-PHS-001) — Depends on: #30, #31, Phase 4 (#17)
-- [ ] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Implementar contadores de uso total y usuarios activos en los catálogos públicos de Menús (#31), Rutinas (#30) y Programas (#32). Permitir ordenamiento por popularidad. **Exploración de Discovery**: Implementar filtros amigables como búsqueda por objetivos (ej. "ganancia muscular"), nivel de dificultad, etiquetas (tags) y duración total de los planes (REQ-CAT-001) — Depends on: #30, #31, #32
 - [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
 

@@ -33,6 +33,7 @@ module ExerciseRoutines
         )
         CopyRoutineLines.call(target: copy, source: source)
         copy.save!
+        Catalog::IncrementTemplateAdoptionMetrics.call(source)
         copy
       end
     end

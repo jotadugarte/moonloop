@@ -85,7 +85,10 @@ class ExerciseRoutinesController < ApplicationController
     params.require(:exercise_routine).permit(
       :name,
       :publicly_shareable,
-      exercise_routine_lines_attributes: %i[id weekday position label notes _destroy]
+      exercise_routine_lines_attributes: %i[id weekday position label notes _destroy],
+      catalog_listing_facet_attributes: %i[
+        id goal_phrase difficulty_level normalized_tags duration_weeks_min duration_weeks_max
+      ]
     )
   end
 end

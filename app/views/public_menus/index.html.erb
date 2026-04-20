@@ -7,6 +7,7 @@
     <li>
       <%= link_to menu.name, public_menu_path(menu) %>
       — <%= t("public_menus.shared.author", code: menu.user.public_catalog_author_code) %>
+      <%= render "shared/catalog_index_metrics", record: menu %>
     </li>
   <% end %>
 </ul>

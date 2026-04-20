@@ -15,6 +15,7 @@ class WeightLogsController < ApplicationController
 
   def new
     @weight_log = weight_log_for_new
+    @weight_lb_display = nil
   end
 
   def create
@@ -24,6 +25,11 @@ class WeightLogsController < ApplicationController
     ).call
     unless parsed.success
       render_invalid_logged_at
+      return
+    end
+
+    if missing_weight_input?
+      render_missing_weight(parsed.time)
       return
     end
 
@@ -49,7 +55,23 @@ class WeightLogsController < ApplicationController
   end
 
   def weight_log_params
-    params.fetch(:weight_log, {}).permit(:weight_kg, :logged_at)
+    params.fetch(:weight_log, {}).permit(:weight_kg, :weight_lb, :logged_at)
+  end
+
+  def missing_weight_input?
+    if Current.user.body_unit_system == "imperial_us"
+      weight_log_params[:weight_lb].blank?
+    else
+      weight_log_params[:weight_kg].blank?
+    end
+  end
+
+  def weight_kg_for_service
+    if Current.user.body_unit_system == "imperial_us"
+      BodyMetrics.lb_to_kg(BigDecimal(weight_log_params[:weight_lb].to_s)).to_f
+    else
+      weight_log_params[:weight_kg]
+    end
   end
 
   def weight_log_for_new
@@ -60,16 +82,29 @@ class WeightLogsController < ApplicationController
   end
 
   def weight_log_for_rescue(logged_at:)
-    Current.user.weight_logs.new(
-      weight_kg: weight_log_params[:weight_kg],
+    attrs = {
       height_cm: Current.user.height_cm,
       logged_at: logged_at
-    )
+    }
+    attrs[:weight_kg] = Current.user.body_unit_system == "imperial_us" ? nil : weight_log_params[:weight_kg]
+    Current.user.weight_logs.new(attrs)
+  end
+
+  def assign_weight_lb_display_for_form
+    @weight_lb_display = Current.user.body_unit_system == "imperial_us" ? weight_log_params[:weight_lb] : nil
+  end
+
+  def render_missing_weight(logged_at)
+    @weight_log = weight_log_for_rescue(logged_at: logged_at)
+    @weight_log.errors.add(:base, I18n.t("weight_logs.errors.weight_blank"))
+    assign_weight_lb_display_for_form
+    render :new, status: :unprocessable_content
   end
 
   def render_invalid_logged_at
     @weight_log = weight_log_for_rescue(logged_at: Time.current)
     @weight_log.errors.add(:logged_at, :invalid)
+    assign_weight_lb_display_for_form
     render :new, status: :unprocessable_content
   end
 
@@ -77,13 +112,14 @@ class WeightLogsController < ApplicationController
   def persist_weight_entry(logged_at)
     LogWeightService.new(
       user: Current.user,
-      weight_kg: weight_log_params[:weight_kg],
+      weight_kg: weight_kg_for_service,
       logged_at: logged_at
     ).call
-    redirect_to profile_path, notice: t("weight_logs.flash.created")
+    redirect_to edit_profile_path, notice: t("weight_logs.flash.created")
   end
 
   def handle_record_invalid(error, logged_at:)
+    assign_weight_lb_display_for_form
     @weight_log =
       if error.record.is_a?(WeightLog)
         error.record
@@ -97,6 +133,7 @@ class WeightLogsController < ApplicationController
   end
 
   def handle_domain_argument_error(error, logged_at:)
+    assign_weight_lb_display_for_form
     @weight_log = weight_log_for_rescue(logged_at: logged_at)
     if WeightKg.invalid_argument_error?(error)
       @weight_log.errors.add(:weight_kg, error.message)
