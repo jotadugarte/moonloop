@@ -84,7 +84,7 @@
 
   <step id="3" status="complete">Escribir **fallando** specs para **idempotencia**: crear entidad tipo `HabitReminderEvent` con unicidad por `(user_id, user_habit_id, local_date)` (y canal/kind solo si se justifica). Confirmar que ante reintentos o ejecución repetida no duplica envíos lógicos.</step>
 
-  <step id="4" status="pending">Implementar `HabitReminderEvent` y su uso hasta **verde**.</step>
+  <step id="4" status="complete">Implementar `HabitReminderEvent` y su uso hasta **verde**.</step>
 
   <step id="5" status="pending">Escribir **fallando** specs para el **sweep job recurrente** (Solid Queue + `config/recurring.yml`): para cada usuario con `timezone` válida, calcular el “slot” de hora local actual, seleccionar hábitos con recordatorio habilitado en ese slot y **activos**, y encolar/procesar envíos por email y push según flags de canal. Asegurar que el sweep usa el día **local** para dedupe.</step>
 

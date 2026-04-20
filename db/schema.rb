@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_091000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -126,6 +126,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_090000) do
     t.integer "user_habit_id", null: false
     t.index ["user_habit_id", "completed_on"], name: "index_habit_completions_on_user_habit_and_completed_on", unique: true
     t.index ["user_habit_id"], name: "index_habit_completions_on_user_habit_id"
+  end
+
+  create_table "habit_reminder_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "local_date", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_habit_id", null: false
+    t.integer "user_id", null: false
+    t.index ["user_habit_id"], name: "index_habit_reminder_events_on_user_habit_id"
+    t.index ["user_id", "user_habit_id", "local_date"], name: "index_habit_reminder_events_uniqueness", unique: true
+    t.index ["user_id"], name: "index_habit_reminder_events_on_user_id"
   end
 
   create_table "menu_entries", force: :cascade do |t|
@@ -304,6 +315,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_090000) do
   add_foreign_key "exercise_routines", "users"
   add_foreign_key "habit_categories", "users"
   add_foreign_key "habit_completions", "user_habits"
+  add_foreign_key "habit_reminder_events", "user_habits"
+  add_foreign_key "habit_reminder_events", "users"
   add_foreign_key "menu_entries", "menus"
   add_foreign_key "menu_entries", "recipes"
   add_foreign_key "menus", "menus", column: "source_menu_id"
