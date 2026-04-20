@@ -10,7 +10,7 @@ This document is the **source of truth for named requirements** in Moonloop. Tes
 | `AUTH` | Registration, session, email verification, password reset |
 | `PROF` | User profile, BMI / weight on profile |
 | `HAB` | Habit templates, categories, user habits, provisioning, scheduling helpers |
-| `WGT` | Weight log — persistence, entry flow, history, reconciliation (`REQ-WGT-001`–`003`) |
+| `WGT` | Weight log — persistence, entry flow, history, reconciliation, UI units (`REQ-WGT-001`–`004`) |
 | `I18N` | Locales and user-visible copy |
 | `DAY` | Daily habit tracking (“Mi Día”) — **implemented** (Phase 3) |
 | `MENU` | Menus, recipes, phase plan — **implemented** (Phase 4) |
@@ -42,6 +42,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Active habit | Habit with `active: true`; inactive habits do not consume the “unique name among active” rule | `user_habits.active` |
 | Provisioning | Idempotent job that ensures default templates/categories/habits exist for a user | `ProvisionDefaultHabitsJob`, sign-in hook |
 | Weight log | Historical weigh-in: **`logged_at`** (product timeline, UTC in DB), **`weight_kg`**, snapshot **`height_cm`**, derived **`bmi`**; entry form, history list, delete + reconcile | `WeightLog` |
+| Body unit system | User preference **`metric`** (kg/cm in UI) or **`imperial_us`** (lb, ft/in in UI). Canonical storage is always **`weight_kg`** / **`height_cm`**; conversion for display and form parsing uses **`BodyMetrics`** (**REQ-PROF-003**). | `users.body_unit_system` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
 | Habit metric kind | Classifies how progress is measured for a **`UserHabit`**: **`none`** (binary: only done/failed semantics as before), **`count`** (discrete units, e.g. glasses), or **`duration_min`** (whole minutes). Closed vocabulary; Mi Día, streaks, and reports use the same definitions (see **REQ-DAY-005**). | `user_habits` (persisted column; exact name per schema) |
@@ -69,7 +70,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **User** (`users`)
   - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_programs`, `has_many :phase_reminder_events`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
-  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
+  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `body_unit_system` (**`metric`** \| **`imperial_us`**, default **`metric`**, **REQ-PROF-003**), `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
   - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)
 
 - **Session** (`sessions`)
@@ -144,6 +145,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-AUTH-007 | When password changes, sessions other than the current one are invalidated. | Implemented |
 | REQ-PROF-001 | Profile enforces presence and validity of `date_of_birth`, `height_cm`, and `timezone` (IANA name set). | Implemented |
 | REQ-PROF-002 | User stores `current_weight_kg` and `current_bmi`; BMI is derived from weight and height per application rules. | Implemented |
+| REQ-PROF-003 | **Body unit preference and conversion:** `users.body_unit_system` is **`metric`** \| **`imperial_us`** (US customary), NOT NULL, default **`metric`**. Canonical storage remains **`weight_kg`** / **`height_cm`**. **`BodyMetrics`** (`app/services/body_metrics.rb`) exposes **BigDecimal** conversion and display rounding (lb **1** decimal; height to integer ft/in with **12 in → 1 ft** normalization). Profile and registration forms, mailers, and other surfaces that show body metrics must read this preference and must not persist alternate unit columns. *Remaining:* profile/registration UX, mailers, and any stragglers per active roadmap task. | Partial |
 | REQ-HAB-001 | System stores `global_habit_templates` with unique stable `code` values. | Implemented |
 | REQ-HAB-002 | After sign-in, provisioning runs so each user gains default categories and habits from templates **idempotently** (safe to repeat). | Implemented |
 | REQ-HAB-003 | User can create, update, and delete habit categories; names are unique per user ignoring case; category delete is forbidden if habits reference it. | Implemented |
@@ -161,6 +163,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-WGT-001 | `weight_logs` persist historical weight, height snapshot, BMI, and **`logged_at`** (indexed with `user_id`) for a user. | Implemented |
 | REQ-WGT-002 | **Weight log entry:** authenticated user can record weigh-ins over time via a form (**`weight_kg`**, **`logged_at`** in the user’s timezone; no height field on the form); navigation entry points (e.g. home, profile). | Implemented |
 | REQ-WGT-003 | **History:** authenticated user can view a paginated list (**30** per page) of their weigh-ins ordered by **`logged_at`** descending, with local date/time, weight, height snapshot, BMI, and delete-with-confirmation that reconciles **`current_*`**. | Implemented |
+| REQ-WGT-004 | **Weight log UI units:** weigh-in entry, history list, and Informes weight chart present **`weight_kg`** / snapshot **`height_cm`** using the viewer’s **`User#body_unit_system`** (lb vs kg; ft/in vs cm) while persisting only canonical columns. *Remaining:* entry/history/chart presentation and form parsing per active roadmap task. | Partial |
 | REQ-MENU-001 | Weekly **menu** plan: at most one persisted slot per `(menu, weekday, meal_type)`; slot holds a user-owned **recipe** and/or optional freeform text per profile preference; validations and Hotwire grid editor. | Implemented |
 | REQ-MENU-002 | **Recipe** model: name, instructions, optional **ActiveStorage** image; in menu slots, fallback image by meal type when the recipe has no image. | Implemented |
 | REQ-MENU-003 | **Phase** anchor `phase_one_starts_on` on user; program **week index** from anchor and user timezone; **phase_assignments** map contiguous week ranges to menus (no overlaps); active menu resolution for current week. | Implemented |
@@ -175,7 +178,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | REQ-EXR-006 | **Public exercise routine catalog:** owner opt-in `publicly_shareable`; authenticated catalog index/show (no author email in HTML); adopt creates one copy per adopter per source with line copy and sync fingerprint; explicit apply-update from source with stale detection; source deleted or made non-public yields unavailable copy UX; admin revoke like recipes/menus. See **Acceptance criteria — REQ-EXR-006** below. | Implemented |
 | REQ-RPT-001 | **Habit fulfillment report** on **Informes:** per habit, fulfillment with **weekly** (Mon–Sun, user TZ) and **monthly** (civil month, user TZ) breakdown; due-day and completion rules aligned with Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-RPT-002 | **Streak report** on **Informes:** per habit, **current** streak (parity with **`Habits::Streak`**) and **all-time longest** streak; `as_of` date rules match Mi Día. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
-| REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
+| REQ-RPT-003 | **Weight progress chart** on **Informes:** visual trend from `weight_logs`; efficient read (indexed `user_id` + `logged_at`), not history pagination; server-rendered SVG; timezone-consistent labels. **Extended (imperial/metric):** Y-axis, legend, and tooltips respect **`User#body_unit_system`** while the series stays **`weight_kg`**-based (acceptance criterion 7 below). See **Acceptance criteria — reporting (Phase 7)** below. | Implemented |
 | REQ-CAT-001 | **Public catalog metrics & discovery:** authenticated **`public_menus`**, **`public_exercise_routines`**, **`public_phase_programs`**: template **`public_catalog_adoptions_count`** / **`public_catalog_distinct_adopters_count`** (increment on successful adoption only); **`sort=name`** / **`sort=popular`**; optional **`catalog_listing_facets`**; filters via **`Catalog::ApplyPublicListingFilters`** (`q`, **`difficulty`**, **`tags`**, **`min_weeks`**, **`max_weeks`**); **`PhaseProgram`** facet week span materialized by **`Catalog::MaterializePhaseProgramFacetDuration`** from **`phase_program_assignments`**. Revoke public sharing removes template from index. See **`#### REQ-CAT-001`**. | Implemented |
 
 ---
@@ -186,8 +189,6 @@ Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| REQ-PROF-003 | **Body unit preference and conversion:** user-level preference **`metric`** \| **`imperial_us`** (US customary: lb, ft/in); canonical storage remains **`weight_kg`** / **`height_cm`**; **`BodyMetrics`** (under `app/services/`) exposes explicit conversion constants and **BigDecimal** math; **display-only** rounding (lb **1** decimal; height inches **integer** 0–11 with **12 in → 1 ft** roll-up); parsing imperial/metric form input yields canonical values without double-rounding artifacts on BMI when validated against canonical columns. | Planned |
-| REQ-WGT-004 | **Weight log UI units:** entry and history presentation respect the user’s body unit preference (lb vs kg; snapshot height in ft/in vs cm) while persisting **`weight_kg`** and **`height_cm`** only. | Planned |
 | REQ-PHS-001 | **Unified phase program (bundle):** user-owned entity grouping menu and exercise routine phase planning for contiguous program weeks; **public catalog** `public_phase_programs` (authenticated index/show, owner **`publicly_shareable`** opt-in); admin **revoke** scopes to currently-public rows (parity with menus/routines). **Adopt:** `Programs::AdoptFromPublicCatalog` + `Programs::ContentFingerprint` duplicate nested menus/routines (via `Menus::CopyMenuForAdopter`, `ExerciseRoutines::CopyRoutineForAdopter`) and segment rows; one copy per adopter per source. **Sync:** `Programs::AdoptionSyncStatus` + `Programs::ApplyAdoptionSourceSync` (fingerprint + expected-origin retry); applying rebuilds segment rows from the current source template via `Programs::PopulateAssignmentsFromSource` (prior duplicated menus/routines may remain orphaned on the account — acceptable MVP). **Apply to user:** `Programs::ApplyBundleToUser` **replaces** all of that user’s existing **`phase_assignments`** and **`exercise_routine_assignments`** with rows copied from the program’s **`phase_program_assignments`** (same week ranges, same menu and routine IDs), in **one transaction** — explicit product choice for MVP (`docs/ROADMAP.md` **#33**). | Planned |
 
 ### Acceptance criteria — reporting (Phase 7)
@@ -220,6 +221,7 @@ These criteria are **testable**; implementation lives under services (e.g. `Repo
 4. **Timezone:** Axis labels and date interpretation for each point are **consistent** with existing weight history (`logged_at` in user TZ as elsewhere).
 5. **Rendering:** **Server-first** or minimal Stimulus (e.g. SVG/polyline); **no** Node bundler unless ADR — see **SYSTEM_ARCHITECTURE.md**.
 6. **I18n:** User-visible copy uses `es` default, `en` available.
+7. **Body units (extends REQ-PROF-003 / REQ-WGT-004):** The chart’s **Y-axis scale**, **tick labels**, **legend**, and **point tooltips** show weight in the authenticated user’s **`body_unit_system`** ( **`metric`** → kg with the app’s display precision; **`imperial_us`** → lb with **display-only** rounding per **REQ-PROF-003**). The plotted series and backend queries remain driven by canonical **`weight_kg`** (no alternate stored series).
 
 #### Decisions log — REQ-RPT (Phase 7, locked)
 

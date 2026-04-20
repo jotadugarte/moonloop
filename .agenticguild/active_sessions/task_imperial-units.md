@@ -100,7 +100,7 @@ En uso **habitual** en Estados Unidos:
 
   <step id="3" status="complete">Escribir **fallando** ejemplos de modelo/migración: columna persistida en **`users`** (p. ej. `body_unit_system` o equivalente) con valores **`metric` | `imperial_us`**, **default `metric`**, **NOT NULL**; validación de vocabulario cerrado. Aplicar migración y modelo hasta **verde**.</step>
 
-  <step id="4" status="pending">Actualizar **`docs/core/SPEC.md`** (y glosario si aplica) con **`REQ-PROF-003`**, **`REQ-WGT-004`**, y criterios añadidos a **`REQ-RPT-003`**; enlazar **`docs/core/SCHEMA_REFERENCE.md`** / **`DATA_FLOW_MAP.md`** si el repo los mantiene sincronizados tras el cambio de esquema.</step>
+  <step id="4" status="complete">Actualizar **`docs/core/SPEC.md`** (y glosario si aplica) con **`REQ-PROF-003`**, **`REQ-WGT-004`**, y criterios añadidos a **`REQ-RPT-003`**; enlazar **`docs/core/SCHEMA_REFERENCE.md`** / **`DATA_FLOW_MAP.md`** si el repo los mantiene sincronizados tras el cambio de esquema.</step>
 
   <step id="5" status="pending">Escribir **fallando** specs de **request o sistema** para **perfil y alta de usuario**: selector único de unidades; campos de peso/altura en **métrico o imperial US** según preferencia; persistencia siempre **kg/cm**; mensajes y `aria-*` coherentes con validaciones existentes sobre `height_cm` tras conversión.</step>
 
