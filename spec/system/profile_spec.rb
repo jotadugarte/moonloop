@@ -7,9 +7,9 @@ RSpec.describe "Profile", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Correo electrónico", with: user.email
-    fill_in "Contraseña", with: "Password123!"
-    click_button "Iniciar sesión"
+    fill_in I18n.t("activerecord.attributes.user.email"), with: user.email
+    fill_in I18n.t("activerecord.attributes.user.password"), with: "Password123!"
+    click_button I18n.t("sessions.new.submit")
   end
 
   # [REQ-AUTH-002, REQ-I18N-001, REQ-PROF-001]
@@ -19,11 +19,11 @@ RSpec.describe "Profile", type: :system do
     expect(page).not_to have_field("Height")
     expect(page).not_to have_field("Altura (cm)")
 
-    fill_in "Fecha de nacimiento", with: "1985-11-20"
-    fill_in "Zona horaria", with: "Europe/Madrid"
-    click_button "Actualizar perfil"
+    fill_in I18n.t("activerecord.attributes.user.date_of_birth"), with: "1985-11-20"
+    fill_in I18n.t("activerecord.attributes.user.timezone"), with: "Europe/Madrid"
+    click_button I18n.t("profiles.edit.submit")
 
-    expect(page).to have_content("Perfil actualizado correctamente")
+    expect(page).to have_content(I18n.t("profiles.update.success"))
 
     user.reload
     expect(user.date_of_birth.to_s).to eq("1985-11-20")
@@ -38,9 +38,9 @@ RSpec.describe "Profile", type: :system do
     expect(page).not_to have_field("Altura (cm)")
 
     choose "user_body_unit_system_imperial_us"
-    click_button "Actualizar perfil"
+    click_button I18n.t("profiles.edit.submit")
 
-    expect(page).to have_content("Perfil actualizado correctamente")
+    expect(page).to have_content(I18n.t("profiles.update.success"))
     expect(user.reload.body_unit_system).to eq("imperial_us")
   end
 
@@ -58,7 +58,7 @@ RSpec.describe "Profile", type: :system do
     visit edit_profile_path
 
     fill_in I18n.t("activerecord.attributes.user.timezone"), with: ""
-    click_button "Actualizar perfil"
+    click_button I18n.t("profiles.edit.submit")
 
     expect(page.driver.status_code).to eq(422)
     expect(page).to have_css("[role='alert']")

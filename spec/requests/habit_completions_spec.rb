@@ -180,7 +180,7 @@ RSpec.describe "Habit completions", type: :request do
     post habit_completions_path, params: {
       habit_completion: {
         user_habit_id: 0,
-        completed_on:  Date.today.iso8601,
+        completed_on:  Date.new(2026, 4, 16).iso8601,
         status:        "done"
       }
     }

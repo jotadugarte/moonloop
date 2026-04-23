@@ -8,9 +8,9 @@ RSpec.describe "Public catalogs views", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Correo electrónico", with: viewer.email
-    fill_in "Contraseña", with: "Password123!"
-    click_button "Iniciar sesión"
+    fill_in I18n.t("activerecord.attributes.user.email"), with: viewer.email
+    fill_in I18n.t("activerecord.attributes.user.password"), with: "Password123!"
+    click_button I18n.t("sessions.new.submit")
   end
 
   # [REQ-MENU-006]

@@ -2,9 +2,9 @@
   <active_task_pointer>task_web-views.md</active_task_pointer>
 
   <execution_context>
-    <active_skill>[NONE]</active_skill>
-    <current_phase>[NONE]</current_phase>
-    <current_step>[NONE]</current_step>
-    <note>Task archived: `.agenticguild/completed_sessions/task_migrate-to-postgresql_2026-04-22.md`. finish-branch complete.</note>
+    <active_skill>code-review</active_skill>
+    <current_phase>2</current_phase>
+    <current_step>2.1</current_step>
+    <note>All requested fixes applied; user reports tests/CI green. Ready to commit.</note>
   </execution_context>
 </agent_state>
