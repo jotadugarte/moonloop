@@ -60,6 +60,9 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ### Phase 8 — Catalogs
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
 
+### Phase 9 — Infrastructure
+38. [x] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite) — 2026-04-22 — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
+
 ## In Progress
 *(No items currently in progress.)*
 
@@ -67,5 +70,5 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently pending.)*
 
 ## Backlog
-- [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
+*(No items currently in backlog.)*
 

@@ -34,11 +34,11 @@ _No new domain entities introduced. This is purely an infrastructure and platfor
     <type>Configuration</type>
     <description>Update `config/database.yml` to use the `postgresql` adapter for all environments. Set up proper connection strings pointing to the local Docker container.</description>
   </step>
-  <step id="5" status="pending">
+  <step id="5" status="complete">
     <type>Schema Migration</type>
     <description>Execute `rails db:drop db:create db:migrate` on PostgreSQL. Identify and resolve any SQLite-specific constraints or indices in `db/migrate/*.rb`. Generate the new `db/schema.rb`.</description>
   </step>
-  <step id="6" status="pending">
+  <step id="6" status="complete">
     <type>Documentation</type>
     <description>Update `docs/core/SYSTEM_ARCHITECTURE.md` and `docs/ROADMAP.md` to officially document PostgreSQL as the system database.</description>
   </step>

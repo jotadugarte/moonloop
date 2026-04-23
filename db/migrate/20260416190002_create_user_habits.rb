@@ -16,7 +16,7 @@ class CreateUserHabits < ActiveRecord::Migration[8.1]
     add_index :user_habits,
               [ :user_id, :name_normalized ],
               unique: true,
-              where: "active = 1",
+              where: "active = true",
               name: "idx_user_habits_unique_active_name_per_user"
   end
 end
