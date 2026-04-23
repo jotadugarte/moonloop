@@ -1,3 +1,15 @@
+<%
+  # Fly/Rails multidb URLs must keep an absolute path. DATABASE_URL often has no
+  # /dbname (e.g. ...flycast:5432), so appending "_cache" to path breaks URI parsing.
+  def moonloop_db_url_with_suffix(database_url, suffix)
+    return nil if database_url.nil? || database_url.empty?
+    uri = URI.parse(database_url)
+    base = uri.path.to_s.delete_prefix("/")
+    base = "moonloop_production" if base.empty?
+    uri.path = "/#{base}#{suffix}"
+    uri.to_s
+  end
+%>
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -27,9 +39,12 @@ production:
   cache:
     <<: *primary_production
     migrations_paths: db/cache_migrate
+    url: <%= moonloop_db_url_with_suffix(ENV["DATABASE_URL"], "_cache") %>
   queue:
     <<: *primary_production
     migrations_paths: db/queue_migrate
+    url: <%= moonloop_db_url_with_suffix(ENV["DATABASE_URL"], "_queue") %>
   cable:
     <<: *primary_production
     migrations_paths: db/cable_migrate
+    url: <%= moonloop_db_url_with_suffix(ENV["DATABASE_URL"], "_cable") %>
