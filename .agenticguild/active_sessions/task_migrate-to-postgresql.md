@@ -30,7 +30,7 @@ _No new domain entities introduced. This is purely an infrastructure and platfor
     <type>Dependencies</type>
     <description>Update `Gemfile` to remove `sqlite3` and add the `pg` gem. Run `bundle install`.</description>
   </step>
-  <step id="4" status="pending">
+  <step id="4" status="complete">
     <type>Configuration</type>
     <description>Update `config/database.yml` to use the `postgresql` adapter for all environments. Set up proper connection strings pointing to the local Docker container.</description>
   </step>
