@@ -68,7 +68,9 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-*(No items currently pending.)*
+40. [ ] **Bug: UI Registro - Mostrar/Ocultar inputs de altura**. Al seleccionar sistema métrico o imperial, mostrar solo los inputs de altura correspondientes (centímetros o pies/pulgadas) y ocultar los otros (REQ-PROF-003)
+41. [ ] **Bug: Selección de Zona Horaria**. Cambiar el string estático ("America/Costa_Rica") por un combobox con todas las zonas horarias reales, preseleccionando la zona de la ubicación actual del usuario (REQ-PROF-001)
+42. [ ] **Bug: Etiqueta Sistema Imperial**. Cambiar el label de "Estados Unidos pies pulgadas" a "Imperial pies pulgadas" en la UI.
 
 ## Backlog
 *(No items currently in backlog.)*

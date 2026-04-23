@@ -88,4 +88,45 @@ RSpec.describe 'User Registration', type: :system do
     expect(page).to have_content("#{I18n.t('activerecord.attributes.user.date_of_birth')} #{blank}")
     expect(page).to have_content("#{I18n.t('activerecord.attributes.user.height_cm')} #{blank}")
   end
+
+  # [REQ-PROF-001, REQ-I18N-001]
+  it "displays the correct label for imperial system and uses a timezone select" do
+    visit sign_up_path
+
+    # Timezone should be a select field, not a text input
+    expect(page).to have_select('user[timezone]')
+
+    # The radio button label should use "Imperial" instead of "Estados Unidos"
+    expect(page).to have_content("Imperial (pies / pulgadas)")
+  end
+
+  # [REQ-PROF-003]
+  context "with JS enabled (visibility toggle)" do
+    before do
+      driven_by(:selenium_chrome_headless)
+    end
+
+    it "toggles height inputs visibility based on unit system selection" do
+      visit sign_up_path
+
+      # By default, metric is selected, so cm input should be visible and imperial hidden
+      expect(page).to have_field('Altura (cm)', visible: true)
+      expect(page).to have_field('user_registration_height_feet', visible: false)
+      expect(page).to have_field('user_registration_height_inches', visible: false)
+
+      # Change to imperial
+      choose "user_body_unit_system_imperial_us"
+
+      expect(page).to have_field('Altura (cm)', visible: false)
+      expect(page).to have_field('user_registration_height_feet', visible: true)
+      expect(page).to have_field('user_registration_height_inches', visible: true)
+
+      # Change back to metric
+      choose "user_body_unit_system_metric"
+
+      expect(page).to have_field('Altura (cm)', visible: true)
+      expect(page).to have_field('user_registration_height_feet', visible: false)
+      expect(page).to have_field('user_registration_height_inches', visible: false)
+    end
+  end
 end
