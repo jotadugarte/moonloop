@@ -51,8 +51,8 @@ module Catalog
       tokens.each do |tag|
         next unless tag.match?(ListingFacet::TAG_SLUG_PATTERN)
 
-        needle = ",#{tag},"
-        sql = "instr(',' || COALESCE(catalog_listing_facets.normalized_tags, '') || ',', ?) > 0"
+        needle = "%,#{tag},%"
+        sql = "',' || COALESCE(catalog_listing_facets.normalized_tags, '') || ',' LIKE ?"
         clauses << [ sql, needle ]
       end
     end
