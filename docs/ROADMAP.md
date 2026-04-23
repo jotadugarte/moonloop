@@ -12,6 +12,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 2. [x] User authentication (sign up, login, logout, sessions, verification & password flows) (REQ-AUTH-001–007) — 2026-04-16
 3. [x] User profile: age, weight, height, timezone (metric system) (REQ-PROF-001) — 2026-04-16
 4. [x] BMI auto-calculation from weight and height (REQ-PROF-002) — 2026-04-16
+36. [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
 
 ### Phase 2 — Habits Core
 5. [x] Habit model with frequency types: daily, specific weekdays, every X days, weekly, monthly (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 1
@@ -54,6 +55,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 26. [x] Streak report: current streak and all-time longest streak per habit (REQ-RPT-002) — 2026-04-17 — Depends on: Phase 3 #14
 27. [x] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — 2026-04-17 — Depends on: Phase 6
 28. [x] Mi Día / rachas: prefetch de completados acotado (`Habits::MiDayStreakPrefetch`), caché (`Rails.cache`) e invalidación vía `UserHabit#touch` tras completar o borrar día (REQ-DAY-004) — 2026-04-18 — Depends on: Phase 3 #11–#14
+37. [x] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción — 2026-04-22
 
 ### Phase 8 — Catalogs
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
@@ -65,7 +67,5 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently pending.)*
 
 ## Backlog
-- [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
-- [ ] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción
 - [ ] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite si aplica) — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
 
