@@ -23,7 +23,7 @@ We need to create the main application layout and fundamental views (Mi Día, Pe
 - Audit `HabitCompletionsController` to ensure it returns `422 Unprocessable Entity` on errors.
 - Run tests to verify Mi Día is accessible and handles Turbo form submissions correctly.
 </step>
-<step id="3" status="pending">
+<step id="3" status="complete">
 [Feature] Catalogs and Reports Views structure
 - Write failing system tests (`spec/system/catalogs_spec.rb` and `spec/system/reports_spec.rb`) verifying semantic HTML elements and that all interactive elements have clear, accessible text.
 - Modify `app/views/public_menus/index.html.erb`, `app/views/public_exercise_routines/index.html.erb`, and `app/views/reports/show.html.erb` to use basic semantic tags (`<article>`, `<ul>`, `<table>`).
