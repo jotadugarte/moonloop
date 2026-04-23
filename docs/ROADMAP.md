@@ -67,7 +67,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-*(No items currently pending.)*
+39. [ ] Crear vistas sencillas de pantallas para poder ver la app en la web
 
 ## Backlog
 *(No items currently in backlog.)*
