@@ -1,6 +1,6 @@
 # Schema reference
 
-**Purpose:** Map Active Record tables to requirements and domain concepts in `docs/core/SPEC.md`. Structure reflects `db/schema.rb` (authoritative for column types and indexes).
+**Purpose:** Map Active Record tables to requirements and domain concepts in `docs/core/SPEC.md`. Structure reflects `db/schema.rb` (authoritative for column types and indexes; now running on PostgreSQL with a strict 1:1 translation from the original SQLite schema).
 
 **Maintenance:** Update this file when migrations add or change tables material to the product domain. Session/task notes may justify short “why/when” annotations per table.
 

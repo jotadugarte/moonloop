@@ -9,7 +9,7 @@
 | **Language / runtime** | Ruby 3.3.x (see `.ruby-version`) |
 | **Framework** | Ruby on Rails ~> 8.1 |
 | **App server** | Puma |
-| **Database** | SQLite3 (development, test, and default production posture in this repo) |
+| **Database** | PostgreSQL (development, test, and default production posture in this repo) |
 | **Assets** | Propshaft; JavaScript via `importmap-rails` (no default Node/npm asset pipeline) |
 | **Frontend** | Hotwire: `turbo-rails`, `stimulus-rails`; server-rendered ERB |
 | **Auth** | `authentication-zero` + `has_secure_password` (session records, signed cookie); not Devise |

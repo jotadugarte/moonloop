@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -55,10 +58,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
   create_table "exercise_routine_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "end_week", null: false
-    t.integer "exercise_routine_id", null: false
+    t.bigint "exercise_routine_id", null: false
     t.integer "start_week", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["exercise_routine_id"], name: "index_exercise_routine_assignments_on_exercise_routine_id"
     t.index ["user_id", "start_week", "end_week"], name: "index_exercise_routine_assignments_on_user_and_range"
     t.index ["user_id"], name: "index_exercise_routine_assignments_on_user_id"
@@ -68,7 +71,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
 
   create_table "exercise_routine_lines", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "exercise_routine_id", null: false
+    t.bigint "exercise_routine_id", null: false
     t.string "label", limit: 500, null: false
     t.text "notes"
     t.integer "position", null: false
@@ -86,13 +89,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.integer "public_catalog_adoptions_count", default: 0, null: false
     t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
-    t.integer "source_exercise_routine_id"
+    t.bigint "source_exercise_routine_id"
     t.string "source_sync_fingerprint"
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["source_exercise_routine_id"], name: "index_exercise_routines_on_source_exercise_routine_id"
     t.index ["user_id", "name_normalized"], name: "index_exercise_routines_on_user_and_name_normalized", unique: true
-    t.index ["user_id", "source_exercise_routine_id"], name: "index_exercise_routines_adoption_unique_per_user_and_source", unique: true, where: "source_exercise_routine_id IS NOT NULL"
+    t.index ["user_id", "source_exercise_routine_id"], name: "index_exercise_routines_adoption_unique_per_user_and_source", unique: true, where: "(source_exercise_routine_id IS NOT NULL)"
     t.index ["user_id"], name: "index_exercise_routines_on_user_id"
   end
 
@@ -111,7 +114,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.string "name", null: false
     t.string "name_normalized", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id", "name_normalized"], name: "index_habit_categories_on_user_id_and_name_normalized", unique: true
     t.index ["user_id"], name: "index_habit_categories_on_user_id"
   end
@@ -123,7 +126,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.boolean "marked_failed_by_user", default: false, null: false
     t.string "status", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_habit_id", null: false
+    t.bigint "user_habit_id", null: false
     t.index ["user_habit_id", "completed_on"], name: "index_habit_completions_on_user_habit_and_completed_on", unique: true
     t.index ["user_habit_id"], name: "index_habit_completions_on_user_habit_id"
   end
@@ -132,8 +135,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.datetime "created_at", null: false
     t.date "local_date", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_habit_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_habit_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_habit_id"], name: "index_habit_reminder_events_on_user_habit_id"
     t.index ["user_id", "user_habit_id", "local_date"], name: "index_habit_reminder_events_uniqueness", unique: true
     t.index ["user_id"], name: "index_habit_reminder_events_on_user_id"
@@ -143,8 +146,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.datetime "created_at", null: false
     t.text "freeform_text"
     t.string "meal_type", null: false
-    t.integer "menu_id", null: false
-    t.integer "recipe_id"
+    t.bigint "menu_id", null: false
+    t.bigint "recipe_id"
     t.datetime "updated_at", null: false
     t.integer "weekday", null: false
     t.index ["menu_id", "weekday", "meal_type"], name: "index_menu_entries_on_menu_weekday_meal_type", unique: true
@@ -160,23 +163,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.integer "public_catalog_adoptions_count", default: 0, null: false
     t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
     t.boolean "publicly_shareable", default: false, null: false
-    t.integer "source_menu_id"
+    t.bigint "source_menu_id"
     t.string "source_sync_fingerprint"
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["source_menu_id"], name: "index_menus_on_source_menu_id"
     t.index ["user_id", "name_normalized"], name: "index_menus_on_user_id_and_name_normalized", unique: true
-    t.index ["user_id", "source_menu_id"], name: "index_menus_adoption_unique_per_user_and_source", unique: true, where: "source_menu_id IS NOT NULL"
+    t.index ["user_id", "source_menu_id"], name: "index_menus_adoption_unique_per_user_and_source", unique: true, where: "(source_menu_id IS NOT NULL)"
     t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
   create_table "phase_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "end_week", null: false
-    t.integer "menu_id", null: false
+    t.bigint "menu_id", null: false
     t.integer "start_week", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["menu_id"], name: "index_phase_assignments_on_menu_id"
     t.index ["user_id", "start_week", "end_week"], name: "index_phase_assignments_on_user_and_range"
     t.index ["user_id"], name: "index_phase_assignments_on_user_id"
@@ -187,9 +190,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
   create_table "phase_program_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "end_week", null: false
-    t.integer "exercise_routine_id", null: false
-    t.integer "menu_id", null: false
-    t.integer "phase_program_id", null: false
+    t.bigint "exercise_routine_id", null: false
+    t.bigint "menu_id", null: false
+    t.bigint "phase_program_id", null: false
     t.integer "start_week", null: false
     t.datetime "updated_at", null: false
     t.index ["exercise_routine_id"], name: "index_phase_program_assignments_on_exercise_routine_id"
@@ -214,7 +217,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.integer "user_id", null: false
     t.index ["source_phase_program_id"], name: "index_phase_programs_on_source_phase_program_id"
     t.index ["user_id", "name_normalized"], name: "index_phase_programs_on_user_and_name_normalized", unique: true
-    t.index ["user_id", "source_phase_program_id"], name: "index_phase_programs_adoption_unique_per_user_and_source", unique: true, where: "source_phase_program_id IS NOT NULL"
+    t.index ["user_id", "source_phase_program_id"], name: "index_phase_programs_adoption_unique_per_user_and_source", unique: true, where: "(source_phase_program_id IS NOT NULL)"
     t.index ["user_id"], name: "index_phase_programs_on_user_id"
   end
 
@@ -223,7 +226,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.string "kind", null: false
     t.date "local_date", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id", "kind", "local_date"], name: "index_phase_reminder_events_uniqueness", unique: true
     t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
   end
@@ -234,7 +237,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.string "name", null: false
     t.boolean "publicly_shareable", default: false, null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_recipes_on_user_id"
   end
 
@@ -243,7 +246,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.string "ip_address"
     t.datetime "updated_at", null: false
     t.string "user_agent"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
@@ -255,8 +258,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.integer "daily_target", default: 1, null: false
     t.json "frequency_params", default: {}, null: false
     t.string "frequency_type", default: "daily", null: false
-    t.integer "global_habit_template_id"
-    t.integer "habit_category_id", null: false
+    t.bigint "global_habit_template_id"
+    t.bigint "habit_category_id", null: false
     t.string "habit_metric_kind", default: "none", null: false
     t.integer "longest_streak_through_today", default: 0, null: false
     t.string "name", null: false
@@ -268,14 +271,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.date "streak_counters_as_of"
     t.boolean "streak_counters_stale", default: true, null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["activation_date"], name: "index_user_habits_on_activation_date"
     t.index ["frequency_type"], name: "index_user_habits_on_frequency_type"
     t.index ["global_habit_template_id"], name: "index_user_habits_on_global_habit_template_id"
     t.index ["habit_category_id"], name: "index_user_habits_on_habit_category_id"
     t.index ["reminder_enabled", "reminder_time_of_day"], name: "idx_user_habits_reminder_slot"
     t.index ["streak_counters_stale", "streak_counters_as_of"], name: "index_user_habits_on_streak_counters_freshness"
-    t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "active = 1"
+    t.index ["user_id", "name_normalized"], name: "idx_user_habits_unique_active_name_per_user", unique: true, where: "(active = true)"
     t.index ["user_id"], name: "index_user_habits_on_user_id"
   end
 
@@ -305,7 +308,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.string "endpoint", null: false
     t.string "p256dh", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.index ["user_id", "endpoint"], name: "index_web_push_subscriptions_uniqueness", unique: true
     t.index ["user_id"], name: "index_web_push_subscriptions_on_user_id"
   end
@@ -316,7 +319,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_100000) do
     t.integer "height_cm", null: false
     t.datetime "logged_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.decimal "weight_kg", precision: 5, scale: 2, null: false
     t.index ["user_id", "logged_at"], name: "index_weight_logs_on_user_id_and_logged_at"
     t.index ["user_id"], name: "index_weight_logs_on_user_id"
