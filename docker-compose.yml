@@ -6,6 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    restart: unless-stopped
     ports:
       - "5433:5432"
 
