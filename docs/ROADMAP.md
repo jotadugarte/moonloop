@@ -62,6 +62,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ### Phase 9 — Infrastructure
 38. [x] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite) — 2026-04-22 — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
+39. [x] Crear vistas sencillas de pantallas para poder ver la app en la web — 2026-04-22 — Branch: views
 
 ## In Progress
 *(No items currently in progress.)*

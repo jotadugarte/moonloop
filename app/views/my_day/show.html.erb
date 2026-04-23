@@ -8,7 +8,7 @@
   <button type="submit"><%= t("my_day.show.go_to_date") %></button>
 <% end %>
 
-<p class="my-day-date"><%= l(@local_date, format: :long) %></p>
+<p class="my-day-date" data-test="my-day-local-date"><%= l(@local_date, format: :long) %></p>
 
 <% if @local_date < @max_date %>
   <p><%= link_to t("my_day.show.view_today"), my_day_path %></p>

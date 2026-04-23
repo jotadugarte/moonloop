@@ -1,4 +1,12 @@
 es:
+  layout:
+    skip_to_content: "Ir al contenido principal"
+    nav:
+      aria_label: "Navegación principal"
+      my_day: "Mi Día"
+      catalogs: "Catálogos"
+      reports: "Informes"
+      profile: "Perfil"
   hello: "Hola mundo"
   ui:
     inline_sep: "·"

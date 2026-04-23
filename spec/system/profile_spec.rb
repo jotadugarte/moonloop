@@ -1,38 +1,33 @@
-require 'rails_helper'
+require "rails_helper"
 
-RSpec.describe 'Profile Editing', type: :system do
+RSpec.describe "Profile", type: :system do
   let(:user) { create(:user, password: "Password123!", timezone: "America/New_York", date_of_birth: "1990-01-01") }
 
   before do
     driven_by(:rack_test)
 
-    # Log in using standard auth-zero forms
     visit sign_in_path
-    fill_in 'Correo electrónico', with: user.email
-    fill_in 'Contraseña', with: 'Password123!'
-    click_button 'Iniciar sesión'
+    fill_in I18n.t("activerecord.attributes.user.email"), with: user.email
+    fill_in I18n.t("activerecord.attributes.user.password"), with: "Password123!"
+    click_button I18n.t("sessions.new.submit")
   end
 
   # [REQ-AUTH-002, REQ-I18N-001, REQ-PROF-001]
-  it 'allows users to update profile attributes but not height' do
-    # We will build this route during the GREEN phase
+  it "allows users to update profile attributes but not height" do
     visit edit_profile_path
 
-    # Height should be completely excluded from the UI since it is immutable
-    expect(page).not_to have_field('Height')
-    expect(page).not_to have_field('Altura (cm)')
+    expect(page).not_to have_field("Height")
+    expect(page).not_to have_field("Altura (cm)")
 
-    # Date of birth and Timezone are editable
-    fill_in 'Fecha de nacimiento', with: '1985-11-20'
-    fill_in 'Zona horaria', with: 'Europe/Madrid'
+    fill_in I18n.t("activerecord.attributes.user.date_of_birth"), with: "1985-11-20"
+    fill_in I18n.t("activerecord.attributes.user.timezone"), with: "Europe/Madrid"
+    click_button I18n.t("profiles.edit.submit")
 
-    click_button 'Actualizar perfil'
-
-    expect(page).to have_content('Perfil actualizado correctamente')
+    expect(page).to have_content(I18n.t("profiles.update.success"))
 
     user.reload
-    expect(user.date_of_birth.to_s).to eq('1985-11-20')
-    expect(user.timezone).to eq('Europe/Madrid')
+    expect(user.date_of_birth.to_s).to eq("1985-11-20")
+    expect(user.timezone).to eq("Europe/Madrid")
     expect(user.body_unit_system).to eq("metric")
   end
 
@@ -43,9 +38,29 @@ RSpec.describe 'Profile Editing', type: :system do
     expect(page).not_to have_field("Altura (cm)")
 
     choose "user_body_unit_system_imperial_us"
-    click_button "Actualizar perfil"
+    click_button I18n.t("profiles.edit.submit")
 
-    expect(page).to have_content("Perfil actualizado correctamente")
+    expect(page).to have_content(I18n.t("profiles.update.success"))
     expect(user.reload.body_unit_system).to eq("imperial_us")
+  end
+
+  # [REQ-PROF-001, REQ-AUTH-002]
+  it "renders all profile form inputs with associated <label> elements" do
+    visit edit_profile_path
+
+    expect(page).to have_field(I18n.t("activerecord.attributes.user.date_of_birth"))
+    expect(page).to have_field(I18n.t("activerecord.attributes.user.timezone"))
+    expect(page).not_to have_field(I18n.t("activerecord.attributes.user.height_cm"))
+  end
+
+  # [REQ-PROF-001]
+  it "returns 422 and renders validation errors with role=alert when profile update fails" do
+    visit edit_profile_path
+
+    fill_in I18n.t("activerecord.attributes.user.timezone"), with: ""
+    click_button I18n.t("profiles.edit.submit")
+
+    expect(page.driver.status_code).to eq(422)
+    expect(page).to have_css("[role='alert']")
   end
 end
