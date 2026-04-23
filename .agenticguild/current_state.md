@@ -5,6 +5,6 @@
     <active_skill>code-review</active_skill>
     <current_phase>2</current_phase>
     <current_step>2.1</current_step>
-    <note>All requested fixes applied; user reports tests/CI green. Ready to commit.</note>
+    <note>Second review pass fixes applied (my_day_spec i18n login + .cursorrules semantic list rule). Awaiting verification/commit.</note>
   </execution_context>
 </agent_state>
