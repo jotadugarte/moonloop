@@ -28,6 +28,14 @@
 #       enabled: "ON"
 
 en:
+  layout:
+    skip_to_content: "Skip to main content"
+    nav:
+      aria_label: "Main navigation"
+      my_day: "My Day"
+      catalogs: "Catalogs"
+      reports: "Reports"
+      profile: "Profile"
   hello: "Hello world"
   ui:
     inline_sep: "·"

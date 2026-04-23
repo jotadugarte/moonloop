@@ -16,7 +16,7 @@ We need to create the main application layout and fundamental views (Mi Día, Pe
 - Modify `app/views/layouts/application.html.erb` to include a semantic `<nav>` with the required links and ensure the mobile viewport meta tag is present.
 - Run tests to verify the layout works.
 </step>
-<step id="2" status="pending">
+<step id="2" status="complete">
 [Feature] Mi Día View enhancements
 - Write a failing system test (`spec/system/my_day_spec.rb`) verifying the local date is clearly displayed at the top and all habit inputs have proper `<label>` elements.
 - Modify `app/views/my_day/show.html.erb` and its related partials to add the local date and semantic labels.

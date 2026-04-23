@@ -4,9 +4,9 @@ class HabitCompletionsController < ApplicationController
   def create
     process_create
   rescue ActionController::ParameterMissing
-    redirect_to my_day_path, alert: t("habit_completions.flash.invalid_request")
+    head :unprocessable_entity
   rescue ArgumentError, TypeError
-    redirect_to my_day_path, alert: t("habit_completions.flash.invalid_date")
+    head :unprocessable_entity
   end
 
   def destroy
@@ -27,7 +27,7 @@ class HabitCompletionsController < ApplicationController
   def process_create
     permitted = habit_completion_params
     habit = find_habit(permitted[:user_habit_id])
-    return not_found_redirect unless habit
+    return head(:unprocessable_entity) unless habit
 
     local_date = Date.iso8601(permitted[:completed_on].to_s)
     result = record_completion(habit, local_date, permitted)

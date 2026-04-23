@@ -25,12 +25,26 @@
   </head>
 
   <body>
+    <a class="skip-link" href="#main-content"><%= t("layout.skip_to_content") %></a>
+
+    <% if Current.user %>
+      <nav aria-label="<%= t('layout.nav.aria_label') %>">
+        <%= link_to t("layout.nav.my_day"),   my_day_path %>
+        <%= link_to t("layout.nav.catalogs"), public_menus_path %>
+        <%= link_to t("layout.nav.reports"),  informes_path %>
+        <%= link_to t("layout.nav.profile"),  edit_profile_path %>
+      </nav>
+    <% end %>
+
     <% if notice.present? %>
       <p class="flash flash--notice" role="status"><%= notice %></p>
     <% end %>
     <% if alert.present? %>
       <p class="flash flash--alert" role="alert"><%= alert %></p>
     <% end %>
-    <%= yield %>
+
+    <main id="main-content">
+      <%= yield %>
+    </main>
   </body>
 </html>
