@@ -29,7 +29,7 @@ We need to create the main application layout and fundamental views (Mi Día, Pe
 - Modify `app/views/public_menus/index.html.erb`, `app/views/public_exercise_routines/index.html.erb`, and `app/views/reports/show.html.erb` to use basic semantic tags (`<article>`, `<ul>`, `<table>`).
 - Run tests to verify catalog and report views.
 </step>
-<step id="4" status="pending">
+<step id="4" status="complete">
 [Feature] Profile and Forms accessibility
 - Write a failing system test (`spec/system/profile_spec.rb`) verifying all form inputs have associated `<label>` tags and that validation errors correctly repaint via Hotwire (verifying 422 status).
 - Modify `app/views/profiles/show.html.erb`, `app/views/profiles/edit.html.erb` (and any other core forms) to add semantic labels.
