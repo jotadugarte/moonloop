@@ -54,22 +54,13 @@ RSpec.describe "Profile", type: :system do
   end
 
   # [REQ-PROF-001]
-  it "renders validation errors with role=alert when profile update fails" do
-    visit edit_profile_path
-
-    fill_in I18n.t("activerecord.attributes.user.timezone"), with: ""
-    click_button "Actualizar perfil"
-
-    expect(page).to have_css("[role='alert']")
-  end
-
-  # [REQ-PROF-001]
-  it "returns 422 when the profile form is submitted with invalid data" do
+  it "returns 422 and renders validation errors with role=alert when profile update fails" do
     visit edit_profile_path
 
     fill_in I18n.t("activerecord.attributes.user.timezone"), with: ""
     click_button "Actualizar perfil"
 
     expect(page.driver.status_code).to eq(422)
+    expect(page).to have_css("[role='alert']")
   end
 end

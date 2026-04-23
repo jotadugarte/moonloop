@@ -409,3 +409,23 @@
   padding-left: 0.5rem;
   border-left: 2px solid #d1d5db;
 }
+
+/* ——— Accessibility ——— */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 0;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background-color: #1e293b;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 0.25rem 0.25rem;
+}
+
+.skip-link:focus-visible {
+  top: 0;
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}

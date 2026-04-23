@@ -17,10 +17,10 @@ RSpec.describe "Application Layout", type: :system do
     visit my_day_path
 
     within("nav") do
-      expect(page).to have_link("Mi Día",    href: my_day_path)
-      expect(page).to have_link("Catálogos", href: public_menus_path)
-      expect(page).to have_link("Informes",  href: informes_path)
-      expect(page).to have_link("Perfil",    href: edit_profile_path)
+      expect(page).to have_link(I18n.t("layout.nav.my_day"),   href: my_day_path)
+      expect(page).to have_link(I18n.t("layout.nav.catalogs"), href: public_menus_path)
+      expect(page).to have_link(I18n.t("layout.nav.reports"),  href: informes_path)
+      expect(page).to have_link(I18n.t("layout.nav.profile"),  href: edit_profile_path)
     end
   end
 

@@ -167,4 +167,24 @@ RSpec.describe "Habit completions", type: :request do
       expect(row.status).to eq("done")
     end
   end
+
+  # [REQ-DAY-002]
+  it "returns 422 when the habit_completion param is missing entirely" do
+    post habit_completions_path, params: {}
+
+    expect(response).to have_http_status(:unprocessable_content)
+  end
+
+  # [REQ-DAY-002]
+  it "returns 422 when user_habit_id does not match any habit owned by the user" do
+    post habit_completions_path, params: {
+      habit_completion: {
+        user_habit_id: 0,
+        completed_on:  Date.today.iso8601,
+        status:        "done"
+      }
+    }
+
+    expect(response).to have_http_status(:unprocessable_content)
+  end
 end

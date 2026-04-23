@@ -2,14 +2,12 @@
 
 <h1><%= t("public_menus.index.heading") %></h1>
 
-<ul>
+<ul role="list">
   <% @menus.each do |menu| %>
-    <li>
-      <article>
-        <%= link_to menu.name, public_menu_path(menu) %>
-        — <%= t("public_menus.shared.author", code: menu.user.public_catalog_author_code) %>
-        <%= render "shared/catalog_index_metrics", record: menu %>
-      </article>
-    </li>
+    <article>
+      <%= link_to menu.name, public_menu_path(menu) %>
+      — <%= t("public_menus.shared.author", code: menu.user.public_catalog_author_code) %>
+      <%= render "shared/catalog_index_metrics", record: menu %>
+    </article>
   <% end %>
 </ul>

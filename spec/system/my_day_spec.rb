@@ -29,18 +29,4 @@ RSpec.describe "Mi Día view", type: :system do
 
     expect(page).to have_field(I18n.t("my_day.show.date_label"))
   end
-
-  # [REQ-DAY-002]
-  it "returns 422 when an invalid habit completion is submitted" do
-    post_params = {
-      habit_completion: {
-        user_habit_id: 0,
-        completed_on:  Date.today.iso8601,
-        status:        "done"
-      }
-    }
-
-    page.driver.post(habit_completions_path, post_params)
-    expect(page.driver.status_code).to eq(422)
-  end
 end
