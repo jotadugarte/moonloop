@@ -1,7 +1,7 @@
 <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
 
 <% registration_err_id = "registration-form-errors" %>
-<%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md" do |form| %>
+<%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md", data: { controller: "unit-system-toggle" } do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
       <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
@@ -55,7 +55,8 @@
     <% User::BODY_UNIT_SYSTEMS.each do |system| %>
       <div class="flex items-center gap-2">
         <%= form.radio_button :body_unit_system, system,
-              aria: { describedby: "registration-body-units-hint" } %>
+              aria: { describedby: "registration-body-units-hint" },
+              data: { action: "change->unit-system-toggle#toggle" } %>
         <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
       </div>
     <% end %>
@@ -63,7 +64,7 @@
   </fieldset>
 
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
-  <div>
+  <div data-unit-system-toggle-target="metric">
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
           min: 50,
@@ -73,7 +74,7 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
   </div>
 
-  <div>
+  <div data-unit-system-toggle-target="imperial">
     <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_feet]", @reg_height_feet,
           id: "user_registration_height_feet",
@@ -82,7 +83,7 @@
           aria: height_cm_aria %>
   </div>
 
-  <div>
+  <div data-unit-system-toggle-target="imperial">
     <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_inches]", @reg_height_inches,
           id: "user_registration_height_inches",
@@ -93,13 +94,14 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_imperial_hint") %></p>
   </div>
 
-  <div data-controller="timezone">
+  <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.text_field :timezone,
-          required: true,
-          data: { timezone_target: "input" },
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :timezone, registration_err_id) %>
+    <%= form.time_zone_select :timezone, nil,
+          { prompt: true },
+          { required: true,
+            data: { timezone_autodetect_target: "input" },
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :timezone, registration_err_id) } %>
   </div>
 
   <div class="pt-4">

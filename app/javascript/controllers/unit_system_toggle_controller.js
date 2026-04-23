@@ -1,0 +1,22 @@
+import { Controller } from "@hotwired/stimulus"
+
+// Connects to data-controller="unit-system-toggle"
+export default class extends Controller {
+  static targets = ["metric", "imperial"]
+
+  connect() {
+    this.toggle()
+  }
+
+  toggle() {
+    const selectedSystem = this.element.querySelector('input[name="user[body_unit_system]"]:checked')?.value
+
+    if (selectedSystem === 'imperial_us') {
+      this.metricTargets.forEach(el => el.classList.add('hidden'))
+      this.imperialTargets.forEach(el => el.classList.remove('hidden'))
+    } else {
+      this.metricTargets.forEach(el => el.classList.remove('hidden'))
+      this.imperialTargets.forEach(el => el.classList.add('hidden'))
+    }
+  }
+}

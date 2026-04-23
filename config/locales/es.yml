@@ -555,7 +555,7 @@ es:
       body_unit_system_hint: "Elige cómo ingresar la altura. El peso en el resto de la app usará la misma preferencia."
       units:
         metric: "Métrico (cm)"
-        imperial_us: "Estados Unidos (pies / pulgadas)"
+        imperial_us: "Imperial (pies / pulgadas)"
       height_cm_hint_metric: "Úsalo cuando Métrico esté seleccionado (se guarda en cm)."
       height_feet: "Altura — pies"
       height_inches: "Altura — pulgadas (0–11)"

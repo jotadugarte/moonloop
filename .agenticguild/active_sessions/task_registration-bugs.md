@@ -29,9 +29,9 @@ No new domain models introduced. These are strictly view-layer and UI interactio
 <implementation_plan>
   <step id="1" status="complete">Write a failing system test (or update existing) asserting that the imperial/metric height inputs correctly toggle visibility when changing `body_unit_system` in the registration form.</step>
   <step id="2" status="complete">Implement `unit-system-toggle_controller.js` and update the registration view to toggle input visibility based on unit selection.</step>
-  <step id="3" status="pending">Write a failing system test asserting that timezone selection is a combobox and the label says 'Imperial pies pulgadas'.</step>
-  <step id="4" status="pending">Update the registration view to use `time_zone_select` instead of a static string for timezone.</step>
-  <step id="5" status="pending">Implement `timezone-autodetect_controller.js` to automatically set the user's local timezone if none is selected.</step>
-  <step id="6" status="pending">Update the translation/view files to change the text "Estados Unidos pies pulgadas" to "Imperial pies pulgadas".</step>
+  <step id="3" status="complete">Write a failing system test asserting that timezone selection is a combobox and the label says 'Imperial pies pulgadas'.</step>
+  <step id="4" status="complete">Update the registration view to use `time_zone_select` instead of a static string for timezone.</step>
+  <step id="5" status="complete">Implement `timezone-autodetect_controller.js` to automatically set the user's local timezone if none is selected.</step>
+  <step id="6" status="complete">Update the translation/view files to change the text "Estados Unidos pies pulgadas" to "Imperial pies pulgadas".</step>
   <step id="7" status="pending">Run system tests to verify all registration bugs are resolved and the tests pass.</step>
 </implementation_plan>
