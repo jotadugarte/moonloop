@@ -1,4 +1,6 @@
 class RegistrationsController < ApplicationController
+  include BirthDateTriplet
+
   skip_before_action :authenticate
 
   def new
@@ -10,9 +12,14 @@ class RegistrationsController < ApplicationController
   def create
     @reg_height_feet = params.dig(:user, :height_feet)
     @reg_height_inches = params.dig(:user, :height_inches)
-    @user = User.new(registration_user_attributes)
 
-    if @user.save
+    attrs, dob_status = registration_user_attributes_tuple
+    @user = User.new(attrs)
+
+    if dob_status == :invalid
+      @user.errors.add(:date_of_birth, :invalid_calendar)
+      render :new, status: :unprocessable_entity
+    elsif @user.save
       session_record = @user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: session_record.id, httponly: true }
 
@@ -24,10 +31,11 @@ class RegistrationsController < ApplicationController
   end
 
   private
-    def registration_user_attributes
+    def registration_user_attributes_tuple
       raw = params.require(:user).permit(
         :email, :password, :password_confirmation,
-        :date_of_birth, :timezone, :body_unit_system,
+        :birth_year, :birth_month, :birth_day,
+        :timezone, :body_unit_system,
         :height_cm, :height_feet, :height_inches
       )
       system = User::BODY_UNIT_SYSTEMS.include?(raw[:body_unit_system]) ? raw[:body_unit_system] : "metric"
@@ -38,15 +46,19 @@ class RegistrationsController < ApplicationController
           raw[:height_cm].presence&.to_i
         end
 
-      {
+      dob = birth_date_from_triplet(raw[:birth_year], raw[:birth_month], raw[:birth_day])
+      dob_value = dob.is_a?(Date) ? dob : nil
+
+      attrs = {
         email: raw[:email],
         password: raw[:password],
         password_confirmation: raw[:password_confirmation],
-        date_of_birth: raw[:date_of_birth],
+        date_of_birth: dob_value,
         timezone: raw[:timezone],
         body_unit_system: system,
         height_cm: height_cm
       }
+      [ attrs, dob ]
     end
 
     def send_email_verification

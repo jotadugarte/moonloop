@@ -13,7 +13,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in 'Contraseña', with: 'Password123!'
     fill_in 'Confirmación de contraseña', with: 'Password123!'
 
-    fill_in 'Fecha de nacimiento', with: '1990-05-15'
+    select_user_birth_date(page, year: 1990, month: 5, day: 15)
     fill_in 'Altura (cm)', with: '175'
 
     # Normally JS automates this part in front-end, we simulate normal submission
@@ -37,7 +37,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in "Correo electrónico", with: "imperial@example.com"
     fill_in "Contraseña", with: "Password123!"
     fill_in "Confirmación de contraseña", with: "Password123!"
-    fill_in "Fecha de nacimiento", with: "1990-05-15"
+    select_user_birth_date(page, year: 1990, month: 5, day: 15)
 
     choose "user_body_unit_system_imperial_us"
     fill_in "user_registration_height_feet", with: "5"
@@ -61,7 +61,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in "Correo electrónico", with: "badht@example.com"
     fill_in "Contraseña", with: "Password123!"
     fill_in "Confirmación de contraseña", with: "Password123!"
-    fill_in "Fecha de nacimiento", with: "1990-05-15"
+    select_user_birth_date(page, year: 1990, month: 5, day: 15)
 
     choose "user_body_unit_system_imperial_us"
     fill_in "user_registration_height_feet", with: "1"

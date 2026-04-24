@@ -342,9 +342,6 @@ es:
       delete: "Eliminar"
       delete_confirm: "¿Eliminar esta receta? Se vaciarán los casilleros de menú que solo tenían esta receta."
     form:
-      errors_header:
-        one: "1 error impidió guardar la receta:"
-        other: "%{count} errores impidieron guardar la receta:"
       name_label: "Nombre"
       instructions_label: "Instrucciones"
       image_label: "Imagen"
@@ -560,9 +557,6 @@ es:
       height_feet: "Altura — pies"
       height_inches: "Altura — pulgadas (0–11)"
       height_imperial_hint: "Pies y pulgadas enteras si eliges US; se guarda en cm."
-      prohibited:
-        one: "1 error impidió guardar este usuario:"
-        other: "%{count} errores impidieron guardar este usuario:"
   identity:
     emails:
       update:
@@ -658,17 +652,16 @@ es:
       units:
         metric: "Métrico (cm, kg)"
         imperial_us: "Imperial (pies / pulgadas, lb)"
-      prohibited:
-        one: "1 error impidió guardar tu perfil:"
-        other: "%{count} errores impidieron guardar tu perfil:"
   shared:
     back: "Volver"
     save_changes: "Guardar cambios"
-  forms:
-    errors:
-      header:
-        one: "1 error impidió guardar este %{model}:"
-        other: "%{count} errores impidieron guardar este %{model}:"
+    birth_date_fields:
+      day_label: "Día"
+      month_label: "Mes"
+      year_label: "Año"
+      day_prompt: "Elige día"
+      month_prompt: "Elige mes"
+      year_prompt: "Elige año"
   home:
     index:
       my_day: "Mi Día"
@@ -818,6 +811,7 @@ es:
             date_of_birth:
               too_young: "debe ser una fecha de hace al menos 10 años"
               too_old: "debe ser una fecha de hace como máximo 120 años"
+              invalid_calendar: "no es una fecha válida del calendario"
             timezone:
               invalid: "no es una zona horaria válida"
             body_unit_system:

@@ -2,7 +2,6 @@
 <%= form_with model: @recipe, class: "space-y-4 max-w-lg" do |f| %>
   <% if @recipe.errors.any? %>
     <div class="text-red-600">
-      <h2 class="font-bold"><%= t("recipes.form.errors_header", count: @recipe.errors.count) %></h2>
       <ul id="<%= recipe_err_id %>" class="list-disc pl-5" role="alert">
         <% @recipe.errors.each do |error| %>
           <li><%= error.full_message %></li>

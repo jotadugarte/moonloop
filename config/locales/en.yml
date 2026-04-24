@@ -61,6 +61,7 @@ en:
   date:
     formats:
       long: "%B %d, %Y"
+    month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
   my_day:
     flash:
       invalid_date: "That date is not valid."
@@ -367,9 +368,6 @@ en:
       delete: "Delete"
       delete_confirm: "Delete this recipe? Menu slots that only had this recipe will be cleared."
     form:
-      errors_header:
-        one: "1 error prevented this recipe from being saved:"
-        other: "%{count} errors prevented this recipe from being saved:"
       name_label: "Name"
       instructions_label: "Instructions"
       image_label: "Image"
@@ -718,6 +716,7 @@ en:
             date_of_birth:
               too_young: "must be at least 10 years ago"
               too_old: "must be at most 120 years ago"
+              invalid_calendar: "is not a valid calendar date"
             timezone:
               invalid: "is not a valid timezone"
             body_unit_system:
@@ -790,11 +789,13 @@ en:
   shared:
     back: "Back"
     save_changes: "Save changes"
-  forms:
-    errors:
-      header:
-        one: "1 error prohibited this %{model} from being saved:"
-        other: "%{count} errors prohibited this %{model} from being saved:"
+    birth_date_fields:
+      day_label: "Day"
+      month_label: "Month"
+      year_label: "Year"
+      day_prompt: "Choose day"
+      month_prompt: "Choose month"
+      year_prompt: "Choose year"
   home:
     index:
       my_day: "My Day"
@@ -885,9 +886,6 @@ en:
       units:
         metric: "Metric (cm, kg)"
         imperial_us: "US customary (ft / in, lb)"
-      prohibited:
-        one: "1 error prohibited your profile from being saved:"
-        other: "%{count} errors prohibited your profile from being saved:"
   registrations:
     create:
       signed_up: "Welcome! You have signed up successfully"
@@ -904,6 +902,3 @@ en:
       height_feet: "Height — feet"
       height_inches: "Height — inches (0–11)"
       height_imperial_hint: "Use feet and whole inches when US customary is selected; stored as cm."
-      prohibited:
-        one: "1 error prohibited this user from being saved:"
-        other: "%{count} errors prohibited this user from being saved:"
