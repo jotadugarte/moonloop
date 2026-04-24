@@ -98,6 +98,7 @@ def seed_weight_history!(user)
 
   zone = Time.find_zone!(user.timezone)
   user_today = zone.today
+  user_now = zone.now
 
   # Deterministic per user (stable across runs)
   rng_seed = user.email.to_s.bytes.sum
@@ -112,7 +113,14 @@ def seed_weight_history!(user)
   # 10 logs weekly over ~9 weeks, ending today.
   (log_count - 1).downto(0) do |weeks_ago|
     local_date = user_today - (weeks_ago * 7)
-    logged_at = zone.local(local_date.year, local_date.month, local_date.day, 9, 0, 0)
+    candidate = zone.local(local_date.year, local_date.month, local_date.day, 9, 0, 0)
+    logged_at =
+      if weeks_ago.zero? && candidate > user_now
+        # WeightLog validates logged_at is not in the future (in the user's timezone).
+        user_now - 1.hour
+      else
+        candidate
+      end
 
     idx = (log_count - 1) - weeks_ago
     weight_kg = (base_weight_kg + (idx * step_kg)).round(2)
