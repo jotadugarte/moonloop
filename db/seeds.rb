@@ -24,7 +24,7 @@ DEMO_USERS = [
     timezone: "America/Los_Angeles",
     body_unit_system: "metric"
   }
-].freeze
+].freeze unless defined?(DEMO_USERS)
 
 def seed_demo_users!
   raise "DEMO_USERS must be present" if DEMO_USERS.empty?
@@ -37,10 +37,14 @@ def seed_demo_users!
 
     user.assign_attributes(
       timezone: attrs[:timezone],
-      body_unit_system: attrs[:body_unit_system],
-      date_of_birth: Date.new(1990, 1, 1),
-      height_cm: 175
+      body_unit_system: attrs[:body_unit_system]
     )
+    if user.new_record?
+      user.assign_attributes(
+        date_of_birth: Date.new(1990, 1, 1),
+        height_cm: 175
+      )
+    end
     user.password = "moonloop-demo-password"
     user.password_confirmation = "moonloop-demo-password"
 
