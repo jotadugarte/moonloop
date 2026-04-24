@@ -54,6 +54,7 @@ def seed_demo_users!
 
     seed_local_recent_completions!(user)
     seed_weight_history!(user)
+    seed_menu_and_phase!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
@@ -130,6 +131,55 @@ def seed_weight_history!(user)
 
   count_after = user.weight_logs.count
   raise "expected 8..12 weight logs, got #{count_after}" unless count_after.between?(8, 12)
+end
+
+def seed_menu_and_phase!(user)
+  raise ArgumentError, "user must be persisted" unless user.persisted?
+
+  zone = Time.find_zone!(user.timezone)
+  user_today = zone.today
+
+  if user.phase_one_starts_on.blank? || user.phase_one_starts_on > user_today
+    user.update!(phase_one_starts_on: user_today - 21)
+  end
+
+  menu_name = "Demo semanal"
+  menu =
+    Menu.find_or_create_by!(user: user, name_normalized: menu_name.strip.downcase) do |m|
+      m.name = menu_name
+    end
+
+  # Keep menu small but non-empty for /phase and related surfaces.
+  [
+    { weekday: 1, meal_type: "desayuno", text: "Avena con fruta" },
+    { weekday: 1, meal_type: "almuerzo", text: "Ensalada + proteína" },
+    { weekday: 1, meal_type: "cena", text: "Sopa + pan" },
+    { weekday: 3, meal_type: "desayuno", text: "Huevos + café" }
+  ].each do |entry|
+    Menus::UpsertEntry.call(
+      user: user,
+      menu: menu,
+      weekday: entry[:weekday],
+      meal_type: entry[:meal_type],
+      recipe_id: nil,
+      freeform_text: entry[:text]
+    )
+  end
+
+  week = Phases::WeekNumber.for_local_date(user: user, local_date: user_today)
+  raise "expected a phase week number for #{user.email}" unless week
+
+  covers_week = user.phase_assignments.where("start_week <= ? AND end_week >= ?", week, week).exists?
+  unless covers_week
+    PhaseAssignment.transaction do
+      user.phase_assignments.delete_all
+      user.phase_assignments.create!(menu: menu, start_week: 1, end_week: 200)
+    end
+  end
+
+  unless menu.menu_entries.exists?
+    raise "expected seeded menu entries for #{user.email}"
+  end
 end
 
 seed_demo_users!
