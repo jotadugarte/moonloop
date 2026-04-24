@@ -1,10 +1,10 @@
 <h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
 
 <% registration_err_id = "registration-form-errors" %>
-<%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md" do |form| %>
+<%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md", data: { controller: "unit-system-toggle" } do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
-      <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
+      <h2 class="font-bold"><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
       <ul id="<%= registration_err_id %>" class="list-disc pl-5" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -42,20 +42,22 @@
           aria: aria_for_field(@user, :password_confirmation, registration_err_id) %>
   </div>
 
-  <div>
-    <%= form.label :date_of_birth, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.date_field :date_of_birth,
-          required: true,
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :date_of_birth, registration_err_id) %>
-  </div>
+  <%= render "shared/birth_date_fields",
+        form: form,
+        error_summary_id: registration_err_id,
+        dom_prefix: "registration" %>
 
   <fieldset class="border border-gray-200 rounded p-3 space-y-2">
     <legend class="font-medium text-gray-800 px-1"><%= t(".body_unit_system_legend") %></legend>
     <% User::BODY_UNIT_SYSTEMS.each do |system| %>
       <div class="flex items-center gap-2">
         <%= form.radio_button :body_unit_system, system,
-              aria: { describedby: "registration-body-units-hint" } %>
+              checked: (@user.body_unit_system == system || (@user.body_unit_system.nil? && system == "metric")),
+              aria: { describedby: "registration-body-units-hint" },
+              data: {
+                unit_system_toggle_target: "unitRadio",
+                action: "change->unit-system-toggle#toggle"
+              } %>
         <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
       </div>
     <% end %>
@@ -63,7 +65,7 @@
   </fieldset>
 
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
-  <div>
+  <div data-unit-system-toggle-target="metric">
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
           min: 50,
@@ -73,7 +75,7 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
   </div>
 
-  <div>
+  <div data-unit-system-toggle-target="imperial">
     <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_feet]", @reg_height_feet,
           id: "user_registration_height_feet",
@@ -82,7 +84,7 @@
           aria: height_cm_aria %>
   </div>
 
-  <div>
+  <div data-unit-system-toggle-target="imperial">
     <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_inches]", @reg_height_inches,
           id: "user_registration_height_inches",
@@ -93,16 +95,22 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_imperial_hint") %></p>
   </div>
 
-  <div data-controller="timezone">
+  <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.text_field :timezone,
-          required: true,
-          data: { timezone_target: "input" },
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :timezone, registration_err_id) %>
+    <%= form.select :timezone,
+          ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
+          { prompt: t("shared.timezone_select_prompt") },
+          { required: true,
+            data: { timezone_autodetect_target: "input" },
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :timezone, registration_err_id) } %>
   </div>
 
   <div class="pt-4">
     <%= form.submit t('.submit'), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
   </div>
 <% end %>
+
+<p class="mt-4 text-sm text-gray-600">
+  <%= link_to t("registrations.new.back_to_sign_in"), sign_in_path, class: "text-blue-600 underline hover:text-blue-800" %>
+</p>

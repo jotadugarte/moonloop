@@ -1,0 +1,68 @@
+<%# locals: (form:, error_summary_id:, dom_prefix:) %>
+<% user = form.object %>
+<% initial = user.date_of_birth&.strftime("%Y-%m-%d") %>
+<% dob_invalid = user.errors[:date_of_birth].any? %>
+<% year_end = Date.current.year - 10 %>
+<% year_start = Date.current.year - 120 %>
+<% years = (year_start..year_end).to_a.reverse %>
+<% month_names = I18n.t("date.month_names") %>
+<% y_sel = params.dig(:user, :birth_year).presence || user.date_of_birth&.year&.to_s %>
+<% m_sel = params.dig(:user, :birth_month).presence || user.date_of_birth&.month&.to_s %>
+<% d_sel = params.dig(:user, :birth_day).presence || user.date_of_birth&.day&.to_s %>
+<% max_day =
+     if y_sel.present? && m_sel.present?
+       y, m = y_sel.to_i, m_sel.to_i
+       Date.valid_date?(y, m, 1) ? Date.new(y, m, -1).day : 31
+     else
+       31
+     end %>
+<% birth_aria = dob_invalid ? { "aria-invalid" => "true", "aria-describedby" => error_summary_id } : {} %>
+<fieldset id="<%= dom_prefix %>-birth-date-fieldset" class="space-y-2">
+  <legend class="block font-medium mb-1 text-gray-700"><%= user.class.human_attribute_name(:date_of_birth) %></legend>
+  <div
+    id="<%= dom_prefix %>-birth-date"
+    data-controller="birth-date"
+    data-birth-date-initial-value="<%= initial %>"
+    data-birth-date-prompt-day-value="<%= t("shared.birth_date_fields.day_prompt") %>"
+    class="flex flex-wrap gap-3 items-end">
+    <div class="min-w-[5.5rem]">
+      <%= label_tag "#{dom_prefix}_birth_day", t("shared.birth_date_fields.day_label"), class: "block text-sm text-gray-600 mb-1" %>
+      <%= select_tag "user[birth_day]",
+            options_for_select(
+              [ [ t("shared.birth_date_fields.day_prompt"), "" ] ] + (1..max_day).map { |d| [ d.to_s, d.to_s ] },
+              d_sel
+            ),
+            {
+              id: "#{dom_prefix}_birth_day",
+              class: "border border-gray-300 rounded p-2 w-full",
+              data: { birth_date_target: "day", action: "change->birth-date#handleChange" }
+            }.merge(birth_aria) %>
+    </div>
+    <div class="min-w-[9rem]">
+      <%= label_tag "#{dom_prefix}_birth_month", t("shared.birth_date_fields.month_label"), class: "block text-sm text-gray-600 mb-1" %>
+      <%= select_tag "user[birth_month]",
+            options_for_select(
+              [ [ t("shared.birth_date_fields.month_prompt"), "" ] ] + (1..12).map { |mo| [ month_names[mo], mo.to_s ] },
+              m_sel
+            ),
+            {
+              id: "#{dom_prefix}_birth_month",
+              class: "border border-gray-300 rounded p-2 w-full",
+              data: { birth_date_target: "month", action: "change->birth-date#handleChange" }
+            }.merge(birth_aria) %>
+    </div>
+    <div class="min-w-[6.5rem]">
+      <%= label_tag "#{dom_prefix}_birth_year", t("shared.birth_date_fields.year_label"), class: "block text-sm text-gray-600 mb-1" %>
+      <%= select_tag "user[birth_year]",
+            options_for_select(
+              [ [ t("shared.birth_date_fields.year_prompt"), "" ] ] + years.map { |y| [ y.to_s, y.to_s ] },
+              y_sel
+            ),
+            {
+              id: "#{dom_prefix}_birth_year",
+              class: "border border-gray-300 rounded p-2 w-full",
+              data: { birth_date_target: "year", action: "change->birth-date#handleChange" }
+            }.merge(birth_aria) %>
+    </div>
+  </div>
+</fieldset>

@@ -43,6 +43,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 | Provisioning | Idempotent job that ensures default templates/categories/habits exist for a user | `ProvisionDefaultHabitsJob`, sign-in hook |
 | Weight log | Historical weigh-in: **`logged_at`** (product timeline, UTC in DB), **`weight_kg`**, snapshot **`height_cm`**, derived **`bmi`**; entry form, history list, delete + reconcile | `WeightLog` |
 | Body unit system | User preference **`metric`** (kg/cm in UI) or **`imperial_us`** (lb, ft/in in UI). Canonical storage is always **`weight_kg`** / **`height_cm`**; conversion for display and form parsing uses **`BodyMetrics`** (**REQ-PROF-003**). | `users.body_unit_system` |
+| Date of birth (form) | Collected as **`user[birth_year]`**, **`user[birth_month]`**, **`user[birth_day]`** on registration and profile edit; **`BirthDateTriplet`** builds a calendar **`Date`**, or **`:incomplete`** (any blank → stored **`date_of_birth`** nil where permitted) or **`:invalid`** (impossible day → **`date_of_birth`** validation **`invalid_calendar`**, no bogus date persisted). Stimulus **`birth_date_controller.js`** coordinates the three controls in the shared partial **`shared/_birth_date_fields`**. | `RegistrationsController`, `ProfilesController`, `app/services/birth_date_triplet.rb` |
 | Local calendar day (user) | A civil date interpreted in the user’s **current** IANA `timezone` (not `Date.current` alone for UX). | Used when resolving “today” and completion dates |
 | Due day | A calendar day on which a **habit** is expected per `frequency_type`, `frequency_params`, and `activation_date`; inactive habits are never due. | `Habits::DueOnDate` (or equivalent) |
 | Habit metric kind | Classifies how progress is measured for a **`UserHabit`**: **`none`** (binary: only done/failed semantics as before), **`count`** (discrete units, e.g. glasses), or **`duration_min`** (whole minutes). Closed vocabulary; Mi Día, streaks, and reports use the same definitions (see **REQ-DAY-005**). | `user_habits` (persisted column; exact name per schema) |
@@ -73,7 +74,7 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 - **User** (`users`)
   - `has_many :sessions`, `has_many :habit_categories`, `has_many :user_habits`, `has_many :weight_logs`, `has_many :menus`, `has_many :recipes`, `has_many :phase_assignments`, `has_many :phase_programs`, `has_many :phase_reminder_events`, `has_many :habit_reminder_events`, `has_many :web_push_subscriptions`; Phase 5 adds `has_many` exercise routines and routine week-range assignments (exact names per schema)
   - Authentication: `has_secure_password`; email normalized (strip, downcase)
-  - Profile: `date_of_birth`, `height_cm` (readonly after set in rules), `timezone`, `body_unit_system` (**`metric`** \| **`imperial_us`**, default **`metric`**, **REQ-PROF-003**), `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
+  - Profile: `date_of_birth` (submitted via birth-date triplet fields → **`BirthDateTriplet`**), `height_cm` (readonly after set in rules), `timezone` (Rails **`time_zone_select`**; Stimulus **`timezone_autodetect_controller.js`** may set the combobox from **`Intl`** when nothing is preselected), `body_unit_system` (**`metric`** \| **`imperial_us`**, default **`metric`**, **REQ-PROF-003**; Stimulus **`unit_system_toggle_controller.js`** shows only the height inputs for the selected system on registration/profile), `current_weight_kg`, `current_bmi`, `verified`, `allow_menu_freeform` (gates freeform text on menu slots)
   - Phase plan: `phase_one_starts_on` (nullable until configured); `phase_reminder_in_app`, `phase_reminder_email` (independent channel toggles); `phase_reminder_dismissed_on` (suppresses in-app banner for that local day)
 
 - **Session** (`sessions`)
@@ -141,16 +142,16 @@ Moonloop is a **wellness and habits** web application. Users authenticate, maint
 |----|-------------|--------|
 | REQ-PLAT-001 | Application uses Rails 8.x with SQLite, Propshaft, importmap-rails, Turbo, and Stimulus as the default stack. | Implemented |
 | REQ-I18N-001 | User-facing copy uses I18n; default locale Spanish (`:es`), English (`:en`) available. | Implemented |
-| REQ-AUTH-001 | User can register with email and password; email format and uniqueness enforced; password minimum length enforced. | Implemented |
+| REQ-AUTH-001 | User can register with email and password; email format and uniqueness enforced; password minimum length enforced. The same sign-up form collects initial **profile** fields (**date of birth**, **timezone**, **body unit system**, **height**) under **REQ-PROF-001** and **REQ-PROF-003**. | Implemented |
 | REQ-AUTH-002 | User can sign in with email and password; invalid credentials are rejected without distinguishing which field failed inappropriately. | Implemented |
 | REQ-AUTH-003 | Authenticated browser access requires a valid signed session cookie mapping to a `Session` record; otherwise redirect to sign-in. | Implemented |
 | REQ-AUTH-004 | User can sign out; session is destroyed. | Implemented |
 | REQ-AUTH-005 | Email verification flow uses time-limited signed tokens; invalid links are handled. | Implemented |
 | REQ-AUTH-006 | Password reset via email; unverified users cannot reset password until email is verified (per product rules). | Implemented |
 | REQ-AUTH-007 | When password changes, sessions other than the current one are invalidated. | Implemented |
-| REQ-PROF-001 | Profile enforces presence and validity of `date_of_birth`, `height_cm`, and `timezone` (IANA name set). | Implemented |
+| REQ-PROF-001 | Profile and registration enforce presence and validity of `date_of_birth`, `height_cm`, and `timezone` (IANA name set). **`date_of_birth`** is set from **`birth_year` / `birth_month` / `birth_day`** via **`BirthDateTriplet`**: all three present and **`Date.valid_date?`** → persisted date; any blank → **`date_of_birth`** nil (incomplete triplet); invalid calendar day → **`date_of_birth`** error **`invalid_calendar`** (422, no silent coercion). | Implemented |
 | REQ-PROF-002 | User stores `current_weight_kg` and `current_bmi`; BMI is derived from weight and height per application rules. | Implemented |
-| REQ-PROF-003 | **Body unit preference and conversion:** `users.body_unit_system` is **`metric`** \| **`imperial_us`** (US customary), NOT NULL, default **`metric`**. Canonical storage remains **`weight_kg`** / **`height_cm`**. **`BodyMetrics`** (`app/services/body_metrics.rb`) and **`BodyMetricsHelper`** format and parse display units; registration and profile include a single unit selector; imperial height uses ft + in on sign-up; **`ApplicationMailer`** includes **`BodyMetricsHelper`** with a contract spec so templates never interpolate raw canonical columns. Out of scope per product: stone/UK, public API export formats. | Implemented |
+| REQ-PROF-003 | **Body unit preference and conversion:** `users.body_unit_system` is **`metric`** \| **`imperial_us`** (US customary), NOT NULL, default **`metric`**. Canonical storage remains **`weight_kg`** / **`height_cm`**. **`BodyMetrics`** (`app/services/body_metrics.rb`) and **`BodyMetricsHelper`** format and parse display units; registration and profile include a single unit selector; imperial height uses ft + in where applicable. **UX:** Stimulus **`unit_system_toggle_controller.js`** toggles visibility so only the height fields for the **selected** system are shown (metric **cm** vs imperial **ft/in**). **Timezone:** sign-up uses **`time_zone_select`**; **`timezone_autodetect_controller.js`** pre-fills from the browser’s IANA zone via **`Intl.DateTimeFormat().resolvedOptions().timeZone`** when the field has no initial value (user can override). **Copy:** imperial height labeling is I18n-driven (e.g. Spanish **“Imperial pies pulgadas”**). **`ApplicationMailer`** includes **`BodyMetricsHelper`** with a contract spec so templates never interpolate raw canonical columns. Out of scope per product: stone/UK, public API export formats. | Implemented |
 | REQ-HAB-001 | System stores `global_habit_templates` with unique stable `code` values. | Implemented |
 | REQ-HAB-002 | After sign-in, provisioning runs so each user gains default categories and habits from templates **idempotently** (safe to repeat). | Implemented |
 | REQ-HAB-003 | User can create, update, and delete habit categories; names are unique per user ignoring case; category delete is forbidden if habits reference it. | Implemented |
@@ -352,8 +353,8 @@ These criteria are **testable**; implementation may use different model/table na
 
 ## Key workflows (summary)
 
-1. **Registration and verification** — User signs up → optional verification email → can complete password reset only when rules allow → sessions created on sign-in.
-2. **Profile** — User maintains DOB, height, timezone, weight; BMI updated from weight and height.
+1. **Registration and verification** — User signs up with email/password plus profile triplet DOB, **`time_zone_select`** (optional autodetect), unit system, and height fields → optional verification email → can complete password reset only when rules allow → sessions created on sign-in.
+2. **Profile** — User maintains DOB (same triplet + **`BirthDateTriplet`** rules as registration), height, timezone, weight; BMI updated from weight and height.
 3. **Habit provisioning** — On sign-in, job ensures template-backed default categories and habits exist once per logical template `code`.
 4. **Category lifecycle** — CRUD categories; destroy prevented if habits still reference the category.
 5. **Habit lifecycle** — Create personal habit or from template; toggle active; name collision only among active habits; frequency params validated by type.
@@ -367,6 +368,7 @@ These criteria are **testable**; implementation may use different model/table na
 
 Feature-specific docs can be linked here as they are written, for example:
 
+- Registration / profile: `RegistrationsController`, `ProfilesController`, service **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`); views **`registrations/new`**, **`profiles/edit`**, partial **`shared/_birth_date_fields`**; Stimulus **`birth_date_controller.js`**, **`unit_system_toggle_controller.js`**, **`timezone_autodetect_controller.js`** (**REQ-AUTH-001**, **REQ-PROF-001**, **REQ-PROF-003**)
 - Habits core: models under `app/models/user_habit.rb`, `habit_category.rb`, `global_habit_template.rb`; services under `app/services/habits/`
 - Provisioning: `ProvisionDefaultHabitsJob` and sign-in integration
 - Phase 4 (Alimentación): `Menu`, `MenuEntry`, `Recipe`, `PhaseAssignment`, `PhaseReminderEvent`; services under `app/services/menus/` and `app/services/phases/`; Turbo menu grid under `Menus::MenuEntriesController`; **`PublicMenusController`**, adoption/sync services (`Menus::AdoptFromPublicCatalog`, `ApplyAdoptionSourceSync`, …); Solid Queue job `Phases::SweepPhaseStartRemindersJob` (see `config/recurring.yml`); admin moderation under `Admin::*` gated by `MOONLOOP_ADMIN_EMAILS` (**REQ-MENU-006**)

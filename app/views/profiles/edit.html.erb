@@ -10,7 +10,7 @@
 <%= form_with(model: @user, url: profile_path, method: :patch, class: "space-y-4 max-w-md") do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
-      <h2 class="font-bold"><%= t('.prohibited', count: @user.errors.count) %></h2>
+      <h2 class="font-bold"><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
       <ul id="<%= profile_err_id %>" class="list-disc pl-5" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -19,21 +19,20 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :date_of_birth, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.date_field :date_of_birth,
-          required: true,
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :date_of_birth, profile_err_id) %>
-  </div>
+  <%= render "shared/birth_date_fields",
+        form: form,
+        error_summary_id: profile_err_id,
+        dom_prefix: "profile" %>
 
-  <div data-controller="timezone">
+  <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.text_field :timezone,
-          required: true,
-          data: { timezone_target: "input" },
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :timezone, profile_err_id) %>
+    <%= form.select :timezone,
+          ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
+          { prompt: t("shared.timezone_select_prompt") },
+          { required: true,
+            data: { timezone_autodetect_target: "input" },
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :timezone, profile_err_id) } %>
   </div>
 
   <fieldset class="border border-gray-200 rounded p-3 space-y-2">

@@ -56,6 +56,9 @@ Things done and things left to do. Update this when finishing branches; use `roa
 27. [x] Weight progress chart: visual trend of weight over time (REQ-RPT-003) — 2026-04-17 — Depends on: Phase 6
 28. [x] Mi Día / rachas: prefetch de completados acotado (`Habits::MiDayStreakPrefetch`), caché (`Rails.cache`) e invalidación vía `UserHabit#touch` tras completar o borrar día (REQ-DAY-004) — 2026-04-18 — Depends on: Phase 3 #11–#14
 37. [x] Reportes / escalado: columnas o contadores **persistidos** en BD para racha (p. ej. actual / máxima por hábito) si, a pesar de **Done #28** (prefetch + `Rails.cache` en Mi Día), el coste en **Informes** u otros lectores sigue siendo alto — Depends on: Phase 7 #26–#28; perfilar en producción — 2026-04-22
+40. [x] **Bug: UI Registro - Mostrar/Ocultar inputs de altura**. Al seleccionar sistema métrico o imperial, mostrar solo los inputs de altura correspondientes (centímetros o pies/pulgadas) y ocultar los otros (REQ-PROF-003) — 2026-04-23
+41. [x] **Bug: Selección de Zona Horaria**. Cambiar el string estático por un combobox con zonas horarias reales, preseleccionando la zona detectada del navegador cuando aplica (REQ-PROF-001) — 2026-04-23
+42. [x] **Bug: Etiqueta Sistema Imperial**. Etiqueta imperial unificada vía i18n (p. ej. “Imperial (pies / pulgadas)”) — 2026-04-23
 
 ### Phase 8 — Catalogs
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
@@ -68,7 +71,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-*(No items currently pending.)*
+43. [ ] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002).
 
 ## Backlog
 *(No items currently in backlog.)*

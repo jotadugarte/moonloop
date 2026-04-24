@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.
+
 ### Fixed
 
 - Public catalog adoption: `ActiveRecord::RecordInvalid` on menu and exercise routine adopt flows now surfaces **i18n** flash keys instead of raw `full_messages` (`adoption.invalid_record.*`).

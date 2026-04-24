@@ -10,6 +10,11 @@ es:
   hello: "Hola mundo"
   ui:
     inline_sep: "·"
+  forms:
+    errors:
+      header:
+        one: "1 error impidió guardar este %{model}:"
+        other: "%{count} errores impidieron guardar este %{model}:"
   time:
     formats:
       weight_log: "%d/%m/%Y %H:%M"
@@ -555,14 +560,11 @@ es:
       body_unit_system_hint: "Elige cómo ingresar la altura. El peso en el resto de la app usará la misma preferencia."
       units:
         metric: "Métrico (cm)"
-        imperial_us: "Estados Unidos (pies / pulgadas)"
+        imperial_us: "Imperial (pies / pulgadas)"
       height_cm_hint_metric: "Úsalo cuando Métrico esté seleccionado (se guarda en cm)."
       height_feet: "Altura — pies"
       height_inches: "Altura — pulgadas (0–11)"
       height_imperial_hint: "Pies y pulgadas enteras si eliges US; se guarda en cm."
-      prohibited:
-        one: "1 error impidió guardar este usuario:"
-        other: "%{count} errores impidieron guardar este usuario:"
   identity:
     emails:
       update:
@@ -657,18 +659,18 @@ es:
       body_unit_system_hint: "Afecta cómo se muestran e ingresan peso y altura; en base de datos siguen kg y cm."
       units:
         metric: "Métrico (cm, kg)"
-        imperial_us: "US (pies / pulgadas, lb)"
-      prohibited:
-        one: "1 error impidió guardar tu perfil:"
-        other: "%{count} errores impidieron guardar tu perfil:"
+        imperial_us: "Imperial (pies / pulgadas, lb)"
   shared:
     back: "Volver"
     save_changes: "Guardar cambios"
-  forms:
-    errors:
-      header:
-        one: "1 error impidió guardar este %{model}:"
-        other: "%{count} errores impidieron guardar este %{model}:"
+    timezone_select_prompt: "Elige una zona horaria…"
+    birth_date_fields:
+      day_label: "Día"
+      month_label: "Mes"
+      year_label: "Año"
+      day_prompt: "Elige día"
+      month_prompt: "Elige mes"
+      year_prompt: "Elige año"
   home:
     index:
       my_day: "Mi Día"
@@ -818,6 +820,7 @@ es:
             date_of_birth:
               too_young: "debe ser una fecha de hace al menos 10 años"
               too_old: "debe ser una fecha de hace como máximo 120 años"
+              invalid_calendar: "no es una fecha válida del calendario"
             timezone:
               invalid: "no es una zona horaria válida"
             body_unit_system:

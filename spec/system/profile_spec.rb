@@ -19,8 +19,8 @@ RSpec.describe "Profile", type: :system do
     expect(page).not_to have_field("Height")
     expect(page).not_to have_field("Altura (cm)")
 
-    fill_in I18n.t("activerecord.attributes.user.date_of_birth"), with: "1985-11-20"
-    fill_in I18n.t("activerecord.attributes.user.timezone"), with: "Europe/Madrid"
+    select_user_birth_date(page, year: 1985, month: 11, day: 20)
+    select "(GMT+01:00) Madrid", from: I18n.t("activerecord.attributes.user.timezone")
     click_button I18n.t("profiles.edit.submit")
 
     expect(page).to have_content(I18n.t("profiles.update.success"))
@@ -48,7 +48,7 @@ RSpec.describe "Profile", type: :system do
   it "renders all profile form inputs with associated <label> elements" do
     visit edit_profile_path
 
-    expect(page).to have_field(I18n.t("activerecord.attributes.user.date_of_birth"))
+    expect(page).to have_select(I18n.t("shared.birth_date_fields.year_label"))
     expect(page).to have_field(I18n.t("activerecord.attributes.user.timezone"))
     expect(page).not_to have_field(I18n.t("activerecord.attributes.user.height_cm"))
   end
@@ -57,7 +57,7 @@ RSpec.describe "Profile", type: :system do
   it "returns 422 and renders validation errors with role=alert when profile update fails" do
     visit edit_profile_path
 
-    fill_in I18n.t("activerecord.attributes.user.timezone"), with: ""
+    clear_user_birth_date(page)
     click_button I18n.t("profiles.edit.submit")
 
     expect(page.driver.status_code).to eq(422)
