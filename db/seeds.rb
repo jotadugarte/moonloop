@@ -53,6 +53,7 @@ def seed_demo_users!
     ProvisionDefaultHabitsJob.perform_now(user_id: user.id)
 
     seed_local_recent_completions!(user)
+    seed_weight_history!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
@@ -87,6 +88,40 @@ def seed_local_recent_completions!(user)
     completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: local_date)
     raise "expected a water completion for #{user.email} on #{local_date}" unless completion
   end
+end
+
+def seed_weight_history!(user)
+  raise ArgumentError, "user must be persisted" unless user.persisted?
+
+  existing = user.weight_logs.count
+  return if existing.positive?
+
+  zone = Time.find_zone!(user.timezone)
+  user_today = zone.today
+
+  # Deterministic per user (stable across runs)
+  rng_seed = user.email.to_s.bytes.sum
+  rng = Random.new(rng_seed)
+
+  log_count = 10
+  raise "log_count must be within 8..12" unless log_count.between?(8, 12)
+
+  base_weight_kg = 72.0 + (rng.rand * 6.0) # 72–78kg
+  step_kg = 0.15 + (rng.rand * 0.15) # 0.15–0.30kg per step
+
+  # 10 logs weekly over ~9 weeks, ending today.
+  (log_count - 1).downto(0) do |weeks_ago|
+    local_date = user_today - (weeks_ago * 7)
+    logged_at = zone.local(local_date.year, local_date.month, local_date.day, 9, 0, 0)
+
+    idx = (log_count - 1) - weeks_ago
+    weight_kg = (base_weight_kg + (idx * step_kg)).round(2)
+
+    LogWeightService.new(user: user, weight_kg: weight_kg, logged_at: logged_at).call
+  end
+
+  count_after = user.weight_logs.count
+  raise "expected 8..12 weight logs, got #{count_after}" unless count_after.between?(8, 12)
 end
 
 seed_demo_users!
