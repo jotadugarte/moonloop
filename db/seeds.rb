@@ -56,6 +56,7 @@ def seed_demo_users!
     seed_weight_history!(user)
     seed_menu_and_phase!(user)
     seed_exercise_routine_and_assignment!(user)
+    seed_phase_program_bundle!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
@@ -215,6 +216,35 @@ def seed_exercise_routine_and_assignment!(user)
       user.exercise_routine_assignments.create!(exercise_routine: routine, start_week: 1, end_week: 200)
     end
   end
+end
+
+def seed_phase_program_bundle!(user)
+  raise ArgumentError, "user must be persisted" unless user.persisted?
+
+  # Only seed the bundle for one primary demo user to keep the dataset small.
+  return unless user.email == "demo+mx-metric@moonloop.local"
+
+  program_name = "Demo programa"
+  program =
+    PhaseProgram.find_or_create_by!(user: user, name_normalized: program_name.strip.downcase) do |p|
+      p.name = program_name
+    end
+
+  # Reuse the already-seeded menu and routine so ownership and validation are satisfied.
+  menu = user.menus.order(:id).first
+  routine = user.exercise_routines.order(:id).first
+  raise "expected seeded menu for phase program" unless menu
+  raise "expected seeded exercise routine for phase program" unless routine
+
+  # Ensure at least one segment exists.
+  return if program.phase_program_assignments.exists?
+
+  program.phase_program_assignments.create!(
+    menu: menu,
+    exercise_routine: routine,
+    start_week: 1,
+    end_week: 4
+  )
 end
 
 seed_demo_users!
