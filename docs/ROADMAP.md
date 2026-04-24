@@ -72,6 +72,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 
 ## Pending (by priority)
 43. [ ] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002).
+44. [ ] **Datos para pruebas**: cargar o mantener seeds/fixtures con escenarios representativos para desarrollo, demos y QA (fases y rangos de semanas, menús, recetas, rutinas de ejercicio, programas de fases / bundles, hábitos de ejemplo, etc.) — alineado con convención del proyecto (`db:seed`, tasks o factories).
 
 ## Backlog
 *(No items currently in backlog.)*
