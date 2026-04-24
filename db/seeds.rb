@@ -69,6 +69,12 @@ def seed_local_recent_completions!(user)
   water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
   raise "expected fitness_water habit for #{user.email}" unless water_habit
 
+  # For "daily" habits without activation_date, due-day start defaults to created_at (local date).
+  # Seeds need "yesterday" to be a due day, so we anchor activation_date before recording completions.
+  if water_habit.habit_completions.none? && (water_habit.activation_date.blank? || water_habit.activation_date > user_yesterday)
+    water_habit.update!(activation_date: user_yesterday)
+  end
+
   [user_yesterday, user_today].each do |local_date|
     Habits::RecordCompletion.call(
       user: user,
