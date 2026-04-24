@@ -61,5 +61,21 @@ RSpec.describe "Demo dataset seeds" do
       expect(exercise_habit.daily_target).to eq(30)
     end
   end
+
+  # [REQ-DAY-002, REQ-DAY-005]
+  it "creates at least one completion for today (user-local) on a measurable habit" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+      user_today = Time.find_zone!(user.timezone).today
+
+      water_template = GlobalHabitTemplate.find_by!(code: "fitness_water")
+      water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
+
+      completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: user_today)
+      expect(completion).to be_present
+    end
+  end
 end
 
