@@ -81,5 +81,23 @@ RSpec.describe "Demo dataset seeds" do
       expect(yesterday_completion).to be_present
     end
   end
+
+  # [REQ-WGT-001, REQ-WGT-002]
+  it "creates a small weight log history and reconciles current stats" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+
+      expect(user.weight_logs.count).to be_between(8, 12)
+
+      latest = user.weight_logs.order(logged_at: :desc, id: :desc).first
+      expect(latest).to be_present
+
+      user.reload
+      expect(user.current_weight_kg).to eq(latest.weight_kg)
+      expect(user.current_bmi).to eq(latest.bmi)
+    end
+  end
 end
 
