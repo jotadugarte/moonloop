@@ -17,10 +17,19 @@ export default class extends Controller {
         // like "America/New_York" (if configured with ActiveSupport::TimeZone::MAPPING).
         // Let's iterate options and match the value.
         const options = Array.from(this.inputTarget.options)
-        const option = options.find(opt => opt.value === timezone)
+        let option = options.find(opt => opt.value === timezone)
         
+        if (!option) {
+          const date = new Date()
+          const offset = -date.getTimezoneOffset()
+          const sign = offset >= 0 ? '+' : '-'
+          const pad = (num) => String(num).padStart(2, '0')
+          const offsetString = `(GMT${sign}${pad(Math.abs(Math.floor(offset / 60)))}:${pad(Math.abs(offset % 60))})`
+          option = options.find(opt => opt.text.includes(offsetString))
+        }
+
         if (option) {
-          this.inputTarget.value = timezone
+          this.inputTarget.value = option.value
         }
       }
     } catch (e) {

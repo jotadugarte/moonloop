@@ -55,6 +55,7 @@
     <% User::BODY_UNIT_SYSTEMS.each do |system| %>
       <div class="flex items-center gap-2">
         <%= form.radio_button :body_unit_system, system,
+              checked: (@user.body_unit_system == system || (@user.body_unit_system.nil? && system == 'metric_cm')),
               aria: { describedby: "registration-body-units-hint" },
               data: { action: "change->unit-system-toggle#toggle" } %>
         <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
@@ -98,7 +99,7 @@
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.select :timezone,
           ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
-          { prompt: true },
+          { prompt: "Selecciona una zona horaria..." },
           { required: true,
             data: { timezone_autodetect_target: "input" },
             class: "border border-gray-300 rounded p-2 w-full",

@@ -12,11 +12,11 @@ export default class extends Controller {
     const selectedSystem = this.element.querySelector('input[name="user[body_unit_system]"]:checked')?.value
 
     if (selectedSystem === 'imperial_us') {
-      this.metricTargets.forEach(el => el.classList.add('hidden'))
-      this.imperialTargets.forEach(el => el.classList.remove('hidden'))
+      this.metricTargets.forEach(el => el.style.display = 'none')
+      this.imperialTargets.forEach(el => el.style.display = '')
     } else {
-      this.metricTargets.forEach(el => el.classList.remove('hidden'))
-      this.imperialTargets.forEach(el => el.classList.add('hidden'))
+      this.metricTargets.forEach(el => el.style.display = '')
+      this.imperialTargets.forEach(el => el.style.display = 'none')
     }
   }
 }
