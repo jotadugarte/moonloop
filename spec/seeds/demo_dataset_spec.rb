@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe "Demo dataset seeds" do
+  include ActiveJob::TestHelper
+
   let(:demo_emails) do
     [
       "demo+mx-metric@moonloop.local",
@@ -157,6 +159,16 @@ RSpec.describe "Demo dataset seeds" do
 
     expect(user.phase_assignments.count).to eq(program.phase_program_assignments.count)
     expect(user.exercise_routine_assignments.count).to eq(program.phase_program_assignments.count)
+  end
+
+  # [REQ-PLAT-001]
+  it "does not enqueue background jobs as a side effect" do
+    ActiveJob::Base.queue_adapter = :test
+    clear_enqueued_jobs
+
+    Rails.application.load_seed
+
+    expect(enqueued_jobs).to be_empty
   end
 end
 

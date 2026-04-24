@@ -26,37 +26,52 @@ DEMO_USERS = [
   }
 ].freeze unless defined?(DEMO_USERS)
 
+def with_seed_side_effects_disabled
+  prev_adapter = ActiveJob::Base.queue_adapter
+  prev_deliveries = ActionMailer::Base.perform_deliveries
+
+  ActiveJob::Base.queue_adapter = :test
+  ActionMailer::Base.perform_deliveries = false
+
+  yield
+ensure
+  ActiveJob::Base.queue_adapter = prev_adapter
+  ActionMailer::Base.perform_deliveries = prev_deliveries
+end
+
 def seed_demo_users!
   raise "DEMO_USERS must be present" if DEMO_USERS.empty?
 
-  DEMO_USERS.each do |attrs|
-    raise "demo email required" if attrs[:email].blank?
-    raise "demo timezone required" if attrs[:timezone].blank?
+  with_seed_side_effects_disabled do
+    DEMO_USERS.each do |attrs|
+      raise "demo email required" if attrs[:email].blank?
+      raise "demo timezone required" if attrs[:timezone].blank?
 
-    user = User.find_or_initialize_by(email: attrs[:email])
+      user = User.find_or_initialize_by(email: attrs[:email])
 
-    user.assign_attributes(
-      timezone: attrs[:timezone],
-      body_unit_system: attrs[:body_unit_system]
-    )
-    if user.new_record?
       user.assign_attributes(
-        date_of_birth: Date.new(1990, 1, 1),
-        height_cm: 175
+        timezone: attrs[:timezone],
+        body_unit_system: attrs[:body_unit_system]
       )
+      if user.new_record?
+        user.assign_attributes(
+          date_of_birth: Date.new(1990, 1, 1),
+          height_cm: 175
+        )
+      end
+      user.password = "moonloop-demo-password"
+      user.password_confirmation = "moonloop-demo-password"
+
+      user.save!
+
+      ProvisionDefaultHabitsJob.perform_now(user_id: user.id)
+
+      seed_local_recent_completions!(user)
+      seed_weight_history!(user)
+      seed_menu_and_phase!(user)
+      seed_exercise_routine_and_assignment!(user)
+      seed_phase_program_bundle!(user)
     end
-    user.password = "moonloop-demo-password"
-    user.password_confirmation = "moonloop-demo-password"
-
-    user.save!
-
-    ProvisionDefaultHabitsJob.perform_now(user_id: user.id)
-
-    seed_local_recent_completions!(user)
-    seed_weight_history!(user)
-    seed_menu_and_phase!(user)
-    seed_exercise_routine_and_assignment!(user)
-    seed_phase_program_bundle!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
