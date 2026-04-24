@@ -22,5 +22,23 @@ RSpec.describe "Demo dataset seeds" do
     expect(first_count).to eq(3)
     expect(second_count).to eq(3)
   end
+
+  # [REQ-PLAT-001]
+  it "sets stable demo profile attributes" do
+    Rails.application.load_seed
+
+    mx = User.find_by!(email: "demo+mx-metric@moonloop.local")
+    es = User.find_by!(email: "demo+es-imperial@moonloop.local")
+    us = User.find_by!(email: "demo+us-metric@moonloop.local")
+
+    expect(mx.timezone).to eq("America/Mexico_City")
+    expect(mx.body_unit_system).to eq("metric")
+
+    expect(es.timezone).to eq("Europe/Madrid")
+    expect(es.body_unit_system).to eq("imperial_us")
+
+    expect(us.timezone).to eq("America/Los_Angeles")
+    expect(us.body_unit_system).to eq("metric")
+  end
 end
 
