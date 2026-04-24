@@ -99,5 +99,26 @@ RSpec.describe "Demo dataset seeds" do
       expect(user.current_bmi).to eq(latest.bmi)
     end
   end
+
+  # [REQ-MENU-001, REQ-MENU-003]
+  it "seeds a menu and a phase assignment covering the current week" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+
+      expect(user.phase_one_starts_on).to be_present
+      user_today = Time.find_zone!(user.timezone).today
+      week = Phases::WeekNumber.for_local_date(user: user, local_date: user_today)
+      expect(week).to be_present
+
+      expect(user.menus.count).to be >= 1
+
+      active_assignment = user.phase_assignments.where("start_week <= ? AND end_week >= ?", week, week).first
+      expect(active_assignment).to be_present
+
+      expect(active_assignment.menu.menu_entries.count).to be > 0
+    end
+  end
 end
 
