@@ -657,7 +657,7 @@ es:
       body_unit_system_hint: "Afecta cómo se muestran e ingresan peso y altura; en base de datos siguen kg y cm."
       units:
         metric: "Métrico (cm, kg)"
-        imperial_us: "US (pies / pulgadas, lb)"
+        imperial_us: "Imperial (pies / pulgadas, lb)"
       prohibited:
         one: "1 error impidió guardar tu perfil:"
         other: "%{count} errores impidieron guardar tu perfil:"

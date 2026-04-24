@@ -27,13 +27,15 @@
           aria: aria_for_field(@user, :date_of_birth, profile_err_id) %>
   </div>
 
-  <div data-controller="timezone">
+  <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.text_field :timezone,
-          required: true,
-          data: { timezone_target: "input" },
-          class: "border border-gray-300 rounded p-2 w-full",
-          aria: aria_for_field(@user, :timezone, profile_err_id) %>
+    <%= form.select :timezone,
+          ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
+          { prompt: "Selecciona una zona horaria..." },
+          { required: true,
+            data: { timezone_autodetect_target: "input" },
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :timezone, profile_err_id) } %>
   </div>
 
   <fieldset class="border border-gray-200 rounded p-3 space-y-2">
