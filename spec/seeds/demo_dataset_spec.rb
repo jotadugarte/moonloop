@@ -69,12 +69,16 @@ RSpec.describe "Demo dataset seeds" do
     demo_emails.each do |email|
       user = User.find_by!(email: email)
       user_today = Time.find_zone!(user.timezone).today
+      user_yesterday = user_today - 1
 
       water_template = GlobalHabitTemplate.find_by!(code: "fitness_water")
       water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
 
-      completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: user_today)
-      expect(completion).to be_present
+      today_completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: user_today)
+      expect(today_completion).to be_present
+
+      yesterday_completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: user_yesterday)
+      expect(yesterday_completion).to be_present
     end
   end
 end
