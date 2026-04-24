@@ -40,5 +40,26 @@ RSpec.describe "Demo dataset seeds" do
     expect(us.timezone).to eq("America/Los_Angeles")
     expect(us.body_unit_system).to eq("metric")
   end
+
+  # [REQ-HAB-002, REQ-DAY-005]
+  it "provisions default habits (including metric/target defaults) for demo users" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+
+      expect(user.user_habits.count).to be > 0
+
+      water_template = GlobalHabitTemplate.find_by!(code: "fitness_water")
+      water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
+      expect(water_habit.habit_metric_kind).to eq("count")
+      expect(water_habit.daily_target).to eq(8)
+
+      exercise_template = GlobalHabitTemplate.find_by!(code: "fitness_exercise")
+      exercise_habit = UserHabit.find_by!(user: user, global_habit_template: exercise_template)
+      expect(exercise_habit.habit_metric_kind).to eq("duration_min")
+      expect(exercise_habit.daily_target).to eq(30)
+    end
+  end
 end
 
