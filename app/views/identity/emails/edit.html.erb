@@ -6,10 +6,12 @@
   <p><%= button_to t("identity.emails.edit.resend_verification"), identity_email_verification_path %></p>
 <% end %>
 
+<% identity_email_err_id = "identity-email-errors" %>
 <%= form_with(url: identity_email_path, method: :patch) do |form| %>
   <% if @user.errors.any? %>
     <div style="color: red">
-      <ul>
+      <h2><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
+      <ul id="<%= identity_email_err_id %>" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>

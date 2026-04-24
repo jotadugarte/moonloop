@@ -1,6 +1,4 @@
 class ProfilesController < ApplicationController
-  include BirthDateTriplet
-
   def edit
     @user = Current.user
   end
@@ -23,20 +21,32 @@ class ProfilesController < ApplicationController
   private
 
     def profile_attributes_with_dob
-      raw = params.require(:user).permit(
+      raw = profile_permitted_params
+      dob = BirthDateTriplet.parse(raw[:birth_year], raw[:birth_month], raw[:birth_day])
+      attrs = profile_base_attrs(raw)
+      apply_profile_date_of_birth(attrs, dob)
+      [ attrs, dob ]
+    end
+
+    def profile_permitted_params
+      params.require(:user).permit(
         :birth_year, :birth_month, :birth_day,
         :timezone, :allow_menu_freeform, :body_unit_system
       )
-      dob = birth_date_from_triplet(raw[:birth_year], raw[:birth_month], raw[:birth_day])
-      attrs = raw.except(:birth_year, :birth_month, :birth_day)
+    end
+
+    def profile_base_attrs(raw)
+      raw.except(:birth_year, :birth_month, :birth_day)
+    end
+
+    def apply_profile_date_of_birth(attrs, dob)
       case dob
       when :incomplete
         attrs[:date_of_birth] = nil
       when :invalid
-        # omit date_of_birth so we do not persist an impossible day
+        nil
       else
         attrs[:date_of_birth] = dob
       end
-      [ attrs, dob ]
     end
 end

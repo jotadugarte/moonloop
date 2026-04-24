@@ -10,6 +10,11 @@ es:
   hello: "Hola mundo"
   ui:
     inline_sep: "·"
+  forms:
+    errors:
+      header:
+        one: "1 error impidió guardar este %{model}:"
+        other: "%{count} errores impidieron guardar este %{model}:"
   time:
     formats:
       weight_log: "%d/%m/%Y %H:%M"
@@ -342,6 +347,9 @@ es:
       delete: "Eliminar"
       delete_confirm: "¿Eliminar esta receta? Se vaciarán los casilleros de menú que solo tenían esta receta."
     form:
+      errors_header:
+        one: "1 error impidió guardar la receta:"
+        other: "%{count} errores impidieron guardar la receta:"
       name_label: "Nombre"
       instructions_label: "Instrucciones"
       image_label: "Imagen"
@@ -655,6 +663,7 @@ es:
   shared:
     back: "Volver"
     save_changes: "Guardar cambios"
+    timezone_select_prompt: "Elige una zona horaria…"
     birth_date_fields:
       day_label: "Día"
       month_label: "Mes"

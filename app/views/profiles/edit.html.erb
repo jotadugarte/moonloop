@@ -10,6 +10,7 @@
 <%= form_with(model: @user, url: profile_path, method: :patch, class: "space-y-4 max-w-md") do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
+      <h2 class="font-bold"><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
       <ul id="<%= profile_err_id %>" class="list-disc pl-5" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -27,7 +28,7 @@
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.select :timezone,
           ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
-          { prompt: "Selecciona una zona horaria..." },
+          { prompt: t("shared.timezone_select_prompt") },
           { required: true,
             data: { timezone_autodetect_target: "input" },
             class: "border border-gray-300 rounded p-2 w-full",

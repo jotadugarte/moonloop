@@ -1,9 +1,11 @@
 <h1><%= t("passwords.edit.title") %></h1>
 
+<% password_edit_err_id = "password-edit-errors" %>
 <%= form_with(url: password_path, method: :patch) do |form| %>
   <% if @user.errors.any? %>
     <div style="color: red">
-      <ul>
+      <h2><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
+      <ul id="<%= password_edit_err_id %>" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>

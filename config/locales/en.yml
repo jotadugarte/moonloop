@@ -39,6 +39,11 @@ en:
   hello: "Hello world"
   ui:
     inline_sep: "·"
+  forms:
+    errors:
+      header:
+        one: "1 error prohibited this %{model} from being saved:"
+        other: "%{count} errors prohibited this %{model} from being saved:"
   time:
     formats:
       weight_log: "%Y-%m-%d %H:%M"
@@ -368,6 +373,9 @@ en:
       delete: "Delete"
       delete_confirm: "Delete this recipe? Menu slots that only had this recipe will be cleared."
     form:
+      errors_header:
+        one: "1 error prevented this recipe from being saved:"
+        other: "%{count} errors prevented this recipe from being saved:"
       name_label: "Name"
       instructions_label: "Instructions"
       image_label: "Image"
@@ -789,6 +797,7 @@ en:
   shared:
     back: "Back"
     save_changes: "Save changes"
+    timezone_select_prompt: "Choose a time zone…"
     birth_date_fields:
       day_label: "Day"
       month_label: "Month"

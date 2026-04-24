@@ -4,6 +4,7 @@
 <%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md", data: { controller: "unit-system-toggle" } do |form| %>
   <% if @user.errors.any? %>
     <div class="text-red-600 mb-4">
+      <h2 class="font-bold"><%= t("forms.errors.header", count: @user.errors.count, model: @user.model_name.human) %></h2>
       <ul id="<%= registration_err_id %>" class="list-disc pl-5" role="alert">
         <% @user.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -51,9 +52,12 @@
     <% User::BODY_UNIT_SYSTEMS.each do |system| %>
       <div class="flex items-center gap-2">
         <%= form.radio_button :body_unit_system, system,
-              checked: (@user.body_unit_system == system || (@user.body_unit_system.nil? && system == 'metric_cm')),
+              checked: (@user.body_unit_system == system || (@user.body_unit_system.nil? && system == "metric")),
               aria: { describedby: "registration-body-units-hint" },
-              data: { action: "change->unit-system-toggle#toggle" } %>
+              data: {
+                unit_system_toggle_target: "unitRadio",
+                action: "change->unit-system-toggle#toggle"
+              } %>
         <%= form.label :body_unit_system, t(".units.#{system}"), value: system, class: "text-gray-700" %>
       </div>
     <% end %>
@@ -95,7 +99,7 @@
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.select :timezone,
           ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
-          { prompt: "Selecciona una zona horaria..." },
+          { prompt: t("shared.timezone_select_prompt") },
           { required: true,
             data: { timezone_autodetect_target: "input" },
             class: "border border-gray-300 rounded p-2 w-full",

@@ -11,18 +11,29 @@ export default class extends Controller {
 
   connect() {
     const init = (this.initialValue || "").trim()
-    if (/^\d{4}-\d{2}-\d{2}$/.test(init)) {
-      const [yStr, mStr, dStr] = init.split("-")
-      this.yearTarget.value = yStr
-      this.monthTarget.value = String(parseInt(mStr, 10))
-      this.rebuildDayOptions()
-      const d = parseInt(dStr, 10)
-      if (d >= 1 && d <= this.maxDayFor(this.yearTarget.value, this.monthTarget.value)) {
-        this.dayTarget.value = String(d)
-      }
+    if (this.isoDatePattern.test(init)) {
+      this.hydrateFromInitial(init)
     } else {
       this.rebuildDayOptions()
     }
+  }
+
+  get isoDatePattern() {
+    return /^\d{4}-\d{2}-\d{2}$/
+  }
+
+  hydrateFromInitial(init) {
+    const [yStr, mStr, dStr] = init.split("-")
+    this.yearTarget.value = yStr
+    this.monthTarget.value = String(parseInt(mStr, 10))
+    this.rebuildDayOptions()
+    this.selectDayIfInRange(dStr)
+  }
+
+  selectDayIfInRange(dStr) {
+    const d = parseInt(dStr, 10)
+    const max = this.maxDayFor(this.yearTarget.value, this.monthTarget.value)
+    if (d >= 1 && d <= max) this.dayTarget.value = String(d)
   }
 
   handleChange() {
@@ -40,24 +51,38 @@ export default class extends Controller {
   rebuildDayOptions() {
     const maxDay = this.maxDayFor(this.yearTarget.value, this.monthTarget.value)
     const previous = parseInt(this.dayTarget.value, 10)
-    const daySelect = this.dayTarget
-    const prompt = this.promptDayValue
+    this.fillDaySelect(maxDay, previous)
+  }
 
+  fillDaySelect(maxDay, previous) {
+    const daySelect = this.daySelectElement
     daySelect.innerHTML = ""
-    const blank = document.createElement("option")
-    blank.value = ""
-    blank.textContent = prompt
-    daySelect.appendChild(blank)
+    daySelect.appendChild(this.blankDayOption())
 
     for (let d = 1; d <= maxDay; d++) {
-      const opt = document.createElement("option")
-      opt.value = String(d)
-      opt.textContent = String(d)
-      daySelect.appendChild(opt)
+      daySelect.appendChild(this.dayOption(d))
     }
 
     if (Number.isFinite(previous) && previous >= 1 && previous <= maxDay) {
       daySelect.value = String(previous)
     }
+  }
+
+  get daySelectElement() {
+    return this.dayTarget
+  }
+
+  blankDayOption() {
+    const blank = document.createElement("option")
+    blank.value = ""
+    blank.textContent = this.promptDayValue
+    return blank
+  }
+
+  dayOption(d) {
+    const opt = document.createElement("option")
+    opt.value = String(d)
+    opt.textContent = String(d)
+    return opt
   }
 }
