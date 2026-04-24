@@ -170,5 +170,20 @@ RSpec.describe "Demo dataset seeds" do
 
     expect(enqueued_jobs).to be_empty
   end
+
+  # [REQ-MENU-001, REQ-MENU-002]
+  it "seeds at least one recipe and links a menu entry to it" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+
+      expect(user.recipes.count).to be >= 1
+
+      entry = MenuEntry.joins(:menu).where(menus: { user_id: user.id }).where.not(recipe_id: nil).first
+      expect(entry).to be_present
+      expect(entry.recipe.user_id).to eq(user.id)
+    end
+  end
 end
 

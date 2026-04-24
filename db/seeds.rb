@@ -71,6 +71,7 @@ def seed_demo_users!
       seed_menu_and_phase!(user)
       seed_exercise_routine_and_assignment!(user)
       seed_phase_program_bundle!(user)
+    seed_recipes_and_link_menu!(user)
     end
   end
 
@@ -259,6 +260,29 @@ def seed_phase_program_bundle!(user)
     exercise_routine: routine,
     start_week: 1,
     end_week: 4
+  )
+end
+
+def seed_recipes_and_link_menu!(user)
+  raise ArgumentError, "user must be persisted" unless user.persisted?
+
+  recipe =
+    Recipe.find_or_create_by!(user: user, name: "Demo: Avena con fruta") do |r|
+      r.instructions = "Mezcla avena con fruta y sirve."
+      r.publicly_shareable = false
+    end
+
+  menu = user.menus.order(:id).first
+  raise "expected seeded menu for #{user.email}" unless menu
+
+  # Ensure at least one slot is recipe-backed (to exercise default image fallbacks).
+  Menus::UpsertEntry.call(
+    user: user,
+    menu: menu,
+    weekday: 1,
+    meal_type: "desayuno",
+    recipe_id: recipe.id,
+    freeform_text: nil
   )
 end
 
