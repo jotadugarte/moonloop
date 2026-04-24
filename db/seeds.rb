@@ -55,6 +55,7 @@ def seed_demo_users!
     seed_local_recent_completions!(user)
     seed_weight_history!(user)
     seed_menu_and_phase!(user)
+    seed_exercise_routine_and_assignment!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
@@ -179,6 +180,40 @@ def seed_menu_and_phase!(user)
 
   unless menu.menu_entries.exists?
     raise "expected seeded menu entries for #{user.email}"
+  end
+end
+
+def seed_exercise_routine_and_assignment!(user)
+  raise ArgumentError, "user must be persisted" unless user.persisted?
+
+  zone = Time.find_zone!(user.timezone)
+  user_today = zone.today
+
+  # Week number requires a phase anchor; menu seeding ensures it, but keep this resilient.
+  if user.phase_one_starts_on.blank? || user.phase_one_starts_on > user_today
+    user.update!(phase_one_starts_on: user_today - 21)
+  end
+
+  routine_name = "Demo rutina"
+  routine =
+    ExerciseRoutine.find_or_create_by!(user: user, name_normalized: routine_name.strip.downcase) do |r|
+      r.name = routine_name
+      r.exercise_routine_lines.build(weekday: 1, position: 0, label: "Caminata 30 min", notes: nil)
+    end
+
+  if routine.exercise_routine_lines.none?
+    routine.exercise_routine_lines.create!(weekday: 1, position: 0, label: "Caminata 30 min", notes: nil)
+  end
+
+  week = Phases::WeekNumber.for_local_date(user: user, local_date: user_today)
+  raise "expected a phase week number for #{user.email}" unless week
+
+  covers_week = user.exercise_routine_assignments.where("start_week <= ? AND end_week >= ?", week, week).exists?
+  unless covers_week
+    ExerciseRoutineAssignment.transaction do
+      user.exercise_routine_assignments.delete_all
+      user.exercise_routine_assignments.create!(exercise_routine: routine, start_week: 1, end_week: 200)
+    end
   end
 end
 
