@@ -120,5 +120,27 @@ RSpec.describe "Demo dataset seeds" do
       expect(active_assignment.menu.menu_entries.count).to be > 0
     end
   end
+
+  # [REQ-EXR-001, REQ-EXR-002]
+  it "seeds an exercise routine and assignment covering the current week" do
+    Rails.application.load_seed
+
+    demo_emails.each do |email|
+      user = User.find_by!(email: email)
+
+      user_today = Time.find_zone!(user.timezone).today
+      week = Phases::WeekNumber.for_local_date(user: user, local_date: user_today)
+      expect(week).to be_present
+
+      expect(user.exercise_routines.count).to be >= 1
+
+      assignment =
+        user.exercise_routine_assignments.where("start_week <= ? AND end_week >= ?", week, week).first
+      expect(assignment).to be_present
+
+      routine = assignment.exercise_routine
+      expect(routine.exercise_routine_lines.count).to be > 0
+    end
+  end
 end
 
