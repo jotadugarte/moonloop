@@ -96,7 +96,8 @@
 
   <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.time_zone_select :timezone, nil,
+    <%= form.select :timezone,
+          ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
           { prompt: true },
           { required: true,
             data: { timezone_autodetect_target: "input" },

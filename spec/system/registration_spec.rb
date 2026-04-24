@@ -17,7 +17,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in 'Altura (cm)', with: '175'
 
     # Normally JS automates this part in front-end, we simulate normal submission
-    find("select[name='user[timezone]']").find("option[value='Santiago']").select_option
+    find("select[name='user[timezone]']").find("option[value='America/Santiago']").select_option
 
     click_button 'Registrarse'
 
@@ -43,7 +43,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in "user_registration_height_feet", with: "5"
     fill_in "user_registration_height_inches", with: "7"
 
-    find("select[name='user[timezone]']").find("option[value='Santiago']").select_option
+    find("select[name='user[timezone]']").find("option[value='America/Santiago']").select_option
     click_button "Registrarse"
 
     expect(page).to have_content(I18n.t("registrations.create.signed_up"))
@@ -67,7 +67,7 @@ RSpec.describe 'User Registration', type: :system do
     fill_in "user_registration_height_feet", with: "1"
     fill_in "user_registration_height_inches", with: "0"
 
-    find("select[name='user[timezone]']").find("option[value='Santiago']").select_option
+    find("select[name='user[timezone]']").find("option[value='America/Santiago']").select_option
     click_button "Registrarse"
 
     expect(page).to have_css("#registration-form-errors[role='alert']")
