@@ -33,5 +33,5 @@ No new domain models introduced. These are strictly view-layer and UI interactio
   <step id="4" status="complete">Update the registration view to use `time_zone_select` instead of a static string for timezone.</step>
   <step id="5" status="complete">Implement `timezone-autodetect_controller.js` to automatically set the user's local timezone if none is selected.</step>
   <step id="6" status="complete">Update the translation/view files to change the text "Estados Unidos pies pulgadas" to "Imperial pies pulgadas".</step>
-  <step id="7" status="pending">Run system tests to verify all registration bugs are resolved and the tests pass.</step>
+  <step id="7" status="complete">Run system tests to verify all registration bugs are resolved and the tests pass.</step>
 </implementation_plan>
