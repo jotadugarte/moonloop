@@ -52,32 +52,35 @@ def seed_demo_users!
 
     ProvisionDefaultHabitsJob.perform_now(user_id: user.id)
 
-    seed_local_today_completions!(user)
+    seed_local_recent_completions!(user)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
   raise "expected 3 demo users, got #{demo_count}" unless demo_count == 3
 end
 
-def seed_local_today_completions!(user)
+def seed_local_recent_completions!(user)
   raise ArgumentError, "user must be persisted" unless user.persisted?
 
   user_today = Time.find_zone!(user.timezone).today
+  user_yesterday = user_today - 1
 
   water_template = GlobalHabitTemplate.find_by!(code: "fitness_water")
   water_habit = UserHabit.find_by!(user: user, global_habit_template: water_template)
   raise "expected fitness_water habit for #{user.email}" unless water_habit
 
-  Habits::RecordCompletion.call(
-    user: user,
-    user_habit: water_habit,
-    local_date: user_today,
-    status: "done",
-    day_progress: water_habit.daily_target
-  )
+  [user_yesterday, user_today].each do |local_date|
+    Habits::RecordCompletion.call(
+      user: user,
+      user_habit: water_habit,
+      local_date: local_date,
+      status: "done",
+      day_progress: water_habit.daily_target
+    )
 
-  completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: user_today)
-  raise "expected a water completion for #{user.email} on #{user_today}" unless completion
+    completion = HabitCompletion.find_by(user_habit: water_habit, completed_on: local_date)
+    raise "expected a water completion for #{user.email} on #{local_date}" unless completion
+  end
 end
 
 seed_demo_users!
