@@ -126,17 +126,17 @@ Preparar `<implementation_plan>` con pasos concretos para implementar el seed en
   </dataset>
 
   <steps>
-    <step>Inventariar modelos/servicios existentes a reutilizar desde seeds (p.ej. servicios de apply bundle, upsert de menús, logging de peso) y confirmar APIs públicas estables.</step>
-    <step>Definir helpers internos en `db/seeds.rb` (o `db/seeds/*` requerido por seeds.rb si el repo ya usa esa convención) para: RNG determinista, “local today” por usuario, y upsert por email.</step>
-    <step>Implementar creación/upsert de 3 usuarios demo con perfiles: timezone, métricas corporales (altura/peso inicial), sistema métrico/imperial.</step>
-    <step>Para cada usuario: asegurar hábitos base y configurar al menos 2 hábitos con target (REQ-DAY-005) y 1 hábito booleano; activar lo necesario para que Mi Día muestre contenido.</step>
-    <step>Crear completions “ayer/hoy” usando día local del usuario para evitar inconsistencias por UTC; validar que streaks resultan visibles.</step>
-    <step>Crear 8–12 weight logs por usuario con timestamps espaciados; al final ejecutar (o emular) reconciliación de stats para que current weight/BMI refleje el último log.</step>
-    <step>Crear menús/recetas mínimos y un plan de fases que los asigne por rangos; asegurar que hoy caiga dentro de un rango asignado.</step>
-    <step>Crear rutinas y asignarlas por rangos de semanas; asegurar que el “hábito Ejercicio” en Mi Día enlace a la rutina activa.</step>
-    <step>Crear 1 PhaseProgram bundle y aplicarlo a 1 usuario; confirmar que el plan resultante es navegable.</step>
-    <step>Blindar side-effects durante seed: envolver el seed en un “guard” de entorno (dev) y deshabilitar delivery/enqueue donde corresponda (sin modificar producción).</step>
-    <step>Verificar idempotencia: re-ejecutar `db:seed` y confirmar que no duplica; ajustar claves naturales y upserts hasta pasar.</step>
+    <step status="complete">Inventariar modelos/servicios existentes a reutilizar desde seeds (p.ej. servicios de apply bundle, upsert de menús, logging de peso) y confirmar APIs públicas estables.</step>
+    <step status="complete">Definir helpers internos en `db/seeds.rb` (o `db/seeds/*` requerido por seeds.rb si el repo ya usa esa convención) para: RNG determinista, “local today” por usuario, y upsert por email.</step>
+    <step status="complete">Implementar creación/upsert de 3 usuarios demo con perfiles: timezone, métricas corporales (altura/peso inicial), sistema métrico/imperial.</step>
+    <step status="complete">Para cada usuario: asegurar hábitos base y configurar al menos 2 hábitos con target (REQ-DAY-005) y 1 hábito booleano; activar lo necesario para que Mi Día muestre contenido.</step>
+    <step status="complete">Crear completions “ayer/hoy” usando día local del usuario para evitar inconsistencias por UTC; validar que streaks resultan visibles.</step>
+    <step status="complete">Crear 8–12 weight logs por usuario con timestamps espaciados; al final ejecutar (o emular) reconciliación de stats para que current weight/BMI refleje el último log.</step>
+    <step status="complete">Crear menús/recetas mínimos y un plan de fases que los asigne por rangos; asegurar que hoy caiga dentro de un rango asignado.</step>
+    <step status="complete">Crear rutinas y asignarlas por rangos de semanas; asegurar que el “hábito Ejercicio” en Mi Día enlace a la rutina activa.</step>
+    <step status="complete">Crear 1 PhaseProgram bundle y aplicarlo a 1 usuario; confirmar que el plan resultante es navegable.</step>
+    <step status="complete">Blindar side-effects durante seed: envolver el seed en un “guard” de entorno (dev) y deshabilitar delivery/enqueue donde corresponda (sin modificar producción).</step>
+    <step status="complete">Verificar idempotencia: re-ejecutar `db:seed` y confirmar que no duplica; ajustar claves naturales y upserts hasta pasar.</step>
   </steps>
 
   <verification>
