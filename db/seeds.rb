@@ -49,6 +49,8 @@ def seed_demo_users!
     user.password_confirmation = "moonloop-demo-password"
 
     user.save!
+
+    ProvisionDefaultHabitsJob.perform_now(user_id: user.id)
   end
 
   demo_count = User.where(email: DEMO_USERS.map { |u| u[:email] }).count
