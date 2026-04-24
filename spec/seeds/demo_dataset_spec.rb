@@ -142,5 +142,21 @@ RSpec.describe "Demo dataset seeds" do
       expect(routine.exercise_routine_lines.count).to be > 0
     end
   end
+
+  # [REQ-PHS-001]
+  it "seeds a phase program (bundle) and can apply it to a demo user" do
+    Rails.application.load_seed
+
+    user = User.find_by!(email: "demo+mx-metric@moonloop.local")
+    expect(user.phase_programs.count).to be >= 1
+
+    program = user.phase_programs.first
+    expect(program.phase_program_assignments.count).to be > 0
+
+    Programs::ApplyBundleToUser.call(phase_program: program, user: user)
+
+    expect(user.phase_assignments.count).to eq(program.phase_program_assignments.count)
+    expect(user.exercise_routine_assignments.count).to eq(program.phase_program_assignments.count)
+  end
 end
 
