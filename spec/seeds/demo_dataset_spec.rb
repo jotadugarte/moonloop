@@ -185,5 +185,49 @@ RSpec.describe "Demo dataset seeds" do
       expect(entry.recipe.user_id).to eq(user.id)
     end
   end
+
+  # [REQ-PLAT-001]
+  it "is idempotent across demo-owned data" do
+    Rails.application.load_seed
+
+    users = User.where(email: demo_emails).order(:email).to_a
+    expect(users.size).to eq(3)
+
+    snapshot =
+      users.index_by(&:email).transform_values do |u|
+        {
+          habits: u.user_habits.count,
+          completions: HabitCompletion.joins(:user_habit).where(user_habits: { user_id: u.id }).count,
+          weight_logs: u.weight_logs.count,
+          menus: u.menus.count,
+          menu_entries: MenuEntry.joins(:menu).where(menus: { user_id: u.id }).count,
+          recipes: u.recipes.count,
+          routines: u.exercise_routines.count,
+          routine_lines: ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count,
+          phase_assignments: u.phase_assignments.count,
+          routine_assignments: u.exercise_routine_assignments.count,
+          programs: u.phase_programs.count,
+          program_segments: PhaseProgramAssignment.joins(:phase_program).where(phase_programs: { user_id: u.id }).count
+        }
+      end
+
+    Rails.application.load_seed
+
+    snapshot.each do |email, counts|
+      u = User.find_by!(email: email)
+      expect(u.user_habits.count).to eq(counts[:habits])
+      expect(HabitCompletion.joins(:user_habit).where(user_habits: { user_id: u.id }).count).to eq(counts[:completions])
+      expect(u.weight_logs.count).to eq(counts[:weight_logs])
+      expect(u.menus.count).to eq(counts[:menus])
+      expect(MenuEntry.joins(:menu).where(menus: { user_id: u.id }).count).to eq(counts[:menu_entries])
+      expect(u.recipes.count).to eq(counts[:recipes])
+      expect(u.exercise_routines.count).to eq(counts[:routines])
+      expect(ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count).to eq(counts[:routine_lines])
+      expect(u.phase_assignments.count).to eq(counts[:phase_assignments])
+      expect(u.exercise_routine_assignments.count).to eq(counts[:routine_assignments])
+      expect(u.phase_programs.count).to eq(counts[:programs])
+      expect(PhaseProgramAssignment.joins(:phase_program).where(phase_programs: { user_id: u.id }).count).to eq(counts[:program_segments])
+    end
+  end
 end
 
