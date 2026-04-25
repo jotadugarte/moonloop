@@ -9,6 +9,8 @@ Things you may want to cover:
 
 * System dependencies
 
+  - **libvips**: required in **CI** and **production** to generate Active Storage variants (image resizing + WebP conversion). Without libvips, the app falls back to serving the original blob (see `docs/core/IMAGES.md` and `docs/core/SYSTEM_ARCHITECTURE.md`).
+
 * Configuration
 
 * Database creation
