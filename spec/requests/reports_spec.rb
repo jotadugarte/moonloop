@@ -37,7 +37,8 @@ RSpec.describe "Reports (Informes)", type: :request do
         get informes_path
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).not_to include(I18n.t("reports.show.reference_period_intro", date: l(Date.new(2026, 4, 20), format: :long)))
+        formatted = I18n.l(Date.new(2026, 4, 20), format: :long, locale: I18n.default_locale)
+        expect(response.body).not_to include(I18n.t("reports.show.reference_period_intro", date: formatted, locale: I18n.default_locale))
         expect(response.body).to include(%(#{I18n.t("reports.show.date_label")}))
 
         get informes_path, params: { section: "streaks" }
