@@ -41,7 +41,7 @@ module ApplicationHelper
 
     if preview.display == :uploaded
       attachable_image_tag preview.uploaded_image,
-        resize_to_limit: [ 160, 160 ],
+        resize_to_limit: ImageVariants::ResizeToLimit.for(:thumb),
         alt: alt,
         class: "menu-grid__slot-preview-img",
         data: data
