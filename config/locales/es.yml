@@ -777,6 +777,8 @@ es:
         name: "Mascota"
   activerecord:
     attributes:
+      menu:
+        name: "Nombre"
       user:
         email: "Correo electrónico"
         password: "Contraseña"

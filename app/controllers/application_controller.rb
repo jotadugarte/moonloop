@@ -2,10 +2,15 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
+  around_action :switch_locale
   before_action :set_current_request_details
   before_action :authenticate
 
   private
+    def switch_locale(&)
+      I18n.with_locale(I18n.default_locale, &)
+    end
+
     def authenticate
       if session_record = Session.find_by_id(cookies.signed[:session_token])
         Current.session = session_record
