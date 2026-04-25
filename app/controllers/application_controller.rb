@@ -8,7 +8,9 @@ class ApplicationController < ActionController::Base
 
   private
     def switch_locale(&)
-      I18n.with_locale(I18n.default_locale, &)
+      requested = params[:locale].presence&.to_sym
+      locale = I18n.available_locales.include?(requested) ? requested : I18n.locale
+      I18n.with_locale(locale, &)
     end
 
     def authenticate
