@@ -20,6 +20,17 @@ RSpec.describe "Menus autosave", type: :system do
     expect(page).to have_content(I18n.t("registrations.create.signed_up"))
   end
 
+  def set_freeform_in_slot(frame_css, label, value)
+    attempts = 0
+    begin
+      attempts += 1
+      within(find(frame_css)) { find_field(label).set(value) }
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      raise if attempts >= 3
+      retry
+    end
+  end
+
   # [REQ-MENU-001]
   it "autosaves a slot when selecting a recipe (no explicit save click)" do
     register_user_in_browser(email: "menu-autosave@example.com")
@@ -109,17 +120,13 @@ RSpec.describe "Menus autosave", type: :system do
     within(find(frame_css)) { select "Tostadas", from: recipe_label }
     expect(page).to have_css(frame_css)
 
-    within(find(frame_css)) do
-      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
-      find_field(freeform_label).set("sin azúcar")
-      find_field(freeform_label).send_keys(:tab) # blur → autosave
-    end
+    within(find(frame_css)) { expect(page).to have_css(%(img[data-test="menu-slot-preview"])) }
+    set_freeform_in_slot(frame_css, freeform_label, "sin azúcar")
+    within(find(frame_css)) { find_field(freeform_label).send_keys(:tab) } # blur → autosave
     expect(page).to have_css(frame_css)
 
-    within(find(frame_css)) do
-      find_field(freeform_label).set("")
-      find_field(freeform_label).send_keys(:tab) # blur → autosave
-    end
+    set_freeform_in_slot(frame_css, freeform_label, "")
+    within(find(frame_css)) { find_field(freeform_label).send_keys(:tab) } # blur → autosave
     expect(page).to have_css(frame_css)
 
     within(find(frame_css)) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
