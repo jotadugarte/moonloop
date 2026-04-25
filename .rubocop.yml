@@ -1,6 +1,18 @@
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
+inherit_mode:
+  merge:
+    - Exclude
+
+plugins:
+  - rubocop-erb
+
+# Full-repo RuboCop runs (e.g. CI) stay Ruby-only; pass explicit `*.html.erb` paths to lint views.
+AllCops:
+  Exclude:
+    - "**/*.html.erb"
+
 # Overwrite or add rules to create your own house style
 #
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`

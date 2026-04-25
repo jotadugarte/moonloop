@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Linting:** `rubocop-erb` plugin so `bundle exec rubocop` can inspect ERB when template paths are passed explicitly; default `Exclude` keeps `bin/rubocop` / CI on Ruby sources only.
+
 ### Changed
 
 - **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.
