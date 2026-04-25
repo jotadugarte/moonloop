@@ -19,9 +19,9 @@ module ApplicationHelper
 
   # Raster images get a resized variant; SVG and other non-variable types use the original blob.
   # Default +loading: lazy+ keeps the menu grid cheap; pass +loading: "eager"+ for above-the-fold heroes.
-  def attachable_image_tag(attachment, resize_to_limit:, **image_options)
+  def attachable_image_tag(attachment, resize_to_limit:, variant_name: nil, **image_options)
     opts = { loading: "lazy" }.merge(image_options)
-    image_tag attachable_image_source(attachment, resize_to_limit), **opts
+    image_tag attachable_image_source(attachment, resize_to_limit, variant_name), **opts
   end
 
   def recipe_image_tag(recipe, resize_to_limit:, **image_options)
@@ -40,27 +40,24 @@ module ApplicationHelper
     alt = t("menus.slots.preview_alt", meal: t("menus.meal_types.#{meal_type}"))
     data = { test: "menu-slot-preview" }
 
-    if preview.display == :uploaded
-      attachable_image_tag preview.uploaded_image,
-        resize_to_limit: ImageVariants::ResizeToLimit.for(:thumb),
-        alt: alt,
-        class: "menu-grid__slot-preview-img",
-        data: data
-    else
-      image_tag preview.fallback_asset_path,
-        alt: alt,
-        class: "menu-grid__slot-preview-img menu-grid__slot-preview-img--fallback",
-        data: data.merge(preview_kind: "fallback")
-    end
+    return menu_slot_preview_uploaded_image_tag(preview, alt, data) if preview.display == :uploaded
+
+    menu_slot_preview_fallback_image_tag(preview, alt, data)
   end
 
   private
 
-  def attachable_image_source(attachment, resize_to_limit)
+  def attachable_image_source(attachment, resize_to_limit, variant_name)
     return attachment if attachment_svg?(attachment)
     return attachment unless attachment.variable? && ImageVariants::Available.call
 
-    attachment.variant(ImageVariants::VariantOptions.for(:thumb).merge(resize_to_limit: resize_to_limit))
+    attachment.variant(attachable_image_variant_options(variant_name, resize_to_limit))
+  end
+
+  def attachable_image_variant_options(variant_name, resize_to_limit)
+    return ImageVariants::VariantOptions.for(variant_name) if variant_name.present?
+
+    { format: :webp, resize_to_limit: resize_to_limit }
   end
 
   def persistable_active_storage_attachment?(attachment)
@@ -68,6 +65,22 @@ module ApplicationHelper
     return false if active_storage_attachment.blank?
 
     active_storage_attachment.persisted?
+  end
+
+  def menu_slot_preview_uploaded_image_tag(preview, alt, data)
+    attachable_image_tag preview.uploaded_image,
+      variant_name: :thumb,
+      resize_to_limit: ImageVariants::ResizeToLimit.for(:thumb),
+      alt: alt,
+      class: "menu-grid__slot-preview-img",
+      data: data
+  end
+
+  def menu_slot_preview_fallback_image_tag(preview, alt, data)
+    image_tag preview.fallback_asset_path,
+      alt: alt,
+      class: "menu-grid__slot-preview-img menu-grid__slot-preview-img--fallback",
+      data: data.merge(preview_kind: "fallback")
   end
 
   def attachment_svg?(attachment)

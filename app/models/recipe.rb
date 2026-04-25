@@ -14,12 +14,17 @@ class Recipe < ApplicationRecord
   private
 
   def image_upload_safety_limits
-    return unless image.attached?
-    return if image.blob&.content_type == "image/svg+xml"
+    return unless image_upload_needs_limits_check?
 
-    result = ImageUploads::SafetyLimits.validate(image.blob)
-    return unless result.rejected?
+    ImageUploads::SafetyLimits
+      .validate(image.blob)
+      .errors
+      .each { errors.add(:image, _1) }
+  end
 
-    result.errors.each { errors.add(:image, _1) }
+  def image_upload_needs_limits_check?
+    return false unless image.attached?
+
+    image.blob&.content_type != "image/svg+xml"
   end
 end
