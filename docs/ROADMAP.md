@@ -43,7 +43,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 50. [x] **Nueva receta: vista previa de imagen**. Preview en cliente (`recipe-image-preview` Stimulus, i18n) en `/recipes/new`; system spec Selenium (registro vía UI por transaccional vs Puma). (**REQ-MENU-002**) — 2026-04-24 — Depends on: Phase 4 #16; mismo branch que **#51**
 
 ### Phase 5 — Exercise Routines
-20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
+20. [x] Exercise  routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
 21. [x] Phase assignment for routines using same week-range system as menus (REQ-EXR-002) — 2026-04-17 — Depends on: Phase 4 (#15–19, #29), #20
 22. [x] Surface active routine in "Mi Día" linked to the Ejercicio habit; add Mi Día shortcut(s) to exercise routine / plan screens (Turbo-friendly entry points, consistent with menus/phases shortcuts) (REQ-EXR-003) — 2026-04-17 — Depends on: #20, Phase 3 #11, Phase 4 (#15–19)
 30. [x] Exercise routines: catálogo público (opt-in, moderación admin, **mostrar autor**). La **plantilla pública** en el catálogo sigue la **última versión** guardada por el autor. Si otro usuario **adoptó / usa una copia** en su cuenta, **no** se actualiza sola: aviso de que la rutina de origen cambió, puede **revisar** y **aceptar actualizar** su copia (REQ-EXR-006) — 2026-04-18 — Depends on: Phase 5 (#20–22), Phase 4 **#29**
