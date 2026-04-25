@@ -814,6 +814,7 @@ es:
       exercise_routine:
         name: "Nombre"
         publicly_shareable: "Catálogo público"
+        exercise_routine_lines: "Líneas de rutina"
       exercise_routine_line:
         weekday: "Día"
         position: "Orden"
