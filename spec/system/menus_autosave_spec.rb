@@ -106,33 +106,32 @@ RSpec.describe "Menus autosave", type: :system do
 
     expect(page).to have_css(frame_css)
 
-    within(frame_css) { select "Tostadas", from: recipe_label }
+    within(find(frame_css)) { select "Tostadas", from: recipe_label }
     expect(page).to have_css(frame_css)
 
-    within(frame_css) do
+    within(find(frame_css)) do
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
       find_field(freeform_label).set("sin azúcar")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
     expect(page).to have_css(frame_css)
 
-    within(frame_css) do
-      expect(page).to have_css(frame_css)
+    within(find(frame_css)) do
       find_field(freeform_label).set("")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
     expect(page).to have_css(frame_css)
 
-    within(frame_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
+    within(find(frame_css)) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
     expect(page).to have_css(frame_css)
 
-    within(frame_css) do
+    within(find(frame_css)) do
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
     end
 
     visit current_path
 
-    within(frame_css) do
+    within(find(frame_css)) do
       expect(page).to have_select(recipe_label, selected: I18n.t("menus.slots.recipe_blank"))
       expect(page).to have_field(freeform_label, with: "")
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
