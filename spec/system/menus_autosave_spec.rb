@@ -32,6 +32,10 @@ RSpec.describe "Menus autosave", type: :system do
     end
   end
 
+  def ensure_still_on_menu_editor!
+    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
+  end
+
   # [REQ-MENU-001]
   it "autosaves a slot when selecting a recipe (no explicit save click)" do
     register_user_in_browser(email: "menu-autosave@example.com")
@@ -109,37 +113,35 @@ RSpec.describe "Menus autosave", type: :system do
     click_button I18n.t("menus.index.create_submit")
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
-    menu_id = page.current_path.match(%r{^/menus/(\d+)/edit$})[1]
-    # Slot frames use `dom_id(menu, "slot_#{weekday}_#{meal_type}")`
-    # which yields "slot_2_desayuno_menu_#{menu_id}".
-    frame_css = %(turbo-frame#slot_2_desayuno_menu_#{menu_id})
+    slot_css = %([data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])
     recipe_label = I18n.t("menus.slots.recipe_pick_label")
     freeform_label = I18n.t("menus.slots.freeform_label")
 
-    expect(page).to have_css(frame_css)
+    ensure_still_on_menu_editor!
+    within(slot_css) { select "Tostadas", from: recipe_label }
+    ensure_still_on_menu_editor!
 
-    within(find(frame_css)) { select "Tostadas", from: recipe_label }
-    expect(page).to have_css(frame_css)
-
-    within(find(frame_css)) { expect(page).to have_css(%(img[data-test="menu-slot-preview"])) }
-    set_freeform_in_slot(frame_css, freeform_label, "sin azúcar")
-    within(find(frame_css)) { find_field(freeform_label).send_keys(:tab) } # blur → autosave
-    expect(page).to have_css(frame_css)
-
-    set_freeform_in_slot(frame_css, freeform_label, "")
-    within(find(frame_css)) { find_field(freeform_label).send_keys(:tab) } # blur → autosave
-    expect(page).to have_css(frame_css)
-
-    within(find(frame_css)) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
-    expect(page).to have_css(frame_css)
-
-    within(find(frame_css)) do
-      expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
+    within(slot_css) do
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
+      find_field(freeform_label).set("sin azúcar")
+      find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
+    ensure_still_on_menu_editor!
+
+    within(slot_css) do
+      find_field(freeform_label).set("")
+      find_field(freeform_label).send_keys(:tab) # blur → autosave
+    end
+    ensure_still_on_menu_editor!
+
+    within(slot_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
+    ensure_still_on_menu_editor!
+
+    within(slot_css) { expect(page).to have_no_css(%(img[data-test="menu-slot-preview"])) }
 
     visit current_path
 
-    within(find(frame_css)) do
+    within(slot_css) do
       expect(page).to have_select(recipe_label, selected: I18n.t("menus.slots.recipe_blank"))
       expect(page).to have_field(freeform_label, with: "")
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
