@@ -557,6 +557,9 @@ es:
       title: "Registrarse"
       submit: "Registrarse"
       password_hint: "Mínimo 12 caracteres."
+      weight_kg_label: "Peso actual (kg)"
+      weight_lb_label: "Peso actual (lb)"
+      weight_optional_hint: "Opcional. Puedes agregarlo o actualizarlo más tarde en tu perfil."
       body_unit_system_legend: "Unidades corporales"
       body_unit_system_hint: "Elige cómo ingresar la altura. El peso en el resto de la app usará la misma preferencia."
       units:

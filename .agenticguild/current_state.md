@@ -1,7 +1,7 @@
 <phase>start-task / Phase 3 — Execution (Iterative TDD)</phase>
-<step>3.1 — Added failing spec: sign-up weight hint present</step>
+<step>3.2 — Implemented weight input + optional hint on sign-up</step>
 
-Context: Added request spec expecting weight input + optional hint on GET /sign_up (will fail until UI is implemented).
+Context: Registration form now renders weight input (kg or lb) and an i18n optional hint with data-test registration-weight-optional-hint.
 
 # Agentic Guild — current state
 

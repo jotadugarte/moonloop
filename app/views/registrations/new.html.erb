@@ -107,6 +107,32 @@
             aria: aria_for_field(@user, :timezone, registration_err_id) } %>
   </div>
 
+  <% weight_hint_text = t(".weight_optional_hint") %>
+  <div data-unit-system-toggle-target="metric">
+    <%= form.label :weight_kg, t(".weight_kg_label"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.number_field :weight_kg,
+          min: 20,
+          max: 500,
+          step: 0.1,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: { describedby: "registration-weight-optional-hint" } %>
+  </div>
+
+  <div data-unit-system-toggle-target="imperial" class="hidden">
+    <%= label_tag "user_registration_weight_lb", t(".weight_lb_label"), class: "block font-medium mb-1 text-gray-700" %>
+    <%= number_field_tag "user[weight_lb]", nil,
+          id: "user_registration_weight_lb",
+          min: 44,
+          max: 1102,
+          step: 0.1,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: { describedby: "registration-weight-optional-hint" } %>
+  </div>
+
+  <p id="registration-weight-optional-hint" data-test="registration-weight-optional-hint" class="text-sm text-gray-500">
+    <%= weight_hint_text %>
+  </p>
+
   <div class="pt-4">
     <%= form.submit t(".submit"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
   </div>
