@@ -13,6 +13,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 3. [x] User profile: age, weight, height, timezone (metric system) (REQ-PROF-001) — 2026-04-16
 4. [x] BMI auto-calculation from weight and height (REQ-PROF-002) — 2026-04-16
 36. [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
+43. [x] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002). — 2026-04-24
 
 ### Phase 2 — Habits Core
 5. [x] Habit model with frequency types: daily, weekdays, every X days, monthly (`weekly` removed and migrated — Done #10) (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 1
@@ -76,7 +77,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ## Pending (by priority)
 Orden revisado **2026-04-24** (prioridad y **agrupación sugerida por rama**): **#43** (registro); **#48** (menús); **#47** (informes); **#46** (sesiones); **#44** (seeds/fixtures, branch aparte); **#52** (refactor Receta → Plato, branch dedicado y SPEC); **#53** (pipeline/regla de imágenes web).
 
-43. [x] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002). — 2026-04-24
+55. [ ] **Registro: orden de campos (peso)**. En `http://localhost:3000/sign_up`, colocar **Peso** luego de **Altura** y antes de **Zona horaria**. (REQ-PROF-001)
 48. [ ] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot.
 47. [ ] **Informes: copy y navegación por pestaña**. En `/informes`: eliminar la línea “Semana y mes mostrados según este día: …”; renombrar “Día de referencia” a **“Día”**; semana como rango legible (“20 de abril al 26 de abril de 2026”); mes como **“Abril 2026.”** (sin rango día–día); enlaces **Cumplimiento · Rachas · Peso** deben mostrar **solo** el contenido de cada sección al activarlos.
 46. [ ] **Sesiones: textos comprensibles para usuarios no técnicos**. En `/sessions`, sustituir o complementar datos crudos (User-Agent, IP `::1`, timestamp UTC) por mensajes en lenguaje claro que indiquen **desde qué dispositivo** y **desde dónde** se conectó la sesión (sin asumir conocimiento de redes ni cabeceras HTTP).

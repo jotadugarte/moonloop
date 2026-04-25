@@ -1,12 +1,5 @@
-<phase>finish-branch / Phase 2 — Compliance & Traceability Audit</phase>
-<step>2.2 — audit clean; proceed to CI/BugBot loop</step>
+<agent_state>
 
-Context: Running local self-review against origin/HEAD (origin/master).
+<active_task_pointer> [NONE] </active_task_pointer>
 
-# Agentic Guild — current state
-
-- **Active task pointer:** `task_registro-peso-opcional.md`
-- **Execution context:**
-  - **active_skill:** `finish-branch`
-  - **current_phase:** `1`
-  - **current_step:** `1.1`
+<execution_context> <active_skill>[NONE]</active_skill> <current_phase>[NONE]</current_phase> <current_step>[NONE]</current_step> </execution_context> </agent_state>
