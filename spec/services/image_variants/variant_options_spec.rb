@@ -17,4 +17,3 @@ RSpec.describe ImageVariants::VariantOptions do
     end
   end
 end
-

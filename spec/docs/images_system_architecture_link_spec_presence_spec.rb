@@ -11,4 +11,3 @@ RSpec.describe "docs/core/SYSTEM_ARCHITECTURE images rule link (REQ-MENU-002)", 
     expect(body).to include("docs/core/IMAGES.md")
   end
 end
-

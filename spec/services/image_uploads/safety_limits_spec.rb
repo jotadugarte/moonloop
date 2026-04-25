@@ -30,4 +30,3 @@ RSpec.describe ImageUploads::SafetyLimits do
     end
   end
 end
-

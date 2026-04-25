@@ -14,4 +14,3 @@ RSpec.describe "CI libvips requirement for image variants (REQ-MENU-002)", :aggr
     expect(ci_body).to match(/apt-get.*(libvips|vips)/i)
   end
 end
-

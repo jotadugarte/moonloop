@@ -25,4 +25,3 @@ RSpec.describe "docs/core/IMAGES upload pipeline rule (REQ-MENU-002)", :aggregat
     expect(body).to match(/\b8000(px)?\b/i)
   end
 end
-

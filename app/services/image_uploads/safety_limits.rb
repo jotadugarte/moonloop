@@ -25,9 +25,8 @@ module ImageUploads
       width = metadata["width"].to_i
       height = metadata["height"].to_i
 
-      [width, height].max
+      [ width, height ].max
     end
     private_class_method :max_dimension_px
   end
 end
-

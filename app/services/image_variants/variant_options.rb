@@ -7,4 +7,3 @@ module ImageVariants
     end
   end
 end
-

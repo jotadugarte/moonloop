@@ -18,4 +18,3 @@ RSpec.describe ImageVariants::ResizeToLimit do
     end
   end
 end
-
