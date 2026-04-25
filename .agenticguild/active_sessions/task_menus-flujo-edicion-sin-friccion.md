@@ -101,7 +101,7 @@
   </working_notes>
 
   <implementation_plan>
-    <step id="1" status="pending">Write/adjust request specs for menu creation redirect: POST /menus redirects to edit path (302) and is scoped to Current.user. [REQ-MENU-001]</step>
+    <step id="1" status="complete">Write/adjust request specs for menu creation redirect: POST /menus redirects to edit path (302) and is scoped to Current.user. [REQ-MENU-001]</step>
     <step id="2" status="pending">Write/adjust system spec (or request+view spec if already patterned) covering: create menu (name only) → lands on /menus/:id/edit. [REQ-MENU-001]</step>
     <step id="3" status="pending">Locate current /menus create behavior and change redirect target to edit. Ensure invalid create still renders 422 with errors (no redirect). [REQ-MENU-001]</step>
     <step id="4" status="pending">Inventory the current menu edit grid implementation: identify slot partial, persistence endpoint (likely MenuEntries controller) and how it calls Menus::UpsertEntry. Document findings in this session file. [REQ-MENU-001]</step>
