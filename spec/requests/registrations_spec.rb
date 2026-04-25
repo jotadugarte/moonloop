@@ -9,7 +9,9 @@ RSpec.describe "Registrations", type: :request do
 
     expect(response).to have_http_status(:ok)
     doc = Nokogiri::HTML(response.body)
+    metric = doc.at_css('[data-unit-system-toggle-target="metric"]')
     imperial = doc.css('[data-unit-system-toggle-target="imperial"]')
+    expect(metric["class"].to_s.split).not_to include("hidden")
     expect(imperial.size).to eq(2)
     imperial.each { |node| expect(node["class"]).to include("hidden") }
   end

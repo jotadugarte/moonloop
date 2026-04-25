@@ -64,7 +64,7 @@
     <p id="registration-body-units-hint" class="text-sm text-gray-500"><%= t(".body_unit_system_hint") %></p>
   </fieldset>
 
-  <% imperial_height = (@user.body_unit_system == "imperial_us") %>
+  <% imperial_height = registration_imperial_height_for_toggle?(@user) %>
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
   <div data-unit-system-toggle-target="metric"<% if imperial_height %> class="hidden"<% end %>>
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
