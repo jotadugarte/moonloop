@@ -102,8 +102,8 @@
 
   <implementation_plan>
     <step id="1" status="complete">Write/adjust request specs for menu creation redirect: POST /menus redirects to edit path (302) and is scoped to Current.user. [REQ-MENU-001]</step>
-    <step id="2" status="pending">Write/adjust system spec (or request+view spec if already patterned) covering: create menu (name only) → lands on /menus/:id/edit. [REQ-MENU-001]</step>
-    <step id="3" status="pending">Locate current /menus create behavior and change redirect target to edit. Ensure invalid create still renders 422 with errors (no redirect). [REQ-MENU-001]</step>
+    <step id="2" status="complete">Write/adjust system spec (or request+view spec if already patterned) covering: create menu (name only) → lands on /menus/:id/edit. [REQ-MENU-001]</step>
+    <step id="3" status="complete">Locate current /menus create behavior and change redirect target to edit. Ensure invalid create still renders 422 with errors (no redirect). [REQ-MENU-001]</step>
     <step id="4" status="pending">Inventory the current menu edit grid implementation: identify slot partial, persistence endpoint (likely MenuEntries controller) and how it calls Menus::UpsertEntry. Document findings in this session file. [REQ-MENU-001]</step>
     <step id="5" status="pending">Design slot as Turbo Frame boundary: one frame per (weekday, meal_type) that re-renders a single slot partial after save, keeping the page stable. [REQ-MENU-001]</step>
     <step id="6" status="pending">Implement recipe autosave on change: slot form submits to the existing persistence endpoint, targeting the slot frame; server responds with frame HTML (or turbo_stream replace) re-rendering the slot with recipe image preview. [REQ-MENU-001, REQ-MENU-002]</step>
