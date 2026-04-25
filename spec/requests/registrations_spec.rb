@@ -37,6 +37,8 @@ RSpec.describe "Registrations", type: :request do
     imperial = doc.css('[data-unit-system-toggle-target="imperial"]')
     expect(metric["class"]).to include("hidden")
     expect(imperial.size).to eq(2)
-    imperial.each { |node| expect(node["class"]).not_to include("hidden") }
+    imperial.each do |node|
+      expect(node["class"].to_s.split).not_to include("hidden")
+    end
   end
 end
