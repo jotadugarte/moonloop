@@ -67,12 +67,12 @@ class RegistrationsController < ApplicationController
 
     def registration_weight_kg_tuple(raw, system)
       raw_value = system == "metric" ? raw[:weight_kg].presence : raw[:weight_lb].presence
-      return [nil, :blank] if raw_value.nil?
+      return [ nil, :blank ] if raw_value.nil?
 
       weight_kg = weight_kg_from_units(raw_value, system)
       [ WeightKg.new(value: weight_kg).value, :ok ]
     rescue ArgumentError => e
-      return [nil, :invalid] if WeightKg.invalid_argument_error?(e)
+      return [ nil, :invalid ] if WeightKg.invalid_argument_error?(e)
 
       raise
     end
