@@ -7,4 +7,3 @@ FactoryBot.define do
     freeform_text { nil }
   end
 end
-

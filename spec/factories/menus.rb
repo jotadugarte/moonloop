@@ -5,4 +5,3 @@ FactoryBot.define do
     publicly_shareable { false }
   end
 end
-
