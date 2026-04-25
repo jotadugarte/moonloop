@@ -11,8 +11,8 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
 
   # [REQ-MENU-001]
   it "creates/updates a slot via turbo-stream" do
-    menu = Menu.create!(user: user, name: "Semana")
-    recipe = Recipe.create!(user: user, name: "Avena")
+    menu = create(:menu, user: user, name: "Semana")
+    recipe = create(:recipe, user: user, name: "Avena")
 
     post menu_menu_entries_path(menu),
       params: {
@@ -34,15 +34,9 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
 
   # [REQ-MENU-001]
   it "clears a slot via turbo-stream" do
-    menu = Menu.create!(user: user, name: "Semana")
-    recipe = Recipe.create!(user: user, name: "Avena")
-    MenuEntry.create!(
-      menu: menu,
-      recipe: recipe,
-      weekday: 2,
-      meal_type: "cena",
-      freeform_text: nil
-    )
+    menu = create(:menu, user: user, name: "Semana")
+    recipe = create(:recipe, user: user, name: "Avena")
+    create(:menu_entry, menu: menu, recipe: recipe, weekday: 2, meal_type: "cena", freeform_text: nil)
 
     delete clear_menu_menu_entries_path(menu),
       params: { weekday: 2, meal_type: "cena" },
@@ -58,8 +52,8 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
     allow_freeform_user = create(:user, password: "Password123!", timezone: "Etc/UTC", allow_menu_freeform: true)
     post sign_in_path, params: { email: allow_freeform_user.email, password: "Password123!" }
 
-    menu = Menu.create!(user: allow_freeform_user, name: "Semana")
-    recipe = Recipe.create!(user: allow_freeform_user, name: "Tostadas")
+    menu = create(:menu, user: allow_freeform_user, name: "Semana")
+    recipe = create(:recipe, user: allow_freeform_user, name: "Tostadas")
     Menus::UpsertEntry.call(
       user: allow_freeform_user,
       menu: menu,

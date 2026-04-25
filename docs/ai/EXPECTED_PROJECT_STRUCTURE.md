@@ -5,7 +5,7 @@ This document lists every referenced path, its purpose, and how it fits into the
 > **Sync Mapping:** For the canonical mapping between agentic:guild upstream sources and these local destinations, see [`SYNC_REGISTRY.md`](SYNC_REGISTRY.md). That file drives both `sync.sh` (initial bootstrap) and the `update-agentic-guild` AI skill (ongoing updates).
 
 ## 1. The Agent RAM (Transient Memory)
-*Located in `.agenticguild/` (Gitignored)*
+*Located in `.agenticguild/` (versioned in Moonloop; reviewed/merged)*
 | Path | Purpose |
 |------|---------|
 | `current_state.md` | Tracks the active skill, phase, and step. Used to resume tasks. Format: `<active_task_pointer>` = session filename (e.g. `task_foo.md`) or `[NONE]`; `<execution_context>` contains `<active_skill>`, `<current_phase>`, `<current_step>`. When multiple session files exist, the active task pointer MUST be set so status-check and cross-IDE resume work correctly. |

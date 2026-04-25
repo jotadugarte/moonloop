@@ -11,9 +11,9 @@ RSpec.describe "Menus editor", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Correo electrónico", with: user.email
-    fill_in "Contraseña", with: "Password123!"
-    click_button "Iniciar sesión"
+    fill_in I18n.t("activerecord.attributes.user.email"), with: user.email
+    fill_in I18n.t("activerecord.attributes.user.password"), with: "Password123!"
+    click_button I18n.t("sessions.new.submit")
   end
 
   # [REQ-MENU-001, REQ-I18N-001]
@@ -33,8 +33,8 @@ RSpec.describe "Menus editor", type: :system do
   it "redirects to the editor after creating a menu from the index" do
     visit "/menus"
 
-    fill_in "Nombre", with: "Nueva semana"
-    click_button "Crear menú"
+    fill_in I18n.t("menus.index.name_label"), with: "Nueva semana"
+    click_button I18n.t("menus.index.create_submit")
 
     menu = Menu.find_by!(user: user, name: "Nueva semana")
     expect(page).to have_current_path(edit_menu_path(menu))

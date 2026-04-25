@@ -2,7 +2,7 @@
   <metadata>
     <task_name>Menús: flujo y edición sin fricción</task_name>
     <type>Feature</type>
-    <req_id>[TBD — map to SPEC.md, likely REQ-MENU-001/002 UX surface]</req_id>
+    <req_id>[REQ-MENU-001]</req_id>
     <roadmap_item>#48</roadmap_item>
   </metadata>
 
