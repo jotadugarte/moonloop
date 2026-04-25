@@ -48,6 +48,7 @@ en:
     formats:
       weight_log: "%Y-%m-%d %H:%M"
       reports_chart_axis: "%Y-%m-%d %H:%M"
+      long: "%Y-%m-%d %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Your Phase 1 program starts today"

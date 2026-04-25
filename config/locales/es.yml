@@ -19,6 +19,7 @@ es:
     formats:
       weight_log: "%d/%m/%Y %H:%M"
       reports_chart_axis: "%d/%m %H:%M"
+      long: "%d/%m/%Y %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Hoy empieza tu fase 1"

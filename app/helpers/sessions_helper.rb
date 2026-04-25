@@ -19,4 +19,3 @@ module SessionsHelper
     ip == "::1" || ip.start_with?("127.")
   end
 end
-
