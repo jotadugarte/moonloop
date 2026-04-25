@@ -60,7 +60,7 @@
 
     <% if @recipe.image.attached? %>
       <div class="mt-2" data-recipe-image-preview-target="currentWrapper">
-        <%= attachable_image_tag @recipe.image,
+        <%= recipe_image_tag @recipe,
               resize_to_limit: [ 320, 320 ],
               class: "rounded max-w-xs border border-gray-200",
               alt: @recipe.name %>

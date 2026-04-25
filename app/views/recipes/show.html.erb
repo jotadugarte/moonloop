@@ -6,15 +6,13 @@
   <p class="text-sm text-gray-600 mb-4"><%= t("recipes.show.public_badge") %></p>
 <% end %>
 
-<% if @recipe.image.attached? %>
-  <div class="mb-4">
-    <%= attachable_image_tag @recipe.image,
-          resize_to_limit: [ 480, 480 ],
-          class: "rounded max-w-md border border-gray-200",
-          alt: @recipe.name,
-          loading: "eager" %>
-  </div>
-<% end %>
+<div class="mb-4">
+  <%= recipe_image_tag @recipe,
+        resize_to_limit: [ 480, 480 ],
+        class: "rounded max-w-md border border-gray-200",
+        alt: @recipe.name,
+        loading: "eager" %>
+</div>
 
 <% if @recipe.instructions.present? %>
   <div class="prose max-w-none mb-6">
