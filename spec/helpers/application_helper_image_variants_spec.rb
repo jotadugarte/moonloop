@@ -8,7 +8,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     # [REQ-MENU-002]
     it "uses ImageVariants::VariantOptions (WebP) when variants are available" do
       blob = instance_double("ActiveStorage::Blob", content_type: "image/jpeg")
-      attachment = instance_double("ActiveStorage::Attached", blob: blob)
+      attachment = double("ActiveStorage attachment", blob: blob)
 
       allow(attachment).to receive(:variable?).and_return(true)
       allow(ImageVariants::Available).to receive(:call).and_return(true)
