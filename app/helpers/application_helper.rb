@@ -27,6 +27,7 @@ module ApplicationHelper
   def recipe_image_tag(recipe, resize_to_limit:, **image_options)
     attachment = recipe.image
     return if attachment.blank? || !attachment.attached?
+    return unless persistable_active_storage_attachment?(attachment)
 
     return placeholder_recipe_image_tag(recipe, **image_options) if recipe_placeholder_svg?(recipe)
 
@@ -60,6 +61,13 @@ module ApplicationHelper
     return attachment unless attachment.variable? && ImageVariants::Available.call
 
     attachment.variant(ImageVariants::VariantOptions.for(:thumb).merge(resize_to_limit: resize_to_limit))
+  end
+
+  def persistable_active_storage_attachment?(attachment)
+    active_storage_attachment = attachment&.attachment
+    return false if active_storage_attachment.blank?
+
+    active_storage_attachment.persisted?
   end
 
   def attachment_svg?(attachment)
