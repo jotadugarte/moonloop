@@ -66,6 +66,8 @@ en:
   date:
     formats:
       long: "%B %d, %Y"
+      reports_month: "%B %Y"
+      reports_week_range_start: "%B %d"
     month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
   my_day:
     flash:
@@ -159,13 +161,12 @@ en:
       nav_fulfillment: "Fulfillment"
       nav_streaks: "Streaks"
       nav_weight: "Weight"
-      date_label: "Reference day"
+      date_label: "Day"
       go_to_date: "Go"
-      reference_period_intro: "Week and month below are based on this day: %{date}."
       view_today: "Back to today"
       fulfillment_heading: "Habit fulfillment"
-      fulfillment_week_range: "Week (Mon–Sun): %{start} — %{end}"
-      fulfillment_month_range: "Month: %{start} — %{end}"
+      fulfillment_week_range: "Week (Mon–Sun): %{start} to %{end}"
+      fulfillment_month_range: "Month: %{month}."
       fulfillment_empty: "No habits to show for these periods."
       fulfillment_no_due_days: "No due days"
       fulfillment_placeholder: "—"

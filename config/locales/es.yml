@@ -37,6 +37,8 @@ es:
   date:
     formats:
       long: "%d de %B de %Y"
+      reports_month: "%B %Y"
+      reports_week_range_start: "%d de %B"
     month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
     abbr_month_names: [~, ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
     day_names: [domingo, lunes, martes, miércoles, jueves, viernes, sábado]
@@ -133,13 +135,12 @@ es:
       nav_fulfillment: "Cumplimiento"
       nav_streaks: "Rachas"
       nav_weight: "Peso"
-      date_label: "Día de referencia"
+      date_label: "Día"
       go_to_date: "Ir"
-      reference_period_intro: "Semana y mes mostrados según este día: %{date}."
       view_today: "Volver a hoy"
       fulfillment_heading: "Cumplimiento de hábitos"
-      fulfillment_week_range: "Semana (lun–dom): %{start} — %{end}"
-      fulfillment_month_range: "Mes: %{start} — %{end}"
+      fulfillment_week_range: "Semana (lun–dom): %{start} al %{end}"
+      fulfillment_month_range: "Mes: %{month}."
       fulfillment_empty: "No hay hábitos que mostrar para estos periodos."
       fulfillment_no_due_days: "Sin días previstos"
       fulfillment_placeholder: "—"
