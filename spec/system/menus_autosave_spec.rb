@@ -97,24 +97,31 @@ RSpec.describe "Menus autosave", type: :system do
     click_button I18n.t("menus.index.create_submit")
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
-    slot_css = %([data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])
+    menu_id = page.current_path.match(%r{^/menus/(\d+)/edit$})[1]
+    frame_css = %(turbo-frame#menu_#{menu_id}_slot_2_desayuno)
+    slot_css = %(#{frame_css} [data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])
     recipe_label = I18n.t("menus.slots.recipe_pick_label")
     freeform_label = I18n.t("menus.slots.freeform_label")
 
     within(slot_css) { select "Tostadas", from: recipe_label }
+    expect(page).to have_css("#{frame_css}:not([busy])")
 
     within(slot_css) do
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
       find_field(freeform_label).set("sin azúcar")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
+    expect(page).to have_css("#{frame_css}:not([busy])")
 
     within(slot_css) do
+      expect(page).to have_css("#{frame_css}:not([busy])")
       find_field(freeform_label).set("")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
+    expect(page).to have_css("#{frame_css}:not([busy])")
 
     within(slot_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
+    expect(page).to have_css("#{frame_css}:not([busy])")
 
     within(slot_css) do
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
