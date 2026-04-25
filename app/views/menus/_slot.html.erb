@@ -2,6 +2,9 @@
 <% slot_err_id = dom_id(menu, "entry_errors_#{weekday}_#{meal_type}") %>
 <% recipes = menu.user.recipes.order(:name) %>
 <% allow_freeform = Current.user.allow_menu_freeform %>
+<% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
+<% recipe_select_id = "#{slot_key}-recipe" %>
+<% freeform_input_id = "#{slot_key}-freeform" %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
@@ -38,10 +41,6 @@
           <% end %>
         </ul>
       <% end %>
-
-      <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
-      <% recipe_select_id = "#{slot_key}-recipe" %>
-      <% freeform_input_id = "#{slot_key}-freeform" %>
 
       <div>
         <%= f.label :recipe_id, t("menus.slots.recipe_pick_label"), for: recipe_select_id %>
