@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
-- **Skill:** finish-branch → harvest-rules
-- **Skill:** finish-branch → pr-description
-- **Phase:** pr-description — Context & Drafting
-- **Step:** 1.1 — **PAUSE:** PR description ready to copy
-- **CI:** usuario pidió “salta CI” (no bucle BugBot)
+- **Active task pointer:** `[NONE]`
+- **Execution context:**
+  - **active_skill:** `[NONE]`
+  - **current_phase:** `[NONE]`
+  - **current_step:** `[NONE]`
