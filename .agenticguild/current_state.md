@@ -2,6 +2,6 @@
 
 - **Skill:** finish-branch
 - **Phase:** 4 — Final Spackle & PR
-- **Step:** sync-docs — SPEC actualizado (REQ-PROF-003); CI omitido por usuario
+- **Step:** harvest-rules 1.1 — Candidatos listados; esperando aprobación (o SKIP)
 - **Stealth mode:** false
-- **Note:** Pendiente: harvest-rules (4.2), pr-description (4.3), cierre sesión (4.4–4.5) si sigue finish-branch.
+- **Note:** `review_ledger.md` vacío de entradas. Tras aprobar harvest, pendiente pr-description (4.3).
