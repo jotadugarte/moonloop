@@ -24,8 +24,15 @@ RSpec.describe "Menus autosave", type: :system do
   it "autosaves a slot when selecting a recipe (no explicit save click)" do
     register_user_in_browser(email: "menu-autosave@example.com")
 
-    recipe = Recipe.create!(user: User.last, name: "Ensalada rápida")
-    menu = Menu.create!(user: User.last, name: "Semana autosave")
+    visit new_recipe_path
+    fill_in "Nombre", with: "Ensalada rápida"
+    click_button "Crear receta"
+
+    visit menus_path
+    fill_in I18n.t("menus.index.name_label"), with: "Semana autosave"
+    click_button I18n.t("menus.index.create_submit")
+
+    menu = Menu.find_by!(name: "Semana autosave")
 
     visit edit_menu_path(menu)
 
