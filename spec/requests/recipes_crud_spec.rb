@@ -46,6 +46,24 @@ RSpec.describe "Recipes CRUD", type: :request do
   end
 
   # [REQ-MENU-002]
+  it "attaches a meal-type placeholder image when creating a recipe without an upload" do
+    post recipes_path,
+      params: {
+        recipe: {
+          name: "Avena",
+          instructions: "",
+          publicly_shareable: "0",
+          meal_type: "desayuno"
+        }
+      }
+
+    expect(response).to have_http_status(:found)
+    recipe = Recipe.find_by!(user: user, name: "Avena")
+    expect(recipe.image).to be_attached
+    expect(recipe.image.filename.to_s).to include("fallback_desayuno")
+  end
+
+  # [REQ-MENU-002]
   it "forbids accessing another user's recipe" do
     other = create(:user, password: "Password123!", timezone: "Etc/UTC")
     foreign = Recipe.create!(user: other, name: "Ajena")
