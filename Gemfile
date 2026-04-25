@@ -59,6 +59,9 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
+  # RuboCop plugin so `bundle exec rubocop path/to/file.html.erb` parses ERB (not plain Ruby)
+  gem "rubocop-erb", require: false
+
   # Testing stack
   gem "rspec-rails"
   gem "factory_bot_rails"

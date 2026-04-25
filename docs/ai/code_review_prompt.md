@@ -5,14 +5,14 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 
 **Context & Stack:**
 
-* **Backend:** Rails ~> 8.1, **SQLite** (primary in this repo), **Solid Queue** / Solid stack adapters where configured, **`authentication-zero`** (session cookies + `Session` model, not Devise).
+* **Backend:** Rails ~> 8.1, **SQLite** (dev/test; PostgreSQL in production per deploy config), **Solid Queue** / Solid stack where configured, **`authentication-zero`** (session cookies + `Session` model + `has_secure_password` on `User`, not Devise).
 * **Frontend:** Hotwire (**Turbo** + **Stimulus**), **importmap-rails**, **Propshaft** for the asset pipeline (no Node/npm frontend toolchain in-repo unless added later).
-* **Styling:** App styles live under `app/assets/stylesheets` (no Tailwind in the default Gemfile). Prefer existing layout/partial patterns and shared CSS over ad-hoc inline styles.
+* **Styling:** Views often use **Tailwind-style utility class names** in markup; compiled CSS lives under `app/assets/stylesheets`. There is **no** `tailwindcss-rails` gem — when markup references utilities that are not emitted (e.g. `hidden`), add a **minimal shared rule** in CSS (see `application.css`) so behavior matches Stimulus toggles. Prefer existing layout/partial patterns over ad-hoc inline styles.
 * **Forbidden:** jQuery, CoffeeScript. No hardcoded user-facing strings (use `I18n` / `t(...)`; default locale may be Spanish).
 
 **Instructions:**
 
-* Review the diff of the current branch vs main.
+* Review the diff of the current branch vs the repo default branch (`master`, or `main` if that is `origin/HEAD`).
 * Do not speculate on code not shown.
 * Be pedantic about our standards (Sandi Metz, Service Objects, i18n, etc.).
 * Reference specific file names and line numbers.
@@ -37,8 +37,8 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 
 **Authentication & Security (`authentication-zero`)**
 
-* **Sessions:** Ensure session creation/teardown is consistent (`cookies.signed[:session_token]`, `Session` records, `Current.session`).
-* **Gating:** Unauthenticated users should be redirected consistently (`ApplicationController#authenticate` and `skip_before_action :authenticate` only where appropriate).
+* **Sessions:** Ensure session creation/teardown is consistent (signed session cookie, `Session` records, `Current.session` / `Current.user` per app conventions).
+* **Gating:** Unauthenticated users should be redirected consistently (`ApplicationController` authentication callback and `skip_before_action` only where appropriate).
 * **Sensitive data:** Ensure passwords/tokens are not logged; filter params; avoid leaking verification/reset tokens in URLs in logs.
 * **Authorization:** Check for authorization gaps (e.g. `before_action` scoping resources to `Current.user` / session user).
 
@@ -120,7 +120,7 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 ### 8. Documentation
 
 * If the PR adds a user-facing change, fix, or notable dependency/config change, has **`docs/ROADMAP.md`** been updated when this work completes a roadmap item?
-* If the project maintains a changelog, update it under `[Unreleased]` when appropriate. (This repo may not have `CHANGELOG.md` yet.)
+* Update **`CHANGELOG.md`** under `[Unreleased]` when appropriate (see that file’s “When to update” guidance).
 
 ---
 

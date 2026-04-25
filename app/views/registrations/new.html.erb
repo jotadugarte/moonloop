@@ -1,4 +1,4 @@
-<h1 class="text-2xl font-bold mb-4"><%= t('.title') %></h1>
+<h1 class="text-2xl font-bold mb-4"><%= t(".title") %></h1>
 
 <% registration_err_id = "registration-form-errors" %>
 <%= form_with model: @user, url: sign_up_path, class: "space-y-4 max-w-md", data: { controller: "unit-system-toggle" } do |form| %>
@@ -30,7 +30,7 @@
           autocomplete: "new-password",
           class: "border border-gray-300 rounded p-2 w-full",
           aria: aria_for_field(@user, :password, registration_err_id) %>
-    <div class="text-sm text-gray-500 mt-1"><%= t('.password_hint') %></div>
+    <div class="text-sm text-gray-500 mt-1"><%= t(".password_hint") %></div>
   </div>
 
   <div>
@@ -64,8 +64,9 @@
     <p id="registration-body-units-hint" class="text-sm text-gray-500"><%= t(".body_unit_system_hint") %></p>
   </fieldset>
 
+  <% imperial_height = registration_imperial_height_for_toggle?(@user) %>
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
-  <div data-unit-system-toggle-target="metric">
+  <div data-unit-system-toggle-target="metric"<% if imperial_height %> class="hidden"<% end %>>
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
           min: 50,
@@ -75,7 +76,7 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
   </div>
 
-  <div data-unit-system-toggle-target="imperial">
+  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_feet]", @reg_height_feet,
           id: "user_registration_height_feet",
@@ -84,7 +85,7 @@
           aria: height_cm_aria %>
   </div>
 
-  <div data-unit-system-toggle-target="imperial">
+  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_inches]", @reg_height_inches,
           id: "user_registration_height_inches",
@@ -98,7 +99,7 @@
   <div data-controller="timezone-autodetect">
     <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.select :timezone,
-          ActiveSupport::TimeZone.all.map { |tz| ["(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name] },
+          ActiveSupport::TimeZone.all.map { |tz| [ "(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name ] },
           { prompt: t("shared.timezone_select_prompt") },
           { required: true,
             data: { timezone_autodetect_target: "input" },
@@ -107,7 +108,7 @@
   </div>
 
   <div class="pt-4">
-    <%= form.submit t('.submit'), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
+    <%= form.submit t(".submit"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
   </div>
 <% end %>
 

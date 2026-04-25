@@ -59,6 +59,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 40. [x] **Bug: UI Registro - Mostrar/Ocultar inputs de altura**. Al seleccionar sistema métrico o imperial, mostrar solo los inputs de altura correspondientes (centímetros o pies/pulgadas) y ocultar los otros (REQ-PROF-003) — 2026-04-23
 41. [x] **Bug: Selección de Zona Horaria**. Cambiar el string estático por un combobox con zonas horarias reales, preseleccionando la zona detectada del navegador cuando aplica (REQ-PROF-001) — 2026-04-23
 42. [x] **Bug: Etiqueta Sistema Imperial**. Etiqueta imperial unificada vía i18n (p. ej. “Imperial (pies / pulgadas)”) — 2026-04-23
+45. [x] **Bug: Registro — altura métrico vs imperial**. HTML inicial y re-render 422 alinean visibilidad cm vs ft/in con `body_unit_system`; request specs [REQ-PROF-003] — 2026-04-24 — Depends on: Done #40
 
 ### Phase 8 — Catalogs
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
@@ -73,7 +74,6 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ## Pending (by priority)
 Orden revisado **2026-04-24**: primero **bugs y registro** (impacto inmediato en nuevos usuarios y contenido roto), luego **flujos de uso frecuente** (menús, informes), **pulido de medios y sesiones**, **datos para QA/demos**, y al final el **refactor de dominio** (mayor alcance y dependencia de SPEC).
 
-45. [ ] **Bug: Registro — altura métrico vs imperial**. En la pantalla de registro vuelven a mostrarse a la vez “Altura (cm)” y el bloque imperial (pies + pulgadas 0–11) aunque solo uno deba aplicar: con **Métrico**, solo entrada en cm (persistencia en cm); con **Imperial**, solo pies y pulgadas. — Depends on: Done #40 (posible regresión) (REQ-PROF-003).
 51. [ ] **Bug: Detalle de receta sin imagen**. En `/recipes/:id`, la imagen subida no se muestra (icono de imagen no encontrada); corregir carga/visualización del adjunto.
 43. [ ] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002).
 48. [ ] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot.
