@@ -125,7 +125,8 @@ RSpec.describe "Recipes CRUD", type: :request do
     expect(response).to have_http_status(:found)
     recipe.reload
     expect(recipe.name).to eq("Sopa fría")
-    expect(recipe.image).not_to be_attached
+    expect(recipe.image).to be_attached
+    expect(recipe.image.filename.to_s).to include("fallback_")
   end
 
   # [REQ-MENU-002]
