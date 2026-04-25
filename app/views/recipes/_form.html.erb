@@ -27,6 +27,15 @@
           aria: aria_for_field(@recipe, :instructions, recipe_err_id) %>
   </div>
 
+  <div>
+    <%= f.label :meal_type, t("recipes.form.meal_type_label"), class: "block font-medium mb-1" %>
+    <%= f.select :meal_type,
+          Menus::MealType::KEYS.map { |key| [ t("menus.meal_types.#{key}"), key ] },
+          {},
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@recipe, :meal_type, recipe_err_id) %>
+  </div>
+
   <div data-controller="recipe-image-preview">
     <div>
       <%= f.label :image, t("recipes.form.image_label"), class: "block font-medium mb-1" %>
