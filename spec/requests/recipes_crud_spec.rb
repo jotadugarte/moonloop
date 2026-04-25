@@ -55,6 +55,30 @@ RSpec.describe "Recipes CRUD", type: :request do
   end
 
   # [REQ-MENU-002]
+  it "serves a successful raster image when the recipe show page links a PNG hero" do
+    png_path = Rails.root.join("spec/fixtures/files/recipe_test_1x1.png")
+    recipe = Recipe.create!(user: user, name: "Plato raster")
+    recipe.image.attach(
+      io: StringIO.new(File.binread(png_path)),
+      filename: "hero.png",
+      content_type: "image/png"
+    )
+
+    get recipe_path(recipe)
+    expect(response).to have_http_status(:ok)
+    doc = Nokogiri::HTML(response.body)
+    img = doc.at_css("img[alt='Plato raster']")
+    expect(img).to be_present
+    src = img["src"]
+    expect(src).to be_present
+
+    get src
+    expect(response).to have_http_status(:ok)
+    expect(response.body.bytesize).to be_positive
+    expect(response.content_type.to_s).to match(/\Aimage\//)
+  end
+
+  # [REQ-MENU-002]
   it "updates a recipe and can remove the image when requested" do
     recipe = Recipe.create!(user: user, name: "Sopa")
     recipe.image.attach(

@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
-- **Skill:** roadmap-manage
-- **Phase:** 1 — Manage Roadmap
-- **Step:** 1.2 (ROADMAP.md updated — catalog accuracy)
-- **Active task pointer:** `[NONE]`
-- **Note:** Alineado ítem Done **#5** con **#10** (`weekly` retirado como `frequency_type`; ver REQ-HAB-005).
+- **Skill:** start-task
+- **Phase:** 3 — Execution (TDD)
+- **Step:** 3.1 complete → **PAUSA** aprobación del test; siguiente **3.2** al confirmar
+- **Active task pointer:** `active_sessions/task_recipe-images-50-51.md`
+- **Artefacto:** ejemplo `serves a successful raster image when the recipe show page links a PNG hero` en `spec/requests/recipes_crud_spec.rb`; fixture `spec/fixtures/files/recipe_test_1x1.png`
