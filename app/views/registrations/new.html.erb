@@ -97,17 +97,6 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_imperial_hint") %></p>
   </div>
 
-  <div data-controller="timezone-autodetect">
-    <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
-    <%= form.select :timezone,
-          ActiveSupport::TimeZone.all.map { |tz| [ "(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name ] },
-          { prompt: t("shared.timezone_select_prompt") },
-          { required: true,
-            data: { timezone_autodetect_target: "input" },
-            class: "border border-gray-300 rounded p-2 w-full",
-            aria: aria_for_field(@user, :timezone, registration_err_id) } %>
-  </div>
-
   <% weight_hint_text = t(".weight_optional_hint") %>
   <% weight_hint_metric_id = "registration-weight-optional-hint-metric" %>
   <% weight_hint_imperial_id = "registration-weight-optional-hint-imperial" %>
@@ -138,6 +127,17 @@
     <p id="<%= weight_hint_imperial_id %>" data-test="registration-weight-optional-hint" class="text-sm text-gray-500 mt-1">
       <%= weight_hint_text %>
     </p>
+  </div>
+
+  <div data-controller="timezone-autodetect">
+    <%= form.label :timezone, class: "block font-medium mb-1 text-gray-700" %>
+    <%= form.select :timezone,
+          ActiveSupport::TimeZone.all.map { |tz| [ "(GMT#{tz.formatted_offset}) #{tz.name}", tz.tzinfo.name ] },
+          { prompt: t("shared.timezone_select_prompt") },
+          { required: true,
+            data: { timezone_autodetect_target: "input" },
+            class: "border border-gray-300 rounded p-2 w-full",
+            aria: aria_for_field(@user, :timezone, registration_err_id) } %>
   </div>
 
   <div class="pt-4">

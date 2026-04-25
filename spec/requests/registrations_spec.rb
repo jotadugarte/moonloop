@@ -3,6 +3,23 @@
 require "rails_helper"
 
 RSpec.describe "Registrations", type: :request do
+  # [REQ-PROF-001]
+  it "renders height, then weight, then timezone on sign-up (initial GET and 422 re-render)" do
+    get sign_up_path
+
+    expect(response).to have_http_status(:ok)
+    initial_html = response.body
+    expect(initial_html.index('data-test="registration-height-metric"')).to be < initial_html.index('data-test="registration-weight-metric"')
+    expect(initial_html.index('data-test="registration-weight-metric"')).to be < initial_html.index('data-controller="timezone-autodetect"')
+
+    post sign_up_path, params: { user: { email: "", password: "", password_confirmation: "" } }
+
+    expect(response).to have_http_status(:unprocessable_content)
+    rerender_html = response.body
+    expect(rerender_html.index('data-test="registration-height-metric"')).to be < rerender_html.index('data-test="registration-weight-metric"')
+    expect(rerender_html.index('data-test="registration-weight-metric"')).to be < rerender_html.index('data-controller="timezone-autodetect"')
+  end
+
   # [REQ-PROF-003]
   it "serves initial sign-up HTML with imperial height wrappers hidden when units default to metric" do
     get sign_up_path
