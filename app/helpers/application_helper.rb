@@ -59,7 +59,7 @@ module ApplicationHelper
     return attachment if attachment_svg?(attachment)
     return attachment unless attachment.variable? && ImageVariants::Available.call
 
-    attachment.variant(resize_to_limit: resize_to_limit)
+    attachment.variant(format: :webp, resize_to_limit: resize_to_limit)
   end
 
   def attachment_svg?(attachment)
