@@ -101,18 +101,22 @@ RSpec.describe "Menus autosave", type: :system do
     recipe_label = I18n.t("menus.slots.recipe_pick_label")
     freeform_label = I18n.t("menus.slots.freeform_label")
 
+    within(slot_css) { select "Tostadas", from: recipe_label }
+
     within(slot_css) do
-      select "Tostadas", from: recipe_label
-      fill_in freeform_label, with: "sin azúcar"
-      find_field(freeform_label).send_keys(:tab) # blur → autosave
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
+      find_field(freeform_label).set("sin azúcar")
+      find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
 
     within(slot_css) do
-      fill_in freeform_label, with: ""
+      find_field(freeform_label).set("")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
+    end
 
-      select I18n.t("menus.slots.recipe_blank"), from: recipe_label
+    within(slot_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
+
+    within(slot_css) do
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
     end
 
