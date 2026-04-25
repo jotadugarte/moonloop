@@ -24,7 +24,7 @@
     <%= form_with model: (entry || MenuEntry.new),
           url: menu_menu_entries_path(menu),
           scope: :menu_entry,
-          data: { turbo_frame: frame_id } do |f| %>
+          data: { turbo_frame: frame_id, controller: "autosubmit" } do |f| %>
       <%= f.hidden_field :weekday, value: weekday %>
       <%= f.hidden_field :meal_type, value: meal_type %>
 
@@ -36,7 +36,7 @@
         </ul>
       <% end %>
 
-      <div data-controller="autosubmit">
+      <div>
         <%= f.label :recipe_id, t("menus.slots.recipe_pick_label") %>
         <%= f.collection_select :recipe_id,
               recipes,
@@ -51,7 +51,8 @@
           <%= f.label :freeform_text, t("menus.slots.freeform_label") %>
           <%= f.text_field :freeform_text,
                 value: entry&.freeform_text,
-                aria: aria_for_field(f.object, :freeform_text, slot_err_id) %>
+                aria: aria_for_field(f.object, :freeform_text, slot_err_id),
+                data: { action: "blur->autosubmit#submit" } %>
         </div>
       <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">
