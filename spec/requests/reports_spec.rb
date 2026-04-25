@@ -29,6 +29,25 @@ RSpec.describe "Reports (Informes)", type: :request do
       end
     end
 
+    # [REQ-RPT-001, REQ-RPT-002, REQ-RPT-003]
+    it "updates copy and can render a single section when requested" do
+      post sign_in_path, params: { email: user.email, password: password }
+
+      travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
+        get informes_path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to include(I18n.t("reports.show.reference_period_intro", date: l(Date.new(2026, 4, 20), format: :long)))
+        expect(response.body).to include(%(#{I18n.t("reports.show.date_label")}))
+
+        get informes_path, params: { section: "streaks" }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("reports-streaks")
+        expect(response.body).not_to include("reports-fulfillment")
+        expect(response.body).not_to include("reports-weight")
+      end
+    end
+
     # [REQ-RPT-001]
     it "redirects with alert when fecha is invalid" do
       post sign_in_path, params: { email: user.email, password: password }
