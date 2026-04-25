@@ -10,6 +10,7 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Sign up (roadmap #45, REQ-PROF-003):** initial HTML and 422 re-renders align height field visibility with **`body_unit_system`** (metric vs imperial), so cm and ft/in are not both shown before Stimulus runs.
 - Public catalog adoption: `ActiveRecord::RecordInvalid` on menu and exercise routine adopt flows now surfaces **i18n** flash keys instead of raw `full_messages` (`adoption.invalid_record.*`).
 - Habit metrics: added **`marked_failed_by_user`** on `habit_completions` so Mi Día can show **“In progress”** for partial measurable days while keeping **`status`** aligned with streaks/reports; public catalog author line uses a **stable non-PII code** derived from the user id (not the raw numeric id in copy).
 

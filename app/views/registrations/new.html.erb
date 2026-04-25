@@ -64,8 +64,9 @@
     <p id="registration-body-units-hint" class="text-sm text-gray-500"><%= t(".body_unit_system_hint") %></p>
   </fieldset>
 
+  <% imperial_height = (@user.body_unit_system == "imperial_us") %>
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
-  <div data-unit-system-toggle-target="metric">
+  <div data-unit-system-toggle-target="metric"<% if imperial_height %> class="hidden"<% end %>>
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
           min: 50,
@@ -75,7 +76,7 @@
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
   </div>
 
-  <div data-unit-system-toggle-target="imperial">
+  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_feet]", @reg_height_feet,
           id: "user_registration_height_feet",
@@ -84,7 +85,7 @@
           aria: height_cm_aria %>
   </div>
 
-  <div data-unit-system-toggle-target="imperial">
+  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_inches]", @reg_height_inches,
           id: "user_registration_height_inches",

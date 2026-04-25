@@ -1,5 +1,6 @@
 # Agentic Guild — current state
 
-- **Skill:** roadmap-manage
-- **Phase:** 1 — Manage Roadmap
-- **Step:** 1.2 — Pending reordered by priority in `docs/ROADMAP.md` (2026-04-24)
+- **Skill:** start-task
+- **Phase:** 3 — Execution (TDD)
+- **Step:** 3.2 — Vista `registrations/new` + CHANGELOG; specs en `spec/requests/registrations_spec.rb` (verificar en tu máquina)
+- **Active session:** `.agenticguild/active_sessions/task_registro-altura-metrico-imperial.md`
