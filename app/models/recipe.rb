@@ -16,10 +16,7 @@ class Recipe < ApplicationRecord
   def image_upload_safety_limits
     return unless image_upload_needs_limits_check?
 
-    ImageUploads::SafetyLimits
-      .validate(image.blob)
-      .errors
-      .each { errors.add(:image, _1) }
+    ImageUploads::SafetyLimits.validate(image.blob).errors.each { errors.add(:image, _1) }
   end
 
   def image_upload_needs_limits_check?

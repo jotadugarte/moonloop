@@ -55,7 +55,7 @@ module ApplicationHelper
   end
 
   def attachable_image_variant_options(variant_name, resize_to_limit)
-    return ImageVariants::VariantOptions.for(variant_name) if variant_name.present?
+    return ImageVariants::VariantOptions.for(variant_name).merge(resize_to_limit: resize_to_limit) if variant_name.present?
 
     { format: :webp, resize_to_limit: resize_to_limit }
   end
@@ -68,19 +68,19 @@ module ApplicationHelper
   end
 
   def menu_slot_preview_uploaded_image_tag(preview, alt, data)
-    attachable_image_tag preview.uploaded_image,
-      variant_name: :thumb,
-      resize_to_limit: ImageVariants::ResizeToLimit.for(:thumb),
-      alt: alt,
-      class: "menu-grid__slot-preview-img",
-      data: data
+    attachable_image_tag(preview.uploaded_image, **menu_slot_preview_uploaded_image_options(alt, data))
   end
 
   def menu_slot_preview_fallback_image_tag(preview, alt, data)
-    image_tag preview.fallback_asset_path,
-      alt: alt,
-      class: "menu-grid__slot-preview-img menu-grid__slot-preview-img--fallback",
-      data: data.merge(preview_kind: "fallback")
+    image_tag(preview.fallback_asset_path, **menu_slot_preview_fallback_image_options(alt, data))
+  end
+
+  def menu_slot_preview_uploaded_image_options(alt, data)
+    { variant_name: :thumb, resize_to_limit: ImageVariants::ResizeToLimit.for(:thumb), alt: alt, class: "menu-grid__slot-preview-img", data: data }
+  end
+
+  def menu_slot_preview_fallback_image_options(alt, data)
+    { alt: alt, class: "menu-grid__slot-preview-img menu-grid__slot-preview-img--fallback", data: data.merge(preview_kind: "fallback") }
   end
 
   def attachment_svg?(attachment)
