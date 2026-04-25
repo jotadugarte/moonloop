@@ -33,6 +33,7 @@ RSpec.describe "Recipes CRUD", type: :request do
         recipe: {
           name: "Ensalada",
           instructions: "Mezclar todo.",
+          meal_type: "cena",
           publicly_shareable: "1",
           image: Rack::Test::UploadedFile.new(image_path, "image/svg+xml")
         }

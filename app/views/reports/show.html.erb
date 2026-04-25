@@ -6,11 +6,11 @@
 <% section = "fulfillment" unless %w[fulfillment streaks weight].include?(section) %>
 
 <nav class="reports-section-nav" aria-label="<%= t("reports.show.section_nav_aria") %>">
-  <%= link_to t("reports.show.nav_fulfillment"), informes_path(fecha: params[:fecha], section: "fulfillment") %>
+  <%= link_to t("reports.show.nav_fulfillment"), informes_path(fecha: params[:fecha], section: "fulfillment"), class: (section == "fulfillment" ? "reports-section-nav__link reports-section-nav__link--active" : "reports-section-nav__link"), aria: (section == "fulfillment" ? { current: "page" } : {}) %>
   <%= t("ui.inline_sep") %>
-  <%= link_to t("reports.show.nav_streaks"), informes_path(fecha: params[:fecha], section: "streaks") %>
+  <%= link_to t("reports.show.nav_streaks"), informes_path(fecha: params[:fecha], section: "streaks"), class: (section == "streaks" ? "reports-section-nav__link reports-section-nav__link--active" : "reports-section-nav__link"), aria: (section == "streaks" ? { current: "page" } : {}) %>
   <%= t("ui.inline_sep") %>
-  <%= link_to t("reports.show.nav_weight"), informes_path(fecha: params[:fecha], section: "weight") %>
+  <%= link_to t("reports.show.nav_weight"), informes_path(fecha: params[:fecha], section: "weight"), class: (section == "weight" ? "reports-section-nav__link reports-section-nav__link--active" : "reports-section-nav__link"), aria: (section == "weight" ? { current: "page" } : {}) %>
 </nav>
 
 <%= form_with url: informes_path, method: :get, local: true, class: "reports-date-picker" do %>
