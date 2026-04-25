@@ -51,6 +51,25 @@
     - `/menus/:id/edit` renders a weekly grid of slots with a select/combobox per slot.
     - Slot changes currently require explicit submit per slot or a full-page “Save”.
 
+    ## Findings (Step 4 — current grid implementation)
+    - Edit page: `app/views/menus/edit.html.erb`
+      - Builds a 7×meal_types grid and renders each slot via `render "menus/slot"` with locals `menu`, `weekday`, `meal_type`, `entry`.
+      - Slot keying matches the existing map: `@entries_by_slot[[weekday, meal_type]]`.
+
+    - Slot partial: `app/views/menus/_slot.html.erb`
+      - Each slot is already a **Turbo Frame**: `turbo_frame_tag dom_id(menu, "slot_#{weekday}_#{meal_type}")`.
+      - Preview image is already supported via `Menus::SlotPreview.call(entry:, meal_type:)` and `menu_slot_preview_image_tag`.
+      - Slot writes currently require an explicit submit button: `f.submit t("menus.slots.save_submit")`.
+      - Slot clear is a separate `button_to` hitting `clear_menu_menu_entries_path(menu)` (DELETE) targeting the same frame.
+      - **Important**: the partial currently queries recipes directly (`recipes = menu.user.recipes.order(:name)`), which is a view-level DB query we should avoid expanding further; prefer passing `recipes` as a local later if we touch this.
+
+    - Persistence endpoint: `app/controllers/menus/menu_entries_controller.rb`
+      - `create` calls `Menus::UpsertEntry.call(**upsert_args)` and responds with:
+        - `turbo_stream`: `turbo_stream.replace(slot_frame_id, partial: "menus/slot", locals: ...)`
+        - `html`: redirect back to `edit_menu_path(@menu)`
+      - `clear` deletes the entry row (if present) and re-renders the slot similarly.
+      - On `ActiveRecord::RecordInvalid`, it re-renders the slot with status **422** (turbo) or redirects with an alert (html).
+
     ## Open questions to resolve during exploration
     - What is the current slot editor UI? (native `<select>`, custom combobox, Turbo Frame per slot, etc.)
     - Slot content supports **both** `recipe_id` **and** `freeform_text` (when `User#allow_menu_freeform` is enabled).
@@ -104,7 +123,7 @@
     <step id="1" status="complete">Write/adjust request specs for menu creation redirect: POST /menus redirects to edit path (302) and is scoped to Current.user. [REQ-MENU-001]</step>
     <step id="2" status="complete">Write/adjust system spec (or request+view spec if already patterned) covering: create menu (name only) → lands on /menus/:id/edit. [REQ-MENU-001]</step>
     <step id="3" status="complete">Locate current /menus create behavior and change redirect target to edit. Ensure invalid create still renders 422 with errors (no redirect). [REQ-MENU-001]</step>
-    <step id="4" status="pending">Inventory the current menu edit grid implementation: identify slot partial, persistence endpoint (likely MenuEntries controller) and how it calls Menus::UpsertEntry. Document findings in this session file. [REQ-MENU-001]</step>
+    <step id="4" status="complete">Inventory the current menu edit grid implementation: identify slot partial, persistence endpoint (likely MenuEntries controller) and how it calls Menus::UpsertEntry. Document findings in this session file. [REQ-MENU-001]</step>
     <step id="5" status="pending">Design slot as Turbo Frame boundary: one frame per (weekday, meal_type) that re-renders a single slot partial after save, keeping the page stable. [REQ-MENU-001]</step>
     <step id="6" status="pending">Implement recipe autosave on change: slot form submits to the existing persistence endpoint, targeting the slot frame; server responds with frame HTML (or turbo_stream replace) re-rendering the slot with recipe image preview. [REQ-MENU-001, REQ-MENU-002]</step>
     <step id="7" status="pending">Implement freeform autosave on blur (only when allow_menu_freeform): add a text input/textarea in the slot, and a small Stimulus controller that submits the slot form on blur. Ensure it does not submit per keystroke. [REQ-MENU-001]</step>
