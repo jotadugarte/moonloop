@@ -155,6 +155,34 @@ RSpec.describe "Weight logs", type: :request do
         end
       end
 
+      # [REQ-PROF-002, REQ-WGT-002]
+      it "creates a weight log for a user with no initial current weight and reconciles current stats" do
+        nil_stats_user = create(
+          :user,
+          password: "Password123!",
+          timezone: "Etc/UTC",
+          height_cm: 180,
+          current_weight_kg: nil,
+          current_bmi: nil
+        )
+        post sign_in_path, params: { email: nil_stats_user.email, password: "Password123!" }
+
+        travel_to Time.utc(2026, 4, 17, 12, 0, 0) do
+          post weight_logs_path,
+            params: {
+              weight_log: {
+                weight_kg: "80.0",
+                logged_at: "2026-04-16T10:30"
+              }
+            }
+
+          expect(response).to redirect_to(edit_profile_path)
+          nil_stats_user.reload
+          expect(nil_stats_user.current_weight_kg).to eq(80.0)
+          expect(nil_stats_user.current_bmi).to be_present
+        end
+      end
+
       # [REQ-WGT-002, REQ-WGT-004]
       it "accepts pounds and persists canonical kg for imperial users" do
         imperial = create(:user, password: "Password123!", timezone: "Etc/UTC", height_cm: 180, body_unit_system: "imperial_us")
