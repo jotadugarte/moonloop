@@ -29,6 +29,17 @@ RSpec.describe "Menus editor", type: :system do
     end
   end
 
+  # [REQ-MENU-001]
+  it "redirects to the editor after creating a menu from the index" do
+    visit "/menus"
+
+    fill_in "Nombre", with: "Nueva semana"
+    click_button "Crear menú"
+
+    menu = Menu.find_by!(user: user, name: "Nueva semana")
+    expect(page).to have_current_path(edit_menu_path(menu))
+  end
+
   # [REQ-MENU-002]
   it "shows a meal-type fallback preview when the slot recipe has no image" do
     menu = Menu.create!(user: user, name: "Con receta")
