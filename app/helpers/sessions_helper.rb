@@ -2,19 +2,19 @@
 
 module SessionsHelper
   USER_AGENT_BROWSER_RULES = [
-    [ "Edg/", "Edge" ],
-    [ "Firefox/", "Firefox" ],
-    [ "Chrome/", "Chrome" ],
-    [ "Version/", "Safari" ]
+    [ "Edg/", :edge ],
+    [ "Firefox/", :firefox ],
+    [ "Chrome/", :chrome ],
+    [ "Version/", :safari ]
   ].freeze
 
   USER_AGENT_PLATFORM_RULES = [
-    [ "Android", "Android" ],
-    [ "iPhone", "iOS" ],
-    [ "iPad", "iOS" ],
-    [ "Windows", "Windows" ],
-    [ "Mac OS X", "macOS" ],
-    [ "Linux", "Linux" ]
+    [ "Android", :android ],
+    [ "iPhone", :ios ],
+    [ "iPad", :ios ],
+    [ "Windows", :windows ],
+    [ "Mac OS X", :macos ],
+    [ "Linux", :linux ]
   ].freeze
 
   def session_device_label(session)
@@ -32,17 +32,19 @@ module SessionsHelper
   private
 
   def platform_label(user_agent)
-    match_label(user_agent, USER_AGENT_PLATFORM_RULES)
+    key = match_key(user_agent, USER_AGENT_PLATFORM_RULES)
+    key.present? ? t("sessions.user_agent.platforms.#{key}") : nil
   end
 
   def browser_label(user_agent)
     return nil if user_agent.include?("Chrome/") && user_agent.include?("Edg/")
 
-    match_label(user_agent, USER_AGENT_BROWSER_RULES)
+    key = match_key(user_agent, USER_AGENT_BROWSER_RULES)
+    key.present? ? t("sessions.user_agent.browsers.#{key}") : nil
   end
 
-  def match_label(user_agent, rules)
-    rules.each { |needle, label| return label if user_agent.include?(needle) }
+  def match_key(user_agent, rules)
+    rules.each { |needle, key| return key if user_agent.include?(needle) }
     nil
   end
 

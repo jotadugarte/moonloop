@@ -537,6 +537,18 @@ es:
       phase_program:
         revoked_public_share: "Se quitó el estado público del programa."
   sessions:
+    user_agent:
+      browsers:
+        edge: "Edge"
+        firefox: "Firefox"
+        chrome: "Chrome"
+        safari: "Safari"
+      platforms:
+        android: "Android"
+        ios: "iOS"
+        windows: "Windows"
+        macos: "macOS"
+        linux: "Linux"
     new:
       title: "Iniciar sesión"
       submit: "Iniciar sesión"

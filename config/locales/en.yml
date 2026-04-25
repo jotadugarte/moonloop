@@ -563,6 +563,18 @@ en:
       phase_program:
         revoked_public_share: "This program is no longer publicly shared."
   sessions:
+    user_agent:
+      browsers:
+        edge: "Edge"
+        firefox: "Firefox"
+        chrome: "Chrome"
+        safari: "Safari"
+      platforms:
+        android: "Android"
+        ios: "iOS"
+        windows: "Windows"
+        macos: "macOS"
+        linux: "Linux"
     new:
       title: "Sign in"
       submit: "Sign in"
