@@ -37,6 +37,11 @@ RSpec.describe "Menus autosave", type: :system do
       select "Ensalada rápida", from: I18n.t("menus.slots.recipe_pick_label")
     end
 
+    # Wait for the Turbo autosave response (slot re-render).
+    within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
+    end
+
     visit current_path
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
