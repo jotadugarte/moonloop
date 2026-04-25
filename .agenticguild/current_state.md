@@ -1,12 +1,12 @@
-<phase>explore-task / Phase 1 — The Whiteboard (Discovery Loop)</phase>
-<step>1.1 — Check current_state for active session</step>
+<phase>start-task / Phase 3 — Execution (Iterative TDD)</phase>
+<step>3.1 — Added failing spec: sign-up weight hint present</step>
 
-Context: Added Pending item #54 to `docs/ROADMAP.md` about allowing users to choose which recipe image to remove in `/recipes/:id/edit`; current behavior removes the first uploaded image.
+Context: Added request spec expecting weight input + optional hint on GET /sign_up (will fail until UI is implemented).
 
 # Agentic Guild — current state
 
-- **Active task pointer:** `[NONE]`
+- **Active task pointer:** `task_registro-peso-opcional.md`
 - **Execution context:**
-  - **active_skill:** `explore-task`
-  - **current_phase:** `1`
-  - **current_step:** `1.1`
+  - **active_skill:** `start-task`
+  - **current_phase:** `3`
+  - **current_step:** `3.1`

@@ -16,6 +16,46 @@ RSpec.describe "Registrations", type: :request do
     imperial.each { |node| expect(node["class"]).to include("hidden") }
   end
 
+  # [REQ-PROF-002, REQ-WGT-002]
+  it "allows sign-up when weight is blank and persists nil current weight and BMI" do
+    post sign_up_path, params: {
+      user: {
+        email: "blank_weight@example.com",
+        password: "password-123",
+        password_confirmation: "password-123",
+        birth_year: "1990",
+        birth_month: "5",
+        birth_day: "15",
+        timezone: "America/Santiago",
+        body_unit_system: "metric",
+        height_cm: "170",
+        weight_kg: ""
+      }
+    }
+
+    expect(response).to have_http_status(:found)
+
+    user = User.find_by(email: "blank_weight@example.com")
+    expect(user).to be_present
+    expect(user.current_weight_kg).to be_nil
+    expect(user.current_bmi).to be_nil
+  end
+
+  # [REQ-I18N-001, REQ-WGT-002]
+  it "shows a weight field with an 'optional' hint on the sign-up page" do
+    get sign_up_path
+
+    expect(response).to have_http_status(:ok)
+    doc = Nokogiri::HTML(response.body)
+
+    weight_input = doc.at_css('input[name="user[weight_kg]"], input[name="user[weight_lb]"]')
+    expect(weight_input).to be_present
+
+    hint = doc.at_css('[data-test="registration-weight-optional-hint"]')
+    expect(hint).to be_present
+    expect(hint.text.strip).not_to be_empty
+  end
+
   # [REQ-PROF-003]
   it "422 re-render hides metric height wrapper when imperial units are selected" do
     post sign_up_path, params: {
