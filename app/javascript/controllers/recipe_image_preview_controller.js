@@ -11,18 +11,24 @@ export default class extends Controller {
   showPreview() {
     this.revokeObjectUrl()
     const file = this.fileTarget.files?.[0]
-    if (!file) {
-      this.wrapperTarget.classList.add("hidden")
-      this.imageTarget.removeAttribute("src")
-      return
-    }
-    this.objectUrl = URL.createObjectURL(file)
-    this.imageTarget.src = this.objectUrl
-    this.wrapperTarget.classList.remove("hidden")
+    if (!file) return this.clearPreview()
+
+    this.applyFilePreview(file)
   }
 
   disconnect() {
     this.revokeObjectUrl()
+  }
+
+  clearPreview() {
+    this.wrapperTarget.classList.add("hidden")
+    this.imageTarget.removeAttribute("src")
+  }
+
+  applyFilePreview(file) {
+    this.objectUrl = URL.createObjectURL(file)
+    this.imageTarget.src = this.objectUrl
+    this.wrapperTarget.classList.remove("hidden")
   }
 
   revokeObjectUrl() {
