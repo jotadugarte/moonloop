@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "stringio"
+require "uri"
 
 require "rails_helper"
 
@@ -72,7 +73,13 @@ RSpec.describe "Recipes CRUD", type: :request do
     src = img["src"]
     expect(src).to be_present
 
-    get src
+    path = src.start_with?("http") ? URI(src).request_uri : src
+    get path
+    6.times do
+      break unless response.redirect?
+
+      follow_redirect!
+    end
     expect(response).to have_http_status(:ok)
     expect(response.body.bytesize).to be_positive
     expect(response.content_type.to_s).to match(/\Aimage\//)
