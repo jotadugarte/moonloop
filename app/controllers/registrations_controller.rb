@@ -11,11 +11,14 @@ class RegistrationsController < ApplicationController
     @reg_height_feet = params.dig(:user, :height_feet)
     @reg_height_inches = params.dig(:user, :height_inches)
 
-    attrs, dob_status = registration_user_attributes_tuple
+    attrs, dob_status, weight_status = registration_user_attributes_tuple
     @user = User.new(attrs)
 
     if dob_status == :invalid
       @user.errors.add(:date_of_birth, :invalid_calendar)
+      render :new, status: :unprocessable_entity
+    elsif weight_status == :invalid
+      @user.errors.add(:current_weight_kg, :invalid)
       render :new, status: :unprocessable_entity
     elsif @user.save
       session_record = @user.sessions.create!
@@ -34,10 +37,10 @@ class RegistrationsController < ApplicationController
       raw = registration_permitted_params
       system = registration_body_unit_system(raw[:body_unit_system])
       height_cm = registration_height_cm(raw, system)
-      weight_kg = registration_weight_kg(raw, system)
+      weight_kg, weight_status = registration_weight_kg_tuple(raw, system)
       current_bmi = registration_current_bmi(weight_kg, height_cm)
       dob = BirthDateTriplet.parse(raw[:birth_year], raw[:birth_month], raw[:birth_day])
-      [ build_registration_attrs(raw, dob, system, height_cm, weight_kg, current_bmi), dob ]
+      [ build_registration_attrs(raw, dob, system, height_cm, weight_kg, current_bmi), dob, weight_status ]
     end
 
     def registration_permitted_params
@@ -62,13 +65,22 @@ class RegistrationsController < ApplicationController
       end
     end
 
-    def registration_weight_kg(raw, system)
-      return raw[:weight_kg].presence&.to_d if system == "metric"
+    def registration_weight_kg_tuple(raw, system)
+      raw_value = system == "metric" ? raw[:weight_kg].presence : raw[:weight_lb].presence
+      return [nil, :blank] if raw_value.nil?
 
-      pounds = raw[:weight_lb].presence
-      return nil if pounds.nil?
+      weight_kg = weight_kg_from_units(raw_value, system)
+      [ WeightKg.new(value: weight_kg).value, :ok ]
+    rescue ArgumentError => e
+      return [nil, :invalid] if WeightKg.invalid_argument_error?(e)
 
-      BodyMetrics.lb_to_kg(pounds).round(2)
+      raise
+    end
+
+    def weight_kg_from_units(raw_value, system)
+      return BigDecimal(raw_value.to_s) if system == "metric"
+
+      BodyMetrics.lb_to_kg(raw_value).round(2)
     end
 
     def registration_current_bmi(weight_kg, height_cm)
