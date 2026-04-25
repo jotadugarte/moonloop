@@ -150,4 +150,3 @@ RSpec.describe "Menus autosave", type: :system do
     end
   end
 end
-
