@@ -1,7 +1,7 @@
 <phase>start-task / Phase 3 — Execution (Iterative TDD)</phase>
-<step>3.2 — Implemented weight input + optional hint on sign-up</step>
+<step>3.3 — Roadmap #43 marked done; ready for finish-branch</step>
 
-Context: Registration form now renders weight input (kg or lb) and an i18n optional hint with data-test registration-weight-optional-hint.
+Context: Specs green per user. Implemented optional sign-up weight (UI + persistence + validation) and marked ROADMAP #43 done.
 
 # Agentic Guild — current state
 
@@ -9,4 +9,4 @@ Context: Registration form now renders weight input (kg or lb) and an i18n optio
 - **Execution context:**
   - **active_skill:** `start-task`
   - **current_phase:** `3`
-  - **current_step:** `3.1`
+  - **current_step:** `3.3`
