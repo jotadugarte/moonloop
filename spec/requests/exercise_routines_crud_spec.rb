@@ -43,6 +43,25 @@ RSpec.describe "Exercise routines CRUD", type: :request do
     expect(r.exercise_routine_lines.first.label).to eq("Press")
   end
 
+  # [REQ-I18N-001]
+  it "shows exercise routine validation errors in Spanish without translation-missing noise" do
+    I18n.with_locale(:es) do
+      post exercise_routines_path,
+        params: {
+          exercise_routine: {
+            name: "",
+            exercise_routine_lines_attributes: {
+              "0" => { weekday: 0, position: 0, label: "" }
+            }
+          }
+        }
+    end
+
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(response.body).not_to include("Translation missing")
+    expect(response.body).not_to include("Exercise routine lines")
+  end
+
   # [REQ-EXR-006]
   it "creates a routine as publicly shareable when the owner opts in" do
     post exercise_routines_path,
