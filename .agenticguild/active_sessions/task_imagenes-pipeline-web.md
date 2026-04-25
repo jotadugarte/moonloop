@@ -152,6 +152,6 @@ User intent: que sea duradero.
   <step id="5" status="complete">Operación: asegurar `libvips` instalado en producción y en CI (documentar el requisito en el README / setup del repo si existe). Mantener fallback local para dev sin libvips (pero CI debe fallar si no puede generar variantes).</step>
   <step id="6" status="complete">Validación de uploads: aplicar límites duros (por ejemplo 25MB / 8000px lado mayor) para proteger CPU/RAM; mensajes de error via i18n; confirmar que solo se aceptan imágenes estáticas.</step>
   <step id="7" status="complete">Pruebas: agregar request/system specs mínimas que verifiquen que el HTML renderiza URLs de variantes (no originales) y que el pipeline produce WebP para `thumb/list/detail`, más un spec para el límite duro (rechazo con 422 + mensaje i18n).</step>
-  <step id="8" status="pending">Actualización de CHANGELOG.md bajo `[Unreleased]` (cambio visible de performance/entrega de imágenes + regla transversal) si aplica según la política del repo.</step>
+  <step id="8" status="complete">Actualización de CHANGELOG.md bajo `[Unreleased]` (cambio visible de performance/entrega de imágenes + regla transversal) si aplica según la política del repo.</step>
 </implementation_plan>
 
