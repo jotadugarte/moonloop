@@ -58,6 +58,28 @@ RSpec.describe "Registrations", type: :request do
     expect(hint.text.strip).not_to be_empty
   end
 
+  # [REQ-PROF-002, REQ-WGT-002]
+  it "does not allow sign-up with an out-of-domain weight" do
+    post sign_up_path, params: {
+      user: {
+        email: "bad_weight@example.com",
+        password: "password-123",
+        password_confirmation: "password-123",
+        birth_year: "1990",
+        birth_month: "5",
+        birth_day: "15",
+        timezone: "America/Santiago",
+        body_unit_system: "metric",
+        height_cm: "170",
+        weight_kg: "10"
+      }
+    }
+
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(User.find_by(email: "bad_weight@example.com")).to be_nil
+    expect(response.body).to include("role=\"alert\"")
+  end
+
   # [REQ-PROF-003, REQ-WGT-002]
   it "422 re-render shows imperial weight and hides metric weight when imperial units are selected" do
     post sign_up_path, params: {
