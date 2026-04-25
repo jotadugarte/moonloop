@@ -23,6 +23,7 @@
 
     <%= form_with model: (entry || MenuEntry.new),
           url: menu_menu_entries_path(menu),
+          method: :post,
           scope: :menu_entry,
           data: { turbo_frame: frame_id, controller: "autosubmit" } do |f| %>
       <%= f.hidden_field :weekday, value: weekday %>
