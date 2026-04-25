@@ -26,6 +26,7 @@ All notable changes to this project are documented in this file.
 - **Sign up (roadmap #45, REQ-PROF-003):** initial HTML and 422 re-renders align height field visibility with **`body_unit_system`** (metric vs imperial); define **`.hidden`** in `application.css` so Tailwind-like markup and **`unit-system-toggle`** actually hide blocks (Propshaft stack has no `tailwindcss-rails`).
 - Public catalog adoption: `ActiveRecord::RecordInvalid` on menu and exercise routine adopt flows now surfaces **i18n** flash keys instead of raw `full_messages` (`adoption.invalid_record.*`).
 - Habit metrics: added **`marked_failed_by_user`** on `habit_completions` so Mi Día can show **“In progress”** for partial measurable days while keeping **`status`** aligned with streaks/reports; public catalog author line uses a **stable non-PII code** derived from the user id (not the raw numeric id in copy).
+- **Quick wins (roadmap #46, #47, #54, #55, #56):** Informes navigation now renders a single active section (Fulfillment/Streaks/Weight) with updated copy and an active-link indicator; sessions list shows privacy-safe device/location labels; recipes now persist `meal_type` and enforce a single current image with a per-meal placeholder fallback; locale behavior respects `I18n.locale` unless `?locale=` is explicitly provided.
 
 ### Changed
 

@@ -24,7 +24,7 @@
 |--------|----------------------------|--------------|
 | `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**); **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | `REQ-MENU-001`, **REQ-MENU-006**, **REQ-CAT-001**. Weekly templates; catalog opt-in; adopted-copy metadata; template-level catalog popularity metrics |
 | `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `recipes` | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
-| `recipes` | `user_id` FK | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable` |
+| `recipes` | `user_id` FK; `meal_type` (string, NOT NULL, default `"desayuno"`, indexed with `user_id`) | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable`. `meal_type` drives per-meal placeholder fallback assets |
 
 ---
 
