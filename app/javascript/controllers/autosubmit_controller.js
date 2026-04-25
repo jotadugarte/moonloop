@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     this.lastFocusedName = null
+    this.shouldRestoreFocus = false
     this.onSubmitEnd = this.onSubmitEnd.bind(this)
     this.element.addEventListener("turbo:submit-end", this.onSubmitEnd)
   }
@@ -13,7 +14,9 @@ export default class extends Controller {
 
   submit(event) {
     const target = event?.target
-    this.lastFocusedName = target?.getAttribute?.("name") || null
+    const targetName = target?.getAttribute?.("name") || null
+    this.shouldRestoreFocus = event?.type === "change"
+    this.lastFocusedName = this.shouldRestoreFocus ? targetName : null
 
     const form = target?.form || this.element.closest("form")
     if (!form) return
@@ -23,6 +26,7 @@ export default class extends Controller {
 
   onSubmitEnd(event) {
     if (!event?.detail?.success) return
+    if (!this.shouldRestoreFocus) return
     if (!this.lastFocusedName) return
 
     const next = this.element.querySelector(`[name="${CSS.escape(this.lastFocusedName)}"]`)
