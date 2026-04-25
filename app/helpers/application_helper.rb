@@ -24,6 +24,15 @@ module ApplicationHelper
     image_tag attachable_image_source(attachment, resize_to_limit), **opts
   end
 
+  def recipe_image_tag(recipe, resize_to_limit:, **image_options)
+    attachment = recipe.image
+    return if attachment.blank? || !attachment.attached?
+
+    return placeholder_recipe_image_tag(recipe, **image_options) if recipe_placeholder_svg?(recipe)
+
+    attachable_image_tag attachment, resize_to_limit: resize_to_limit, **image_options
+  end
+
   def menu_slot_preview_image_tag(preview, meal_type)
     return if preview.blank?
 
@@ -47,8 +56,26 @@ module ApplicationHelper
   private
 
   def attachable_image_source(attachment, resize_to_limit)
+    return attachment if attachment_svg?(attachment)
     return attachment unless attachment.variable? && ImageVariants::Available.call
 
     attachment.variant(resize_to_limit: resize_to_limit)
+  end
+
+  def attachment_svg?(attachment)
+    attachment&.blob&.content_type == "image/svg+xml"
+  end
+
+  def recipe_placeholder_svg?(recipe)
+    blob = recipe.image&.blob
+    return false if blob.blank?
+    return false unless blob.content_type == "image/svg+xml"
+
+    blob.filename.to_s.start_with?("fallback_")
+  end
+
+  def placeholder_recipe_image_tag(recipe, **image_options)
+    opts = { loading: "lazy" }.merge(image_options)
+    image_tag "menus/fallback_#{recipe.meal_type}.svg", **opts
   end
 end

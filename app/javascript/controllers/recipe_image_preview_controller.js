@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Client-side preview for recipe image file input (new/edit before submit).
 export default class extends Controller {
-  static targets = ["file", "wrapper", "image"]
+  static targets = ["file", "wrapper", "image", "currentWrapper"]
 
   connect() {
     this.objectUrl = null
@@ -20,15 +20,23 @@ export default class extends Controller {
     this.revokeObjectUrl()
   }
 
+  prepareRemove(event) {
+    this.fileTarget.value = ""
+    this.clearPreview()
+    if (!event?.defaultPrevented) return
+  }
+
   clearPreview() {
     this.wrapperTarget.classList.add("hidden")
     this.imageTarget.removeAttribute("src")
+    if (this.hasCurrentWrapperTarget) this.currentWrapperTarget.classList.remove("hidden")
   }
 
   applyFilePreview(file) {
     this.objectUrl = URL.createObjectURL(file)
     this.imageTarget.src = this.objectUrl
     this.wrapperTarget.classList.remove("hidden")
+    if (this.hasCurrentWrapperTarget) this.currentWrapperTarget.classList.add("hidden")
   }
 
   revokeObjectUrl() {

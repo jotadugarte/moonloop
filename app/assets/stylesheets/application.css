@@ -375,6 +375,11 @@
 }
 
 /* ——— Reports (Informes) ——— */
+.reports-section-nav__link--active {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 .reports-weight-chart__series {
   fill: none;
   stroke: #2563eb;

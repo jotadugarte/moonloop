@@ -15,9 +15,10 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Current.user.recipes.new(recipe_params.except(:remove_image))
+    attrs = recipe_params.except(:remove_image)
+    @recipe = Current.user.recipes.new(attrs)
 
-    if @recipe.save
+    if save_recipe_and_attach_placeholder
       redirect_to recipe_path(@recipe), notice: t("recipes.flash.created")
     else
       render :new, status: :unprocessable_entity
@@ -35,6 +36,7 @@ class RecipesController < ApplicationController
     if @recipe.update(attrs)
       if remove_image && incoming_image.blank?
         @recipe.image.purge if @recipe.image.attached?
+        attach_placeholder_image_if_missing
       end
       redirect_to recipe_path(@recipe), notice: t("recipes.flash.updated")
     else
@@ -54,6 +56,27 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:name, :instructions, :publicly_shareable, :image, :remove_image)
+    params.require(:recipe).permit(:name, :instructions, :publicly_shareable, :meal_type, :image, :remove_image)
+  end
+
+  def attach_placeholder_image_if_missing
+    return if @recipe.image.attached?
+
+    meal_key = Menus::MealType.new(@recipe.meal_type).key
+    path = Rails.root.join("app/assets/images/menus/fallback_#{meal_key}.svg")
+    @recipe.image.attach(
+      io: StringIO.new(File.binread(path)),
+      filename: "fallback_#{meal_key}.svg",
+      content_type: "image/svg+xml"
+    )
+  end
+
+  def save_recipe_and_attach_placeholder
+    Recipe.transaction do
+      return false unless @recipe.save
+
+      attach_placeholder_image_if_missing
+      true
+    end
   end
 end

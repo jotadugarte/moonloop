@@ -14,6 +14,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 4. [x] BMI auto-calculation from weight and height (REQ-PROF-002) — 2026-04-16
 36. [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
 43. [x] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002). — 2026-04-24
+55. [x] **Registro: orden de campos (peso)**. En `http://localhost:3000/sign_up`, colocar **Peso** luego de **Altura** y antes de **Zona horaria**. (REQ-PROF-001) — 2026-04-25
+46. [x] **Sesiones: textos comprensibles para usuarios no técnicos**. En `/sessions`, sustituir o complementar datos crudos (User-Agent, IP `::1`, timestamp UTC) por mensajes en lenguaje claro que indiquen **desde qué dispositivo** y **desde dónde** se conectó la sesión (sin asumir conocimiento de redes ni cabeceras HTTP). — 2026-04-25
 
 ### Phase 2 — Habits Core
 5. [x] Habit model with frequency types: daily, weekdays, every X days, monthly (`weekly` removed and migrated — Done #10) (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 1
@@ -42,6 +44,9 @@ Things done and things left to do. Update this when finishing branches; use `roa
 33. [x] **Programas de Fases Unificadas (Bundles)**: entidad `PhaseProgram` con segmentos menú+rutina por rango de semanas, aplicación atómica al plan (`Programs::ApplyBundleToUser`), catálogo público, adopción integral y sincronización con origen en paridad con menús/rutinas (REQ-PHS-001); entrada en `/phase` y mapa de datos actualizado — 2026-04-19 — Depends on: **Done** #30, #31, Phase 4 (#17)
 51. [x] **Bug: Detalle de receta sin imagen**. Raster en `/recipes/:id` sin **libvips**: servir blob original vía `ImageVariants::Available` + `attachable_image_tag`; regresión request (PNG + redirecciones Active Storage). (**REQ-MENU-002**) — 2026-04-24 — Depends on: Phase 4 #16
 50. [x] **Nueva receta: vista previa de imagen**. Preview en cliente (`recipe-image-preview` Stimulus, i18n) en `/recipes/new`; system spec Selenium (registro vía UI por transaccional vs Puma). (**REQ-MENU-002**) — 2026-04-24 — Depends on: Phase 4 #16; mismo branch que **#51**
+48. [x] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot. — 2026-04-25
+54. [x] **Recetas: imagen única + placeholder por tipo de comida**. En recetas (`/recipes/new`, `/recipes/:id/edit`): siempre hay **una sola imagen actual**; al crear sin subir imagen, usar **placeholder** según `meal_type`; subir imagen **reemplaza** la actual; “Eliminar imagen” revierte al placeholder. (REQ-MENU-002) — 2026-04-25
+56. [x] **Bug: Menús — validación en idioma incorrecto**. En `/menus`, cuando el idioma activo es español, el error de validación de **Nombre** aparece en inglés (“Name can't be blank”). Debe mostrarse coherente con el locale actual (p. ej. “Nombre no puede estar en blanco”). — 2026-04-25
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise  routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -63,6 +68,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 41. [x] **Bug: Selección de Zona Horaria**. Cambiar el string estático por un combobox con zonas horarias reales, preseleccionando la zona detectada del navegador cuando aplica (REQ-PROF-001) — 2026-04-23
 42. [x] **Bug: Etiqueta Sistema Imperial**. Etiqueta imperial unificada vía i18n (p. ej. “Imperial (pies / pulgadas)”) — 2026-04-23
 45. [x] **Bug: Registro — altura métrico vs imperial**. HTML inicial y re-render 422 alinean visibilidad cm vs ft/in con `body_unit_system`; request specs [REQ-PROF-003] — 2026-04-24 — Depends on: Done #40
+47. [x] **Informes: copy y navegación por pestaña**. En `/informes`: eliminar la línea “Semana y mes mostrados según este día: …”; renombrar “Día de referencia” a **“Día”**; semana como rango legible (“20 de abril al 26 de abril de 2026”); mes como **“Abril 2026.”** (sin rango día–día); enlaces **Cumplimiento · Rachas · Peso** deben mostrar **solo** el contenido de cada sección al activarlos. — 2026-04-25
 
 ### Phase 8 — Catalogs
 34. [x] **Métricas de popularidad y búsqueda avanzada (Catálogos)**: Contadores de adopción y adoptantes distintos, orden por popularidad, facets y filtros discovery (`q`, dificultad, tags, semanas), duración de programas derivada de segmentos (REQ-CAT-001) — 2026-04-19 — Depends on: #30, #31, #33
@@ -70,6 +76,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ### Phase 9 — Infrastructure
 38. [x] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite) — 2026-04-22 — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
 39. [x] Crear vistas sencillas de pantallas para poder ver la app en la web — 2026-04-22 — Branch: views
+44. [x] **Datos para pruebas**: cargar o mantener seeds/fixtures con escenarios representativos para desarrollo, demos y QA (fases y rangos de semanas, menús, recetas, rutinas de ejercicio, programas de fases / bundles, hábitos de ejemplo, etc.) — alineado con convención del proyecto (`db:seed`, tasks o factories). — 2026-04-25
 
 ## In Progress
 *(No items currently in progress.)*
@@ -77,15 +84,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ## Pending (by priority)
 Orden revisado **2026-04-24** (prioridad y **agrupación sugerida por rama**): **#43** (registro); **#48** (menús); **#47** (informes); **#46** (sesiones); **#44** (seeds/fixtures, branch aparte); **#52** (refactor Receta → Plato, branch dedicado y SPEC); **#53** (pipeline/regla de imágenes web).
 
-55. [ ] **Registro: orden de campos (peso)**. En `http://localhost:3000/sign_up`, colocar **Peso** luego de **Altura** y antes de **Zona horaria**. (REQ-PROF-001)
-48. [x] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot. — 2026-04-25
-47. [ ] **Informes: copy y navegación por pestaña**. En `/informes`: eliminar la línea “Semana y mes mostrados según este día: …”; renombrar “Día de referencia” a **“Día”**; semana como rango legible (“20 de abril al 26 de abril de 2026”); mes como **“Abril 2026.”** (sin rango día–día); enlaces **Cumplimiento · Rachas · Peso** deben mostrar **solo** el contenido de cada sección al activarlos.
-46. [ ] **Sesiones: textos comprensibles para usuarios no técnicos**. En `/sessions`, sustituir o complementar datos crudos (User-Agent, IP `::1`, timestamp UTC) por mensajes en lenguaje claro que indiquen **desde qué dispositivo** y **desde dónde** se conectó la sesión (sin asumir conocimiento de redes ni cabeceras HTTP).
-44. [ ] **Datos para pruebas**: cargar o mantener seeds/fixtures con escenarios representativos para desarrollo, demos y QA (fases y rangos de semanas, menús, recetas, rutinas de ejercicio, programas de fases / bundles, hábitos de ejemplo, etc.) — alineado con convención del proyecto (`db:seed`, tasks o factories).
 52. [ ] **Reestructuración de entidad: de “Receta” a “Plato”**. Evolucionar el modelo para que el concepto central sea **Plato** (idea culinaria, p. ej. “Huevos revueltos”): la **receta** pasa a ser **opcional** (instrucciones de preparación no obligatorias); atributo **`tiene_receta`** para UI (mostrar pasos o preparación simple); justificación: precisión semántica, menús más naturales, menos fricción en ítems simples. Impacto: refactor de tabla/asociaciones, formularios con bloque receta dinámico o colapsable, rutas/controladores y nomenclatura coherentes con “plato”. — Depends on: Phase 4 (#16, rutas recetas/menús); alinear SPEC/glosario cuando exista criterio formal.
 53. [ ] **Imágenes subidas: formato web pequeño y regla para CRUD futuros**. En todos los puntos donde la app acepte imágenes, normalizar a un formato web liviano con calidad visual clara y consistente, pero comprimido, para carga rápida y menor uso de almacenamiento (p. ej. variantes Active Storage / pipeline único de procesamiento al adjuntar). Documentar en documentación viva del proyecto la **regla obligatoria** para cualquier CRUD o flujo futuro que permita subida de imágenes. (REQ-MENU-002 y análogos según aparezcan nuevos recursos con foto.)
-54. [ ] **Editar receta: elegir qué imagen se elimina**. En `/recipes/:id/edit`, al usar “Quitar imagen actual” y guardar, permitir elegir cuál imagen adjunta se va a eliminar; hoy elimina siempre la primera que se subió. (REQ-MENU-002)
-56. [ ] **Bug: Menús — validación en idioma incorrecto**. En `/menus`, cuando el idioma activo es español, el error de validación de **Nombre** aparece en inglés (“Name can't be blank”). Debe mostrarse coherente con el locale actual (p. ej. “Nombre no puede estar en blanco”).
 
 ## Backlog
 *(No items currently in backlog.)*

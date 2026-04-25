@@ -48,6 +48,7 @@ en:
     formats:
       weight_log: "%Y-%m-%d %H:%M"
       reports_chart_axis: "%Y-%m-%d %H:%M"
+      long: "%Y-%m-%d %H:%M"
   phase_start_reminder_mailer:
     notify:
       subject: "Your Phase 1 program starts today"
@@ -66,6 +67,8 @@ en:
   date:
     formats:
       long: "%B %d, %Y"
+      reports_month: "%B %Y"
+      reports_week_range_start: "%B %d"
     month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
   my_day:
     flash:
@@ -159,13 +162,12 @@ en:
       nav_fulfillment: "Fulfillment"
       nav_streaks: "Streaks"
       nav_weight: "Weight"
-      date_label: "Reference day"
+      date_label: "Day"
       go_to_date: "Go"
-      reference_period_intro: "Week and month below are based on this day: %{date}."
       view_today: "Back to today"
       fulfillment_heading: "Habit fulfillment"
-      fulfillment_week_range: "Week (Mon–Sun): %{start} — %{end}"
-      fulfillment_month_range: "Month: %{start} — %{end}"
+      fulfillment_week_range: "Week (Mon–Sun): %{start} to %{end}"
+      fulfillment_month_range: "Month: %{month}."
       fulfillment_empty: "No habits to show for these periods."
       fulfillment_no_due_days: "No due days"
       fulfillment_placeholder: "—"
@@ -378,9 +380,10 @@ en:
         other: "%{count} errors prevented this recipe from being saved:"
       name_label: "Name"
       instructions_label: "Instructions"
+      meal_type_label: "Meal type"
       image_label: "Image"
       image_preview_alt: "Preview of selected image"
-      remove_image_label: "Remove current image"
+      remove_image_button: "Delete image"
       public_label: "Share in the public catalog"
       create_submit: "Create recipe"
       update_submit: "Save changes"
@@ -560,6 +563,18 @@ en:
       phase_program:
         revoked_public_share: "This program is no longer publicly shared."
   sessions:
+    user_agent:
+      browsers:
+        edge: "Edge"
+        firefox: "Firefox"
+        chrome: "Chrome"
+        safari: "Safari"
+      platforms:
+        android: "Android"
+        ios: "iOS"
+        windows: "Windows"
+        macos: "macOS"
+        linux: "Linux"
     new:
       title: "Sign in"
       submit: "Sign in"
@@ -572,8 +587,11 @@ en:
       signed_out: "That session has been logged out"
     index:
       title: "Devices & Sessions"
-      user_agent: "User Agent"
-      ip_address: "Ip Address"
+      device: "Device"
+      device_unknown: "Device unavailable"
+      location: "Location"
+      location_localhost: "This device (localhost)"
+      location_unavailable: "Location unavailable"
       created_at: "Created at"
       log_out: "Log out"
   identity:

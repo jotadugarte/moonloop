@@ -33,6 +33,7 @@ RSpec.describe "Recipes CRUD", type: :request do
         recipe: {
           name: "Ensalada",
           instructions: "Mezclar todo.",
+          meal_type: "cena",
           publicly_shareable: "1",
           image: Rack::Test::UploadedFile.new(image_path, "image/svg+xml")
         }
@@ -43,6 +44,24 @@ RSpec.describe "Recipes CRUD", type: :request do
     expect(recipe.instructions).to include("Mezclar")
     expect(recipe.publicly_shareable).to eq(true)
     expect(recipe.image).to be_attached
+  end
+
+  # [REQ-MENU-002]
+  it "attaches a meal-type placeholder image when creating a recipe without an upload" do
+    post recipes_path,
+      params: {
+        recipe: {
+          name: "Avena",
+          instructions: "",
+          publicly_shareable: "0",
+          meal_type: "desayuno"
+        }
+      }
+
+    expect(response).to have_http_status(:found)
+    recipe = Recipe.find_by!(user: user, name: "Avena")
+    expect(recipe.image).to be_attached
+    expect(recipe.image.filename.to_s).to include("fallback_desayuno")
   end
 
   # [REQ-MENU-002]
@@ -107,7 +126,8 @@ RSpec.describe "Recipes CRUD", type: :request do
     expect(response).to have_http_status(:found)
     recipe.reload
     expect(recipe.name).to eq("Sopa fría")
-    expect(recipe.image).not_to be_attached
+    expect(recipe.image).to be_attached
+    expect(recipe.image.filename.to_s).to include("fallback_")
   end
 
   # [REQ-MENU-002]

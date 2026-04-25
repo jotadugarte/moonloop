@@ -5,18 +5,18 @@
   <% @sessions.each do |session| %>
     <div id="<%= dom_id session %>">
       <p>
-        <strong><%= t("sessions.index.user_agent") %>:</strong>
-        <%= session.user_agent %>
+        <strong><%= t("sessions.index.device") %>:</strong>
+        <%= session_device_label(session) %>
       </p>
 
       <p>
-        <strong><%= t("sessions.index.ip_address") %>:</strong>
-        <%= session.ip_address %>
+        <strong><%= t("sessions.index.location") %>:</strong>
+        <%= session_location_label(session) %>
       </p>
 
       <p>
         <strong><%= t("sessions.index.created_at") %>:</strong>
-        <%= session.created_at %>
+        <%= l(session.created_at.in_time_zone(Current.user.timezone), format: :long) %>
       </p>
 
     </div>
