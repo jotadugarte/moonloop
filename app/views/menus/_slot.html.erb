@@ -37,8 +37,9 @@
         </ul>
       <% end %>
 
-      <% recipe_focus_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}-recipe" %>
-      <% freeform_focus_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}-freeform" %>
+      <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
+      <% recipe_select_id = "#{slot_key}-recipe" %>
+      <% freeform_input_id = "#{slot_key}-freeform" %>
 
       <div>
         <%= f.label :recipe_id, t("menus.slots.recipe_pick_label") %>
@@ -48,7 +49,8 @@
               :name,
               { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
               { aria: aria_for_field(f.object, :recipe_id, slot_err_id),
-                data: { action: "change->autosubmit#submit", focus_key: recipe_focus_key } } %>
+                id: recipe_select_id,
+                data: { action: "change->autosubmit#submit" } } %>
       </div>
 
       <% if allow_freeform %>
@@ -56,8 +58,9 @@
           <%= f.label :freeform_text, t("menus.slots.freeform_label") %>
           <%= f.text_field :freeform_text,
                 value: entry&.freeform_text,
+                id: freeform_input_id,
                 aria: aria_for_field(f.object, :freeform_text, slot_err_id),
-                data: { action: "blur->autosubmit#submit", focus_key: freeform_focus_key } %>
+                data: { action: "blur->autosubmit#submit", turbo_permanent: true } %>
         </div>
       <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">
