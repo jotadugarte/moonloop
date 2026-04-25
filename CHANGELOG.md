@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **CI:** GitHub Actions `test` job (PostgreSQL 16 service, `db:test:prepare`, `bin/rspec`); push triggers include `main` and `master`. Local `bin/ci` runs test DB prepare and RSpec after existing lint/security steps.
+
 - **Linting:** `rubocop-erb` plugin so `bundle exec rubocop` can inspect ERB when template paths are passed explicitly; default `Exclude` keeps `bin/rubocop` / CI on Ruby sources only.
 
 ### Changed
