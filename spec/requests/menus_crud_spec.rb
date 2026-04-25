@@ -27,6 +27,17 @@ RSpec.describe "Menus CRUD", type: :request do
     expect(Menu.find_by(user: user, name: "Nueva semana")).to be_present
   end
 
+  # [REQ-I18N-001]
+  it "shows menu name validation errors in Spanish when locale is es" do
+    I18n.with_locale(:es) do
+      post "/menus", params: { menu: { name: "" } }
+    end
+
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(response.body).to include("Nombre no puede estar en blanco")
+    expect(response.body).not_to include("Name can't be blank")
+  end
+
   # [REQ-MENU-001]
   it "redirects to edit after creating a menu" do
     post "/menus", params: { menu: { name: "Nueva semana" } }
