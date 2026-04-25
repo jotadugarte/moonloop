@@ -42,7 +42,7 @@
       <% freeform_input_id = "#{slot_key}-freeform" %>
 
       <div>
-        <%= f.label :recipe_id, t("menus.slots.recipe_pick_label") %>
+        <%= f.label :recipe_id, t("menus.slots.recipe_pick_label"), for: recipe_select_id %>
         <%= f.collection_select :recipe_id,
               recipes,
               :id,
@@ -55,7 +55,7 @@
 
       <% if allow_freeform %>
         <div>
-          <%= f.label :freeform_text, t("menus.slots.freeform_label") %>
+          <%= f.label :freeform_text, t("menus.slots.freeform_label"), for: freeform_input_id %>
           <%= f.text_field :freeform_text,
                 value: entry&.freeform_text,
                 id: freeform_input_id,
