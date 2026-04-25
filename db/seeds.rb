@@ -95,7 +95,7 @@ def seed_local_recent_completions!(user)
     water_habit.update!(activation_date: user_yesterday)
   end
 
-  [user_yesterday, user_today].each do |local_date|
+  [ user_yesterday, user_today ].each do |local_date|
     Habits::RecordCompletion.call(
       user: user,
       user_habit: water_habit,

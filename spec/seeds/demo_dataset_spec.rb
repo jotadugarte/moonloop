@@ -230,4 +230,3 @@ RSpec.describe "Demo dataset seeds" do
     end
   end
 end
-
