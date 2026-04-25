@@ -23,6 +23,7 @@
     <div class="text-red-600 text-sm">
       <ul id="<%= routine_err_id %>" class="list-disc pl-5" role="alert">
         <% @routine.errors.each do |error| %>
+          <% next if error.attribute.to_s.start_with?("exercise_routine_lines.") %>
           <li><%= error.full_message %></li>
         <% end %>
         <% @routine.exercise_routine_lines.each do |line| %>
