@@ -1,6 +1,6 @@
 # Agentic Guild — current state
 
-- **Skill:** finish-branch
-- **Phase:** 2 — Compliance & Traceability Audit
-- **Step:** 2.1 — informe emitido; **PAUSE** a esperar FIX / PROCEED del usuario
-- **Nota:** Code review cerrado (verde local); sin segunda pasada salvo que pidas
+- **Skill:** finish-branch → harvest-rules
+- **Phase:** harvest-rules — Knowledge Commit
+- **Step:** 2.1 — rules written; ledger cleared; **PAUSE** to continue finish-branch
+- **CI:** usuario pidió “salta CI” (no bucle BugBot)
