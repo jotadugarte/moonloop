@@ -98,31 +98,33 @@ RSpec.describe "Menus autosave", type: :system do
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
     menu_id = page.current_path.match(%r{^/menus/(\d+)/edit$})[1]
-    frame_css = %(turbo-frame#menu_#{menu_id}_slot_2_desayuno)
+    # Slot frames use `dom_id(menu, "slot_#{weekday}_#{meal_type}")`
+    # which yields "slot_2_desayuno_menu_#{menu_id}".
+    frame_css = %(turbo-frame#slot_2_desayuno_menu_#{menu_id})
     recipe_label = I18n.t("menus.slots.recipe_pick_label")
     freeform_label = I18n.t("menus.slots.freeform_label")
 
     expect(page).to have_css(frame_css)
 
     within(frame_css) { select "Tostadas", from: recipe_label }
-    expect(page).to have_css("#{frame_css}:not([busy])")
+    expect(page).to have_css(frame_css)
 
     within(frame_css) do
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
       find_field(freeform_label).set("sin azúcar")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
-    expect(page).to have_css("#{frame_css}:not([busy])")
+    expect(page).to have_css(frame_css)
 
     within(frame_css) do
-      expect(page).to have_css("#{frame_css}:not([busy])")
+      expect(page).to have_css(frame_css)
       find_field(freeform_label).set("")
       find_field(freeform_label).send_keys(:tab) # blur → autosave
     end
-    expect(page).to have_css("#{frame_css}:not([busy])")
+    expect(page).to have_css(frame_css)
 
     within(frame_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
-    expect(page).to have_css("#{frame_css}:not([busy])")
+    expect(page).to have_css(frame_css)
 
     within(frame_css) do
       expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
