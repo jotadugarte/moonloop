@@ -39,6 +39,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 29. [x] Public recipe catalog: browsable `public_recipes` index; recipes may opt into `publicly_shareable`; admin may revoke public sharing (moderation). `Menu` supports `publicly_shareable` for catalog + admin revoke (**REQ-MENU-006**). (REQ-MENU-002; SPEC glossary — `Recipe`, `Menu`) — 2026-04-17 — Depends on: #16
 31. [x] Menús: catálogo público `public_menus` + adopción/sync con **paridad semántica** a rutinas (**REQ-EXR-006** / **Done #30**): usuarios autenticados, una copia por origen, nombre de copia estable al sincronizar, recetas duplicadas al adoptante en slots con receta, aviso/origen no disponible, moderación admin (REQ-MENU-006) — 2026-04-18 — Depends on: **Done #30**, Phase 4 (#15–19, #29)
 33. [x] **Programas de Fases Unificadas (Bundles)**: entidad `PhaseProgram` con segmentos menú+rutina por rango de semanas, aplicación atómica al plan (`Programs::ApplyBundleToUser`), catálogo público, adopción integral y sincronización con origen en paridad con menús/rutinas (REQ-PHS-001); entrada en `/phase` y mapa de datos actualizado — 2026-04-19 — Depends on: **Done** #30, #31, Phase 4 (#17)
+51. [x] **Bug: Detalle de receta sin imagen**. Raster en `/recipes/:id` sin **libvips**: servir blob original vía `ImageVariants::Available` + `attachable_image_tag`; regresión request (PNG + redirecciones Active Storage). (**REQ-MENU-002**) — 2026-04-24 — Depends on: Phase 4 #16
+50. [x] **Nueva receta: vista previa de imagen**. Preview en cliente (`recipe-image-preview` Stimulus, i18n) en `/recipes/new`; system spec Selenium (registro vía UI por transaccional vs Puma). (**REQ-MENU-002**) — 2026-04-24 — Depends on: Phase 4 #16; mismo branch que **#51**
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -72,10 +74,8 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-Orden revisado **2026-04-24** (prioridad y **agrupación sugerida por rama**): **#51** + **#50** consecutivos (un solo branch: imágenes de receta / Active Storage); **#43** (registro); **#48** (menús); **#47** (informes); **#46** (sesiones); **#44** (seeds/fixtures, branch aparte); al final **#52** (refactor Receta → Plato, branch dedicado y SPEC).
+Orden revisado **2026-04-24** (prioridad y **agrupación sugerida por rama**): **#43** (registro); **#48** (menús); **#47** (informes); **#46** (sesiones); **#44** (seeds/fixtures, branch aparte); al final **#52** (refactor Receta → Plato, branch dedicado y SPEC).
 
-51. [ ] **Bug: Detalle de receta sin imagen**. En `/recipes/:id`, la imagen subida no se muestra (icono de imagen no encontrada); corregir carga/visualización del adjunto.
-50. [ ] **Nueva receta: vista previa de imagen**. En `/recipes/new`, al adjuntar imagen de la receta, subirla y **mostrarla en la página** (feedback inmediato). — Branch sugerido: mismo que **#51**.
 43. [ ] **Registro: peso opcional**. En la pantalla de registro, solicitar **peso actual** como campo **opcional**; si se deja sin llenar, mostrar en la misma pantalla una indicación clara de que puede **añadirlo o actualizarlo más tarde en el perfil** (REQ-PROF-001, REQ-WGT-002).
 48. [ ] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot.
 47. [ ] **Informes: copy y navegación por pestaña**. En `/informes`: eliminar la línea “Semana y mes mostrados según este día: …”; renombrar “Día de referencia” a **“Día”**; semana como rango legible (“20 de abril al 26 de abril de 2026”); mes como **“Abril 2026.”** (sin rango día–día); enlaces **Cumplimiento · Rachas · Peso** deben mostrar **solo** el contenido de cada sección al activarlos.
