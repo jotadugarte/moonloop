@@ -37,6 +37,9 @@
         </ul>
       <% end %>
 
+      <% recipe_focus_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}-recipe" %>
+      <% freeform_focus_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}-freeform" %>
+
       <div>
         <%= f.label :recipe_id, t("menus.slots.recipe_pick_label") %>
         <%= f.collection_select :recipe_id,
@@ -44,7 +47,8 @@
               :id,
               :name,
               { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
-              { aria: aria_for_field(f.object, :recipe_id, slot_err_id), data: { action: "change->autosubmit#submit" } } %>
+              { aria: aria_for_field(f.object, :recipe_id, slot_err_id),
+                data: { action: "change->autosubmit#submit", focus_key: recipe_focus_key } } %>
       </div>
 
       <% if allow_freeform %>
@@ -53,7 +57,7 @@
           <%= f.text_field :freeform_text,
                 value: entry&.freeform_text,
                 aria: aria_for_field(f.object, :freeform_text, slot_err_id),
-                data: { action: "blur->autosubmit#submit" } %>
+                data: { action: "blur->autosubmit#submit", focus_key: freeform_focus_key } %>
         </div>
       <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">
