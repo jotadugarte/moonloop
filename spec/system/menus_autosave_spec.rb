@@ -20,22 +20,6 @@ RSpec.describe "Menus autosave", type: :system do
     expect(page).to have_content(I18n.t("registrations.create.signed_up"))
   end
 
-  def set_freeform_in_slot(frame_css, label, value)
-    attempts = 0
-    begin
-      attempts += 1
-      frame = find(frame_css, wait: 5)
-      within(frame) { find_field(label).set(value) }
-    rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::StaleElementReferenceError
-      raise if attempts >= 3
-      retry
-    end
-  end
-
-  def ensure_still_on_menu_editor!
-    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
-  end
-
   # [REQ-MENU-001]
   it "autosaves a slot when selecting a recipe (no explicit save click)" do
     register_user_in_browser(email: "menu-autosave@example.com")
@@ -92,61 +76,6 @@ RSpec.describe "Menus autosave", type: :system do
 
     within(%([data-test="menu-entry-slot"][data-weekday="1"][data-meal-type="desayuno"])) do
       expect(page).to have_field(I18n.t("menus.slots.freeform_label"), with: "nota rápida")
-    end
-  end
-
-  # [REQ-MENU-001]
-  it "clears the persisted slot when both recipe and freeform are blank" do
-    skip("Covered reliably at request level in spec/requests/menu_entries_turbo_spec.rb; Selenium is flaky with Turbo Frame replacements here.")
-
-    register_user_in_browser(email: "menu-clear-slot@example.com")
-
-    visit edit_profile_path
-    check I18n.t("profiles.edit.allow_menu_freeform")
-    click_button I18n.t("profiles.edit.submit")
-    expect(page).to have_content(I18n.t("profiles.update.success"))
-
-    visit new_recipe_path
-    fill_in "Nombre", with: "Tostadas"
-    click_button "Crear receta"
-
-    visit menus_path
-    fill_in I18n.t("menus.index.name_label"), with: "Semana limpiar"
-    click_button I18n.t("menus.index.create_submit")
-    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
-
-    slot_css = %([data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])
-    recipe_label = I18n.t("menus.slots.recipe_pick_label")
-    freeform_label = I18n.t("menus.slots.freeform_label")
-
-    ensure_still_on_menu_editor!
-    within(slot_css) { select "Tostadas", from: recipe_label }
-    ensure_still_on_menu_editor!
-
-    within(slot_css) do
-      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
-      find_field(freeform_label).set("sin azúcar")
-      find_field(freeform_label).send_keys(:tab) # blur → autosave
-    end
-    ensure_still_on_menu_editor!
-
-    within(slot_css) do
-      find_field(freeform_label).set("")
-      find_field(freeform_label).send_keys(:tab) # blur → autosave
-    end
-    ensure_still_on_menu_editor!
-
-    within(slot_css) { select I18n.t("menus.slots.recipe_blank"), from: recipe_label }
-    ensure_still_on_menu_editor!
-
-    within(slot_css) { expect(page).to have_no_css(%(img[data-test="menu-slot-preview"])) }
-
-    visit current_path
-
-    within(slot_css) do
-      expect(page).to have_select(recipe_label, selected: I18n.t("menus.slots.recipe_blank"))
-      expect(page).to have_field(freeform_label, with: "")
-      expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
     end
   end
 end
