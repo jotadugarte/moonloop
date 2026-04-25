@@ -78,5 +78,49 @@ RSpec.describe "Menus autosave", type: :system do
       expect(page).to have_field(I18n.t("menus.slots.freeform_label"), with: "nota rápida")
     end
   end
+
+  # [REQ-MENU-001]
+  it "clears the persisted slot when both recipe and freeform are blank" do
+    register_user_in_browser(email: "menu-clear-slot@example.com")
+
+    visit edit_profile_path
+    check I18n.t("profiles.edit.allow_menu_freeform")
+    click_button I18n.t("profiles.edit.submit")
+    expect(page).to have_content(I18n.t("profiles.update.success"))
+
+    visit new_recipe_path
+    fill_in "Nombre", with: "Tostadas"
+    click_button "Crear receta"
+
+    visit menus_path
+    fill_in I18n.t("menus.index.name_label"), with: "Semana limpiar"
+    click_button I18n.t("menus.index.create_submit")
+    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
+
+    slot_css = %([data-test="menu-entry-slot"][data-weekday="2"][data-meal-type="desayuno"])
+    recipe_label = I18n.t("menus.slots.recipe_pick_label")
+    freeform_label = I18n.t("menus.slots.freeform_label")
+
+    within(slot_css) do
+      select "Tostadas", from: recipe_label
+      fill_in freeform_label, with: "sin azúcar"
+      find_field(freeform_label).send_keys(:tab) # blur → autosave
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
+    end
+
+    within(slot_css) do
+      select I18n.t("menus.slots.recipe_blank"), from: recipe_label
+      fill_in freeform_label, with: ""
+      find_field(freeform_label).send_keys(:tab) # blur → autosave clear
+    end
+
+    visit current_path
+
+    within(slot_css) do
+      expect(page).to have_select(recipe_label, selected: I18n.t("menus.slots.recipe_blank"))
+      expect(page).to have_field(freeform_label, with: "")
+      expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
+    end
+  end
 end
 
