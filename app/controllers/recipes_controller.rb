@@ -21,7 +21,7 @@ class RecipesController < ApplicationController
     if save_recipe_and_attach_placeholder
       redirect_to recipe_path(@recipe), notice: t("recipes.flash.created")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -40,7 +40,7 @@ class RecipesController < ApplicationController
       end
       redirect_to recipe_path(@recipe), notice: t("recipes.flash.updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

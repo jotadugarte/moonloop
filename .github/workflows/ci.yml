@@ -90,6 +90,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install system dependencies (libvips for image variants)
+        run: sudo apt-get update && sudo apt-get install -y libvips
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:

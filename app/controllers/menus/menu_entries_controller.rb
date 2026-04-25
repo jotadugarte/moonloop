@@ -7,7 +7,7 @@ module Menus
       respond_after_upsert
     rescue ActiveRecord::RecordInvalid => e
       assign_invalid_entry(e)
-      respond_after_upsert(status: :unprocessable_entity)
+      respond_after_upsert(status: :unprocessable_content)
     end
 
     def clear

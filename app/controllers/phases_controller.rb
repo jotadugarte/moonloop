@@ -12,7 +12,7 @@ class PhasesController < ApplicationController
       redirect_after_phase_update
     else
       load_phase_dashboard
-      render :show, status: :unprocessable_entity
+      render :show, status: :unprocessable_content
     end
   end
 

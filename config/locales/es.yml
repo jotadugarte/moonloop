@@ -924,3 +924,8 @@ es:
             base:
               content_required: "elige una receta o escribe una nota"
               recipes_only_require_recipe_or_clear: "elige una receta o usa Limpiar para vaciar este casillero"
+        recipe:
+          attributes:
+            image:
+              too_large: "es demasiado grande (máx 25MB)"
+              too_many_pixels: "tiene dimensiones demasiado grandes (máx 8000px por lado)"

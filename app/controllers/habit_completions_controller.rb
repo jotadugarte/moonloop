@@ -4,9 +4,9 @@ class HabitCompletionsController < ApplicationController
   def create
     process_create
   rescue ActionController::ParameterMissing
-    render plain: t("habit_completions.flash.invalid_request"), status: :unprocessable_entity
+    render plain: t("habit_completions.flash.invalid_request"), status: :unprocessable_content
   rescue ArgumentError, TypeError
-    render plain: t("habit_completions.flash.invalid_date"), status: :unprocessable_entity
+    render plain: t("habit_completions.flash.invalid_date"), status: :unprocessable_content
   end
 
   def destroy
@@ -27,7 +27,7 @@ class HabitCompletionsController < ApplicationController
   def process_create
     permitted = habit_completion_params
     habit = find_habit(permitted[:user_habit_id])
-    return render(plain: t("habit_completions.flash.not_found"), status: :unprocessable_entity) unless habit
+    return render(plain: t("habit_completions.flash.not_found"), status: :unprocessable_content) unless habit
 
     local_date = Date.iso8601(permitted[:completed_on].to_s)
     result = record_completion(habit, local_date, permitted)

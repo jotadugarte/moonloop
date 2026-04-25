@@ -13,7 +13,7 @@ class UserHabitsController < ApplicationController
       redirect_to user_habits_path, notice: t("user_habits.flash.created")
     else
       load_habits_index_collections
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -49,7 +49,7 @@ class UserHabitsController < ApplicationController
     if @user_habit.update(user_habit_update_params)
       redirect_to user_habits_path, notice: t("user_habits.flash.updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

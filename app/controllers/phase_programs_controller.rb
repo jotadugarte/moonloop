@@ -14,7 +14,7 @@ class PhaseProgramsController < ApplicationController
       redirect_to edit_phase_program_path(@phase_program), notice: t("phase_programs.flash.created")
     else
       @phase_programs = Current.user.phase_programs.order(:name)
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -29,7 +29,7 @@ class PhaseProgramsController < ApplicationController
     else
       set_adoption_sync_status
       load_edit_assignments
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

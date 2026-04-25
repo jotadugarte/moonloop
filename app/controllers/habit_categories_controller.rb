@@ -13,7 +13,7 @@ class HabitCategoriesController < ApplicationController
       redirect_to habit_categories_path, notice: t("habit_categories.flash.created")
     else
       @habit_categories = Current.user.habit_categories.order(created_at: :asc)
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -24,7 +24,7 @@ class HabitCategoriesController < ApplicationController
     if @habit_category.update(habit_category_params)
       redirect_to habit_categories_path, notice: t("habit_categories.flash.updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
