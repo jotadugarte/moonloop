@@ -27,12 +27,27 @@
           aria: aria_for_field(@recipe, :instructions, recipe_err_id) %>
   </div>
 
-  <div>
-    <%= f.label :image, t("recipes.form.image_label"), class: "block font-medium mb-1" %>
-    <%= f.file_field :image,
-          accept: "image/*",
-          class: "block w-full text-sm",
-          aria: aria_for_field(@recipe, :image, recipe_err_id) %>
+  <div data-controller="recipe-image-preview">
+    <div>
+      <%= f.label :image, t("recipes.form.image_label"), class: "block font-medium mb-1" %>
+      <%= f.file_field :image,
+            accept: "image/*",
+            class: "block w-full text-sm",
+            aria: aria_for_field(@recipe, :image, recipe_err_id),
+            data: {
+              recipe_image_preview_target: "file",
+              action: "change->recipe-image-preview#showPreview"
+            } %>
+    </div>
+    <div
+      class="hidden mt-2"
+      data-recipe-image-preview-target="wrapper"
+      data-test="recipe-image-preview">
+      <%= image_tag "",
+            alt: t("recipes.form.image_preview_alt"),
+            class: "rounded max-w-xs border border-gray-200",
+            data: { recipe_image_preview_target: "image" } %>
+    </div>
   </div>
 
   <% if @recipe.image.attached? %>

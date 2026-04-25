@@ -1,7 +1,6 @@
 # Agentic Guild — current state
 
-- **Skill:** start-task
-- **Phase:** 3 — Execution (TDD)
-- **Step:** 3.1 complete → **PAUSA** aprobación del test; siguiente **3.2** al confirmar
-- **Active task pointer:** `active_sessions/task_recipe-images-50-51.md`
-- **Artefacto:** ejemplo `serves a successful raster image when the recipe show page links a PNG hero` en `spec/requests/recipes_crud_spec.rb`; fixture `spec/fixtures/files/recipe_test_1x1.png`
+- **Skill:** start-task (rama recipe images #51 + #50)
+- **Phase:** 3 — TDD
+- **Hecho:** #51 (fallback libvips + request spec + redirects); #50 (Stimulus preview, i18n, system spec Selenium, CHANGELOG)
+- **Pendiente (plan):** cierre — `recipes` + RuboCop tocados; marcar #51/#50 en `docs/ROADMAP.md` al mergear rama

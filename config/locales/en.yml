@@ -379,6 +379,7 @@ en:
       name_label: "Name"
       instructions_label: "Instructions"
       image_label: "Image"
+      image_preview_alt: "Preview of selected image"
       remove_image_label: "Remove current image"
       public_label: "Share in the public catalog"
       create_submit: "Create recipe"
