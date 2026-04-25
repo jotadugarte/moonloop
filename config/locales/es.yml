@@ -547,8 +547,11 @@ es:
       signed_out: "Esa sesión se cerró"
     index:
       title: "Dispositivos y sesiones"
-      user_agent: "Agente de usuario"
-      ip_address: "Dirección IP"
+      device: "Dispositivo"
+      device_unknown: "Dispositivo no disponible"
+      location: "Ubicación"
+      location_localhost: "Este dispositivo (localhost)"
+      location_unavailable: "Ubicación no disponible"
       created_at: "Creada el"
       log_out: "Cerrar sesión"
   registrations:

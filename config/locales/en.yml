@@ -573,8 +573,11 @@ en:
       signed_out: "That session has been logged out"
     index:
       title: "Devices & Sessions"
-      user_agent: "User Agent"
-      ip_address: "Ip Address"
+      device: "Device"
+      device_unknown: "Device unavailable"
+      location: "Location"
+      location_localhost: "This device (localhost)"
+      location_unavailable: "Location unavailable"
       created_at: "Created at"
       log_out: "Log out"
   identity:
