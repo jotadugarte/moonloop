@@ -47,8 +47,13 @@ module ApplicationHelper
   private
 
   def attachable_image_source(attachment, resize_to_limit)
+    return attachment if attachment_svg?(attachment)
     return attachment unless attachment.variable? && ImageVariants::Available.call
 
     attachment.variant(resize_to_limit: resize_to_limit)
+  end
+
+  def attachment_svg?(attachment)
+    attachment&.blob&.content_type == "image/svg+xml"
   end
 end
