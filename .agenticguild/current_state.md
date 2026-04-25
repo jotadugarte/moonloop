@@ -1,12 +1,12 @@
-<phase>start-task / Phase 3 — Execution (Iterative TDD)</phase>
-<step>3.3 — Roadmap #43 marked done; ready for finish-branch</step>
+<phase>finish-branch / Phase 1 — Interactive Local Review</phase>
+<step>1.1 — code-review Step 2.1: applied requested fixes (locale-robust hint spec, per-unit hint ids, input data-test)</step>
 
-Context: Specs green per user. Implemented optional sign-up weight (UI + persistence + validation) and marked ROADMAP #43 done.
+Context: Running local self-review against origin/HEAD (origin/master).
 
 # Agentic Guild — current state
 
 - **Active task pointer:** `task_registro-peso-opcional.md`
 - **Execution context:**
-  - **active_skill:** `start-task`
-  - **current_phase:** `3`
-  - **current_step:** `3.3`
+  - **active_skill:** `finish-branch`
+  - **current_phase:** `1`
+  - **current_step:** `1.1`

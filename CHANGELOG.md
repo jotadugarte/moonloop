@@ -13,6 +13,7 @@ All notable changes to this project are documented in this file.
 ### Changed
 
 - **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.
+- **Sign up (roadmap #43, REQ-WGT-002):** current weight is optional on registration; leaving it blank persists `current_weight_kg`/`current_bmi` as nil and shows an i18n “optional” hint (metric + imperial).
 
 ### Added
 

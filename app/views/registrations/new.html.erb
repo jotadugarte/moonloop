@@ -66,17 +66,18 @@
 
   <% imperial_height = registration_imperial_height_for_toggle?(@user) %>
   <% height_cm_aria = aria_for_field(@user, :height_cm, registration_err_id) %>
-  <div data-unit-system-toggle-target="metric"<% if imperial_height %> class="hidden"<% end %>>
+  <div data-unit-system-toggle-target="metric" data-test="registration-height-metric"<% if imperial_height %> class="hidden"<% end %>>
     <%= form.label :height_cm, class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :height_cm,
           min: 50,
           max: 300,
           class: "border border-gray-300 rounded p-2 w-full",
+          data: { test: "registration-height-cm-input" },
           aria: height_cm_aria %>
     <p class="text-sm text-gray-500 mt-1"><%= t(".height_cm_hint_metric") %></p>
   </div>
 
-  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
+  <div data-unit-system-toggle-target="imperial" data-test="registration-height-imperial-feet"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_feet", t(".height_feet"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_feet]", @reg_height_feet,
           id: "user_registration_height_feet",
@@ -85,7 +86,7 @@
           aria: height_cm_aria %>
   </div>
 
-  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
+  <div data-unit-system-toggle-target="imperial" data-test="registration-height-imperial-inches"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_height_inches", t(".height_inches"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[height_inches]", @reg_height_inches,
           id: "user_registration_height_inches",
@@ -108,17 +109,23 @@
   </div>
 
   <% weight_hint_text = t(".weight_optional_hint") %>
-  <div data-unit-system-toggle-target="metric"<% if imperial_height %> class="hidden"<% end %>>
+  <% weight_hint_metric_id = "registration-weight-optional-hint-metric" %>
+  <% weight_hint_imperial_id = "registration-weight-optional-hint-imperial" %>
+  <div data-unit-system-toggle-target="metric" data-test="registration-weight-metric"<% if imperial_height %> class="hidden"<% end %>>
     <%= form.label :weight_kg, t(".weight_kg_label"), class: "block font-medium mb-1 text-gray-700" %>
     <%= form.number_field :weight_kg,
           min: 20,
           max: 500,
           step: 0.1,
           class: "border border-gray-300 rounded p-2 w-full",
-          aria: { describedby: "registration-weight-optional-hint" } %>
+          data: { test: "registration-weight-kg-input" },
+          aria: { describedby: weight_hint_metric_id } %>
+    <p id="<%= weight_hint_metric_id %>" data-test="registration-weight-optional-hint" class="text-sm text-gray-500 mt-1">
+      <%= weight_hint_text %>
+    </p>
   </div>
 
-  <div data-unit-system-toggle-target="imperial"<% unless imperial_height %> class="hidden"<% end %>>
+  <div data-unit-system-toggle-target="imperial" data-test="registration-weight-imperial"<% unless imperial_height %> class="hidden"<% end %>>
     <%= label_tag "user_registration_weight_lb", t(".weight_lb_label"), class: "block font-medium mb-1 text-gray-700" %>
     <%= number_field_tag "user[weight_lb]", nil,
           id: "user_registration_weight_lb",
@@ -126,12 +133,12 @@
           max: 1102,
           step: 0.1,
           class: "border border-gray-300 rounded p-2 w-full",
-          aria: { describedby: "registration-weight-optional-hint" } %>
+          data: { test: "registration-weight-lb-input" },
+          aria: { describedby: weight_hint_imperial_id } %>
+    <p id="<%= weight_hint_imperial_id %>" data-test="registration-weight-optional-hint" class="text-sm text-gray-500 mt-1">
+      <%= weight_hint_text %>
+    </p>
   </div>
-
-  <p id="registration-weight-optional-hint" data-test="registration-weight-optional-hint" class="text-sm text-gray-500">
-    <%= weight_hint_text %>
-  </p>
 
   <div class="pt-4">
     <%= form.submit t(".submit"), class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700" %>
