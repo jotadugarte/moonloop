@@ -109,9 +109,11 @@ RSpec.describe "Menus autosave", type: :system do
     end
 
     within(slot_css) do
-      select I18n.t("menus.slots.recipe_blank"), from: recipe_label
       fill_in freeform_label, with: ""
-      find_field(freeform_label).send_keys(:tab) # blur → autosave clear
+      find_field(freeform_label).send_keys(:tab) # blur → autosave
+
+      select I18n.t("menus.slots.recipe_blank"), from: recipe_label
+      expect(page).to have_no_css(%(img[data-test="menu-slot-preview"]))
     end
 
     visit current_path
