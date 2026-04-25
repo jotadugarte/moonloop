@@ -9,6 +9,8 @@
     data-test="menu-entry-slot"
     data-weekday="<%= weekday %>"
     data-meal-type="<%= meal_type %>"
+    data-controller="menu-slot"
+    data-menu-slot-freeform-id-value="<%= freeform_input_id %>"
   >
     <div class="menu-grid__slot-label">
       <%= t("date.day_names")[weekday] %>
@@ -76,7 +78,7 @@
             clear_menu_menu_entries_path(menu),
             method: :delete,
             params: { weekday: weekday, meal_type: meal_type },
-            form: { data: { turbo_frame: frame_id } } %>
+            form: { data: { turbo_frame: frame_id, action: "turbo:submit-end->menu-slot#clearDone" } } %>
     </div>
   </div>
 <% end %>
