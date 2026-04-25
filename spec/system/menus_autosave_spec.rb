@@ -24,8 +24,9 @@ RSpec.describe "Menus autosave", type: :system do
     attempts = 0
     begin
       attempts += 1
-      within(find(frame_css)) { find_field(label).set(value) }
-    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      frame = find(frame_css, wait: 5)
+      within(frame) { find_field(label).set(value) }
+    rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::StaleElementReferenceError
       raise if attempts >= 3
       retry
     end
