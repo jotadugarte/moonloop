@@ -57,20 +57,26 @@
             class: "rounded max-w-xs border border-gray-200",
             data: { recipe_image_preview_target: "image" } %>
     </div>
-  </div>
 
-  <% if @recipe.image.attached? %>
-    <div>
-      <%= attachable_image_tag @recipe.image,
-            resize_to_limit: [ 320, 320 ],
-            class: "rounded max-w-xs border border-gray-200",
-            alt: @recipe.name %>
-    </div>
-    <div class="flex items-start gap-2">
-      <%= f.check_box :remove_image, class: "mt-1" %>
-      <%= f.label :remove_image, t("recipes.form.remove_image_label"), class: "text-gray-700" %>
-    </div>
-  <% end %>
+    <% if @recipe.image.attached? %>
+      <div class="mt-2" data-recipe-image-preview-target="currentWrapper">
+        <%= attachable_image_tag @recipe.image,
+              resize_to_limit: [ 320, 320 ],
+              class: "rounded max-w-xs border border-gray-200",
+              alt: @recipe.name %>
+      </div>
+
+      <div class="mt-2">
+        <%= f.hidden_field :remove_image, value: "0" %>
+        <%= button_tag t("recipes.form.remove_image_button"),
+              type: "submit",
+              name: "recipe[remove_image]",
+              value: "1",
+              class: "bg-white text-red-700 border border-red-300 px-3 py-2 rounded hover:bg-red-50",
+              data: { action: "click->recipe-image-preview#prepareRemove" } %>
+      </div>
+    <% end %>
+  </div>
 
   <div class="flex items-start gap-2">
     <%= f.check_box :publicly_shareable,
