@@ -129,8 +129,8 @@
     <step id="7" status="complete">Implement freeform autosave on blur (only when allow_menu_freeform): add a text input/textarea in the slot, and a small Stimulus controller that submits the slot form on blur. Ensure it does not submit per keystroke. [REQ-MENU-001]</step>
     <step id="8" status="complete">Define/implement slot “empty” semantics: if both recipe and freeform are blank, delete the MenuEntry row via service/controller path while keeping UI slot present (empty). [REQ-MENU-001]</step>
     <step id="9" status="complete">Render slot image preview: prefer recipe attached image; else fallback image by meal type; ensure envs without libvips still render by using the existing image-variants availability probe (serve original blob when needed). [REQ-MENU-002]</step>
-    <step id="10" status="pending">Add/adjust request specs for slot persistence: change recipe, change freeform (blur), clear both deletes row; all scoped to Current.user; response is Turbo-frame compatible. [REQ-MENU-001]</step>
-    <step id="11" status="pending">Accessibility pass on slot controls: label association, focus behavior after frame update, keyboard navigation (especially if custom combobox exists). Keep copy I18n-only. [REQ-I18N-001]</step>
+    <step id="10" status="complete">Add/adjust request specs for slot persistence: change recipe, change freeform (blur), clear both deletes row; all scoped to Current.user; response is Turbo-frame compatible. [REQ-MENU-001]</step>
+    <step id="11" status="complete">Accessibility pass on slot controls: label association, focus behavior after frame update, keyboard navigation (especially if custom combobox exists). Keep copy I18n-only. [REQ-I18N-001]</step>
     <step id="12" status="pending">Update docs as needed: ensure the chosen UX is reflected (if there is a relevant living doc section; otherwise update ROADMAP notes only if required by team process). [REQ-MENU-001]</step>
   </implementation_plan>
 </task_session>
