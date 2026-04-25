@@ -36,14 +36,14 @@
         </ul>
       <% end %>
 
-      <div>
+      <div data-controller="autosubmit">
         <%= f.label :recipe_id, t("menus.slots.recipe_pick_label") %>
         <%= f.collection_select :recipe_id,
               recipes,
               :id,
               :name,
               { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
-              { aria: aria_for_field(f.object, :recipe_id, slot_err_id) } %>
+              { aria: aria_for_field(f.object, :recipe_id, slot_err_id), data: { action: "change->autosubmit#submit" } } %>
       </div>
 
       <% if allow_freeform %>
