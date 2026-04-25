@@ -1,5 +1,5 @@
-<phase>finish-branch / Phase 1 — Interactive Local Review</phase>
-<step>1.1 — code-review Step 2.1: applied requested fixes (locale-robust hint spec, per-unit hint ids, input data-test)</step>
+<phase>finish-branch / Phase 2 — Compliance & Traceability Audit</phase>
+<step>2.2 — audit clean; proceed to CI/BugBot loop</step>
 
 Context: Running local self-review against origin/HEAD (origin/master).
 
