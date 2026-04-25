@@ -91,17 +91,6 @@
     - **Consistency**: keep menu entry persistence path consistent with existing `Menus::UpsertEntry` rules (validation + permissions).
     - **Freeform + autosave**: saving on **blur** avoids a request per keystroke; ensure it still feels responsive and gives clear “saved” feedback.
 
-    ## Candidate approach (not locked yet)
-    - Redirect after menu create: `MenusController#create` → `redirect_to edit_menu_path(@menu)`.
-    - Autosave per slot:
-      - Render each slot as a Turbo Frame; on change, submit a `form_with` targeting that frame.
-      - Controller action returns Turbo Stream or frame HTML to re-render slot with updated selection + image.
-      - Stimulus “autosubmit on change” controller attached to the select/combobox.
-      - For `freeform_text`: save on **blur** (chosen).
-    - Slot photo preview:
-      - Server renders an `img` (or `attachable_image_tag`) for the selected recipe (or meal fallback).
-      - Update happens as part of the slot re-render after autosave.
-
     ## Acceptance criteria (derived from ROADMAP #48)
     - Creating a menu from `/menus` lands on `/menus/:id/edit` without extra clicks.
     - Changing a slot selection persists without an explicit save button.

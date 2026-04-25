@@ -4,7 +4,7 @@ This document lists every referenced path, its purpose, and how it fits into the
 
 > **Sync Mapping:** For the canonical mapping between agentic:guild upstream sources and these local destinations, see [`SYNC_REGISTRY.md`](SYNC_REGISTRY.md). That file drives both `sync.sh` (initial bootstrap) and the `update-agentic-guild` AI skill (ongoing updates).
 
-## 1. The Agent RAM (Transient Memory)
+## 1. The Agent RAM (Versioned Workflow Artifacts)
 *Located in `.agenticguild/` (versioned in Moonloop; reviewed/merged)*
 | Path | Purpose |
 |------|---------|
