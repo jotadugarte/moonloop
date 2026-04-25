@@ -4,4 +4,3 @@ class AddMealTypeToRecipes < ActiveRecord::Migration[8.1]
     add_index :recipes, %i[user_id meal_type]
   end
 end
-

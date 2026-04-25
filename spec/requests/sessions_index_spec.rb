@@ -21,4 +21,3 @@ RSpec.describe "Sessions index", type: :request do
     expect(response.body).not_to include(raw_ip)
   end
 end
-
