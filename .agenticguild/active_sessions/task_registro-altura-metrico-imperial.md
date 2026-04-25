@@ -17,5 +17,5 @@ En `/sign_up` se muestran a la vez el bloque de altura en cm y el bloque imperia
 <implementation_plan>
   <step id="1" status="complete">Write a failing test that reproduces the bug: primera respuesta HTML de registro con `metric` por defecto debe marcar los contenedores `data-unit-system-toggle-target=&quot;imperial&quot;` como ocultos (p. ej. clase `hidden`); con `imperial_us` (simulando re-render), los contenedores `metric` deben ir ocultos y los `imperial` visibles. Usar request spec + Nokogiri o aserción estable sobre el body. Etiqueta [REQ-PROF-003].</step>
   <step id="2" status="complete">Actualizar `app/views/registrations/new.html.erb`: añadir clases condicionales `hidden` (u equivalente Tailwind) en los tres wrappers de altura según `@user.body_unit_system` efectivo (`metric` vs `imperial_us`), alineado con la lógica del Stimulus controller. No duplicar lógica compleja: helper local mínimo o expresión clara en la vista.</step>
-  <step id="3" status="pending">Ejecutar specs de registro/request afectados y RuboCop en archivos tocados; ajustar si hace falta. (Comandos los copia el usuario en su terminal.)</step>
+  <step id="3" status="complete">Ejecutar specs de registro/request afectados y RuboCop en archivos tocados; ajustar si hace falta. (Comandos los copia el usuario en su terminal.)</step>
 </implementation_plan>

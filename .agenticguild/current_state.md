@@ -1,6 +1,6 @@
 # Agentic Guild — current state
 
-- **Skill:** start-task
-- **Phase:** 3 — Execution (TDD)
-- **Step:** 3.2 — Vista `registrations/new` + CHANGELOG; specs en `spec/requests/registrations_spec.rb` (verificar en tu máquina)
-- **Active session:** `.agenticguild/active_sessions/task_registro-altura-metrico-imperial.md`
+- **Skill:** (idle)
+- **Phase:** —
+- **Step:** —
+- **Note:** Roadmap **#45** cerrado en `docs/ROADMAP.md` (2026-04-24). Sesión `task_registro-altura-metrico-imperial.md` — plan completo.
