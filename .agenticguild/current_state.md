@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
 - **Skill:** finish-branch
-- **Phase:** 4 — Final Spackle & PR (sync-docs)
-- **Step:** sync-docs 1.1 — Informe de impacto; CI omitido por decisión del usuario (2026-04-24)
+- **Phase:** 4 — Final Spackle & PR
+- **Step:** sync-docs — SPEC actualizado (REQ-PROF-003); CI omitido por usuario
 - **Stealth mode:** false
-- **Note:** Fase 3 (push/CI) no ejecutada. Esperando confirmación sync-docs (aplicar o saltar).
+- **Note:** Pendiente: harvest-rules (4.2), pr-description (4.3), cierre sesión (4.4–4.5) si sigue finish-branch.
