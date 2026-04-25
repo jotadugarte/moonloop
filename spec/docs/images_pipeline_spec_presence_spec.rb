@@ -14,8 +14,8 @@ RSpec.describe "docs/core/IMAGES upload pipeline rule (REQ-MENU-002)", :aggregat
     expect(body).to match(/\bdetail\b/i)
 
     expect(body).to match(/\b160\b/)
-    expect(body).to match(/\b640\b/)
-    expect(body).to match(/\b1200\b/)
+    expect(body).to match(/\b640(px)?\b/i)
+    expect(body).to match(/\b1200(px)?\b/i)
 
     expect(body).to match(/\b20KB\b/i)
     expect(body).to match(/\b120KB\b/i)
