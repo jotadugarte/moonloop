@@ -2,6 +2,6 @@
 
 - **Skill:** finish-branch
 - **Phase:** 4 — Final Spackle & PR
-- **Step:** harvest-rules 1.1 — Candidatos listados; esperando aprobación (o SKIP)
+- **Step:** harvest-rules completado → siguiente **pr-description** (4.3)
 - **Stealth mode:** false
-- **Note:** `review_ledger.md` vacío de entradas. Tras aprobar harvest, pendiente pr-description (4.3).
+- **Note:** `SYSTEM_ARCHITECTURE.md` actualizado (RuboCop ERB). `review_ledger.md` limpiado.
