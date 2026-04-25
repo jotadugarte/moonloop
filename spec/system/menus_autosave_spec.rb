@@ -31,16 +31,13 @@ RSpec.describe "Menus autosave", type: :system do
     visit menus_path
     fill_in I18n.t("menus.index.name_label"), with: "Semana autosave"
     click_button I18n.t("menus.index.create_submit")
-
-    menu = Menu.find_by!(name: "Semana autosave")
-
-    visit edit_menu_path(menu)
+    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
       select "Ensalada rápida", from: I18n.t("menus.slots.recipe_pick_label")
     end
 
-    visit edit_menu_path(menu)
+    visit current_path
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
       expect(page).to have_select(I18n.t("menus.slots.recipe_pick_label"), selected: "Ensalada rápida")
