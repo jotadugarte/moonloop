@@ -58,6 +58,39 @@ RSpec.describe "Registrations", type: :request do
     expect(hint.text.strip).not_to be_empty
   end
 
+  # [REQ-PROF-003, REQ-WGT-002]
+  it "422 re-render shows imperial weight and hides metric weight when imperial units are selected" do
+    post sign_up_path, params: {
+      user: {
+        email: "imperial_weight_rerender@example.com",
+        password: "",
+        password_confirmation: "",
+        birth_year: "1990",
+        birth_month: "5",
+        birth_day: "15",
+        timezone: "America/Santiago",
+        body_unit_system: "imperial_us",
+        height_feet: "5",
+        height_inches: "7"
+      }
+    }
+
+    expect(response).to have_http_status(:unprocessable_content)
+    doc = Nokogiri::HTML(response.body)
+
+    metric_weight_wrapper = doc
+      .css('[data-unit-system-toggle-target="metric"]')
+      .find { |node| node.at_css('input[name="user[weight_kg]"]') }
+    expect(metric_weight_wrapper).to be_present
+    expect(metric_weight_wrapper["class"].to_s.split).to include("hidden")
+
+    imperial_weight_wrapper = doc
+      .css('[data-unit-system-toggle-target="imperial"]')
+      .find { |node| node.at_css('input[name="user[weight_lb]"]') }
+    expect(imperial_weight_wrapper).to be_present
+    expect(imperial_weight_wrapper["class"].to_s.split).not_to include("hidden")
+  end
+
   # [REQ-PROF-003]
   it "422 re-render hides metric height wrapper when imperial units are selected" do
     post sign_up_path, params: {
