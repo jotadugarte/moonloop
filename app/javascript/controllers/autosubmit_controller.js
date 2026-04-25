@@ -1,10 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form"]
-
-  submit() {
-    const form = this.formTarget || this.element.closest("form")
+  submit(event) {
+    const target = event?.target
+    const form = target?.form || this.element.closest("form")
     if (!form) return
 
     form.requestSubmit()
