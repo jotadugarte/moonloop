@@ -19,13 +19,24 @@ RSpec.describe "Reports (Informes)", type: :request do
       post sign_in_path, params: { email: user.email, password: password }
 
       travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
-        get informes_path
-
+        get informes_path, params: { section: "fulfillment" }
         expect(response).to have_http_status(:ok)
         expect(response.body).to include(I18n.t("reports.show.heading"))
         expect(response.body).to include("reports-fulfillment")
+        expect(response.body).not_to include("reports-streaks")
+        expect(response.body).not_to include("reports-weight")
+
+        get informes_path, params: { section: "streaks" }
+        expect(response).to have_http_status(:ok)
         expect(response.body).to include("reports-streaks")
+        expect(response.body).not_to include("reports-fulfillment")
+        expect(response.body).not_to include("reports-weight")
+
+        get informes_path, params: { section: "weight" }
+        expect(response).to have_http_status(:ok)
         expect(response.body).to include("reports-weight")
+        expect(response.body).not_to include("reports-fulfillment")
+        expect(response.body).not_to include("reports-streaks")
       end
     end
 
@@ -123,7 +134,7 @@ RSpec.describe "Reports (Informes)", type: :request do
         create(:weight_log, user: imperial, weight_kg: 70.0, height_cm: 180, logged_at: Time.utc(2026, 4, 10, 10, 0, 0))
         create(:weight_log, user: imperial, weight_kg: 80.0, height_cm: 180, logged_at: Time.utc(2026, 4, 18, 10, 0, 0))
 
-        get informes_path
+        get informes_path, params: { section: "weight" }
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("154.3")
@@ -139,7 +150,7 @@ RSpec.describe "Reports (Informes)", type: :request do
       travel_to Time.utc(2026, 4, 20, 12, 0, 0) do
         create(:weight_log, user: user, weight_kg: 70.5, height_cm: 175, logged_at: Time.utc(2026, 4, 10, 10, 0, 0))
 
-        get informes_path
+        get informes_path, params: { section: "weight" }
 
         expect(response.body).to include("70.5")
         expect(response.body).to include(I18n.t("reports.show.weight_chart_legend", unit: I18n.t("body_metrics.unit_kg")))
