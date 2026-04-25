@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
 - **Skill:** finish-branch
-- **Phase:** 2 — Compliance & Traceability Audit
-- **Step:** 2.1 — Informe emitido; esperando FIX / PROCEED hacia 2.2
+- **Phase:** 4 — Final Spackle & PR (sync-docs)
+- **Step:** sync-docs 1.1 — Informe de impacto; CI omitido por decisión del usuario (2026-04-24)
 - **Stealth mode:** false
-- **Note:** Code review cerrado (sin segunda pasada). Diff vs `master` auditado.
+- **Note:** Fase 3 (push/CI) no ejecutada. Esperando confirmación sync-docs (aplicar o saltar).
