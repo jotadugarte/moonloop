@@ -6,7 +6,7 @@ CI.run do
   step "Style: Ruby", "bundle exec rubocop"
 
   step "Security: Gem audit", "bundle exec bundler-audit"
-  step "Security: Importmap vulnerability audit", "bundle exec importmap audit"
+  step "Security: Importmap vulnerability audit", "bundle exec rails importmap:audit"
   step "Security: Brakeman code analysis", "bundle exec brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
 
   step "Database: Test prepare", "RAILS_ENV=test bundle exec rails db:test:prepare"
