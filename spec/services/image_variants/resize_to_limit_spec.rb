@@ -8,8 +8,8 @@ RSpec.describe ImageVariants::ResizeToLimit do
     # [REQ-MENU-002]
     it "maps named UI variants to canonical resize_to_limit values" do
       expect(described_class.for(:thumb)).to eq([ 160, 160 ])
-      expect(described_class.for(:list)).to eq([ 640, 640 ])
-      expect(described_class.for(:detail)).to eq([ 1200, 1200 ])
+      expect(described_class.for(:list)).to eq([ 640, 8000 ])
+      expect(described_class.for(:detail)).to eq([ 1200, 8000 ])
     end
 
     # [REQ-MENU-002]
