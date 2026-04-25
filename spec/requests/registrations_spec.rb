@@ -10,10 +10,12 @@ RSpec.describe "Registrations", type: :request do
     expect(response).to have_http_status(:ok)
     doc = Nokogiri::HTML(response.body)
     metric = doc.at_css('[data-unit-system-toggle-target="metric"]')
-    imperial = doc.css('[data-unit-system-toggle-target="imperial"]')
+    imperial_height_wrappers = doc
+      .css('[data-unit-system-toggle-target="imperial"]')
+      .select { |node| node.at_css("#user_registration_height_feet, #user_registration_height_inches") }
     expect(metric["class"].to_s.split).not_to include("hidden")
-    expect(imperial.size).to eq(2)
-    imperial.each { |node| expect(node["class"]).to include("hidden") }
+    expect(imperial_height_wrappers.size).to eq(2)
+    imperial_height_wrappers.each { |node| expect(node["class"]).to include("hidden") }
   end
 
   # [REQ-PROF-002, REQ-WGT-002]
@@ -76,10 +78,12 @@ RSpec.describe "Registrations", type: :request do
     expect(response).to have_http_status(:unprocessable_content)
     doc = Nokogiri::HTML(response.body)
     metric = doc.at_css('[data-unit-system-toggle-target="metric"]')
-    imperial = doc.css('[data-unit-system-toggle-target="imperial"]')
+    imperial_height_wrappers = doc
+      .css('[data-unit-system-toggle-target="imperial"]')
+      .select { |node| node.at_css("#user_registration_height_feet, #user_registration_height_inches") }
     expect(metric["class"]).to include("hidden")
-    expect(imperial.size).to eq(2)
-    imperial.each do |node|
+    expect(imperial_height_wrappers.size).to eq(2)
+    imperial_height_wrappers.each do |node|
       expect(node["class"].to_s.split).not_to include("hidden")
     end
   end
