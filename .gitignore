@@ -34,3 +34,4 @@
 /config/*.key
 
 /vendor/bundle
+.agenticguild/current_state.md
