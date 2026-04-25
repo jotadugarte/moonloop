@@ -27,6 +27,14 @@ RSpec.describe "Menus CRUD", type: :request do
     expect(Menu.find_by(user: user, name: "Nueva semana")).to be_present
   end
 
+  # [REQ-MENU-001]
+  it "redirects to edit after creating a menu" do
+    post "/menus", params: { menu: { name: "Nueva semana" } }
+
+    menu = Menu.find_by!(user: user, name: "Nueva semana")
+    expect(response).to redirect_to(edit_menu_path(menu))
+  end
+
   # [REQ-MENU-001, REQ-MENU-006]
   it "creates a menu with publicly_shareable when the checkbox is on" do
     post "/menus", params: { menu: { name: "Catálogo", publicly_shareable: "1" } }

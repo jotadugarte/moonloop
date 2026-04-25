@@ -11,14 +11,14 @@ RSpec.describe "Menus editor", type: :system do
     driven_by(:rack_test)
 
     visit sign_in_path
-    fill_in "Correo electrónico", with: user.email
-    fill_in "Contraseña", with: "Password123!"
-    click_button "Iniciar sesión"
+    fill_in I18n.t("activerecord.attributes.user.email"), with: user.email
+    fill_in I18n.t("activerecord.attributes.user.password"), with: "Password123!"
+    click_button I18n.t("sessions.new.submit")
   end
 
   # [REQ-MENU-001, REQ-I18N-001]
   it "renders a 7x4 grid of meal slots (sparse entries)" do
-    menu = Menu.create!(user: user, name: "Semana prueba")
+    menu = create(:menu, user: user, name: "Semana prueba")
 
     visit "/menus/#{menu.id}/edit"
 
@@ -29,17 +29,22 @@ RSpec.describe "Menus editor", type: :system do
     end
   end
 
+  # [REQ-MENU-001]
+  it "redirects to the editor after creating a menu from the index" do
+    visit "/menus"
+
+    fill_in I18n.t("menus.index.name_label"), with: "Nueva semana"
+    click_button I18n.t("menus.index.create_submit")
+
+    menu = Menu.find_by!(user: user, name: "Nueva semana")
+    expect(page).to have_current_path(edit_menu_path(menu))
+  end
+
   # [REQ-MENU-002]
   it "shows a meal-type fallback preview when the slot recipe has no image" do
-    menu = Menu.create!(user: user, name: "Con receta")
-    recipe = Recipe.create!(user: user, name: "Ensalada")
-    MenuEntry.create!(
-      menu: menu,
-      recipe: recipe,
-      weekday: 5,
-      meal_type: "cena",
-      freeform_text: nil
-    )
+    menu = create(:menu, user: user, name: "Con receta")
+    recipe = create(:recipe, user: user, name: "Ensalada")
+    create(:menu_entry, menu: menu, recipe: recipe, weekday: 5, meal_type: "cena", freeform_text: nil)
 
     visit "/menus/#{menu.id}/edit"
 
@@ -50,20 +55,14 @@ RSpec.describe "Menus editor", type: :system do
 
   # [REQ-MENU-002]
   it "shows the recipe upload in the slot preview when the recipe has an image" do
-    menu = Menu.create!(user: user, name: "Menú foto")
-    recipe = Recipe.create!(user: user, name: "Tortilla")
+    menu = create(:menu, user: user, name: "Menú foto")
+    recipe = create(:recipe, user: user, name: "Tortilla")
     recipe.image.attach(
       io: StringIO.new(File.read(Rails.root.join("spec/fixtures/files/recipe_test.svg"))),
       filename: "recipe_test.svg",
       content_type: "image/svg+xml"
     )
-    MenuEntry.create!(
-      menu: menu,
-      recipe: recipe,
-      weekday: 2,
-      meal_type: "desayuno",
-      freeform_text: nil
-    )
+    create(:menu_entry, menu: menu, recipe: recipe, weekday: 2, meal_type: "desayuno", freeform_text: nil)
 
     visit edit_menu_path(menu)
 

@@ -12,7 +12,7 @@ class MenusController < ApplicationController
     @menu = Current.user.menus.new(menu_params)
 
     if @menu.save
-      redirect_to menus_path, notice: t("menus.flash.created")
+      redirect_to edit_menu_path(@menu), notice: t("menus.flash.created")
     else
       @menus = Current.user.menus.order(created_at: :asc)
       render :index, status: :unprocessable_entity
