@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
-- **Skill:** (idle)
-- **Phase:** —
-- **Step:** —
+- **Skill:** roadmap-manage
+- **Phase:** 1 — Manage Roadmap
+- **Step:** 1.2 (ROADMAP.md updated — catalog accuracy)
 - **Active task pointer:** `[NONE]`
-- **Note:** Sesión `task_registro-altura-metrico-imperial` archivada como `completed_sessions/task_registro-altura-metrico-imperial_2026-04-24.md`. finish-branch completado.
+- **Note:** Alineado ítem Done **#5** con **#10** (`weekly` retirado como `frequency_type`; ver REQ-HAB-005).

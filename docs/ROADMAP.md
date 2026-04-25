@@ -15,7 +15,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 36. [x] **Imperial units (US customary)** — weight + height: `body_unit_system`, `BodyMetrics`, registration/profile, weight log entry/history, Informes chart, mailer helper contract (**REQ-PROF-003**, **REQ-WGT-004**, **REQ-RPT-003** criterion 7) — 2026-04-19
 
 ### Phase 2 — Habits Core
-5. [x] Habit model with frequency types: daily, specific weekdays, every X days, weekly, monthly (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 1
+5. [x] Habit model with frequency types: daily, weekdays, every X days, monthly (`weekly` removed and migrated — Done #10) (REQ-HAB-005) — 2026-04-16 — Depends on: Phase 1
 6. [x] Default habits seeded per user on registration: Alimentación (Desayuno, Almuerzo, Cena, Merienda), Salud Física (Ejercicio, Agua), Emocional (Mascota) (REQ-HAB-002, REQ-HAB-001) — 2026-04-16 — Depends on: #5
 7. [x] User-managed categories: create, edit, delete (REQ-HAB-003) — 2026-04-16 — Depends on: Phase 1
 8. [x] Habits displayed grouped by category (REQ-HAB-008) — 2026-04-16 — Depends on: #5, #7
