@@ -81,19 +81,28 @@ RSpec.describe "Public catalogs views", type: :system do
     end
 
     it "renders the three report sections with semantic ids" do
-      visit informes_path
+      visit informes_path(section: "fulfillment")
+      expect(page).to have_css('section[data-test="reports-fulfillment"]')
+      expect(page).not_to have_css('section[data-test="reports-streaks"]')
+      expect(page).not_to have_css('section[data-test="reports-weight"]')
 
-      expect(page).to have_css("section#cumplimiento")
-      expect(page).to have_css("section#rachas")
-      expect(page).to have_css("section#peso")
+      visit informes_path(section: "streaks")
+      expect(page).to have_css('section[data-test="reports-streaks"]')
+      expect(page).not_to have_css('section[data-test="reports-fulfillment"]')
+      expect(page).not_to have_css('section[data-test="reports-weight"]')
+
+      visit informes_path(section: "weight")
+      expect(page).to have_css('section[data-test="reports-weight"]')
+      expect(page).not_to have_css('section[data-test="reports-fulfillment"]')
+      expect(page).not_to have_css('section[data-test="reports-streaks"]')
     end
 
     it "renders internal section navigation links" do
       visit informes_path
 
-      expect(page).to have_link(I18n.t("reports.show.nav_fulfillment"), href: "#cumplimiento")
-      expect(page).to have_link(I18n.t("reports.show.nav_streaks"),     href: "#rachas")
-      expect(page).to have_link(I18n.t("reports.show.nav_weight"),      href: "#peso")
+      expect(page).to have_link(I18n.t("reports.show.nav_fulfillment"), href: informes_path(section: "fulfillment"))
+      expect(page).to have_link(I18n.t("reports.show.nav_streaks"), href: informes_path(section: "streaks"))
+      expect(page).to have_link(I18n.t("reports.show.nav_weight"), href: informes_path(section: "weight"))
     end
   end
 end
