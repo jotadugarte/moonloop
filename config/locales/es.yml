@@ -776,6 +776,13 @@ es:
       emotional_pet:
         name: "Mascota"
   activerecord:
+    models:
+      exercise_routine:
+        one: "Rutina de ejercicio"
+        other: "Rutinas de ejercicio"
+      exercise_routine_line:
+        one: "Línea de rutina"
+        other: "Líneas de rutina"
     attributes:
       menu:
         name: "Nombre"
@@ -859,6 +866,8 @@ es:
               range_overlap: "ese rango de semanas se solapa con otra asignación"
         exercise_routine:
           attributes:
+            exercise_routine_lines:
+              invalid: "tiene errores"
             base:
               empty_routine: "añade al menos una línea de ejercicio en al menos un día"
               too_many_lines_on_weekday: "no puede haber más de %{max} líneas de ejercicio en un solo día"
