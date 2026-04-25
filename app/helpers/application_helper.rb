@@ -23,7 +23,7 @@ module ApplicationHelper
     image_options = { loading: "lazy" }.merge(image_options)
 
     source =
-      if attachment.variable?
+      if attachment.variable? && ImageVariants::Available.call
         attachment.variant(resize_to_limit: resize_to_limit)
       else
         attachment
