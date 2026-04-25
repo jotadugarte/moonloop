@@ -6,7 +6,7 @@ class WebPushSubscriptionsController < ApplicationController
     if sub.save
       render json: { ok: true }, status: :ok
     else
-      render json: { ok: false, errors: sub.errors.full_messages }, status: :unprocessable_entity
+      render json: { ok: false, errors: sub.errors.full_messages }, status: :unprocessable_content
     end
   end
 

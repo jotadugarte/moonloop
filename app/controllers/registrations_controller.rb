@@ -16,10 +16,10 @@ class RegistrationsController < ApplicationController
 
     if dob_status == :invalid
       @user.errors.add(:date_of_birth, :invalid_calendar)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     elsif weight_status == :invalid
       @user.errors.add(:current_weight_kg, :invalid)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     elsif @user.save
       session_record = @user.sessions.create!
       cookies.signed.permanent[:session_token] = { value: session_record.id, httponly: true }
@@ -27,7 +27,7 @@ class RegistrationsController < ApplicationController
       send_email_verification
       redirect_to root_path, notice: t("registrations.create.signed_up")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

@@ -13,7 +13,7 @@ class PhaseAssignmentsController < ApplicationController
     if @assignment.save
       redirect_to phase_path, notice: t("phase_assignments.flash.created")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -24,7 +24,7 @@ class PhaseAssignmentsController < ApplicationController
     if @assignment.update(assignment_params)
       redirect_to phase_path, notice: t("phase_assignments.flash.updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

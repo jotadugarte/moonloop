@@ -17,7 +17,7 @@ class ExerciseRoutinesController < ApplicationController
       redirect_to exercise_routines_path, notice: t("exercise_routines.flash.created")
     else
       @routine.exercise_routine_lines.build(weekday: 0, position: 0) if @routine.exercise_routine_lines.empty?
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -31,7 +31,7 @@ class ExerciseRoutinesController < ApplicationController
       redirect_to edit_exercise_routine_path(@routine), notice: t("exercise_routines.flash.updated")
     else
       set_adoption_sync_status
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

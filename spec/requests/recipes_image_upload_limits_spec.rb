@@ -27,7 +27,7 @@ RSpec.describe "Recipe image upload safety limits", type: :request do
         }
       }
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(response.body).to include(I18n.t("activerecord.errors.models.recipe.attributes.image.too_large"))
   end
 end

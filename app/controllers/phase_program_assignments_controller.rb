@@ -13,7 +13,7 @@ class PhaseProgramAssignmentsController < ApplicationController
     if @assignment.save
       redirect_to edit_phase_program_path(@phase_program), notice: t("phase_program_assignments.flash.created")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -24,7 +24,7 @@ class PhaseProgramAssignmentsController < ApplicationController
     if @assignment.update(assignment_params)
       redirect_to edit_phase_program_path(@phase_program), notice: t("phase_program_assignments.flash.updated")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

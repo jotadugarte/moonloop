@@ -15,7 +15,7 @@ class MenusController < ApplicationController
       redirect_to edit_menu_path(@menu), notice: t("menus.flash.created")
     else
       @menus = Current.user.menus.order(created_at: :asc)
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -30,7 +30,7 @@ class MenusController < ApplicationController
     else
       set_adoption_sync_status
       load_menu_editor
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

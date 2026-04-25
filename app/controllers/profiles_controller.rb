@@ -10,11 +10,11 @@ class ProfilesController < ApplicationController
     if dob_status == :invalid
       @user.assign_attributes(attrs)
       @user.errors.add(:date_of_birth, :invalid_calendar)
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     elsif @user.update(attrs)
       redirect_to edit_profile_path, notice: t("profiles.update.success")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
