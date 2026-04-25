@@ -1,12 +1,12 @@
-<phase>explore-task / Phase 1 — The Whiteboard (Discovery Loop)</phase>
-<step>1.1 — Check current_state for active session</step>
+<phase>finish-branch / Phase 2 — Compliance & Traceability Audit</phase>
+<step>2.2 — audit clean; proceed to CI/BugBot loop</step>
 
-Context: Added Pending item #54 to `docs/ROADMAP.md` about allowing users to choose which recipe image to remove in `/recipes/:id/edit`; current behavior removes the first uploaded image.
+Context: Running local self-review against origin/HEAD (origin/master).
 
 # Agentic Guild — current state
 
-- **Active task pointer:** `[NONE]`
+- **Active task pointer:** `task_registro-peso-opcional.md`
 - **Execution context:**
-  - **active_skill:** `explore-task`
+  - **active_skill:** `finish-branch`
   - **current_phase:** `1`
   - **current_step:** `1.1`

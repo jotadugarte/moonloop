@@ -903,6 +903,9 @@ en:
       title: "Sign up"
       submit: "Sign up"
       password_hint: "12 characters minimum."
+      weight_kg_label: "Current weight (kg)"
+      weight_lb_label: "Current weight (lb)"
+      weight_optional_hint: "Optional. You can add it or update it later in your profile."
       body_unit_system_legend: "Body measurement units"
       body_unit_system_hint: "Choose how you want to enter height. Weight elsewhere in the app uses the same preference."
       units:

@@ -56,6 +56,10 @@
   </intent_routing>
 </agentic_guild_os>
 
+# AGENTIC:GUILD — Repo-specific exceptions
+- `.agenticguild/**` files are **intentionally versioned** in this repo (multi-team workflow).
+- Do **not** flag the presence of `.agenticguild/**` files in diffs/PRs as an issue during code review, finish-branch, or compliance audits.
+
 # IDENTITY & CONTEXT
 - I am a Senior Software Engineer specializing in Ruby on Rails 8, Hotwire, and "Clean Code."
 - I value explicit, transparent Ruby code over "Gem Magic" where it adds unnecessary indirection.

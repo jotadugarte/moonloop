@@ -11,11 +11,14 @@ class RegistrationsController < ApplicationController
     @reg_height_feet = params.dig(:user, :height_feet)
     @reg_height_inches = params.dig(:user, :height_inches)
 
-    attrs, dob_status = registration_user_attributes_tuple
+    attrs, dob_status, weight_status = registration_user_attributes_tuple
     @user = User.new(attrs)
 
     if dob_status == :invalid
       @user.errors.add(:date_of_birth, :invalid_calendar)
+      render :new, status: :unprocessable_entity
+    elsif weight_status == :invalid
+      @user.errors.add(:current_weight_kg, :invalid)
       render :new, status: :unprocessable_entity
     elsif @user.save
       session_record = @user.sessions.create!
@@ -34,8 +37,10 @@ class RegistrationsController < ApplicationController
       raw = registration_permitted_params
       system = registration_body_unit_system(raw[:body_unit_system])
       height_cm = registration_height_cm(raw, system)
+      weight_kg, weight_status = registration_weight_kg_tuple(raw, system)
+      current_bmi = registration_current_bmi(weight_kg, height_cm)
       dob = BirthDateTriplet.parse(raw[:birth_year], raw[:birth_month], raw[:birth_day])
-      [ build_registration_attrs(raw, dob, system, height_cm), dob ]
+      [ build_registration_attrs(raw, dob, system, height_cm, weight_kg, current_bmi), dob, weight_status ]
     end
 
     def registration_permitted_params
@@ -43,7 +48,8 @@ class RegistrationsController < ApplicationController
         :email, :password, :password_confirmation,
         :birth_year, :birth_month, :birth_day,
         :timezone, :body_unit_system,
-        :height_cm, :height_feet, :height_inches
+        :height_cm, :height_feet, :height_inches,
+        :weight_kg, :weight_lb
       )
     end
 
@@ -59,7 +65,31 @@ class RegistrationsController < ApplicationController
       end
     end
 
-    def build_registration_attrs(raw, dob, system, height_cm)
+    def registration_weight_kg_tuple(raw, system)
+      raw_value = system == "metric" ? raw[:weight_kg].presence : raw[:weight_lb].presence
+      return [ nil, :blank ] if raw_value.nil?
+
+      weight_kg = weight_kg_from_units(raw_value, system)
+      [ WeightKg.new(value: weight_kg).value, :ok ]
+    rescue ArgumentError => e
+      return [ nil, :invalid ] if WeightKg.invalid_argument_error?(e)
+
+      raise
+    end
+
+    def weight_kg_from_units(raw_value, system)
+      return BigDecimal(raw_value.to_s) if system == "metric"
+
+      BodyMetrics.lb_to_kg(raw_value).round(2)
+    end
+
+    def registration_current_bmi(weight_kg, height_cm)
+      return nil if weight_kg.nil? || height_cm.nil?
+
+      BmiValue.compute(weight_kg: weight_kg, height_cm: height_cm).value
+    end
+
+    def build_registration_attrs(raw, dob, system, height_cm, weight_kg, current_bmi)
       {
         email: raw[:email],
         password: raw[:password],
@@ -67,7 +97,9 @@ class RegistrationsController < ApplicationController
         date_of_birth: dob.is_a?(Date) ? dob : nil,
         timezone: raw[:timezone],
         body_unit_system: system,
-        height_cm: height_cm
+        height_cm: height_cm,
+        current_weight_kg: weight_kg,
+        current_bmi: current_bmi
       }
     end
 
