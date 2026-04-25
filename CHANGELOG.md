@@ -6,14 +6,21 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
+- **CI:** GitHub Actions `test` job (PostgreSQL 16 service, `db:test:prepare`, `bin/rspec`); push triggers include `main` and `master`. Local `bin/ci` runs test DB prepare and RSpec after existing lint/security steps.
+
 - **Linting:** `rubocop-erb` plugin so `bundle exec rubocop` can inspect ERB when template paths are passed explicitly; default `Exclude` keeps `bin/rubocop` / CI on Ruby sources only.
 
 ### Changed
 
 - **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.
 
+### Added
+
+- **Recipes (roadmap #50, REQ-MENU-002):** immediate **client-side image preview** on new/edit recipe form via Stimulus `recipe-image-preview` (`URL.createObjectURL` + revoke on disconnect); i18n alt `recipes.form.image_preview_alt`; system spec with Selenium.
+
 ### Fixed
 
+- **Recipes (roadmap #51, REQ-MENU-002):** recipe detail shows raster uploads when **libvips** is not installed by linking the **original** blob instead of an Active Storage **variant** (`ImageVariants::Available` + `attachable_image_tag`); resizing still applies when ruby-vips loads successfully.
 - **Sign up (roadmap #45, REQ-PROF-003):** initial HTML and 422 re-renders align height field visibility with **`body_unit_system`** (metric vs imperial); define **`.hidden`** in `application.css` so Tailwind-like markup and **`unit-system-toggle`** actually hide blocks (Propshaft stack has no `tailwindcss-rails`).
 - Public catalog adoption: `ActiveRecord::RecordInvalid` on menu and exercise routine adopt flows now surfaces **i18n** flash keys instead of raw `full_messages` (`adoption.invalid_record.*`).
 - Habit metrics: added **`marked_failed_by_user`** on `habit_completions` so Mi Día can show **“In progress”** for partial measurable days while keeping **`status`** aligned with streaks/reports; public catalog author line uses a **stable non-PII code** derived from the user id (not the raw numeric id in copy).

@@ -20,15 +20,8 @@ module ApplicationHelper
   # Raster images get a resized variant; SVG and other non-variable types use the original blob.
   # Default +loading: lazy+ keeps the menu grid cheap; pass +loading: "eager"+ for above-the-fold heroes.
   def attachable_image_tag(attachment, resize_to_limit:, **image_options)
-    image_options = { loading: "lazy" }.merge(image_options)
-
-    source =
-      if attachment.variable?
-        attachment.variant(resize_to_limit: resize_to_limit)
-      else
-        attachment
-      end
-    image_tag source, **image_options
+    opts = { loading: "lazy" }.merge(image_options)
+    image_tag attachable_image_source(attachment, resize_to_limit), **opts
   end
 
   def menu_slot_preview_image_tag(preview, meal_type)
@@ -49,5 +42,13 @@ module ApplicationHelper
         class: "menu-grid__slot-preview-img menu-grid__slot-preview-img--fallback",
         data: data.merge(preview_kind: "fallback")
     end
+  end
+
+  private
+
+  def attachable_image_source(attachment, resize_to_limit)
+    return attachment unless attachment.variable? && ImageVariants::Available.call
+
+    attachment.variant(resize_to_limit: resize_to_limit)
   end
 end

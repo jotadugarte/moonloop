@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "stringio"
+require "uri"
 
 require "rails_helper"
 
@@ -52,6 +53,36 @@ RSpec.describe "Recipes CRUD", type: :request do
     get recipe_path(foreign)
 
     expect(response).to have_http_status(:not_found)
+  end
+
+  # [REQ-MENU-002]
+  it "serves a successful raster image when the recipe show page links a PNG hero" do
+    png_path = Rails.root.join("spec/fixtures/files/recipe_test_1x1.png")
+    recipe = Recipe.create!(user: user, name: "Plato raster")
+    recipe.image.attach(
+      io: StringIO.new(File.binread(png_path)),
+      filename: "hero.png",
+      content_type: "image/png"
+    )
+
+    get recipe_path(recipe)
+    expect(response).to have_http_status(:ok)
+    doc = Nokogiri::HTML(response.body)
+    img = doc.at_css("img[alt='Plato raster']")
+    expect(img).to be_present
+    src = img["src"]
+    expect(src).to be_present
+
+    path = src.start_with?("http") ? URI(src).request_uri : src
+    get path
+    6.times do
+      break unless response.redirect?
+
+      follow_redirect!
+    end
+    expect(response).to have_http_status(:ok)
+    expect(response.body.bytesize).to be_positive
+    expect(response.content_type.to_s).to match(/\Aimage\//)
   end
 
   # [REQ-MENU-002]
