@@ -5,6 +5,9 @@
 <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
 <% dish_select_id = "#{slot_key}-dish" %>
 <% freeform_input_id = "#{slot_key}-freeform" %>
+<% meal_type_keys = Menus::MealType::KEYS %>
+<% grouped_dishes = dishes.group_by(&:meal_type) %>
+<% group_order = ([ meal_type ] + meal_type_keys).uniq %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
@@ -44,6 +47,52 @@
 
       <div>
         <%= f.label :dish_id, t("menus.slots.dish_pick_label"), for: dish_select_id %>
+
+        <div
+          class="mt-2"
+          data-controller="dish-picker"
+          data-dish-picker-select-id-value="<%= dish_select_id %>"
+        >
+          <input
+            type="text"
+            class="border border-gray-300 rounded p-2 w-full"
+            autocomplete="off"
+            aria-label="<%= t("menus.slots.dish_pick_label") %>"
+            data-test="dish-picker-filter"
+            data-dish-picker-target="filter"
+            data-action="input->dish-picker#filter"
+          >
+
+          <div class="mt-2 space-y-2" data-dish-picker-target="groups">
+            <% group_order.each do |group_key| %>
+              <% group_items = grouped_dishes[group_key] || [] %>
+              <% next if group_items.empty? %>
+
+              <div data-test="dish-picker-group" data-meal-type="<%= group_key %>">
+                <div class="font-medium text-sm text-gray-700 mb-1">
+                  <%= t("menus.meal_types.#{group_key}") %>
+                </div>
+                <ul role="list" class="space-y-1">
+                  <% group_items.each do |dish| %>
+                    <li>
+                      <button
+                        type="button"
+                        class="text-left w-full border border-gray-200 rounded px-2 py-1 hover:bg-gray-50"
+                        data-test="dish-picker-option"
+                        data-dish-id="<%= dish.id %>"
+                        data-dish-name="<%= dish.name %>"
+                        data-action="click->dish-picker#pick"
+                      >
+                        <%= dish.name %>
+                      </button>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
         <%= f.collection_select :dish_id,
               dishes,
               :id,
