@@ -20,19 +20,12 @@ RSpec.describe "Menu editor dish picker groups", type: :request do
 
     expect(response).to have_http_status(:ok)
 
-    slot_marker = %(data-test="menu-entry-slot" data-weekday="0" data-meal-type="desayuno")
-    expect(response.body).to include(slot_marker)
+    doc = Nokogiri::HTML(response.body)
+    slot = doc.at_css(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"]))
+    expect(slot).to be_present
 
-    group_desayuno = %(data-test="dish-picker-group" data-meal-type="desayuno")
-    group_almuerzo = %(data-test="dish-picker-group" data-meal-type="almuerzo")
-    group_cena = %(data-test="dish-picker-group" data-meal-type="cena")
-
-    slot_start = response.body.index(slot_marker)
-    expect(slot_start).to be_present
-
-    within_slot = response.body[slot_start, 12_000]
-    expect(within_slot.index(group_desayuno)).to be < within_slot.index(group_almuerzo)
-    expect(within_slot.index(group_almuerzo)).to be < within_slot.index(group_cena)
+    group_keys = slot.css(%([data-test="dish-picker-group"])).map { |node| node["data-meal-type"] }
+    expect(group_keys).to eq(%w[desayuno almuerzo cena])
 
     expect(response.body).to include(I18n.t("menus.slots.dish_blank"))
   end
