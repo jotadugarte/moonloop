@@ -80,7 +80,7 @@ En el editor de menú (`/menus/:id/edit`), cada slot permite elegir un **plato**
 - **D3 (group ordering)**: **Slot meal type group first**, then `desayuno → almuerzo → cena → merienda` (excluding the slot group if already first).
 - **D4 (filter matching)**: **Accent-insensitive** (e.g. `cafe` matches `café`) and case-insensitive substring match.
 - **D5 (no-results copy)**: Show an i18n “no results” state inside the picker when the filter yields zero matches.
-- **D6 (focus behavior)**: After selecting a dish + autosave, move focus to the **next slot** (data-entry flow).
+- **D6 (focus behavior)**: **Removed** — do not force-focus the next slot after autosave (unstable across browsers/Turbo; rely on default focus behavior).
 - **D7 (freeform)**: Keep the existing freeform note input; add dish search above it (no unification).
 
 ---

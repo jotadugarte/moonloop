@@ -7,20 +7,11 @@ export default class extends Controller {
   }
 
   connect() {
-    this.onSubmitEnd = this.onSubmitEnd.bind(this)
-    this.pendingNextFocusSelector = null
-
-    const form = this.element.closest("form")
-    if (!form) return
-
-    form.addEventListener("turbo:submit-end", this.onSubmitEnd)
+    // no-op
   }
 
   disconnect() {
-    const form = this.element.closest("form")
-    if (!form) return
-
-    form.removeEventListener("turbo:submit-end", this.onSubmitEnd)
+    // no-op
   }
 
   filter() {
@@ -44,9 +35,6 @@ export default class extends Controller {
     const dishId = event?.currentTarget?.dataset?.dishId
     if (!dishId) return
 
-    this.pendingNextFocusSelector = this.nextSlotFilterSelector()
-    this.focusNextSlotNow()
-
     const select = document.getElementById(this.selectIdValue)
     if (!select) return
 
@@ -56,42 +44,6 @@ export default class extends Controller {
     if (!form) return
 
     form.requestSubmit()
-  }
-
-  onSubmitEnd(event) {
-    if (!event?.detail?.success) return
-
-    this.focusNextSlotNow()
-  }
-
-  focusNextSlotNow() {
-    const selector = this.pendingNextFocusSelector
-    if (!selector) return
-
-    const el = document.querySelector(selector)
-    if (!el) return
-
-    window.setTimeout(() => {
-      el.focus?.()
-    }, 0)
-  }
-
-  nextSlotFilterSelector() {
-    const slot = this.element.closest('[data-test="menu-entry-slot"]')
-    if (!slot) return null
-
-    const allSlots = Array.from(document.querySelectorAll('[data-test="menu-entry-slot"]'))
-    const slotIndex = allSlots.indexOf(slot)
-    if (slotIndex < 0) return null
-
-    const nextSlot = allSlots[slotIndex + 1]
-    if (!nextSlot) return null
-
-    const weekday = nextSlot.getAttribute("data-weekday")
-    const mealType = nextSlot.getAttribute("data-meal-type")
-    if (!weekday || !mealType) return null
-
-    return `[data-test="menu-entry-slot"][data-weekday="${CSS.escape(weekday)}"][data-meal-type="${CSS.escape(mealType)}"] [data-test="dish-picker-filter"]`
   }
 
   normalize(value) {

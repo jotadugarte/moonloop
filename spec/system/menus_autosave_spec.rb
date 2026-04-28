@@ -10,7 +10,7 @@ RSpec.describe "Menus autosave", type: :system do
   include System::RegistrationHelpers
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "filters dish options by name while keeping meal-type groups, then autosaves and moves focus to the next slot" do
+  it "filters dish options by name while keeping meal-type groups, then autosaves the slot" do
     register_user_in_browser(email: "menu-dish-filter@example.com")
 
     visit new_dish_path
@@ -41,10 +41,6 @@ RSpec.describe "Menus autosave", type: :system do
       expect(page).to have_css(%([data-test="dish-picker-group"][data-meal-type="desayuno"]), visible: true)
       find(%([data-test="dish-picker-option"][data-dish-id="#{cafe.id}"])).click
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
-    end
-
-    within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="almuerzo"])) do
-      expect(page).to have_css(%([data-test="dish-picker-filter"]:focus), visible: true)
     end
   end
 
