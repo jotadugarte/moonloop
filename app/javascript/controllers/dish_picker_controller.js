@@ -8,7 +8,8 @@ export default class extends Controller {
 
   connect() {
     this.onSubmitEnd = this.onSubmitEnd.bind(this)
-    this.installFrameLoadFocusHandler()
+    this.focusAttemptRaf = null
+    this.pendingNextFocusSelector = null
 
     const form = this.element.closest("form")
     if (!form) return
@@ -17,6 +18,11 @@ export default class extends Controller {
   }
 
   disconnect() {
+    if (this.focusAttemptRaf) {
+      window.cancelAnimationFrame(this.focusAttemptRaf)
+      this.focusAttemptRaf = null
+    }
+
     const form = this.element.closest("form")
     if (!form) return
 
@@ -56,24 +62,38 @@ export default class extends Controller {
   onSubmitEnd(event) {
     if (!event?.detail?.success) return
 
+    this.attemptPendingFocus()
+  }
+
+  attemptPendingFocus() {
     const selector = this.pendingNextFocusSelector
     if (!selector) return
 
-    window.__moonloopDishPickerNextFocusSelector = selector
-  }
+    if (this.focusAttemptRaf) {
+      window.cancelAnimationFrame(this.focusAttemptRaf)
+      this.focusAttemptRaf = null
+    }
 
-  installFrameLoadFocusHandler() {
-    if (window.__moonloopDishPickerFrameLoadHandlerInstalled) return
+    let attemptsLeft = 30
+    const attempt = () => {
+      const el = document.querySelector(selector)
+      if (el) {
+        el.focus?.()
+        this.pendingNextFocusSelector = null
+        this.focusAttemptRaf = null
+        return
+      }
 
-    window.__moonloopDishPickerFrameLoadHandlerInstalled = true
+      attemptsLeft -= 1
+      if (attemptsLeft <= 0) {
+        this.focusAttemptRaf = null
+        return
+      }
 
-    document.addEventListener("turbo:frame-load", () => {
-      const selector = window.__moonloopDishPickerNextFocusSelector
-      if (!selector) return
+      this.focusAttemptRaf = window.requestAnimationFrame(attempt)
+    }
 
-      window.__moonloopDishPickerNextFocusSelector = null
-      document.querySelector(selector)?.focus?.()
-    })
+    this.focusAttemptRaf = window.requestAnimationFrame(attempt)
   }
 
   nextSlotFilterSelector() {
