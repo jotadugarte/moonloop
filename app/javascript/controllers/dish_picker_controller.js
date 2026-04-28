@@ -71,7 +71,9 @@ export default class extends Controller {
     const el = document.querySelector(selector)
     if (!el) return
 
-    el.focus?.()
+    window.setTimeout(() => {
+      el.focus?.()
+    }, 0)
   }
 
   nextSlotFilterSelector() {
