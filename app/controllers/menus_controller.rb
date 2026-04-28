@@ -60,6 +60,9 @@ class MenusController < ApplicationController
     @entries_by_slot = @menu.menu_entries
       .includes(dish: { image_attachment: :blob })
       .index_by { |e| [ e.weekday, e.meal_type ] }
+
+    @dishes = Current.user.dishes.order(:name).to_a
+    @dishes_by_meal_type = @dishes.group_by(&:meal_type)
   end
 
   def menu_params

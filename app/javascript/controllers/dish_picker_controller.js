@@ -1,10 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["filter", "groups", "noResults"]
-  static values = {
-    selectId: String,
-  }
+  static targets = ["filter", "groups", "noResults", "dishId"]
 
   connect() {
     // no-op
@@ -39,12 +36,9 @@ export default class extends Controller {
     const dishId = event?.currentTarget?.dataset?.dishId
     if (!dishId) return
 
-    const select = document.getElementById(this.selectIdValue)
-    if (!select) return
+    this.dishIdTarget.value = dishId
 
-    select.value = dishId
-
-    const form = select.form || this.element.closest("form")
+    const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
 
     form.requestSubmit()

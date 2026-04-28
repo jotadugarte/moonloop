@@ -56,7 +56,13 @@
       <div class="menu-grid__weekdays">
         <% (0..6).each do |weekday| %>
           <% entry = @entries_by_slot[[ weekday, meal_type ]] %>
-          <%= render "menus/slot", menu: @menu, weekday: weekday, meal_type: meal_type, entry: entry %>
+          <%= render "menus/slot",
+                menu: @menu,
+                weekday: weekday,
+                meal_type: meal_type,
+                entry: entry,
+                dishes: @dishes,
+                dishes_by_meal_type: @dishes_by_meal_type %>
         <% end %>
       </div>
     </section>
