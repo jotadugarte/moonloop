@@ -7,7 +7,7 @@
 <% freeform_input_id = "#{slot_key}-freeform" %>
 <% meal_type_keys = Menus::MealType::KEYS %>
 <% group_order = ([ meal_type ] + meal_type_keys).uniq %>
-<% selected_dish_name = entry&.dish&.name.to_s %>
+<% selected_dish_name = dishes.find { |dish| dish.id == entry&.dish_id }&.name.to_s %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
