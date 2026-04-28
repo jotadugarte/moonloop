@@ -56,7 +56,11 @@ export default class extends Controller {
     if (!select) return
 
     select.value = dishId
-    select.dispatchEvent(new Event("change", { bubbles: true }))
+
+    const form = select.form || this.element.closest("form")
+    if (!form) return
+
+    form.requestSubmit()
   }
 
   onSubmitEnd(event) {
