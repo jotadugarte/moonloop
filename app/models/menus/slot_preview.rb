@@ -43,11 +43,11 @@ module Menus
       Result.new(
         display: :fallback,
         uploaded_image: nil,
-        fallback_asset_path: "menus/fallback_#{fallback_meal_type_key(dish)}.svg"
+        fallback_asset_path: "menus/fallback_#{fallback_meal_type_key}.svg"
       )
     end
 
-    def fallback_meal_type_key(dish)
+    def fallback_meal_type_key
       @slot_meal_type_key
     end
 

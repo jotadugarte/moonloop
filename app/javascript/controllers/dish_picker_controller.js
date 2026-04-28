@@ -31,8 +31,8 @@ export default class extends Controller {
     })
 
     groupNodes.forEach((group) => {
-      const visibleOptions = group.querySelectorAll('li:not(.hidden)[data-test="dish-picker-option"], li:not(.hidden) [data-test="dish-picker-option"]')
-      group.classList.toggle("hidden", visibleOptions.length === 0)
+      const visibleItems = group.querySelectorAll("li:not(.hidden)")
+      group.classList.toggle("hidden", visibleItems.length === 0)
     })
 
     this.noResultsTarget.classList.toggle("hidden", anyVisible)
@@ -40,13 +40,14 @@ export default class extends Controller {
 
   open() {
     if (!this.hasFilterTarget) return
-    if (!this.hasSelectedDishNameValue) return
 
     if (this.hasGroupsTarget) this.groupsTarget.classList.remove("hidden")
     if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
     this.markOpen()
 
     const currentValue = this.normalize(this.filterTarget.value)
+    if (!this.hasSelectedDishNameValue) return
+
     const selectedValue = this.normalize(this.selectedDishNameValue)
     if (currentValue !== selectedValue) return
 
