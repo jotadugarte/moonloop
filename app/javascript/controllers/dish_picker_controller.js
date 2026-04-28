@@ -42,6 +42,7 @@ export default class extends Controller {
     if (!this.hasSelectedDishNameValue) return
 
     if (this.hasGroupsTarget) this.groupsTarget.classList.remove("hidden")
+    if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
 
     const currentValue = this.normalize(this.filterTarget.value)
     const selectedValue = this.normalize(this.selectedDishNameValue)
