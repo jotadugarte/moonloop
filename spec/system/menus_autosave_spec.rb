@@ -9,6 +9,30 @@ RSpec.describe "Menus autosave", type: :system do
 
   include System::RegistrationHelpers
 
+  # [REQ-MENU-001]
+  it "shows the selected dish name in the closed picker state after autosave" do
+    register_user_in_browser(email: "menu-dish-selected-label@example.com")
+
+    visit new_dish_path
+    fill_in I18n.t("dishes.form.name_label"), with: "Café con leche"
+    select I18n.t("menus.meal_types.desayuno"), from: I18n.t("dishes.form.meal_type_label")
+    click_button I18n.t("dishes.form.create_submit")
+
+    user = User.find_by!(email: "menu-dish-selected-label@example.com")
+    cafe = Dish.find_by!(user: user, name: "Café con leche")
+
+    visit menus_path
+    fill_in I18n.t("menus.index.name_label"), with: "Semana seleccion"
+    click_button I18n.t("menus.index.create_submit")
+    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
+
+    within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
+      find(%([data-test="dish-picker-option"][data-dish-id="#{cafe.id}"])).click
+      expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
+      expect(find(%([data-test="dish-picker-filter"])).value).to eq("Café con leche")
+    end
+  end
+
   # [REQ-MENU-001, REQ-MENU-002]
   it "filters dish options by name while keeping meal-type groups, then autosaves the slot" do
     register_user_in_browser(email: "menu-dish-filter@example.com")
