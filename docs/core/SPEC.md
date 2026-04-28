@@ -200,6 +200,20 @@ Reserved for **future** REQ rows promoted from **Backlog** in `ROADMAP.md`. When
 
 *(No planned REQ rows in this table right now.)*
 
+### Acceptance criteria — menus (Phase 4)
+
+#### REQ-MENU-001 — Menu editor slots (dish picker + autosave)
+
+1. **Grid & uniqueness:** a menu has at most one persisted **`MenuEntry`** per `(menu, weekday, meal_type)`.
+2. **Dish picker UI:** each slot renders a dish picker that:
+   - groups dishes by **`Dish#meal_type`** (using the same canonical keys as `Menus::MealType::KEYS`),
+   - orders groups with the **slot meal type first**, then the remaining keys in canonical order,
+   - allows client-side filtering by dish **name** (case-insensitive and accent-insensitive substring match),
+   - shows an i18n “no results” state when the filter yields zero matches,
+   - includes an in-picker **clear** action labeled via `menus.slots.dish_blank`.
+3. **Autosave contract:** selecting a dish (or clearing) **submits** the slot form via Turbo to `Menus::MenuEntriesController#create` and replaces only the slot frame; persistence is handled by **`Menus::UpsertEntry`**.
+4. **Preview image:** when a slot has content (dish or freeform), the slot renders a preview image; when the chosen dish has no uploaded image, the preview uses the **meal-type fallback** asset (see **REQ-MENU-002** and `Menus::SlotPreview`).
+
 ### Acceptance criteria — reporting (Phase 7)
 
 These criteria are **testable**; implementation lives under services (e.g. `Reports::`, `Habits::`, `WeightLogs::`) and a **single** Informes surface per **Decisions log — REQ-RPT** below.
