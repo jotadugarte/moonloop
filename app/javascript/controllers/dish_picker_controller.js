@@ -5,11 +5,15 @@ export default class extends Controller {
   static values = { selectedDishName: String }
 
   connect() {
-    // no-op
+    this.boundCloseIfClickedOutside = this.closeIfClickedOutside.bind(this)
+    document.addEventListener("click", this.boundCloseIfClickedOutside)
+
+    if (this.hasGroupsTarget) this.groupsTarget.classList.add("hidden")
+    if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
   }
 
   disconnect() {
-    // no-op
+    document.removeEventListener("click", this.boundCloseIfClickedOutside)
   }
 
   filter() {
@@ -37,12 +41,27 @@ export default class extends Controller {
     if (!this.hasFilterTarget) return
     if (!this.hasSelectedDishNameValue) return
 
+    if (this.hasGroupsTarget) this.groupsTarget.classList.remove("hidden")
+
     const currentValue = this.normalize(this.filterTarget.value)
     const selectedValue = this.normalize(this.selectedDishNameValue)
     if (currentValue !== selectedValue) return
 
     this.filterTarget.value = ""
     if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+  }
+
+  close() {
+    if (!this.hasGroupsTarget) return
+    this.groupsTarget.classList.add("hidden")
+    if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
+  }
+
+  closeIfClickedOutside(event) {
+    if (!event?.target) return
+    if (this.element.contains(event.target)) return
+
+    this.close()
   }
 
   pick(event) {

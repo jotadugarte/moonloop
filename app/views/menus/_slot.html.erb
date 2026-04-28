@@ -86,7 +86,7 @@
             <%= t("menus.slots.dish_picker_no_results") %>
           </p>
 
-          <div class="mt-2 space-y-2" data-dish-picker-target="groups">
+          <div class="hidden mt-2 space-y-2" data-dish-picker-target="groups">
             <% group_order.each do |group_key| %>
               <% group_items = (dishes_by_meal_type[group_key] || []) %>
               <% next if group_items.empty? %>
