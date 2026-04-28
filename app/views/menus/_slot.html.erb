@@ -8,6 +8,7 @@
 <% meal_type_keys = Menus::MealType::KEYS %>
 <% group_order = ([ meal_type ] + meal_type_keys).uniq %>
 <% selected_dish_name = dishes.find { |dish| dish.id == entry&.dish_id }&.name.to_s %>
+<% selected_picker_value = entry&.dish_id.present? ? selected_dish_name : t("menus.slots.dish_blank") %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
@@ -51,7 +52,7 @@
         <div
           class="mt-2"
           data-controller="dish-picker"
-          data-dish-picker-selected-dish-name-value="<%= selected_dish_name %>"
+          data-dish-picker-selected-dish-name-value="<%= selected_picker_value %>"
         >
           <%= f.hidden_field :dish_id,
                 value: entry&.dish_id,
@@ -64,7 +65,7 @@
             type="text"
             class="border border-gray-300 rounded p-2 w-full"
             autocomplete="off"
-            value="<%= selected_dish_name %>"
+            value="<%= selected_picker_value %>"
             placeholder="<%= t("menus.slots.dish_picker_filter_placeholder") %>"
             aria-label="<%= t("menus.slots.dish_picker_filter_aria") %>"
             data-test="dish-picker-filter"
