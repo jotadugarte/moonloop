@@ -8,6 +8,7 @@ export default class extends Controller {
 
   connect() {
     this.onSubmitEnd = this.onSubmitEnd.bind(this)
+    this.installFrameLoadFocusHandler()
 
     const form = this.element.closest("form")
     if (!form) return
@@ -43,6 +44,8 @@ export default class extends Controller {
     const dishId = event?.currentTarget?.dataset?.dishId
     if (!dishId) return
 
+    this.pendingNextFocusSelector = this.nextSlotFilterSelector()
+
     const select = document.getElementById(this.selectIdValue)
     if (!select) return
 
@@ -53,18 +56,42 @@ export default class extends Controller {
   onSubmitEnd(event) {
     if (!event?.detail?.success) return
 
+    const selector = this.pendingNextFocusSelector
+    if (!selector) return
+
+    window.__moonloopDishPickerNextFocusSelector = selector
+  }
+
+  installFrameLoadFocusHandler() {
+    if (window.__moonloopDishPickerFrameLoadHandlerInstalled) return
+
+    window.__moonloopDishPickerFrameLoadHandlerInstalled = true
+
+    document.addEventListener("turbo:frame-load", () => {
+      const selector = window.__moonloopDishPickerNextFocusSelector
+      if (!selector) return
+
+      window.__moonloopDishPickerNextFocusSelector = null
+      document.querySelector(selector)?.focus?.()
+    })
+  }
+
+  nextSlotFilterSelector() {
     const slot = this.element.closest('[data-test="menu-entry-slot"]')
-    if (!slot) return
+    if (!slot) return null
 
     const allSlots = Array.from(document.querySelectorAll('[data-test="menu-entry-slot"]'))
     const slotIndex = allSlots.indexOf(slot)
-    if (slotIndex < 0) return
+    if (slotIndex < 0) return null
 
     const nextSlot = allSlots[slotIndex + 1]
-    if (!nextSlot) return
+    if (!nextSlot) return null
 
-    const nextFilter = nextSlot.querySelector('[data-test="dish-picker-filter"]')
-    nextFilter?.focus?.()
+    const weekday = nextSlot.getAttribute("data-weekday")
+    const mealType = nextSlot.getAttribute("data-meal-type")
+    if (!weekday || !mealType) return null
+
+    return `[data-test="menu-entry-slot"][data-weekday="${CSS.escape(weekday)}"][data-meal-type="${CSS.escape(mealType)}"] [data-test="dish-picker-filter"]`
   }
 
   normalize(value) {
