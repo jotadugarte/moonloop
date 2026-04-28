@@ -200,6 +200,10 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 - **Picker controls (single source of truth):** If you build a custom picker UI for a model attribute, do **not** render a second interactive form control for the same attribute (e.g. custom list + `<select>`). Keep one canonical input (often a hidden field) and drive it from the picker.
 - **Picker submit contract:** For picker UIs that submit a form, keep the canonical input **inside** the picker's Stimulus controller scope (so targets exist). Set the canonical value and submit via `form.requestSubmit()`; avoid global DOM lookups.
 - **Picker clear UX:** A clear action should reset both the canonical value **and** the filter UI state (clear the filter input and re-run filtering) before submitting, so the full option set is visible again.
+- **Picker panel close + a11y:** For picker UIs that open a panel (popover/listbox):
+  - support **Escape** to close (`keydown.escape->...#close`)
+  - on pick/clear, **close the panel before** `form.requestSubmit()` so the UI does not remain open during Turbo navigation
+  - keep `aria-expanded` in sync with panel state (`true` when open, `false` when closed)
 
 ## 3. Turbo & Hotwire
 - **Frame IDs:** Ensure `turbo_frame_tag` IDs match the backend response exactly.
