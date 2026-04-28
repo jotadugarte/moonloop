@@ -51,6 +51,12 @@
           class="mt-2"
           data-controller="dish-picker"
         >
+          <%= f.hidden_field :dish_id,
+                value: entry&.dish_id,
+                id: dish_select_id,
+                data: { dish_picker_target: "dishId" },
+                aria: aria_for_field(f.object, :dish_id, slot_err_id) %>
+
           <input
             id="<%= dish_filter_id %>"
             type="text"
@@ -62,6 +68,15 @@
             data-dish-picker-target="filter"
             data-action="input->dish-picker#filter"
           >
+
+          <button
+            type="button"
+            class="mt-2 text-sm underline text-gray-700"
+            data-test="dish-picker-clear"
+            data-action="click->dish-picker#clear"
+          >
+            <%= t("menus.slots.dish_blank") %>
+          </button>
 
           <p class="hidden mt-2 text-sm text-gray-600" data-dish-picker-target="noResults">
             <%= t("menus.slots.dish_picker_no_results") %>
@@ -96,12 +111,6 @@
             <% end %>
           </div>
         </div>
-
-        <%= f.hidden_field :dish_id,
-              value: entry&.dish_id,
-              id: dish_select_id,
-              data: { dish_picker_target: "dishId" },
-              aria: aria_for_field(f.object, :dish_id, slot_err_id) %>
       </div>
 
       <% if allow_freeform %>

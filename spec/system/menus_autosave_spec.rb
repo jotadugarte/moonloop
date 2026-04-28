@@ -72,7 +72,7 @@ RSpec.describe "Menus autosave", type: :system do
     visit current_path
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
-      expect(page).to have_css(%([data-test="dish-picker-option"][data-dish-id="#{ensalada.id}"]))
+      expect(page).to have_field("menu_entry[dish_id]", type: "hidden", visible: false, with: ensalada.id.to_s)
     end
   end
 

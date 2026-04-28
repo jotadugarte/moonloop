@@ -36,7 +36,18 @@ export default class extends Controller {
     const dishId = event?.currentTarget?.dataset?.dishId
     if (!dishId) return
 
+    if (!this.hasDishIdTarget) return
     this.dishIdTarget.value = dishId
+
+    const form = this.dishIdTarget.form || this.element.closest("form")
+    if (!form) return
+
+    form.requestSubmit()
+  }
+
+  clear() {
+    if (!this.hasDishIdTarget) return
+    this.dishIdTarget.value = ""
 
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
