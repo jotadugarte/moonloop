@@ -48,8 +48,6 @@ module Menus
     end
 
     def fallback_meal_type_key(dish)
-      return Menus::MealType.new(dish.meal_type).key if dish.present?
-
       @slot_meal_type_key
     end
 
