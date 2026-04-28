@@ -83,8 +83,7 @@ module Menus
     end
 
     def render_turbo_slot(weekday, meal_type, entry, status = nil)
-      dishes = Current.user.dishes.order(:name).to_a
-      dishes_by_meal_type = dishes.group_by(&:meal_type)
+      dish_picker = Menus::DishPickerOptions.call(user: Current.user)
 
       stream = turbo_stream.replace(
         slot_frame_id(@menu, weekday, meal_type),
@@ -94,8 +93,8 @@ module Menus
           weekday: weekday,
           meal_type: meal_type,
           entry: entry,
-          dishes: dishes,
-          dishes_by_meal_type: dishes_by_meal_type
+          dishes: dish_picker.dishes,
+          dishes_by_meal_type: dish_picker.dishes_by_meal_type
         }
       )
       return render(turbo_stream: stream) if status.blank?

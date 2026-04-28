@@ -49,6 +49,9 @@ export default class extends Controller {
     if (!this.hasDishIdTarget) return
     this.dishIdTarget.value = ""
 
+    if (this.hasFilterTarget) this.filterTarget.value = ""
+    if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
 

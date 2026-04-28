@@ -93,14 +93,16 @@
                 </div>
                 <ul role="list" class="space-y-1">
                   <% group_items.each do |dish| %>
+                    <% selected = entry&.dish_id == dish.id %>
                     <li>
                       <button
                         type="button"
-                        class="text-left w-full border border-gray-200 rounded px-2 py-1 hover:bg-gray-50"
+                        class="text-left w-full border rounded px-2 py-1 hover:bg-gray-50 <%= selected ? "border-blue-400 bg-blue-50" : "border-gray-200" %>"
                         data-test="dish-picker-option"
                         data-dish-id="<%= dish.id %>"
                         data-dish-name="<%= dish.name %>"
                         data-action="click->dish-picker#pick"
+                        aria-pressed="<%= selected %>"
                       >
                         <%= dish.name %>
                       </button>
