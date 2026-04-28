@@ -6,9 +6,9 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "creates core tables for menus, recipes, and menu entries" do
+  it "creates core tables for menus, dishes (Recipe rows), and menu entries" do
     expect(connection.data_source_exists?("menus")).to eq(true)
-    expect(connection.data_source_exists?("recipes")).to eq(true)
+    expect(connection.data_source_exists?("dishes")).to eq(true)
     expect(connection.data_source_exists?("menu_entries")).to eq(true)
     expect(connection.data_source_exists?("phase_assignments")).to eq(true)
   end

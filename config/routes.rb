@@ -40,11 +40,11 @@ Rails.application.routes.draw do
       delete :clear, on: :collection
     end
   end
-  get "recipes", to: redirect(path: "/platos", status: 301)
-  get "recetas", to: redirect(path: "/platos", status: 301)
-  get "recipes/:id", to: redirect(path: "/platos/%{id}", status: 301)
-  get "public_recipes", to: redirect(path: "/public_dishes", status: 301)
   resources :recipes, path: "platos"
+  get "recipes", to: redirect(path: "/platos", status: 301), as: :legacy_recipes_collection
+  get "recetas", to: redirect(path: "/platos", status: 301), as: :legacy_recetas_collection
+  get "recipes/:id", to: redirect(path: "/platos/%{id}", status: 301), as: :legacy_recipes_member
+  get "public_recipes", to: redirect(path: "/public_dishes", status: 301), as: :legacy_public_recipes_index
   resource :phase, only: %i[show update] do
     post :dismiss_reminder, on: :member
     post :repeat_last_assignment, on: :member
