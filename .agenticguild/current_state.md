@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
 - <active_task_pointer>.agenticguild/active_sessions/task_menus-combobox-por-tipo-de-comida.md</active_task_pointer>
-- **Phase:** harvest-rules (Pattern Analysis)
-- **Step:** 1.1 Propose new rule candidates from diff/session
-- **Context:** Diff + session analyzed; ready to propose candidates for `.cursorrules` / `SYSTEM_ARCHITECTURE.md`.
-- **Next:** Await user approval (APPROVE / list / SKIP).
+- **Phase:** finish-branch (Final Spackle & PR)
+- **Step:** 4.3 Update changelog/roadmap for branch + ready for PR description
+- **Context:** ROADMAP marked #58 done; CHANGELOG updated with menus dish picker entry.
+- **Next:** Run pr-description skill to generate PR title/body.

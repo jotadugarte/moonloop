@@ -47,6 +47,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 48. [x] **Menús: flujo y edición sin fricción**. Tras escribir el nombre de un menú y guardar en `/menus`, redirigir directamente a `/menus/:id/edit` para completar el detalle del menú. En `/menus/:id/edit`, **sin botón “Guardar” por cada comida/plato**: al cambiar el combobox se **persiste automáticamente** la elección. Mostrar la **foto** del ítem (plato/comida) elegido en el combobox de cada slot. — 2026-04-25
 54. [x] **Platos: imagen única + placeholder por tipo de comida**. En **`/platos/new`** y **`/platos/:id/edit`**: siempre hay **una sola imagen actual**; al crear sin subir imagen, usar **placeholder** según `meal_type`; subir imagen **reemplaza** la actual; “Eliminar imagen” revierte al placeholder. (REQ-MENU-002) — 2026-04-25
 56. [x] **Bug: Menús — validación en idioma incorrecto**. En `/menus`, cuando el idioma activo es español, el error de validación de **Nombre** aparece en inglés (“Name can't be blank”). Debe mostrarse coherente con el locale actual (p. ej. “Nombre no puede estar en blanco”). — 2026-04-25
+58. [x] **Menús — combobox por tipo de comida**. En el picker/combobox al asignar **plato** en el editor de menú, **agrupar** opciones por **tipo de comida** (Desayuno, Almuerzo, Cena, Merienda) y permitir **buscar por nombre** manteniendo grupos; incluye acción “Sin plato/No dish” y mantiene autosave por Turbo (REQ-MENU-001, REQ-MENU-002). — 2026-04-27 — Depends on: Phase 4 #48; **#52**
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise  routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -83,13 +84,11 @@ Things done and things left to do. Update this when finishing branches; use `roa
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque fases: decisión), **#58** (combobox de menú por tipo de comida). **#52** cerrado (reestructuración Receta → Plato; SPEC/DATA_FLOW alineados). **#53** cerrado en Done (Phase 9, **2026-04-25**).
+Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque fases: decisión). **#58** cerrado (combobox/picker de menú por tipo de comida). **#52** cerrado (reestructuración Receta → Plato; SPEC/DATA_FLOW alineados). **#53** cerrado en Done (Phase 9, **2026-04-25**).
 
 52. [x] **Reestructuración de entidad: de “Receta” a “Plato”**. Modelo **`Dish`** / tabla **`dishes`**, FK **`menu_entries.dish_id`**, CRUD y catálogo en **`/platos`** y **`/public_dishes`** (redirects **301** desde rutas antiguas); instrucciones de preparación opcionales en **`dishes.instructions`**; UI “Plato” vía i18n (`dishes.*`). Criterio **tiene receta** en producto = derivado de `instructions.present?` (sin columna booleana). — 2026-04-28 — Depends on: Phase 4 (#16); ver **`docs/core/SPEC.md`**, **`docs/core/DATA_FLOW_MAP.md`**, **`docs/core/SCHEMA_REFERENCE.md`**.
 
 57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
-
-58. [ ] **Menús — combobox por tipo de comida**. En el combobox al asignar **plato** en el editor de menú, **agrupar o clasificar** las opciones por **tipo de comida** (p. ej. Desayuno, Almuerzo, Cena, Merienda), coherente con `meal_type` / slots (REQ-MENU-001, REQ-MENU-002). — Depends on: Phase 4 #48 (combobox por slot); **#52** (entidad **`Dish`**).
 
 ## Backlog
 *(No items currently in backlog.)*
