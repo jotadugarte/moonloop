@@ -2,13 +2,19 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["filter", "groups", "noResults", "dishId"]
+  static values = { selectedDishName: String }
 
   connect() {
-    // no-op
+    this.boundCloseIfClickedOutside = this.closeIfClickedOutside.bind(this)
+    document.addEventListener("click", this.boundCloseIfClickedOutside)
+
+    if (this.hasGroupsTarget) this.groupsTarget.classList.add("hidden")
+    if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
+    this.markClosed()
   }
 
   disconnect() {
-    // no-op
+    document.removeEventListener("click", this.boundCloseIfClickedOutside)
   }
 
   filter() {
@@ -25,11 +31,42 @@ export default class extends Controller {
     })
 
     groupNodes.forEach((group) => {
-      const visibleOptions = group.querySelectorAll('li:not(.hidden)[data-test="dish-picker-option"], li:not(.hidden) [data-test="dish-picker-option"]')
-      group.classList.toggle("hidden", visibleOptions.length === 0)
+      const visibleItems = group.querySelectorAll("li:not(.hidden)")
+      group.classList.toggle("hidden", visibleItems.length === 0)
     })
 
     this.noResultsTarget.classList.toggle("hidden", anyVisible)
+  }
+
+  open() {
+    if (!this.hasFilterTarget) return
+
+    if (this.hasGroupsTarget) this.groupsTarget.classList.remove("hidden")
+    if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+    this.markOpen()
+
+    const currentValue = this.normalize(this.filterTarget.value)
+    if (!this.hasSelectedDishNameValue) return
+
+    const selectedValue = this.normalize(this.selectedDishNameValue)
+    if (currentValue !== selectedValue) return
+
+    this.filterTarget.value = ""
+    if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+  }
+
+  close() {
+    if (!this.hasGroupsTarget) return
+    this.groupsTarget.classList.add("hidden")
+    if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
+    this.markClosed()
+  }
+
+  closeIfClickedOutside(event) {
+    if (!event?.target) return
+    if (this.element.contains(event.target)) return
+
+    this.close()
   }
 
   pick(event) {
@@ -38,6 +75,7 @@ export default class extends Controller {
 
     if (!this.hasDishIdTarget) return
     this.dishIdTarget.value = dishId
+    this.close()
 
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
@@ -51,11 +89,22 @@ export default class extends Controller {
 
     if (this.hasFilterTarget) this.filterTarget.value = ""
     if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+    this.close()
 
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
 
     form.requestSubmit()
+  }
+
+  markOpen() {
+    if (!this.hasFilterTarget) return
+    this.filterTarget.setAttribute("aria-expanded", "true")
+  }
+
+  markClosed() {
+    if (!this.hasFilterTarget) return
+    this.filterTarget.setAttribute("aria-expanded", "false")
   }
 
   normalize(value) {

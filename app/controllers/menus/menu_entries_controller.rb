@@ -94,6 +94,7 @@ module Menus
           meal_type: meal_type,
           entry: entry,
           dishes: dish_picker.dishes,
+          dishes_by_id: dish_picker.dishes.index_by(&:id),
           dishes_by_meal_type: dish_picker.dishes_by_meal_type
         }
       )

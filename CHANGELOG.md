@@ -32,6 +32,7 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+- **Menus (roadmap #59, REQ-MENU-001):** dish picker in `/menus/:id/edit` now shows a coherent closed state (“Sin plato” or the selected dish name), opens a grouped list predictably, supports Escape-to-close, and keeps Turbo slot re-renders consistent with full-page locals.
 - **Recipes (roadmap #51, REQ-MENU-002):** recipe detail shows raster uploads when **libvips** is not installed by linking the **original** blob instead of an Active Storage **variant** (`ImageVariants::Available` + `attachable_image_tag`); resizing still applies when ruby-vips loads successfully.
 - **Images (roadmap #53, REQ-MENU-002):** standardized WebP variants for raster attachments (thumb/list/detail via `ImageVariants::*` helpers), added hard upload safety limits (25MB / 8000px) with i18n validation, and ensured CI installs **libvips** so variants are testable.
 - **Sign up (roadmap #45, REQ-PROF-003):** initial HTML and 422 re-renders align height field visibility with **`body_unit_system`** (metric vs imperial); define **`.hidden`** in `application.css` so Tailwind-like markup and **`unit-system-toggle`** actually hide blocks (Propshaft stack has no `tailwindcss-rails`).

@@ -4,9 +4,12 @@
 <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
 <% dish_select_id = "#{slot_key}-dish" %>
 <% dish_filter_id = "#{slot_key}-dish-filter" %>
+<% dish_panel_id = "#{slot_key}-dish-panel" %>
 <% freeform_input_id = "#{slot_key}-freeform" %>
 <% meal_type_keys = Menus::MealType::KEYS %>
 <% group_order = ([ meal_type ] + meal_type_keys).uniq %>
+<% selected_dish_name = dishes_by_id[entry&.dish_id]&.name.to_s %>
+<% selected_picker_value = entry&.dish_id.present? ? selected_dish_name : t("menus.slots.dish_blank") %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
@@ -50,6 +53,7 @@
         <div
           class="mt-2"
           data-controller="dish-picker"
+          data-dish-picker-selected-dish-name-value="<%= selected_picker_value %>"
         >
           <%= f.hidden_field :dish_id,
                 value: entry&.dish_id,
@@ -62,55 +66,64 @@
             type="text"
             class="border border-gray-300 rounded p-2 w-full"
             autocomplete="off"
+            value="<%= selected_picker_value %>"
             placeholder="<%= t("menus.slots.dish_picker_filter_placeholder") %>"
             aria-label="<%= t("menus.slots.dish_picker_filter_aria") %>"
+            aria-controls="<%= dish_panel_id %>"
+            aria-expanded="false"
+            aria-haspopup="listbox"
             data-test="dish-picker-filter"
             data-dish-picker-target="filter"
-            data-action="input->dish-picker#filter"
+            data-action="focus->dish-picker#open input->dish-picker#filter keydown.escape->dish-picker#close"
           >
 
-          <button
-            type="button"
-            class="mt-2 text-sm underline text-gray-700"
-            data-test="dish-picker-clear"
-            data-action="click->dish-picker#clear"
-          >
-            <%= t("menus.slots.dish_blank") %>
-          </button>
+          <div id="<%= dish_panel_id %>" class="dish-picker__panel hidden" role="listbox" data-dish-picker-target="groups">
+            <div class="dish-picker__panel-inner">
+              <button
+                type="button"
+                class="text-sm underline text-gray-700"
+                data-test="dish-picker-clear"
+                data-action="click->dish-picker#clear"
+              >
+                <%= t("menus.slots.dish_blank") %>
+              </button>
 
-          <p class="hidden mt-2 text-sm text-gray-600" data-dish-picker-target="noResults">
-            <%= t("menus.slots.dish_picker_no_results") %>
-          </p>
+              <p class="hidden mt-2 text-sm text-gray-600" data-dish-picker-target="noResults">
+                <%= t("menus.slots.dish_picker_no_results") %>
+              </p>
 
-          <div class="mt-2 space-y-2" data-dish-picker-target="groups">
-            <% group_order.each do |group_key| %>
-              <% group_items = (dishes_by_meal_type[group_key] || []) %>
-              <% next if group_items.empty? %>
+              <div class="mt-2 space-y-2">
+                <% group_order.each do |group_key| %>
+                  <% group_items = (dishes_by_meal_type[group_key] || []) %>
+                  <% next if group_items.empty? %>
 
-              <div data-test="dish-picker-group" data-meal-type="<%= group_key %>">
-                <div class="font-medium text-sm text-gray-700 mb-1">
-                  <%= t("menus.meal_types.#{group_key}") %>
-                </div>
-                <ul role="list" class="space-y-1">
-                  <% group_items.each do |dish| %>
-                    <% selected = entry&.dish_id == dish.id %>
-                    <li>
-                      <button
-                        type="button"
-                        class="text-left w-full border rounded px-2 py-1 hover:bg-gray-50 <%= selected ? "border-blue-400 bg-blue-50" : "border-gray-200" %>"
-                        data-test="dish-picker-option"
-                        data-dish-id="<%= dish.id %>"
-                        data-dish-name="<%= dish.name %>"
-                        data-action="click->dish-picker#pick"
-                        aria-pressed="<%= selected %>"
-                      >
-                        <%= dish.name %>
-                      </button>
-                    </li>
-                  <% end %>
-                </ul>
+                  <div data-test="dish-picker-group" data-meal-type="<%= group_key %>">
+                    <div class="font-medium text-sm text-gray-700 mb-1">
+                      <%= t("menus.meal_types.#{group_key}") %>
+                    </div>
+                    <ul role="list" class="space-y-1">
+                      <% group_items.each do |dish| %>
+                        <% selected = entry&.dish_id == dish.id %>
+                        <li>
+                          <button
+                            type="button"
+                            class="text-left w-full border rounded px-2 py-1 hover:bg-gray-50 <%= selected ? "border-blue-400 bg-blue-50" : "border-gray-200" %>"
+                            data-test="dish-picker-option"
+                            data-dish-id="<%= dish.id %>"
+                            data-dish-name="<%= dish.name %>"
+                            data-action="click->dish-picker#pick"
+                            role="option"
+                            aria-selected="<%= selected %>"
+                          >
+                            <%= dish.name %>
+                          </button>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
               </div>
-            <% end %>
+            </div>
           </div>
         </div>
       </div>

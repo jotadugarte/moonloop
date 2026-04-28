@@ -2,11 +2,20 @@
 
 **Type:** Bug (regression / incorrect UX vs agreed contract)
 
-**Related roadmap items:** #58 (marked Done) — Menús: combobox por tipo de comida
+**Related roadmap items:** #59 (pending) — Bug: Menús combobox agrupación + filtro; depends on #58 (Done)
 
 **Where:** editor de menú (`/menus/:id/edit`) en el picker/combobox para asignar `Dish` en un slot.
 
 ---
+
+## Implementation plan
+
+<implementation_plan>
+  <step id="1" status="completed">Write a failing spec that captures the dish picker contract for menu slots (grouping by `meal_type`, group ordering with slot type first then canonical order, and filtering-by-name that preserves groups). Tag with [REQ-MENU-001].</step>
+  <step id="2" status="completed">Make the test pass by fixing the dish picker implementation (Stimulus + view partials) so: closed state shows selected dish or “blank”; open state renders grouped options with correct ordering; filter hides non-matches while keeping group headers and shows i18n “no results”.</step>
+  <step id="3" status="completed">Add/adjust a11y + i18n wiring for the picker UI (labels, aria, keyboard navigation; ensure `menus.slots.dish_blank` and no-results copy are translated) and cover with a focused spec where appropriate.</step>
+  <step id="4" status="completed">Run targeted specs and linters; ensure Turbo autosave flow remains intact (`Menus::MenuEntriesController#create` + slot frame replace) and no slot partial does DB queries.</step>
+</implementation_plan>
 
 ## Problem statement
 

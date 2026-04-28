@@ -374,6 +374,29 @@
   border-radius: 0.35rem;
 }
 
+/* ——— Dish picker (menu slots) ——— */
+[data-controller="dish-picker"] {
+  position: relative;
+}
+
+.dish-picker__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.25rem);
+  z-index: 50;
+}
+
+.dish-picker__panel-inner {
+  max-height: 16rem;
+  overflow: auto;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.12);
+}
+
 /* ——— Reports (Informes) ——— */
 .reports-section-nav__link--active {
   font-weight: 700;
