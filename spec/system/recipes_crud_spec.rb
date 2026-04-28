@@ -3,7 +3,7 @@
 require "rails_helper"
 require "securerandom"
 
-RSpec.describe "Recipes CRUD", type: :system do
+RSpec.describe "Dishes CRUD", type: :system do
   let(:user) { create(:user, password: "Password123!") }
 
   def sign_in_as_user
@@ -27,17 +27,17 @@ RSpec.describe "Recipes CRUD", type: :system do
   end
 
   # [REQ-MENU-002]
-  it "creates a recipe and shows it with image on the detail page" do
+  it "creates a dish and shows it with image on the detail page" do
     driven_by(:rack_test)
     sign_in_as_user
-    visit new_recipe_path
+    visit new_dish_path
 
-    fill_in "Nombre", with: "Batido verde"
-    fill_in "Instrucciones", with: "Licuar espinaca y plátano."
-    attach_file "recipe[image]", Rails.root.join("spec/fixtures/files/recipe_test.svg")
-    check "Compartir en el catálogo público"
+    fill_in I18n.t("dishes.form.name_label"), with: "Batido verde"
+    fill_in I18n.t("dishes.form.instructions_label"), with: "Licuar espinaca y plátano."
+    attach_file "dish[image]", Rails.root.join("spec/fixtures/files/recipe_test.svg")
+    check I18n.t("dishes.form.public_label")
 
-    click_button "Crear receta"
+    click_button I18n.t("dishes.form.create_submit")
 
     expect(page).to have_css("h1", text: "Batido verde")
     expect(page).to have_content("Licuar espinaca")
@@ -46,21 +46,21 @@ RSpec.describe "Recipes CRUD", type: :system do
   end
 
   # [REQ-MENU-002]
-  context "when JS is enabled (image preview on new recipe)" do
+  context "when JS is enabled (image preview on new dish)" do
     before do
       driven_by(:selenium_chrome_headless)
     end
 
     it "shows a client-side preview after attaching a raster image before submit" do
       register_user_in_browser(email: "recipe-preview-#{SecureRandom.hex(8)}@example.com")
-      visit new_recipe_path
-      fill_in "Nombre", with: "Plato previo"
+      visit new_dish_path
+      fill_in I18n.t("dishes.form.name_label"), with: "Plato previo"
       png = Rails.root.join("spec/fixtures/files/recipe_test_1x1.png")
-      attach_file "recipe[image]", png, make_visible: true
+      attach_file "dish[image]", png, make_visible: true
 
-      alt_text = I18n.t("recipes.form.image_preview_alt")
-      expect(page).to have_css(%([data-test="recipe-image-preview"] img[alt="#{alt_text}"]), visible: true)
-      preview_src = find(%([data-test="recipe-image-preview"] img))[:src]
+      alt_text = I18n.t("dishes.form.image_preview_alt")
+      expect(page).to have_css(%([data-test="dish-image-preview"] img[alt="#{alt_text}"]), visible: true)
+      preview_src = find(%([data-test="dish-image-preview"] img))[:src]
       expect(preview_src).to start_with("blob:")
     end
   end

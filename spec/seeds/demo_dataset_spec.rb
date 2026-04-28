@@ -172,17 +172,17 @@ RSpec.describe "Demo dataset seeds" do
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "seeds at least one recipe and links a menu entry to it" do
+  it "seeds at least one dish and links a menu entry to it" do
     Rails.application.load_seed
 
     demo_emails.each do |email|
       user = User.find_by!(email: email)
 
-      expect(user.recipes.count).to be >= 1
+      expect(user.dishes.count).to be >= 1
 
-      entry = MenuEntry.joins(:menu).where(menus: { user_id: user.id }).where.not(recipe_id: nil).first
+      entry = MenuEntry.joins(:menu).where(menus: { user_id: user.id }).where.not(dish_id: nil).first
       expect(entry).to be_present
-      expect(entry.recipe.user_id).to eq(user.id)
+      expect(entry.dish.user_id).to eq(user.id)
     end
   end
 
@@ -201,7 +201,7 @@ RSpec.describe "Demo dataset seeds" do
           weight_logs: u.weight_logs.count,
           menus: u.menus.count,
           menu_entries: MenuEntry.joins(:menu).where(menus: { user_id: u.id }).count,
-          recipes: u.recipes.count,
+          dishes: u.dishes.count,
           routines: u.exercise_routines.count,
           routine_lines: ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count,
           phase_assignments: u.phase_assignments.count,
@@ -220,7 +220,7 @@ RSpec.describe "Demo dataset seeds" do
       expect(u.weight_logs.count).to eq(counts[:weight_logs])
       expect(u.menus.count).to eq(counts[:menus])
       expect(MenuEntry.joins(:menu).where(menus: { user_id: u.id }).count).to eq(counts[:menu_entries])
-      expect(u.recipes.count).to eq(counts[:recipes])
+      expect(u.dishes.count).to eq(counts[:dishes])
       expect(u.exercise_routines.count).to eq(counts[:routines])
       expect(ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count).to eq(counts[:routine_lines])
       expect(u.phase_assignments.count).to eq(counts[:phase_assignments])

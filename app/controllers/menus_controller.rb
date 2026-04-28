@@ -58,8 +58,12 @@ class MenusController < ApplicationController
   def load_menu_editor
     @meal_types = Menus::MealType::KEYS
     @entries_by_slot = @menu.menu_entries
-      .includes(recipe: { image_attachment: :blob })
+      .includes(dish: { image_attachment: :blob })
       .index_by { |e| [ e.weekday, e.meal_type ] }
+
+    dish_picker = Menus::DishPickerOptions.call(user: Current.user)
+    @dishes = dish_picker.dishes
+    @dishes_by_meal_type = dish_picker.dishes_by_meal_type
   end
 
   def menu_params

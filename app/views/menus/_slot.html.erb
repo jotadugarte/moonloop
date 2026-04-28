@@ -1,10 +1,12 @@
 <% frame_id = dom_id(menu, "slot_#{weekday}_#{meal_type}") %>
 <% slot_err_id = dom_id(menu, "entry_errors_#{weekday}_#{meal_type}") %>
-<% recipes = menu.user.recipes.order(:name) %>
 <% allow_freeform = Current.user.allow_menu_freeform %>
 <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
-<% recipe_select_id = "#{slot_key}-recipe" %>
+<% dish_select_id = "#{slot_key}-dish" %>
+<% dish_filter_id = "#{slot_key}-dish-filter" %>
 <% freeform_input_id = "#{slot_key}-freeform" %>
+<% meal_type_keys = Menus::MealType::KEYS %>
+<% group_order = ([ meal_type ] + meal_type_keys).uniq %>
 
 <%= turbo_frame_tag frame_id do %>
   <div
@@ -43,15 +45,74 @@
       <% end %>
 
       <div>
-        <%= f.label :recipe_id, t("menus.slots.recipe_pick_label"), for: recipe_select_id %>
-        <%= f.collection_select :recipe_id,
-              recipes,
-              :id,
-              :name,
-              { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
-              { aria: aria_for_field(f.object, :recipe_id, slot_err_id),
-                id: recipe_select_id,
-                data: { action: "change->autosubmit#submit" } } %>
+        <%= f.label :dish_id, t("menus.slots.dish_pick_label"), for: dish_filter_id %>
+
+        <div
+          class="mt-2"
+          data-controller="dish-picker"
+        >
+          <%= f.hidden_field :dish_id,
+                value: entry&.dish_id,
+                id: dish_select_id,
+                data: { dish_picker_target: "dishId" },
+                aria: aria_for_field(f.object, :dish_id, slot_err_id) %>
+
+          <input
+            id="<%= dish_filter_id %>"
+            type="text"
+            class="border border-gray-300 rounded p-2 w-full"
+            autocomplete="off"
+            placeholder="<%= t("menus.slots.dish_picker_filter_placeholder") %>"
+            aria-label="<%= t("menus.slots.dish_picker_filter_aria") %>"
+            data-test="dish-picker-filter"
+            data-dish-picker-target="filter"
+            data-action="input->dish-picker#filter"
+          >
+
+          <button
+            type="button"
+            class="mt-2 text-sm underline text-gray-700"
+            data-test="dish-picker-clear"
+            data-action="click->dish-picker#clear"
+          >
+            <%= t("menus.slots.dish_blank") %>
+          </button>
+
+          <p class="hidden mt-2 text-sm text-gray-600" data-dish-picker-target="noResults">
+            <%= t("menus.slots.dish_picker_no_results") %>
+          </p>
+
+          <div class="mt-2 space-y-2" data-dish-picker-target="groups">
+            <% group_order.each do |group_key| %>
+              <% group_items = (dishes_by_meal_type[group_key] || []) %>
+              <% next if group_items.empty? %>
+
+              <div data-test="dish-picker-group" data-meal-type="<%= group_key %>">
+                <div class="font-medium text-sm text-gray-700 mb-1">
+                  <%= t("menus.meal_types.#{group_key}") %>
+                </div>
+                <ul role="list" class="space-y-1">
+                  <% group_items.each do |dish| %>
+                    <% selected = entry&.dish_id == dish.id %>
+                    <li>
+                      <button
+                        type="button"
+                        class="text-left w-full border rounded px-2 py-1 hover:bg-gray-50 <%= selected ? "border-blue-400 bg-blue-50" : "border-gray-200" %>"
+                        data-test="dish-picker-option"
+                        data-dish-id="<%= dish.id %>"
+                        data-dish-name="<%= dish.name %>"
+                        data-action="click->dish-picker#pick"
+                        aria-pressed="<%= selected %>"
+                      >
+                        <%= dish.name %>
+                      </button>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <% if allow_freeform %>
@@ -63,7 +124,7 @@
                 aria: aria_for_field(f.object, :freeform_text, slot_err_id),
                 data: { action: "blur->autosubmit#submit", turbo_permanent: true } %>
         </div>
-      <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
+      <% elsif entry&.freeform_text.present? && entry.dish_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">
           <%= t("menus.slots.legacy_freeform_hint") %>
           <span class="font-medium"><%= entry.freeform_text %></span>

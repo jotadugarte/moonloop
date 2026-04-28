@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
     t.string "normalized_tags", limit: 500
     t.datetime "updated_at", null: false
     t.index ["listable_type", "listable_id"], name: "index_catalog_listing_facets_on_listable", unique: true
+  end
+
+  create_table "dishes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "instructions"
+    t.string "meal_type", default: "desayuno", null: false
+    t.string "name", null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "meal_type"], name: "index_dishes_on_user_id_and_meal_type"
+    t.index ["user_id"], name: "index_dishes_on_user_id"
   end
 
   create_table "exercise_routine_assignments", force: :cascade do |t|
@@ -144,15 +156,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
 
   create_table "menu_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.bigint "dish_id"
     t.text "freeform_text"
     t.string "meal_type", null: false
     t.bigint "menu_id", null: false
-    t.bigint "recipe_id"
     t.datetime "updated_at", null: false
     t.integer "weekday", null: false
+    t.index ["dish_id"], name: "index_menu_entries_on_dish_id"
     t.index ["menu_id", "weekday", "meal_type"], name: "index_menu_entries_on_menu_weekday_meal_type", unique: true
     t.index ["menu_id"], name: "index_menu_entries_on_menu_id"
-    t.index ["recipe_id"], name: "index_menu_entries_on_recipe_id"
   end
 
   create_table "menus", force: :cascade do |t|
@@ -229,18 +241,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
     t.bigint "user_id", null: false
     t.index ["user_id", "kind", "local_date"], name: "index_phase_reminder_events_uniqueness", unique: true
     t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
-  end
-
-  create_table "recipes", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "instructions"
-    t.string "meal_type", default: "desayuno", null: false
-    t.string "name", null: false
-    t.boolean "publicly_shareable", default: false, null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id", "meal_type"], name: "index_recipes_on_user_id_and_meal_type"
-    t.index ["user_id"], name: "index_recipes_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -329,6 +329,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "dishes", "users"
   add_foreign_key "exercise_routine_assignments", "exercise_routines"
   add_foreign_key "exercise_routine_assignments", "users"
   add_foreign_key "exercise_routine_lines", "exercise_routines"
@@ -338,8 +339,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
   add_foreign_key "habit_completions", "user_habits"
   add_foreign_key "habit_reminder_events", "user_habits"
   add_foreign_key "habit_reminder_events", "users"
+  add_foreign_key "menu_entries", "dishes"
   add_foreign_key "menu_entries", "menus"
-  add_foreign_key "menu_entries", "recipes"
   add_foreign_key "menus", "menus", column: "source_menu_id"
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
@@ -350,7 +351,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
   add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
   add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
-  add_foreign_key "recipes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"

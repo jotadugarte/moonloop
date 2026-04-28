@@ -197,6 +197,9 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 - **Values API:** Use `static values` (e.g., `static values = { id: Number }`) instead of manually parsing `dataset` attributes.
 - **Targeting:** Use `static targets` instead of `document.querySelector`.
 - **No jQuery:** STRICTLY FORBIDDEN. Use native DOM APIs (`this.element`, `event.target`).
+- **Picker controls (single source of truth):** If you build a custom picker UI for a model attribute, do **not** render a second interactive form control for the same attribute (e.g. custom list + `<select>`). Keep one canonical input (often a hidden field) and drive it from the picker.
+- **Picker submit contract:** For picker UIs that submit a form, keep the canonical input **inside** the picker's Stimulus controller scope (so targets exist). Set the canonical value and submit via `form.requestSubmit()`; avoid global DOM lookups.
+- **Picker clear UX:** A clear action should reset both the canonical value **and** the filter UI state (clear the filter input and re-run filtering) before submitting, so the full option set is visible again.
 
 ## 3. Turbo & Hotwire
 - **Frame IDs:** Ensure `turbo_frame_tag` IDs match the backend response exactly.
@@ -205,6 +208,7 @@ The `docs/` folder is authoritative. Consult these files before implementing fea
 - **Turbo Stream partial IDs:** DOM element IDs targeted by `turbo_stream.replace` MUST follow the pattern `"#{model_name}_#{record.id}"` (e.g. `"habit_42"`). Never use hardcoded or position-based IDs — this ensures replacements are idempotent and do not collide between records.
 - **Forms targeting the full page from inside a frame:** When a `form_with` is rendered inside a Turbo Frame but must submit so the **full document** navigates or replaces (e.g. new/edit flows linked from `/phase`), pass `data: { turbo_frame: "_top" }` on the form so the response is not constrained to the wrong frame.
 - **Turbo form error responses — use 422, not redirect+flash:** When a form submission fails validation or cannot be processed, respond with `head :unprocessable_content` or `render ..., status: :unprocessable_content`. NEVER use `redirect_to path, alert: ...` for error paths on form controllers — Turbo Drive treats 2xx/3xx as success and discards form state, so the user gets no inline error feedback. Reserve flash-redirect only for successful submissions and business-rule rejections that intentionally navigate away. See `docs/core/ADRs/0003-turbo-422-over-redirect-on-invalid-form.md`.
+- **Turbo Stream partial locals:** When replacing a slot/row via Turbo Streams (`turbo_stream.replace` + `partial:`), ensure `locals:` includes **all** values the partial depends on (especially derived collections used by Stimulus-driven UI). Turbo paths must render the same shape as full-page renders.
 
 ## 4. Service & Query Objects
 - **Controller Logic:** If a Controller action contains complex filtering or business logic, extract it to a **Service Object** immediately (e.g., `AreaReportService`).

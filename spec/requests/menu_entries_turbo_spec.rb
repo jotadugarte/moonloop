@@ -12,14 +12,14 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
   # [REQ-MENU-001]
   it "creates/updates a slot via turbo-stream" do
     menu = create(:menu, user: user, name: "Semana")
-    recipe = create(:recipe, user: user, name: "Avena")
+    dish = create(:dish, user: user, name: "Avena")
 
     post menu_menu_entries_path(menu),
       params: {
         menu_entry: {
           weekday: 1,
           meal_type: "desayuno",
-          recipe_id: recipe.id,
+          dish_id: dish.id,
           freeform_text: ""
         }
       },
@@ -29,14 +29,14 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
     expect(response.media_type).to eq(Mime[:turbo_stream])
 
     entry = menu.menu_entries.find_by!(weekday: 1, meal_type: "desayuno")
-    expect(entry.recipe_id).to eq(recipe.id)
+    expect(entry.dish_id).to eq(dish.id)
   end
 
   # [REQ-MENU-001]
   it "clears a slot via turbo-stream" do
     menu = create(:menu, user: user, name: "Semana")
-    recipe = create(:recipe, user: user, name: "Avena")
-    create(:menu_entry, menu: menu, recipe: recipe, weekday: 2, meal_type: "cena", freeform_text: nil)
+    dish = create(:dish, user: user, name: "Avena")
+    create(:menu_entry, menu: menu, dish: dish, weekday: 2, meal_type: "cena", freeform_text: nil)
 
     delete clear_menu_menu_entries_path(menu),
       params: { weekday: 2, meal_type: "cena" },
@@ -48,18 +48,18 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
   end
 
   # [REQ-MENU-001]
-  it "deletes the entry row when both recipe and freeform are blank (sparse slots)" do
+  it "deletes the entry row when both dish and freeform are blank (sparse slots)" do
     allow_freeform_user = create(:user, password: "Password123!", timezone: "Etc/UTC", allow_menu_freeform: true)
     post sign_in_path, params: { email: allow_freeform_user.email, password: "Password123!" }
 
     menu = create(:menu, user: allow_freeform_user, name: "Semana")
-    recipe = create(:recipe, user: allow_freeform_user, name: "Tostadas")
+    dish = create(:dish, user: allow_freeform_user, name: "Tostadas")
     Menus::UpsertEntry.call(
       user: allow_freeform_user,
       menu: menu,
       weekday: 2,
       meal_type: "desayuno",
-      recipe_id: recipe.id,
+      dish_id: dish.id,
       freeform_text: "sin azúcar"
     )
 
@@ -70,7 +70,7 @@ RSpec.describe "Menu entries (Turbo)", type: :request do
         menu_entry: {
           weekday: 2,
           meal_type: "desayuno",
-          recipe_id: "",
+          dish_id: "",
           freeform_text: ""
         }
       },

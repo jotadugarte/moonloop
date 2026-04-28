@@ -1,0 +1,30 @@
+<% content_for :title, t("dishes.show.title", name: @dish.name) %>
+
+<h1 class="text-2xl font-bold mb-2"><%= @dish.name %></h1>
+
+<% if @dish.publicly_shareable %>
+  <p class="text-sm text-gray-600 mb-4"><%= t("dishes.show.public_badge") %></p>
+<% end %>
+
+<div class="mb-4">
+  <%= dish_image_tag @dish,
+        resize_to_limit: [ 480, 480 ],
+        class: "rounded max-w-md border border-gray-200",
+        alt: @dish.name,
+        loading: "eager" %>
+</div>
+
+<% if @dish.instructions.present? %>
+  <div class="prose max-w-none mb-6">
+    <h2 class="text-lg font-semibold mb-2"><%= t("dishes.show.instructions_heading") %></h2>
+    <pre class="whitespace-pre-wrap font-sans text-gray-800 border border-gray-100 rounded p-3 bg-gray-50"><%= @dish.instructions %></pre>
+  </div>
+<% else %>
+  <p class="text-gray-600 mb-6"><%= t("dishes.show.no_instructions") %></p>
+<% end %>
+
+<div class="flex flex-wrap gap-4">
+  <%= link_to t("dishes.show.edit"), edit_dish_path(@dish), class: "text-blue-600 underline" %>
+  <%= link_to t("dishes.show.back_index"), dishes_path, class: "text-blue-600 underline" %>
+  <%= button_to t("dishes.show.delete"), dish_path(@dish), method: :delete, class: "text-red-600 bg-transparent border-0 underline cursor-pointer p-0", form: { data: { turbo_confirm: t("dishes.show.delete_confirm") } } %>
+</div>

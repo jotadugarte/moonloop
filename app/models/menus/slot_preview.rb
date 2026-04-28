@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Menus
-  # Resolves which image to show in a menu grid slot: uploaded recipe image or a
+  # Resolves which image to show in a menu grid slot: uploaded dish image or a
   # meal-type fallback asset (REQ-MENU-002, context-based).
   class SlotPreview
     Result = Struct.new(:display, :uploaded_image, :fallback_asset_path, keyword_init: true)
@@ -19,9 +19,9 @@ module Menus
       return nil if @entry.blank?
       return nil unless slot_preview_visible?
 
-      recipe = @entry.recipe
-      if recipe&.image&.attached?
-        Result.new(display: :uploaded, uploaded_image: recipe.image, fallback_asset_path: nil)
+      dish = @entry.dish
+      if dish&.image&.attached?
+        Result.new(display: :uploaded, uploaded_image: dish.image, fallback_asset_path: nil)
       else
         Result.new(
           display: :fallback,
@@ -34,7 +34,7 @@ module Menus
     private
 
     def slot_preview_visible?
-      @entry.recipe_id.present? || @entry.freeform_text.to_s.strip.present?
+      @entry.dish_id.present? || @entry.freeform_text.to_s.strip.present?
     end
   end
 end

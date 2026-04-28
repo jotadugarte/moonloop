@@ -1,0 +1,9 @@
+<% content_for :title, t("dishes.edit.title", name: @dish.name) %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("dishes.edit.heading", name: @dish.name) %></h1>
+
+<%= render "form" %>
+
+<p class="mt-6">
+  <%= link_to t("dishes.edit.back"), dish_path(@dish), class: "text-blue-600 underline" %>
+</p>

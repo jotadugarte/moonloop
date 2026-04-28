@@ -4,7 +4,7 @@
 <h1><%= t("menus.index.title") %></h1>
 
 <p class="mb-4">
-  <%= link_to t("menus.index.recipes_link"), recipes_path, class: "text-blue-600 underline" %>
+  <%= link_to t("menus.index.dishes_link"), dishes_path, class: "text-blue-600 underline" %>
 </p>
 
 <%= form_with model: @menu, url: menus_path, class: "space-y-3 max-w-lg" do |f| %>

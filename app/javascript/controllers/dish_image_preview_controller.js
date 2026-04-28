@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Client-side preview for recipe image file input (new/edit before submit).
+// Client-side preview for dish image file input (new/edit before submit).
 export default class extends Controller {
   static targets = ["file", "wrapper", "image", "currentWrapper"]
 

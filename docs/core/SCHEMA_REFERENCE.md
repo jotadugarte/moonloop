@@ -11,20 +11,20 @@
 | Table | Role |
 |--------|------|
 | `active_storage_blobs` | Binary metadata for uploaded files |
-| `active_storage_attachments` | Polymorphic link from records (e.g. `Recipe` image) to blobs |
+| `active_storage_attachments` | Polymorphic link from records (e.g. `Dish` row image) to blobs |
 | `active_storage_variant_records` | Derived image variants when using `image_processing` |
 
-**Semantics:** Recipe images use **`has_one_attached :image`** (`REQ-MENU-002`). Variants are applied only when the blob is **variable** (see `ApplicationHelper#attachable_image_tag`).
+**Semantics:** Dish images use **`has_one_attached :image`** (`REQ-MENU-002`). Variants are applied only when the blob is **variable** (see `ApplicationHelper#attachable_image_tag`).
 
 ---
 
-## Menus and recipes
+## Menus and dishes
 
 | Table | Primary keys / constraints | SPEC / notes |
 |--------|----------------------------|--------------|
 | `menus` | `user_id` FK; optional self-FK `source_menu_id`; partial unique `(user_id, source_menu_id)` where source present; unique `(user_id, name_normalized)`; `source_sync_fingerprint`, `adoption_catalog_origin_id` (adoption/sync, **REQ-MENU-006**); **`public_catalog_adoptions_count`**, **`public_catalog_distinct_adopters_count`** (integer, default 0, NOT NULL, **REQ-CAT-001**) | `REQ-MENU-001`, **REQ-MENU-006**, **REQ-CAT-001**. Weekly templates; catalog opt-in; adopted-copy metadata; template-level catalog popularity metrics |
-| `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `recipes` | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
-| `recipes` | `user_id` FK; `meal_type` (string, NOT NULL, default `"desayuno"`, indexed with `user_id`) | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable`. `meal_type` drives per-meal placeholder fallback assets |
+| `menu_entries` | Unique `(menu_id, weekday, meal_type)`; FKs to `menus`, optional `dishes` (`dish_id`) | `REQ-MENU-001`. Sparse rows; `meal_type` + `weekday` index the grid slot |
+| `dishes` | **`Dish`** model; `user_id` FK; `meal_type` (string, NOT NULL, default `"desayuno"`, indexed with `user_id`) | `REQ-MENU-002`. Optional instructions; image via Active Storage; `publicly_shareable`. `meal_type` drives per-meal placeholder fallback assets |
 
 ---
 
@@ -86,7 +86,7 @@ See **REQ-HAB-010** for validation rules and eligibility (inactive habits are no
 |--------|----------------------------|--------------|
 | `catalog_listing_facets` | Polymorphic **`listable_type`** / **`listable_id`**, **NOT NULL**; **unique** `(listable_type, listable_id)`; `goal_phrase` (255), `difficulty_level` (32, closed vocabulary in **`Catalog::ListingFacet`**), `normalized_tags` (500, comma-separated slugs), `duration_weeks_min` / `duration_weeks_max` (nullable integers); timestamps | **REQ-CAT-001**. At most one facet row per catalog listable (`Menu`, `ExerciseRoutine`, `PhaseProgram`); owner-only writes in app code; public catalog reads join only **public** templates |
 
-**Template counters:** **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`** on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see rows in **Menus and recipes**, **Phase programs**, and **Exercise routines** above).
+**Template counters:** **`public_catalog_adoptions_count`** and **`public_catalog_distinct_adopters_count`** on **`menus`**, **`exercise_routines`**, and **`phase_programs`** (see rows in **Menus and dishes**, **Phase programs**, and **Exercise routines** above).
 
 ---
 
@@ -125,4 +125,4 @@ Tables `users` (non-phase columns), `sessions`, `habit_categories`, `global_habi
 
 ## Foreign keys (excerpt)
 
-Rails adds FKs from `menu_entries` → `menus`, `recipes`; `menus` / `recipes` → `users`; `phase_assignments` → `users`, `menus`; `phase_program_assignments` → `phase_programs`, `menus`, `exercise_routines`; `phase_programs` → `users`, `phase_programs` (self, `source_phase_program_id`); `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; `habit_reminder_events` → `users`, `user_habits`; `web_push_subscriptions` → `users`; Active Storage tables per `db/schema.rb`.
+Rails adds FKs from `menu_entries` → `menus`, `dishes`; `menus` / `dishes` → `users`; `phase_assignments` → `users`, `menus`; `phase_program_assignments` → `phase_programs`, `menus`, `exercise_routines`; `phase_programs` → `users`, `phase_programs` (self, `source_phase_program_id`); `exercise_routine_assignments` → `users`, `exercise_routines`; `exercise_routine_lines` → `exercise_routines`; `exercise_routines` → `users`; `phase_reminder_events` → `users`; `habit_reminder_events` → `users`, `user_habits`; `web_push_subscriptions` → `users`; Active Storage tables per `db/schema.rb`.

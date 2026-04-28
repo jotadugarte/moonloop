@@ -1,0 +1,9 @@
+<% content_for :title, t("dishes.new.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("dishes.new.heading") %></h1>
+
+<%= render "form" %>
+
+<p class="mt-6">
+  <%= link_to t("dishes.new.back"), dishes_path, class: "text-blue-600 underline" %>
+</p>

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Public recipes catalog", type: :request do
+RSpec.describe "Public dishes catalog (index)", type: :request do
   let(:viewer) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
   let(:author) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
@@ -11,11 +11,11 @@ RSpec.describe "Public recipes catalog", type: :request do
   end
 
   # [REQ-MENU-002]
-  it "lists recipes that are publicly shareable" do
-    Recipe.create!(user: author, name: "Pública", publicly_shareable: true)
-    Recipe.create!(user: author, name: "Privada", publicly_shareable: false)
+  it "lists dishes that are publicly shareable" do
+    Dish.create!(user: author, name: "Pública", publicly_shareable: true)
+    Dish.create!(user: author, name: "Privada", publicly_shareable: false)
 
-    get public_recipes_path
+    get public_dishes_path
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("Pública")

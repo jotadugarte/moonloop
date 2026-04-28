@@ -6,22 +6,22 @@ RSpec.describe Menus::UpsertEntry do
   let(:user) { create(:user, password: "Password123!", allow_menu_freeform: allow_freeform) }
   let(:allow_freeform) { true }
   let(:menu) { Menu.create!(user: user, name: "Semana") }
-  let(:recipe) { Recipe.create!(user: user, name: "Avena") }
+  let(:dish) { Dish.create!(user: user, name: "Avena") }
 
   describe ".call" do
     # [REQ-MENU-001]
-    it "persists recipe and freeform when allowed" do
+    it "persists dish and freeform when allowed" do
       described_class.call(
         user: user,
         menu: menu,
         weekday: 1,
         meal_type: "desayuno",
-        recipe_id: recipe.id,
+        dish_id: dish.id,
         freeform_text: "extra"
       )
 
       entry = menu.menu_entries.find_by!(weekday: 1, meal_type: "desayuno")
-      expect(entry.recipe_id).to eq(recipe.id)
+      expect(entry.dish_id).to eq(dish.id)
       expect(entry.freeform_text).to eq("extra")
     end
 
@@ -29,18 +29,18 @@ RSpec.describe Menus::UpsertEntry do
       let(:allow_freeform) { false }
 
       # [REQ-MENU-001]
-      it "ignores freeform params and saves recipe only" do
+      it "ignores freeform params and saves dish only" do
         described_class.call(
           user: user,
           menu: menu,
           weekday: 3,
           meal_type: "almuerzo",
-          recipe_id: recipe.id,
+          dish_id: dish.id,
           freeform_text: "should not persist"
         )
 
         entry = menu.menu_entries.find_by!(weekday: 3, meal_type: "almuerzo")
-        expect(entry.recipe_id).to eq(recipe.id)
+        expect(entry.dish_id).to eq(dish.id)
         expect(entry.freeform_text).to be_blank
       end
 
@@ -48,7 +48,7 @@ RSpec.describe Menus::UpsertEntry do
       it "does not clear a freeform-only legacy slot on empty submit" do
         MenuEntry.create!(
           menu: menu,
-          recipe: nil,
+          dish: nil,
           weekday: 4,
           meal_type: "cena",
           freeform_text: "legacy note"
@@ -60,7 +60,7 @@ RSpec.describe Menus::UpsertEntry do
             menu: menu,
             weekday: 4,
             meal_type: "cena",
-            recipe_id: "",
+            dish_id: "",
             freeform_text: ""
           )
         end.to raise_error(ActiveRecord::RecordInvalid)
@@ -70,10 +70,10 @@ RSpec.describe Menus::UpsertEntry do
       end
 
       # [REQ-MENU-001]
-      it "replaces legacy freeform-only slot when a recipe is chosen" do
+      it "replaces legacy freeform-only slot when a dish is chosen" do
         MenuEntry.create!(
           menu: menu,
-          recipe: nil,
+          dish: nil,
           weekday: 5,
           meal_type: "merienda",
           freeform_text: "legacy note"
@@ -84,12 +84,12 @@ RSpec.describe Menus::UpsertEntry do
           menu: menu,
           weekday: 5,
           meal_type: "merienda",
-          recipe_id: recipe.id,
+          dish_id: dish.id,
           freeform_text: ""
         )
 
         entry = menu.menu_entries.find_by!(weekday: 5, meal_type: "merienda")
-        expect(entry.recipe_id).to eq(recipe.id)
+        expect(entry.dish_id).to eq(dish.id)
         expect(entry.freeform_text).to be_blank
       end
     end

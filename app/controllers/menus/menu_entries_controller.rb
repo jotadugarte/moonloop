@@ -30,7 +30,7 @@ module Menus
     end
 
     def menu_entry_params
-      params.require(:menu_entry).permit(:weekday, :meal_type, :recipe_id, :freeform_text)
+      params.require(:menu_entry).permit(:weekday, :meal_type, :dish_id, :freeform_text)
     end
 
     def slot_frame_id(menu, weekday, meal_type)
@@ -48,7 +48,7 @@ module Menus
         menu: @menu,
         weekday: menu_entry_params[:weekday],
         meal_type: menu_entry_params[:meal_type],
-        recipe_id: menu_entry_params[:recipe_id],
+        dish_id: menu_entry_params[:dish_id],
         freeform_text: menu_entry_params[:freeform_text]
       }
     end
@@ -83,10 +83,19 @@ module Menus
     end
 
     def render_turbo_slot(weekday, meal_type, entry, status = nil)
+      dish_picker = Menus::DishPickerOptions.call(user: Current.user)
+
       stream = turbo_stream.replace(
         slot_frame_id(@menu, weekday, meal_type),
         partial: "menus/slot",
-        locals: { menu: @menu, weekday: weekday, meal_type: meal_type, entry: entry }
+        locals: {
+          menu: @menu,
+          weekday: weekday,
+          meal_type: meal_type,
+          entry: entry,
+          dishes: dish_picker.dishes,
+          dishes_by_meal_type: dish_picker.dishes_by_meal_type
+        }
       )
       return render(turbo_stream: stream) if status.blank?
 

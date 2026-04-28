@@ -1,9 +1,0 @@
-<% content_for :title, t("recipes.edit.title", name: @recipe.name) %>
-
-<h1 class="text-2xl font-bold mb-4"><%= t("recipes.edit.heading", name: @recipe.name) %></h1>
-
-<%= render "form" %>
-
-<p class="mt-6">
-  <%= link_to t("recipes.edit.back"), recipe_path(@recipe), class: "text-blue-600 underline" %>
-</p>

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Recipe image upload safety limits", type: :request do
+RSpec.describe "Dish image upload safety limits", type: :request do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
   before do
@@ -16,9 +16,9 @@ RSpec.describe "Recipe image upload safety limits", type: :request do
     rejected = ImageUploads::SafetyLimits::Result.new(errors: [ :too_large ])
     allow(ImageUploads::SafetyLimits).to receive(:validate).and_return(rejected)
 
-    post recipes_path,
+    post dishes_path,
       params: {
-        recipe: {
+        dish: {
           name: "Límite",
           instructions: "",
           meal_type: "cena",
@@ -28,6 +28,6 @@ RSpec.describe "Recipe image upload safety limits", type: :request do
       }
 
     expect(response).to have_http_status(:unprocessable_content)
-    expect(response.body).to include(I18n.t("activerecord.errors.models.recipe.attributes.image.too_large"))
+    expect(response.body).to include(I18n.t("activerecord.errors.models.dish.attributes.image.too_large"))
   end
 end

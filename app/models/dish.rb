@@ -1,7 +1,9 @@
-class Recipe < ApplicationRecord
+# frozen_string_literal: true
+
+class Dish < ApplicationRecord
   belongs_to :user
 
-  has_many :menu_entries, dependent: :destroy
+  has_many :menu_entries, foreign_key: :dish_id, inverse_of: :dish, dependent: :destroy
 
   has_one_attached :image
 

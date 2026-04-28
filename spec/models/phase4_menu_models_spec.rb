@@ -1,28 +1,28 @@
 require "rails_helper"
 
-RSpec.describe "Phase 4 — menus & recipes models", type: :model do
+RSpec.describe "Phase 4 — menus & dishes models", type: :model do
   def connection
     ActiveRecord::Base.connection
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "creates core tables for menus, recipes, and menu entries" do
+  it "creates core tables for menus, dishes, and menu entries" do
     expect(connection.data_source_exists?("menus")).to eq(true)
-    expect(connection.data_source_exists?("recipes")).to eq(true)
+    expect(connection.data_source_exists?("dishes")).to eq(true)
     expect(connection.data_source_exists?("menu_entries")).to eq(true)
     expect(connection.data_source_exists?("phase_assignments")).to eq(true)
   end
 
   # [REQ-MENU-002]
-  it "installs ActiveStorage tables required for recipe image upload" do
+  it "installs ActiveStorage tables required for dish image upload" do
     expect(connection.data_source_exists?("active_storage_blobs")).to eq(true)
     expect(connection.data_source_exists?("active_storage_attachments")).to eq(true)
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "defines AR models Menu, Recipe, MenuEntry, and PhaseAssignment" do
+  it "defines AR models Menu, Dish, MenuEntry, and PhaseAssignment" do
     expect("Menu".safe_constantize).to be_present
-    expect("Recipe".safe_constantize).to be_present
+    expect("Dish".safe_constantize).to be_present
     expect("MenuEntry".safe_constantize).to be_present
     expect("PhaseAssignment".safe_constantize).to be_present
   end
@@ -42,39 +42,39 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
   end
 
   # [REQ-MENU-002]
-  it "Recipe belongs to user" do
-    recipe_class = "Recipe".safe_constantize
-    expect(recipe_class).to be_present
-    expect(recipe_class.reflect_on_association(:user).macro).to eq(:belongs_to)
+  it "Dish belongs to user" do
+    dish_class = "Dish".safe_constantize
+    expect(dish_class).to be_present
+    expect(dish_class.reflect_on_association(:user).macro).to eq(:belongs_to)
   end
 
   # [REQ-MENU-002]
-  it "Recipe supports image attachment" do
-    recipe_class = "Recipe".safe_constantize
-    expect(recipe_class).to be_present
-    reflection = recipe_class.reflect_on_attachment(:image)
+  it "Dish supports image attachment" do
+    dish_class = "Dish".safe_constantize
+    expect(dish_class).to be_present
+    reflection = dish_class.reflect_on_attachment(:image)
     expect(reflection).to be_present
     expect(reflection.macro).to eq(:has_one_attached)
   end
 
   # [REQ-MENU-001]
-  it "MenuEntry belongs to menu and optionally belongs to recipe" do
+  it "MenuEntry belongs to menu and optionally belongs to dish" do
     entry_class = "MenuEntry".safe_constantize
     expect(entry_class).to be_present
     expect(entry_class.reflect_on_association(:menu).macro).to eq(:belongs_to)
-    expect(entry_class.reflect_on_association(:recipe).macro).to eq(:belongs_to)
-    expect(entry_class.reflect_on_association(:recipe).options[:optional]).to eq(true)
+    expect(entry_class.reflect_on_association(:dish).macro).to eq(:belongs_to)
+    expect(entry_class.reflect_on_association(:dish).options[:optional]).to eq(true)
   end
 
   # [REQ-MENU-001]
   it "enforces uniqueness of menu_entries for (menu, weekday, meal_type)" do
     user = create(:user)
     menu = Menu.create!(user: user, name: "Semana A")
-    recipe = Recipe.create!(user: user, name: "Avena")
+    dish = Dish.create!(user: user, name: "Avena")
 
     MenuEntry.create!(
       menu: menu,
-      recipe: recipe,
+      dish: dish,
       weekday: 1,
       meal_type: "desayuno",
       freeform_text: nil
@@ -82,7 +82,7 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
 
     dup = MenuEntry.new(
       menu: menu,
-      recipe: recipe,
+      dish: dish,
       weekday: 1,
       meal_type: "desayuno",
       freeform_text: nil
@@ -92,21 +92,21 @@ RSpec.describe "Phase 4 — menus & recipes models", type: :model do
   end
 
   # [REQ-MENU-001, REQ-MENU-002]
-  it "requires menu entry content: recipe and/or freeform_text" do
+  it "requires menu entry content: dish and/or freeform_text" do
     user = create(:user)
     menu = Menu.create!(user: user, name: "Semana B")
 
-    blank = MenuEntry.new(menu: menu, recipe: nil, weekday: 2, meal_type: "cena", freeform_text: "   ")
+    blank = MenuEntry.new(menu: menu, dish: nil, weekday: 2, meal_type: "cena", freeform_text: "   ")
     expect(blank).not_to be_valid
 
-    with_text = MenuEntry.new(menu: menu, recipe: nil, weekday: 2, meal_type: "cena", freeform_text: "Ensalada")
+    with_text = MenuEntry.new(menu: menu, dish: nil, weekday: 2, meal_type: "cena", freeform_text: "Ensalada")
     expect(with_text).to be_valid
   end
 
   # [REQ-MENU-002]
-  it "requires recipe name" do
+  it "requires dish name" do
     user = create(:user)
-    recipe = Recipe.new(user: user, name: "   ")
-    expect(recipe).not_to be_valid
+    dish = Dish.new(user: user, name: "   ")
+    expect(dish).not_to be_valid
   end
 end
