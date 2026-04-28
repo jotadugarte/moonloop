@@ -42,7 +42,7 @@ RSpec.describe "Admin moderation of public sharing", type: :request do
     patch "/admin/recipes/#{recipe.id}/revoke_public_share"
     follow_redirect! if response.redirect?
 
-    get public_recipes_path
+    get public_dishes_path
 
     expect(response).to have_http_status(:ok)
     expect(response.body).not_to include("Spam publicada")

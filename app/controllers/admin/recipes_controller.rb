@@ -4,7 +4,7 @@ module Admin
       recipe = Recipe.where(publicly_shareable: true).find(params[:id])
       recipe.update!(publicly_shareable: false)
 
-      redirect_to public_recipes_path, notice: t("admin.moderation.recipe.revoked_public_share")
+      redirect_to public_dishes_path, notice: t("admin.moderation.recipe.revoked_public_share")
     end
   end
 end

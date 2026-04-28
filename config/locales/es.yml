@@ -164,14 +164,18 @@ es:
       col_current_streak: "Racha actual"
       col_longest_streak: "Racha máxima"
       back_home: "Volver al inicio"
-  public_recipes:
-    index:
-      title: "Recetas públicas — Moonloop"
-      heading: "Recetas públicas"
   public_dishes:
+    index:
+      title: "Platos públicos — Moonloop"
+      heading: "Platos públicos"
     show:
+      title: "%{name} — Platos públicos — Moonloop"
+      preparation_heading: "Preparación"
       preparation_neutral: "No se añadieron pasos de preparación para este plato."
       add_preparation_cta: "Añade preparación para quienes adopten este plato."
+      back_to_catalog: "Volver al catálogo de platos"
+    shared:
+      author: "Código de autor %{code}"
   public_menus:
     index:
       title: "Menús públicos — Moonloop"

@@ -1,0 +1,26 @@
+<% content_for :title, t("public_dishes.show.title", name: @recipe.name) %>
+
+<h1><%= @recipe.name %></h1>
+
+<p><%= t("public_dishes.shared.author", code: @recipe.user.public_catalog_author_code) %></p>
+
+<section class="mb-4" aria-labelledby="public-dish-preparation-heading">
+  <h2 class="text-lg font-semibold" id="public-dish-preparation-heading">
+    <%= t("public_dishes.show.preparation_heading") %>
+  </h2>
+  <% if @recipe.instructions.to_s.strip.present? %>
+    <div class="prose prose-sm max-w-none">
+      <%= simple_format @recipe.instructions %>
+    </div>
+  <% else %>
+    <p><%= t("public_dishes.show.preparation_neutral") %></p>
+    <% if Current.user && Current.user.id == @recipe.user_id %>
+      <p>
+        <%= link_to t("public_dishes.show.add_preparation_cta"), edit_recipe_path(@recipe),
+              class: "text-blue-600 underline" %>
+      </p>
+    <% end %>
+  <% end %>
+</section>
+
+<p><%= link_to t("public_dishes.show.back_to_catalog"), public_dishes_path, class: "text-blue-600 underline" %></p>

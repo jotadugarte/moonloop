@@ -40,7 +40,11 @@ Rails.application.routes.draw do
       delete :clear, on: :collection
     end
   end
-  resources :recipes
+  get "recipes", to: redirect(path: "/platos", status: 301)
+  get "recetas", to: redirect(path: "/platos", status: 301)
+  get "recipes/:id", to: redirect(path: "/platos/%{id}", status: 301)
+  get "public_recipes", to: redirect(path: "/public_dishes", status: 301)
+  resources :recipes, path: "platos"
   resource :phase, only: %i[show update] do
     post :dismiss_reminder, on: :member
     post :repeat_last_assignment, on: :member
@@ -55,7 +59,7 @@ Rails.application.routes.draw do
     end
     resources :phase_program_assignments, only: %i[new create edit update destroy]
   end
-  resources :public_recipes, only: [ :index ]
+  resources :public_dishes, only: %i[index show]
   resources :public_menus, only: %i[index show] do
     member do
       post :adopt

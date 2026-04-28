@@ -4,7 +4,7 @@ module Admin
       menu = Menu.where(publicly_shareable: true).find(params[:id])
       menu.update!(publicly_shareable: false)
 
-      redirect_to public_recipes_path, notice: t("admin.moderation.menu.revoked_public_share")
+      redirect_to public_dishes_path, notice: t("admin.moderation.menu.revoked_public_share")
     end
   end
 end

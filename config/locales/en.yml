@@ -190,14 +190,18 @@ en:
       col_current_streak: "Current streak"
       col_longest_streak: "Longest streak"
       back_home: "Back to home"
-  public_recipes:
-    index:
-      title: "Public recipes — Moonloop"
-      heading: "Public recipes"
   public_dishes:
+    index:
+      title: "Public dishes — Moonloop"
+      heading: "Public dishes"
     show:
+      title: "%{name} — Public dishes — Moonloop"
+      preparation_heading: "Preparation"
       preparation_neutral: "No preparation steps were added for this dish."
       add_preparation_cta: "Add preparation details for people who adopt this dish."
+      back_to_catalog: "Back to dish catalog"
+    shared:
+      author: "Author code %{code}"
   public_menus:
     index:
       title: "Public menus — Moonloop"

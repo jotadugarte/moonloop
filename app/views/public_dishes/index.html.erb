@@ -1,0 +1,9 @@
+<% content_for :title, t("public_dishes.index.title") %>
+
+<h1><%= t("public_dishes.index.heading") %></h1>
+
+<ul>
+  <% @recipes.each do |recipe| %>
+    <li><%= recipe.name %></li>
+  <% end %>
+</ul>
