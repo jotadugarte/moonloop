@@ -41,6 +41,7 @@ RSpec.describe "Menus autosave", type: :system do
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
+      find(%([data-test="dish-picker-filter"])).click
       find(%([data-test="dish-picker-option"][data-dish-id="#{cafe.id}"])).click
       expect(page).to have_css(%(img[data-test="menu-slot-preview"]))
       expect(find(%([data-test="dish-picker-filter"])).value).to eq("Café con leche")
@@ -99,6 +100,7 @@ RSpec.describe "Menus autosave", type: :system do
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
+      find(%([data-test="dish-picker-filter"])).click
       find(%([data-test="dish-picker-option"][data-dish-id="#{ensalada.id}"])).click
     end
 
