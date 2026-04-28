@@ -1,8 +1,7 @@
 # Agentic Guild — current state
 
 - <active_task_pointer>.agenticguild/active_sessions/task_bug-menus-combobox-agrupado-y-filtro.md</active_task_pointer>
-- **Phase:** start-task (Context Initialization)
-- **Phase:** start-task (Execution — Iterative TDD)
-- **Step:** 3.3 Phase 3 complete
-- **Context:** Session plan now has all steps completed for roadmap #59 (dish picker closed-state label + focus-to-open behavior; grouped filtering preserved; i18n keys present; targeted specs green per user).
-- **Next:** Optional: update `docs/ROADMAP.md` to mark #59 done and run `finish-branch` when ready.
+- **Phase:** finish-branch (Interactive Local Review → code-review)
+- **Step:** code-review 2.1 Implement requested fixes + run tests/linters
+- **Context:** Implemented all review items (picker a11y/close UX, slot preview refactor, avoid per-slot dish lookup). Test run blocked: Postgres expected at `127.0.0.1:5433` is not reachable; Docker daemon not available from this environment.
+- **Next:** Start Postgres (Docker Desktop / local service) and rerun `bundle exec rspec spec/system/menus_autosave_spec.rb`.
