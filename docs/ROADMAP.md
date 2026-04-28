@@ -48,6 +48,7 @@ Things done and things left to do. Update this when finishing branches; use `roa
 54. [x] **Platos: imagen única + placeholder por tipo de comida**. En **`/platos/new`** y **`/platos/:id/edit`**: siempre hay **una sola imagen actual**; al crear sin subir imagen, usar **placeholder** según `meal_type`; subir imagen **reemplaza** la actual; “Eliminar imagen” revierte al placeholder. (REQ-MENU-002) — 2026-04-25
 56. [x] **Bug: Menús — validación en idioma incorrecto**. En `/menus`, cuando el idioma activo es español, el error de validación de **Nombre** aparece en inglés (“Name can't be blank”). Debe mostrarse coherente con el locale actual (p. ej. “Nombre no puede estar en blanco”). — 2026-04-25
 58. [x] **Menús — combobox por tipo de comida**. En el picker/combobox al asignar **plato** en el editor de menú, **agrupar** opciones por **tipo de comida** (Desayuno, Almuerzo, Cena, Merienda) y permitir **buscar por nombre** manteniendo grupos; incluye acción “Sin plato/No dish” y mantiene autosave por Turbo (REQ-MENU-001, REQ-MENU-002). — 2026-04-27 — Depends on: Phase 4 #48; **#52**
+59. [x] **Bug: Menús — combobox de platos no cumple agrupación + filtro**. En `/menus/:id/edit`, el picker/combobox de plato: (a) muestra “Sin plato” o el plato ya seleccionado cuando está cerrado; (b) al abrir lista **todos** los platos agrupados por tipo de comida con el **tipo del slot primero** y luego `desayuno → almuerzo → cena → merienda`; (c) al escribir, **filtra por nombre manteniendo grupos**. (REQ-MENU-001) — 2026-04-27 — Depends on: #58
 
 ### Phase 5 — Exercise Routines
 20. [x] Exercise  routine model: assign exercises per day-of-week (REQ-EXR-001) — 2026-04-17 — Depends on: Phase 2
@@ -90,7 +91,7 @@ Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque f
 
 57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
 
-59. [ ] **Bug: Menús — combobox de platos no cumple agrupación + filtro**. En `/menus/:id/edit`, el picker/combobox de plato debe: (a) mostrar “Sin plato” o el plato ya seleccionado cuando está cerrado; (b) al abrir listar **todos** los platos agrupados por tipo de comida con el **tipo del slot primero** y luego `desayuno → almuerzo → cena → merienda`; (c) al escribir, **filtrar por nombre manteniendo grupos**. Regresión/implementación incorrecta respecto a **Done #58**. — Depends on: #58
+ 
 
 ## Backlog
 *(No items currently in backlog.)*
