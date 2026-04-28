@@ -165,6 +165,6 @@ Recommended approach:
   <step id="3" status="complete">Implement the grouped searchable dish picker in `app/views/menus/_slot.html.erb` (or extracted partial) using server-rendered grouped option markup and i18n keys. Keep existing freeform field unchanged for freeform-enabled users (D7). Ensure no hardcoded strings.</step>
   <step id="4" status="complete">Add a Stimulus controller for filtering + selection behavior. Ensure all event listeners are removed in `disconnect()` and rely on `static targets/values` (no global query selectors except scoped within the slot element).</step>
   <step id="5" status="complete">Add i18n keys for: dish-filter placeholder/label, “no results” copy, and any accessibility labels (EN/ES). Reuse `menus.meal_types.*` for group labels.</step>
-  <step id="6" status="pending">Make the specs pass; ensure Turbo autosave flow remains intact; run `bundle exec rspec` locally and fix any regressions.</step>
+  <step id="6" status="complete">Make the specs pass; ensure Turbo autosave flow remains intact; run `bundle exec rspec` locally and fix any regressions.</step>
 </implementation_plan>
 
