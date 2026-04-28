@@ -4,10 +4,11 @@
 <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
 <% dish_select_id = "#{slot_key}-dish" %>
 <% dish_filter_id = "#{slot_key}-dish-filter" %>
+<% dish_panel_id = "#{slot_key}-dish-panel" %>
 <% freeform_input_id = "#{slot_key}-freeform" %>
 <% meal_type_keys = Menus::MealType::KEYS %>
 <% group_order = ([ meal_type ] + meal_type_keys).uniq %>
-<% selected_dish_name = dishes.find { |dish| dish.id == entry&.dish_id }&.name.to_s %>
+<% selected_dish_name = dishes_by_id[entry&.dish_id]&.name.to_s %>
 <% selected_picker_value = entry&.dish_id.present? ? selected_dish_name : t("menus.slots.dish_blank") %>
 
 <%= turbo_frame_tag frame_id do %>
@@ -68,12 +69,15 @@
             value="<%= selected_picker_value %>"
             placeholder="<%= t("menus.slots.dish_picker_filter_placeholder") %>"
             aria-label="<%= t("menus.slots.dish_picker_filter_aria") %>"
+            aria-controls="<%= dish_panel_id %>"
+            aria-expanded="false"
+            aria-haspopup="listbox"
             data-test="dish-picker-filter"
             data-dish-picker-target="filter"
-            data-action="focus->dish-picker#open input->dish-picker#filter"
+            data-action="focus->dish-picker#open input->dish-picker#filter keydown.escape->dish-picker#close"
           >
 
-          <div class="dish-picker__panel hidden" data-dish-picker-target="groups">
+          <div id="<%= dish_panel_id %>" class="dish-picker__panel hidden" role="listbox" data-dish-picker-target="groups">
             <div class="dish-picker__panel-inner">
               <button
                 type="button"
@@ -108,7 +112,8 @@
                             data-dish-id="<%= dish.id %>"
                             data-dish-name="<%= dish.name %>"
                             data-action="click->dish-picker#pick"
-                            aria-pressed="<%= selected %>"
+                            role="option"
+                            aria-selected="<%= selected %>"
                           >
                             <%= dish.name %>
                           </button>

@@ -10,6 +10,7 @@ export default class extends Controller {
 
     if (this.hasGroupsTarget) this.groupsTarget.classList.add("hidden")
     if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
+    this.markClosed()
   }
 
   disconnect() {
@@ -43,6 +44,7 @@ export default class extends Controller {
 
     if (this.hasGroupsTarget) this.groupsTarget.classList.remove("hidden")
     if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+    this.markOpen()
 
     const currentValue = this.normalize(this.filterTarget.value)
     const selectedValue = this.normalize(this.selectedDishNameValue)
@@ -56,6 +58,7 @@ export default class extends Controller {
     if (!this.hasGroupsTarget) return
     this.groupsTarget.classList.add("hidden")
     if (this.hasNoResultsTarget) this.noResultsTarget.classList.add("hidden")
+    this.markClosed()
   }
 
   closeIfClickedOutside(event) {
@@ -71,6 +74,7 @@ export default class extends Controller {
 
     if (!this.hasDishIdTarget) return
     this.dishIdTarget.value = dishId
+    this.close()
 
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
@@ -84,11 +88,22 @@ export default class extends Controller {
 
     if (this.hasFilterTarget) this.filterTarget.value = ""
     if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
+    this.close()
 
     const form = this.dishIdTarget.form || this.element.closest("form")
     if (!form) return
 
     form.requestSubmit()
+  }
+
+  markOpen() {
+    if (!this.hasFilterTarget) return
+    this.filterTarget.setAttribute("aria-expanded", "true")
+  }
+
+  markClosed() {
+    if (!this.hasFilterTarget) return
+    this.filterTarget.setAttribute("aria-expanded", "false")
   }
 
   normalize(value) {

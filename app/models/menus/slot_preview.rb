@@ -20,21 +20,31 @@ module Menus
       return nil unless slot_preview_visible?
 
       dish = @entry.dish
-      if dish&.image&.attached? && !placeholder_image?(dish)
-        Result.new(display: :uploaded, uploaded_image: dish.image, fallback_asset_path: nil)
-      else
-        Result.new(
-          display: :fallback,
-          uploaded_image: nil,
-          fallback_asset_path: "menus/fallback_#{fallback_meal_type_key(dish)}.svg"
-        )
-      end
+      return uploaded_result(dish) if show_uploaded_image?(dish)
+
+      fallback_result(dish)
     end
 
     private
 
     def slot_preview_visible?
       @entry.dish_id.present? || @entry.freeform_text.to_s.strip.present?
+    end
+
+    def show_uploaded_image?(dish)
+      dish&.image&.attached? && !placeholder_image?(dish)
+    end
+
+    def uploaded_result(dish)
+      Result.new(display: :uploaded, uploaded_image: dish.image, fallback_asset_path: nil)
+    end
+
+    def fallback_result(dish)
+      Result.new(
+        display: :fallback,
+        uploaded_image: nil,
+        fallback_asset_path: "menus/fallback_#{fallback_meal_type_key(dish)}.svg"
+      )
     end
 
     def fallback_meal_type_key(dish)

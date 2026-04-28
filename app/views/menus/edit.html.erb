@@ -50,6 +50,7 @@
 <% end %>
 
 <div class="menu-grid">
+  <% dishes_by_id = @dishes.index_by(&:id) %>
   <% @meal_types.each do |meal_type| %>
     <section class="menu-grid__meal-type">
       <h2><%= t("menus.meal_types.#{meal_type}") %></h2>
@@ -62,6 +63,7 @@
                 meal_type: meal_type,
                 entry: entry,
                 dishes: @dishes,
+                dishes_by_id: dishes_by_id,
                 dishes_by_meal_type: @dishes_by_meal_type %>
         <% end %>
       </div>
