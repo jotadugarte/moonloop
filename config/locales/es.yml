@@ -168,6 +168,10 @@ es:
     index:
       title: "Recetas públicas — Moonloop"
       heading: "Recetas públicas"
+  public_dishes:
+    show:
+      preparation_neutral: "No se añadieron pasos de preparación para este plato."
+      add_preparation_cta: "Añade preparación para quienes adopten este plato."
   public_menus:
     index:
       title: "Menús públicos — Moonloop"

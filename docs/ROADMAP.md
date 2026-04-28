@@ -77,15 +77,19 @@ Things done and things left to do. Update this when finishing branches; use `roa
 38. [x] Migrar capa de datos a **PostgreSQL** (adapter, `database.yml`, migraciones/schema, job queue / caché alineados con el entorno objetivo, plan de datos desde SQLite) — 2026-04-22 — Depends on: entorno de despliegue y operaciones; stack actual REQ-PLAT-001 (SQLite desarrollo)
 39. [x] Crear vistas sencillas de pantallas para poder ver la app en la web — 2026-04-22 — Branch: views
 44. [x] **Datos para pruebas**: cargar o mantener seeds/fixtures con escenarios representativos para desarrollo, demos y QA (fases y rangos de semanas, menús, recetas, rutinas de ejercicio, programas de fases / bundles, hábitos de ejemplo, etc.) — alineado con convención del proyecto (`db:seed`, tasks o factories). — 2026-04-25
+53. [x] **Imágenes subidas: formato web pequeño y regla para CRUD futuros**. `docs/core/IMAGES.md` (regla obligatoria); variantes WebP **thumb** / **list** / **detail** (`ImageVariants::*`); límites duros de subida (`ImageUploads::SafetyLimits`); render vía helpers/patrón estándar; contrato prod/CI con libvips según arquitectura del stack. (**REQ-MENU-002** y recursos con foto análogos.) — 2026-04-25
 
 ## In Progress
 *(No items currently in progress.)*
 
 ## Pending (by priority)
-Orden revisado **2026-04-24** (prioridad y **agrupación sugerida por rama**): **#43** (registro); **#48** (menús); **#47** (informes); **#46** (sesiones); **#44** (seeds/fixtures, branch aparte); **#52** (refactor Receta → Plato, branch dedicado y SPEC); **#53** (pipeline/regla de imágenes web).
+Estado **2026-04-27**: ítems abiertos con `[ ]` — **#52** (reestructuración Receta → Plato), **#57** (plan que abarque fases: decisión), **#58** (combobox de menú por tipo de comida). **#53** cerrado en Done (Phase 9, **2026-04-25**).
 
 52. [ ] **Reestructuración de entidad: de “Receta” a “Plato”**. Evolucionar el modelo para que el concepto central sea **Plato** (idea culinaria, p. ej. “Huevos revueltos”): la **receta** pasa a ser **opcional** (instrucciones de preparación no obligatorias); atributo **`tiene_receta`** para UI (mostrar pasos o preparación simple); justificación: precisión semántica, menús más naturales, menos fricción en ítems simples. Impacto: refactor de tabla/asociaciones, formularios con bloque receta dinámico o colapsable, rutas/controladores y nomenclatura coherentes con “plato”. — Depends on: Phase 4 (#16, rutas recetas/menús); alinear SPEC/glosario cuando exista criterio formal.
-53. [ ] **Imágenes subidas: formato web pequeño y regla para CRUD futuros**. En todos los puntos donde la app acepte imágenes, normalizar a un formato web liviano con calidad visual clara y consistente, pero comprimido, para carga rápida y menor uso de almacenamiento (p. ej. variantes Active Storage / pipeline único de procesamiento al adjuntar). Documentar en documentación viva del proyecto la **regla obligatoria** para cualquier CRUD o flujo futuro que permita subida de imágenes. (REQ-MENU-002 y análogos según aparezcan nuevos recursos con foto.)
+
+57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
+
+58. [ ] **Menús — combobox por tipo de comida**. En el combobox al asignar plato/receta en el editor de menú, **agrupar o clasificar** las opciones por **tipo de comida** (p. ej. Desayuno, Almuerzo, Cena, Merienda), coherente con `meal_type` / slots (REQ-MENU-001, REQ-MENU-002). — Depends on: Phase 4 #48 (combobox por slot); alinear con **#52** si la entidad pasa a “Plato”.
 
 ## Backlog
 *(No items currently in backlog.)*

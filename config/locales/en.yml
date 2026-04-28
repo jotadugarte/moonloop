@@ -194,6 +194,10 @@ en:
     index:
       title: "Public recipes — Moonloop"
       heading: "Public recipes"
+  public_dishes:
+    show:
+      preparation_neutral: "No preparation steps were added for this dish."
+      add_preparation_cta: "Add preparation details for people who adopt this dish."
   public_menus:
     index:
       title: "Public menus — Moonloop"

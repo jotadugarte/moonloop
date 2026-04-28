@@ -1,11 +1,5 @@
-<agent_state>
-
-<active_task_pointer> [NONE] </active_task_pointer>
-
-<execution_context>
-    <active_skill>[NONE]</active_skill>
-    <current_phase>[NONE]</current_phase>
-    <current_step>[NONE]</current_step>
-</execution_context>
-
-</agent_state>
+<phase>3</phase>
+<step>3.1</step>
+<skill>start-task</skill>
+<active_task_pointer>active_sessions/task_reestructuracion-receta-a-plato.md</active_task_pointer>
+<summary>#52: step 1 — request specs añadidos (redirects + public_dishes#show); pendiente 3.2 make green.</summary>
