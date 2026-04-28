@@ -52,13 +52,16 @@ RSpec.describe "Menus autosave", type: :system do
     fill_in I18n.t("dishes.form.name_label"), with: "Ensalada rápida"
     click_button I18n.t("dishes.form.create_submit")
 
+    user = User.find_by!(email: "menu-autosave@example.com")
+    ensalada = Dish.find_by!(user: user, name: "Ensalada rápida")
+
     visit menus_path
     fill_in I18n.t("menus.index.name_label"), with: "Semana autosave"
     click_button I18n.t("menus.index.create_submit")
     expect(page).to have_current_path(%r{^/menus/\d+/edit$})
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
-      select "Ensalada rápida", from: I18n.t("menus.slots.dish_pick_label")
+      find(%([data-test="dish-picker-option"][data-dish-id="#{ensalada.id}"])).click
     end
 
     # Wait for the Turbo autosave response (slot re-render).
@@ -69,7 +72,7 @@ RSpec.describe "Menus autosave", type: :system do
     visit current_path
 
     within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
-      expect(page).to have_select(I18n.t("menus.slots.dish_pick_label"), selected: "Ensalada rápida")
+      expect(page).to have_css(%([data-test="dish-picker-option"][data-dish-id="#{ensalada.id}"]))
     end
   end
 

@@ -30,4 +30,3 @@ RSpec.describe "Menu editor dish picker groups", type: :request do
     expect(response.body).to include(I18n.t("menus.slots.dish_blank"))
   end
 end
-
