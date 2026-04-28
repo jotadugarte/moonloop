@@ -12,6 +12,8 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
+- **Database (roadmap #52):** table **`recipes`** is renamed to **`dishes`**; **`menu_entries.recipe_id`** becomes **`dish_id`** with updated FKs and index names. The **`Recipe`** model continues to use the same rows via **`self.table_name = "dishes"`** until the class rename; **`MenuEntry`** keeps a **`recipe_id` → `dish_id` alias** for params and forms. See **`docs/core/SCHEMA_REFERENCE.md`**.
+
 - **URLs (roadmap #52):** canonical recipe URLs are **`/platos`** and **`/public_dishes`**; legacy **`/recipes`**, **`/recetas`**, **`/public_recipes`**, and **`/recipes/:id`** respond with **301** to the new paths. Public dish catalog **`index`/`show`** (`PublicDishesController`) keeps `Recipe` data for now; show surface includes neutral copy when preparation text is blank and an owner-only CTA to edit (REQ-MENU-002, REQ-MENU-006).
 
 - **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.

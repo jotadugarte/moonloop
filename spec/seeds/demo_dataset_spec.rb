@@ -180,7 +180,7 @@ RSpec.describe "Demo dataset seeds" do
 
       expect(user.recipes.count).to be >= 1
 
-      entry = MenuEntry.joins(:menu).where(menus: { user_id: user.id }).where.not(recipe_id: nil).first
+      entry = MenuEntry.joins(:menu).where(menus: { user_id: user.id }).where.not(dish_id: nil).first
       expect(entry).to be_present
       expect(entry.recipe.user_id).to eq(user.id)
     end

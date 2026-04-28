@@ -1,6 +1,8 @@
 class MenuEntry < ApplicationRecord
   belongs_to :menu
-  belongs_to :recipe, optional: true
+  belongs_to :recipe, optional: true, foreign_key: :dish_id, inverse_of: :menu_entries
+
+  alias_attribute :recipe_id, :dish_id
 
   validates :weekday, presence: true
   validates :meal_type, presence: true

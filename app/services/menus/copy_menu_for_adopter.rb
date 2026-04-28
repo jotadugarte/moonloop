@@ -8,7 +8,7 @@ module Menus
     def self.call(source_menu:, adopter:, base_name:)
       name = uniquify_menu_name(adopter, base_name.to_s.strip)
       recipe_map = {}
-      source_menu.menu_entries.where.not(recipe_id: nil).distinct.pluck(:recipe_id).compact.each do |rid|
+      source_menu.menu_entries.where.not(dish_id: nil).distinct.pluck(:dish_id).compact.each do |rid|
         src = Recipe.find(rid)
         recipe_map[rid] = DuplicateRecipeForAdopter.call(source_recipe: src, adopter: adopter).id
       end

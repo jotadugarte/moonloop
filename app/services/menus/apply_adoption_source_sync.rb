@@ -33,7 +33,7 @@ module Menus
         source.reload
         copy.menu_entries.destroy_all
         recipe_map = {}
-        source.menu_entries.where.not(recipe_id: nil).distinct.pluck(:recipe_id).compact.each do |rid|
+        source.menu_entries.where.not(dish_id: nil).distinct.pluck(:dish_id).compact.each do |rid|
           src_recipe = Recipe.find(rid)
           recipe_map[rid] = DuplicateRecipeForAdopter.call(source_recipe: src_recipe, adopter: copy.user).id
         end

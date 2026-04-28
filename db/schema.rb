@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_210000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -147,12 +147,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
     t.text "freeform_text"
     t.string "meal_type", null: false
     t.bigint "menu_id", null: false
-    t.bigint "recipe_id"
+    t.bigint "dish_id"
     t.datetime "updated_at", null: false
     t.integer "weekday", null: false
     t.index ["menu_id", "weekday", "meal_type"], name: "index_menu_entries_on_menu_weekday_meal_type", unique: true
     t.index ["menu_id"], name: "index_menu_entries_on_menu_id"
-    t.index ["recipe_id"], name: "index_menu_entries_on_recipe_id"
+    t.index ["dish_id"], name: "index_menu_entries_on_dish_id"
   end
 
   create_table "menus", force: :cascade do |t|
@@ -231,7 +231,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
     t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
   end
 
-  create_table "recipes", force: :cascade do |t|
+  create_table "dishes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "instructions"
     t.string "meal_type", default: "desayuno", null: false
@@ -239,8 +239,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
     t.boolean "publicly_shareable", default: false, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["user_id", "meal_type"], name: "index_recipes_on_user_id_and_meal_type"
-    t.index ["user_id"], name: "index_recipes_on_user_id"
+    t.index ["user_id", "meal_type"], name: "index_dishes_on_user_id_and_meal_type"
+    t.index ["user_id"], name: "index_dishes_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -339,7 +339,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
   add_foreign_key "habit_reminder_events", "user_habits"
   add_foreign_key "habit_reminder_events", "users"
   add_foreign_key "menu_entries", "menus"
-  add_foreign_key "menu_entries", "recipes"
+  add_foreign_key "menu_entries", "dishes"
   add_foreign_key "menus", "menus", column: "source_menu_id"
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
@@ -350,7 +350,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_131000) do
   add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
   add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
-  add_foreign_key "recipes", "users"
+  add_foreign_key "dishes", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
