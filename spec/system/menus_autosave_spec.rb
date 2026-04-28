@@ -10,6 +10,20 @@ RSpec.describe "Menus autosave", type: :system do
   include System::RegistrationHelpers
 
   # [REQ-MENU-001]
+  it "shows the blank label in the closed picker state when no dish is selected" do
+    register_user_in_browser(email: "menu-dish-blank-label@example.com")
+
+    visit menus_path
+    fill_in I18n.t("menus.index.name_label"), with: "Semana sin plato"
+    click_button I18n.t("menus.index.create_submit")
+    expect(page).to have_current_path(%r{^/menus/\d+/edit$})
+
+    within(%([data-test="menu-entry-slot"][data-weekday="0"][data-meal-type="desayuno"])) do
+      expect(find(%([data-test="dish-picker-filter"])).value).to eq(I18n.t("menus.slots.dish_blank"))
+    end
+  end
+
+  # [REQ-MENU-001]
   it "shows the selected dish name in the closed picker state after autosave" do
     register_user_in_browser(email: "menu-dish-selected-label@example.com")
 
