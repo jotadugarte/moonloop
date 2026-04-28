@@ -12,7 +12,7 @@ module Menus
 
     def initialize(entry:, meal_type:)
       @entry = entry
-      @meal_type_key = Menus::MealType.new(meal_type).key
+      @slot_meal_type_key = Menus::MealType.new(meal_type).key
     end
 
     def call
@@ -26,7 +26,7 @@ module Menus
         Result.new(
           display: :fallback,
           uploaded_image: nil,
-          fallback_asset_path: "menus/fallback_#{@meal_type_key}.svg"
+          fallback_asset_path: "menus/fallback_#{fallback_meal_type_key(dish)}.svg"
         )
       end
     end
@@ -35,6 +35,12 @@ module Menus
 
     def slot_preview_visible?
       @entry.dish_id.present? || @entry.freeform_text.to_s.strip.present?
+    end
+
+    def fallback_meal_type_key(dish)
+      return Menus::MealType.new(dish.meal_type).key if dish.present?
+
+      @slot_meal_type_key
     end
 
     def placeholder_image?(dish)
