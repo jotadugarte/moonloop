@@ -1,7 +1,7 @@
 # Agentic Guild — current state
 
-- <active_task_pointer>.agenticguild/active_sessions/task_menus-combobox-por-tipo-de-comida.md</active_task_pointer>
-- **Phase:** finish-branch (Final Spackle & PR)
-- **Step:** 4.3 Update changelog/roadmap for branch + ready for PR description
-- **Context:** ROADMAP marked #58 done; CHANGELOG updated with menus dish picker entry.
-- **Next:** Run pr-description skill to generate PR title/body.
+- <active_task_pointer>.agenticguild/active_sessions/task_bug-menus-combobox-agrupado-y-filtro.md</active_task_pointer>
+- **Phase:** explore-task (The Whiteboard)
+- **Step:** 1.2 Process input + update memory + log roadmap bug
+- **Context:** Regression/incorrect implementation after #58: dish picker should open a grouped, searchable list (slot meal type first; filtering keeps groups).
+- **Next:** Lock the bug spec + handoff to start-task for fix.

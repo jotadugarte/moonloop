@@ -90,6 +90,8 @@ Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque f
 
 57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
 
+59. [ ] **Bug: Menús — combobox de platos no cumple agrupación + filtro**. En `/menus/:id/edit`, el picker/combobox de plato debe: (a) mostrar “Sin plato” o el plato ya seleccionado cuando está cerrado; (b) al abrir listar **todos** los platos agrupados por tipo de comida con el **tipo del slot primero** y luego `desayuno → almuerzo → cena → merienda`; (c) al escribir, **filtrar por nombre manteniendo grupos**. Regresión/implementación incorrecta respecto a **Done #58**. — Depends on: #58
+
 ## Backlog
 *(No items currently in backlog.)*
 
