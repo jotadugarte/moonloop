@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["filter", "groups", "noResults", "dishId"]
+  static values = { selectedDishName: String }
 
   connect() {
     // no-op
@@ -30,6 +31,18 @@ export default class extends Controller {
     })
 
     this.noResultsTarget.classList.toggle("hidden", anyVisible)
+  }
+
+  open() {
+    if (!this.hasFilterTarget) return
+    if (!this.hasSelectedDishNameValue) return
+
+    const currentValue = this.normalize(this.filterTarget.value)
+    const selectedValue = this.normalize(this.selectedDishNameValue)
+    if (currentValue !== selectedValue) return
+
+    this.filterTarget.value = ""
+    if (this.hasGroupsTarget && this.hasNoResultsTarget) this.filter()
   }
 
   pick(event) {
