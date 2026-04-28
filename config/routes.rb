@@ -40,7 +40,7 @@ Rails.application.routes.draw do
       delete :clear, on: :collection
     end
   end
-  resources :recipes, path: "platos"
+  resources :dishes, path: "platos"
   get "recipes", to: redirect(path: "/platos", status: 301), as: :legacy_recipes_collection
   get "recetas", to: redirect(path: "/platos", status: 301), as: :legacy_recetas_collection
   get "recipes/:id", to: redirect(path: "/platos/%{id}", status: 301), as: :legacy_recipes_member
@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     end
   end
   namespace :admin do
-    resources :recipes, only: [] do
+    resources :dishes, only: [] do
       member do
         patch :revoke_public_share
       end

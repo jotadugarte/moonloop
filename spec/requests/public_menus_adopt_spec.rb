@@ -35,20 +35,20 @@ RSpec.describe "Public menus adopt", type: :request do
       expect(response.headers["Location"]).to include(edit_menu_path(copy))
     end
 
-    it "duplicates referenced recipes onto the adopter for recipe slots" do
-      origin = create_public_menu(user: author, name: "Con receta")
-      recipe = Recipe.create!(user: author, name: "Pollo", instructions: "Hornear")
-      MenuEntry.create!(menu: origin, weekday: 1, meal_type: "desayuno", recipe: recipe)
+    it "duplicates referenced dishes onto the adopter for dish slots" do
+      origin = create_public_menu(user: author, name: "Con plato")
+      dish = Dish.create!(user: author, name: "Pollo", instructions: "Hornear")
+      MenuEntry.create!(menu: origin, weekday: 1, meal_type: "desayuno", dish: dish)
 
       expect do
-        post adopt_public_menu_path(origin), params: { name: "Copia con recetas" }
-      end.to change { Menu.count }.by(1).and change { Recipe.where(user: adopter).count }.by(1)
+        post adopt_public_menu_path(origin), params: { name: "Copia con platos" }
+      end.to change { Menu.count }.by(1).and change { Dish.where(user: adopter).count }.by(1)
 
-      copy = Menu.find_by!(user: adopter, name: "Copia con recetas")
-      adopted_recipe = Recipe.find(copy.menu_entries.sole.recipe_id)
-      expect(adopted_recipe.user_id).to eq(adopter.id)
-      expect(adopted_recipe.name).to eq("Pollo")
-      expect(adopted_recipe.instructions).to include("Hornear")
+      copy = Menu.find_by!(user: adopter, name: "Copia con platos")
+      adopted_dish = Dish.find(copy.menu_entries.sole.dish_id)
+      expect(adopted_dish.user_id).to eq(adopter.id)
+      expect(adopted_dish.name).to eq("Pollo")
+      expect(adopted_dish.instructions).to include("Hornear")
     end
 
     it "rejects a second adoption of the same origin" do

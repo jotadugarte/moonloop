@@ -8,7 +8,7 @@ require "rails_helper"
 RSpec.describe Menus::SlotPreview do
   let(:user) { create(:user, password: "Password123!") }
   let(:menu) { Menu.create!(user: user, name: "Semana") }
-  let(:recipe) { Recipe.create!(user: user, name: "Porridge") }
+  let(:dish) { Dish.create!(user: user, name: "Porridge") }
 
   # [REQ-MENU-002]
   it "returns nil for a blank entry" do
@@ -16,16 +16,16 @@ RSpec.describe Menus::SlotPreview do
   end
 
   # [REQ-MENU-002]
-  it "returns nil when the slot has no recipe and no freeform text" do
-    entry = MenuEntry.new(menu: menu, weekday: 1, meal_type: "cena", recipe: nil, freeform_text: "")
+  it "returns nil when the slot has no dish and no freeform text" do
+    entry = MenuEntry.new(menu: menu, weekday: 1, meal_type: "cena", dish: nil, freeform_text: "")
     expect(described_class.call(entry: entry, meal_type: "cena")).to be_nil
   end
 
   # [REQ-MENU-002]
-  it "uses a meal-type fallback asset when the recipe has no image" do
+  it "uses a meal-type fallback asset when the dish has no image" do
     entry = MenuEntry.create!(
       menu: menu,
-      recipe: recipe,
+      dish: dish,
       weekday: 3,
       meal_type: "merienda",
       freeform_text: nil
@@ -40,7 +40,7 @@ RSpec.describe Menus::SlotPreview do
   it "uses a meal-type fallback when only freeform text is present" do
     entry = MenuEntry.create!(
       menu: menu,
-      recipe: nil,
+      dish: nil,
       weekday: 4,
       meal_type: "almuerzo",
       freeform_text: "Sopa del día"
@@ -52,11 +52,11 @@ RSpec.describe Menus::SlotPreview do
   end
 
   # [REQ-MENU-002]
-  it "uses the uploaded image when the recipe has an attachment" do
+  it "uses the uploaded image when the dish has an attachment" do
     png = Base64.decode64(
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
     )
-    recipe.image.attach(
+    dish.image.attach(
       io: StringIO.new(png),
       filename: "one.png",
       content_type: "image/png"
@@ -64,7 +64,7 @@ RSpec.describe Menus::SlotPreview do
 
     entry = MenuEntry.create!(
       menu: menu,
-      recipe: recipe,
+      dish: dish,
       weekday: 0,
       meal_type: "desayuno",
       freeform_text: nil
@@ -73,6 +73,6 @@ RSpec.describe Menus::SlotPreview do
     result = described_class.call(entry: entry, meal_type: "desayuno")
     expect(result.display).to eq(:uploaded)
     expect(result.uploaded_image).to be_present
-    expect(result.uploaded_image).to eq(recipe.image)
+    expect(result.uploaded_image).to eq(dish.image)
   end
 end

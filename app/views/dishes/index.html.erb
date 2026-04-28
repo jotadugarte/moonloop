@@ -1,0 +1,21 @@
+<% content_for :title, t("dishes.index.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("dishes.index.heading") %></h1>
+
+<p class="mb-4">
+  <%= link_to t("dishes.index.new_dish"), new_dish_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t("dishes.index.menus_link"), menus_path, class: "text-blue-600 underline" %>
+</p>
+
+<ul class="space-y-2">
+  <% @dishes.each do |dish| %>
+    <li>
+      <%= link_to dish.name, dish_path(dish), class: "text-blue-600 font-medium" %>
+    </li>
+  <% end %>
+</ul>
+
+<% if @dishes.empty? %>
+  <p class="text-gray-600"><%= t("dishes.index.empty") %></p>
+<% end %>

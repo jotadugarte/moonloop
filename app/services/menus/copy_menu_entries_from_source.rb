@@ -2,11 +2,11 @@
 
 module Menus
   class CopyMenuEntriesFromSource
-    def self.call(target_menu:, source_menu:, recipe_map:)
+    def self.call(target_menu:, source_menu:, dish_map:)
       source_menu.menu_entries.order(:weekday, :meal_type).each do |entry|
         new_dish_id =
           if entry.dish_id.present?
-            recipe_map.fetch(entry.dish_id)
+            dish_map.fetch(entry.dish_id)
           end
 
         target_menu.menu_entries.build(

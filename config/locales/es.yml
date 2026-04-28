@@ -243,7 +243,7 @@ es:
       public_share_label: "Compartir en el catálogo público de menús"
       create_submit: "Crear menú"
       edit: "Editar"
-      recipes_link: "Recetas"
+      dishes_link: "Platos"
     edit:
       title: "Editar menú: %{name}"
       name_label: "Nombre"
@@ -260,10 +260,9 @@ es:
       cena: "Cena"
       merienda: "Merienda"
     slots:
-      recipe_id_label: "Receta"
-      recipe_pick_label: "Receta"
-      recipe_blank: "Sin receta"
-      legacy_freeform_hint: "Nota guardada (solo recetas). Elige una receta o usa Limpiar:"
+      dish_pick_label: "Plato"
+      dish_blank: "Sin plato"
+      legacy_freeform_hint: "Nota guardada (solo platos). Elige un plato o usa Limpiar:"
       preview_alt: "Vista previa (%{meal})"
       freeform_label: "Nota"
       save_submit: "Guardar"
@@ -332,34 +331,31 @@ es:
         other: "Se eliminarán <strong>%{count}</strong> asignaciones de semanas y después la rutina. Esta acción no se puede deshacer."
       confirm_submit: "Sí, eliminar"
       cancel: "Cancelar"
-  recipes:
+  dishes:
     index:
-      title: "Recetas — Moonloop"
-      heading: "Mis recetas"
-      new_recipe: "Nueva receta"
+      title: "Platos — Moonloop"
+      heading: "Mis platos"
+      new_dish: "Nuevo plato"
       menus_link: "Menús"
-      empty: "Aún no tienes recetas. Crea la primera."
+      empty: "Aún no tienes platos. Crea el primero."
     new:
-      title: "Nueva receta — Moonloop"
-      heading: "Nueva receta"
+      title: "Nuevo plato — Moonloop"
+      heading: "Nuevo plato"
       back: "Volver al listado"
     edit:
       title: "Editar %{name} — Moonloop"
       heading: "Editar: %{name}"
-      back: "Volver a la receta"
+      back: "Volver al plato"
     show:
       title: "%{name} — Moonloop"
       public_badge: "Visible en el catálogo público"
       instructions_heading: "Preparación"
       no_instructions: "Sin instrucciones todavía."
       edit: "Editar"
-      back_index: "Todas las recetas"
+      back_index: "Todos los platos"
       delete: "Eliminar"
-      delete_confirm: "¿Eliminar esta receta? Se vaciarán los casilleros de menú que solo tenían esta receta."
+      delete_confirm: "¿Eliminar este plato? Se vaciarán los casilleros de menú que solo tenían este plato."
     form:
-      errors_header:
-        one: "1 error impidió guardar la receta:"
-        other: "%{count} errores impidieron guardar la receta:"
       name_label: "Nombre"
       instructions_label: "Instrucciones"
       meal_type_label: "Tipo de comida"
@@ -367,12 +363,12 @@ es:
       image_preview_alt: "Vista previa de la imagen elegida"
       remove_image_button: "Eliminar imagen"
       public_label: "Compartir en el catálogo público"
-      create_submit: "Crear receta"
+      create_submit: "Crear plato"
       update_submit: "Guardar cambios"
     flash:
-      created: "Receta creada."
-      updated: "Receta actualizada."
-      destroyed: "Receta eliminada."
+      created: "Plato creado."
+      updated: "Plato actualizado."
+      destroyed: "Plato eliminado."
   phases:
     show:
       title: "Mi plan de fases — Moonloop"
@@ -538,6 +534,8 @@ es:
     moderation:
       recipe:
         revoked_public_share: "Se quitó el estado público de la receta."
+      dish:
+        revoked_public_share: "Se quitó el estado público del plato."
       menu:
         revoked_public_share: "Se quitó el estado público del menú."
       exercise_routine:
@@ -706,7 +704,7 @@ es:
       my_day: "Mi Día"
       informes: "Informes"
       menus: "Menús"
-      recipes: "Recetas"
+      dishes: "Platos"
       exercise_routines: "Rutinas de ejercicio"
       phase_plan: "Plan de fases"
       weight_history: "Historial de peso"
@@ -803,6 +801,9 @@ es:
         name: "Mascota"
   activerecord:
     models:
+      dish:
+        one: "Plato"
+        other: "Platos"
       exercise_routine:
         one: "Rutina de ejercicio"
         other: "Rutinas de ejercicio"
@@ -836,6 +837,7 @@ es:
       menu_entry:
         meal_type: "Tipo de comida"
         weekday: "Día de la semana"
+        dish_id: "Plato"
         freeform_text: "Nota"
       exercise_routine:
         name: "Nombre"
@@ -927,12 +929,12 @@ es:
               invalid: "no es un tipo de comida válido"
             weekday:
               invalid: "debe ser un número entre 0 (domingo) y 6 (sábado)"
-            recipe_id:
-              must_match_menu_owner: "debe ser una receta de tu cuenta"
+            dish_id:
+              must_match_menu_owner: "debe ser un plato de tu cuenta"
             base:
-              content_required: "elige una receta o escribe una nota"
-              recipes_only_require_recipe_or_clear: "elige una receta o usa Limpiar para vaciar este casillero"
-        recipe:
+              content_required: "elige un plato o escribe una nota"
+              recipes_only_require_recipe_or_clear: "elige un plato o usa Limpiar para vaciar este casillero"
+        dish:
           attributes:
             image:
               too_large: "es demasiado grande (máx 25MB)"

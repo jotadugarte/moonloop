@@ -1,9 +1,9 @@
 <% frame_id = dom_id(menu, "slot_#{weekday}_#{meal_type}") %>
 <% slot_err_id = dom_id(menu, "entry_errors_#{weekday}_#{meal_type}") %>
-<% recipes = menu.user.recipes.order(:name) %>
+<% dishes = menu.user.dishes.order(:name) %>
 <% allow_freeform = Current.user.allow_menu_freeform %>
 <% slot_key = "menu-slot-#{menu.id}-#{weekday}-#{meal_type}" %>
-<% recipe_select_id = "#{slot_key}-recipe" %>
+<% dish_select_id = "#{slot_key}-dish" %>
 <% freeform_input_id = "#{slot_key}-freeform" %>
 
 <%= turbo_frame_tag frame_id do %>
@@ -43,14 +43,14 @@
       <% end %>
 
       <div>
-        <%= f.label :recipe_id, t("menus.slots.recipe_pick_label"), for: recipe_select_id %>
-        <%= f.collection_select :recipe_id,
-              recipes,
+        <%= f.label :dish_id, t("menus.slots.dish_pick_label"), for: dish_select_id %>
+        <%= f.collection_select :dish_id,
+              dishes,
               :id,
               :name,
-              { include_blank: t("menus.slots.recipe_blank"), selected: entry&.recipe_id },
-              { aria: aria_for_field(f.object, :recipe_id, slot_err_id),
-                id: recipe_select_id,
+              { include_blank: t("menus.slots.dish_blank"), selected: entry&.dish_id },
+              { aria: aria_for_field(f.object, :dish_id, slot_err_id),
+                id: dish_select_id,
                 data: { action: "change->autosubmit#submit" } } %>
       </div>
 
@@ -63,7 +63,7 @@
                 aria: aria_for_field(f.object, :freeform_text, slot_err_id),
                 data: { action: "blur->autosubmit#submit", turbo_permanent: true } %>
         </div>
-      <% elsif entry&.freeform_text.present? && entry.recipe_id.blank? %>
+      <% elsif entry&.freeform_text.present? && entry.dish_id.blank? %>
         <p class="text-sm text-gray-600 mt-2">
           <%= t("menus.slots.legacy_freeform_hint") %>
           <span class="font-medium"><%= entry.freeform_text %></span>

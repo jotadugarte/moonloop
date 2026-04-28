@@ -7,14 +7,14 @@ module Menus
 
     def self.call(source_menu:, adopter:, base_name:)
       name = uniquify_menu_name(adopter, base_name.to_s.strip)
-      recipe_map = {}
-      source_menu.menu_entries.where.not(dish_id: nil).distinct.pluck(:dish_id).compact.each do |rid|
-        src = Recipe.find(rid)
-        recipe_map[rid] = DuplicateRecipeForAdopter.call(source_recipe: src, adopter: adopter).id
+      dish_map = {}
+      source_menu.menu_entries.where.not(dish_id: nil).distinct.pluck(:dish_id).compact.each do |did|
+        src = Dish.find(did)
+        dish_map[did] = DuplicateDishForAdopter.call(source_dish: src, adopter: adopter).id
       end
 
       copy = Menu.new(user: adopter, name: name, publicly_shareable: false)
-      CopyMenuEntriesFromSource.call(target_menu: copy, source_menu: source_menu, recipe_map: recipe_map)
+      CopyMenuEntriesFromSource.call(target_menu: copy, source_menu: source_menu, dish_map: dish_map)
       copy.save!
       copy
     end

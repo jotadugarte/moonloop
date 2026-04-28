@@ -10,13 +10,13 @@ RSpec.describe "Home", type: :request do
   end
 
   # [REQ-EXR-003]
-  it "exposes Mi Día, menus, recipes, exercise routines, and phase plan" do
+  it "exposes Mi Día, menus, dishes, exercise routines, and phase plan" do
     get root_path
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(my_day_path)
     expect(response.body).to include(menus_path)
-    expect(response.body).to include(recipes_path)
+    expect(response.body).to include(dishes_path)
     expect(response.body).to include(exercise_routines_path)
     expect(response.body).to include(phase_path)
   end

@@ -1,5 +1,7 @@
-<phase>3</phase>
-<step>3.1</step>
-<skill>start-task</skill>
-<active_task_pointer>active_sessions/task_reestructuracion-receta-a-plato.md</active_task_pointer>
-<summary>#52: plan step 2 migración dishes + dish_id; SCHEMA_REFERENCE. Siguiente: plan step 3 rename Recipe→Dish en código.</summary>
+# Agentic Guild — current state
+
+- <active_task_pointer>.agenticguild/active_sessions/task_menus-combobox-por-tipo-de-comida.md</active_task_pointer>
+- **Phase:** start-task (Execution — Type Definition Gate)
+- **Phase:** start-task (Execution — Iterative TDD)
+- **Step:** 3.1 Escribir test fallando (PAUSE)
+- **Next:** Leer la sesión, tomar el próximo `<step ... pending>`, y escribir el spec fallando con tags `[REQ-MENU-001, REQ-MENU-002]`.

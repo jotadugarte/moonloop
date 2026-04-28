@@ -15,31 +15,31 @@ RSpec.describe "Admin moderation of public sharing", type: :request do
   end
 
   # [REQ-MENU-002]
-  it "allows an admin to revoke public sharing on a recipe" do
+  it "allows an admin to revoke public sharing on a dish" do
     admin = create(:user, email: "admin@example.com", password: "Password123!", timezone: "Etc/UTC")
     author = create(:user, password: "Password123!", timezone: "Etc/UTC")
-    recipe = Recipe.create!(user: author, name: "Spam publicada", publicly_shareable: true)
+    dish = Dish.create!(user: author, name: "Spam publicada", publicly_shareable: true)
 
     ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
 
     post sign_in_path, params: { email: admin.email, password: "Password123!" }
 
-    patch "/admin/recipes/#{recipe.id}/revoke_public_share"
+    patch revoke_public_share_admin_dish_path(dish)
 
     expect(response).to have_http_status(:found)
-    expect(recipe.reload.publicly_shareable).to eq(false)
+    expect(dish.reload.publicly_shareable).to eq(false)
   end
 
   # [REQ-MENU-002]
-  it "hides a revoked recipe from the public catalog" do
+  it "hides a revoked dish from the public catalog" do
     admin = create(:user, email: "admin@example.com", password: "Password123!", timezone: "Etc/UTC")
     author = create(:user, password: "Password123!", timezone: "Etc/UTC")
-    recipe = Recipe.create!(user: author, name: "Spam publicada", publicly_shareable: true)
+    dish = Dish.create!(user: author, name: "Spam publicada", publicly_shareable: true)
 
     ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
 
     post sign_in_path, params: { email: admin.email, password: "Password123!" }
-    patch "/admin/recipes/#{recipe.id}/revoke_public_share"
+    patch revoke_public_share_admin_dish_path(dish)
     follow_redirect! if response.redirect?
 
     get public_dishes_path
@@ -52,16 +52,16 @@ RSpec.describe "Admin moderation of public sharing", type: :request do
   it "rejects moderation actions for non-admin users" do
     viewer = create(:user, email: "viewer@example.com", password: "Password123!", timezone: "Etc/UTC")
     author = create(:user, password: "Password123!", timezone: "Etc/UTC")
-    recipe = Recipe.create!(user: author, name: "No tocar", publicly_shareable: true)
+    dish = Dish.create!(user: author, name: "No tocar", publicly_shareable: true)
 
     ENV["MOONLOOP_ADMIN_EMAILS"] = "admin@example.com"
 
     post sign_in_path, params: { email: viewer.email, password: "Password123!" }
 
-    patch "/admin/recipes/#{recipe.id}/revoke_public_share"
+    patch revoke_public_share_admin_dish_path(dish)
 
     expect(response).to have_http_status(:forbidden)
-    expect(recipe.reload.publicly_shareable).to eq(true)
+    expect(dish.reload.publicly_shareable).to eq(true)
   end
 
   # [REQ-EXR-006]

@@ -1,9 +1,9 @@
-class Recipe < ApplicationRecord
-  self.table_name = "dishes"
+# frozen_string_literal: true
 
+class Dish < ApplicationRecord
   belongs_to :user
 
-  has_many :menu_entries, foreign_key: :dish_id, inverse_of: :recipe, dependent: :destroy
+  has_many :menu_entries, foreign_key: :dish_id, inverse_of: :dish, dependent: :destroy
 
   has_one_attached :image
 

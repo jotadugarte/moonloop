@@ -30,7 +30,7 @@ module Menus
     end
 
     def menu_entry_params
-      params.require(:menu_entry).permit(:weekday, :meal_type, :recipe_id, :freeform_text)
+      params.require(:menu_entry).permit(:weekday, :meal_type, :dish_id, :freeform_text)
     end
 
     def slot_frame_id(menu, weekday, meal_type)
@@ -48,7 +48,7 @@ module Menus
         menu: @menu,
         weekday: menu_entry_params[:weekday],
         meal_type: menu_entry_params[:meal_type],
-        recipe_id: menu_entry_params[:recipe_id],
+        dish_id: menu_entry_params[:dish_id],
         freeform_text: menu_entry_params[:freeform_text]
       }
     end

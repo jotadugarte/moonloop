@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class PublicDishesController < ApplicationController
-  before_action :set_public_recipe, only: :show
+  before_action :set_public_dish, only: :show
 
   def index
-    @recipes = Recipe.where(publicly_shareable: true).order(:name)
+    @dishes = Dish.where(publicly_shareable: true).order(:name)
   end
 
   def show
@@ -12,7 +12,7 @@ class PublicDishesController < ApplicationController
 
   private
 
-  def set_public_recipe
-    @recipe = Recipe.find_by!(publicly_shareable: true, id: params[:id])
+  def set_public_dish
+    @dish = Dish.find_by!(publicly_shareable: true, id: params[:id])
   end
 end

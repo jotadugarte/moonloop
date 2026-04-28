@@ -33,19 +33,19 @@ RSpec.describe "Dishes public catalog and legacy routes", type: :request do
 
     # [REQ-MENU-002, REQ-MENU-006]
     it "redirects GET /recipes/:id to the canonical dish path with 301" do
-      recipe = create(:recipe, user: author)
+      dish = create(:dish, user: author)
 
-      get "/recipes/#{recipe.id}"
+      get "/recipes/#{dish.id}"
 
       expect(response).to have_http_status(:moved_permanently)
-      expect(response).to redirect_to("/platos/#{recipe.id}")
+      expect(response).to redirect_to("/platos/#{dish.id}")
     end
   end
 
   describe "public_dishes#show when the item has no instructions" do
     let(:public_dish) do
       create(
-        :recipe,
+        :dish,
         user: author,
         name: "Plain",
         instructions: nil,

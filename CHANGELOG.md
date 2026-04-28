@@ -12,17 +12,21 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **Database (roadmap #52):** table **`recipes`** is renamed to **`dishes`**; **`menu_entries.recipe_id`** becomes **`dish_id`** with updated FKs and index names. The **`Recipe`** model continues to use the same rows via **`self.table_name = "dishes"`** until the class rename; **`MenuEntry`** keeps a **`recipe_id` → `dish_id` alias** for params and forms. See **`docs/core/SCHEMA_REFERENCE.md`**.
+- **Documentation (roadmap #52):** `docs/core/SPEC.md` (glossary, entities, REQ-MENU-001/002/006, deep dive), `docs/core/DATA_FLOW_MAP.md` (menu slot / `MenuEntry` invariants), and `docs/ROADMAP.md` (**#52** done, Phase 4 labels) aligned with the **`Dish`** model and **`/platos`** / **`/public_dishes`** routes.
 
-- **URLs (roadmap #52):** canonical recipe URLs are **`/platos`** and **`/public_dishes`**; legacy **`/recipes`**, **`/recetas`**, **`/public_recipes`**, and **`/recipes/:id`** respond with **301** to the new paths. Public dish catalog **`index`/`show`** (`PublicDishesController`) keeps `Recipe` data for now; show surface includes neutral copy when preparation text is blank and an owner-only CTA to edit (REQ-MENU-002, REQ-MENU-006).
+- **i18n (roadmap #52):** user-facing copy for the former recipes CRUD now lives under **`dishes.*`** (EN: “Dish/Dishes”, ES: “Plato/Platos”); menu grid labels use **`menus.slots.dish_*`**; home and menus index link keys use **`home.index.dishes`** and **`menus.index.dishes_link`**. **`activerecord.models.dish`** supplies the model name (e.g. with **`forms.errors.header`** on the dish form).
 
-- **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** / **`recipes.form.errors_header`** where applicable. Flash for success remains in **`layouts/application`**.
+- **Database (roadmap #52):** table **`recipes`** is renamed to **`dishes`**; **`menu_entries.recipe_id`** becomes **`dish_id`** with updated FKs and index names. The domain model is **`Dish`** (Active Storage `record_type` updated for attachments). See **`docs/core/SCHEMA_REFERENCE.md`**.
+
+- **URLs (roadmap #52):** canonical dish URLs are **`/platos`** (`resources :dishes`) and **`/public_dishes`**; legacy **`/recipes`**, **`/recetas`**, **`/public_recipes`**, and **`/recipes/:id`** respond with **301** to the new paths. Public dish catalog **`index`/`show`** (`PublicDishesController`) includes neutral copy when preparation text is blank and an owner-only CTA to edit (REQ-MENU-002, REQ-MENU-006).
+
+- **Registration & profile (roadmap #40–#42):** triplet DOB fields with server-side **`BirthDateTriplet`** (`app/services/birth_date_triplet.rb`), shared **`shared/_birth_date_fields`**, Stimulus **`birth_date`**, **`unit-system-toggle`** (CSS `hidden` + radio targets), and **`timezone-autodetect`**; timezone **`select`** uses i18n prompt **`shared.timezone_select_prompt`**; form error summaries restore **`forms.errors.header`** where applicable (dish form uses the same pattern with **`@dish.model_name.human`**). Flash for success remains in **`layouts/application`**.
 - **Sign up (roadmap #43, REQ-WGT-002):** current weight is optional on registration; leaving it blank persists `current_weight_kg`/`current_bmi` as nil and shows an i18n “optional” hint (metric + imperial).
 - **Menus (roadmap #48, REQ-MENU-001):** after creating a menu on `/menus`, redirect directly to `/menus/:id/edit`. On the editor, menu slots autosave on recipe change and freeform blur, removing per-slot “Guardar” friction while preserving focus across Turbo frame re-renders.
 
 ### Added
 
-- **Recipes (roadmap #50, REQ-MENU-002):** immediate **client-side image preview** on new/edit recipe form via Stimulus `recipe-image-preview` (`URL.createObjectURL` + revoke on disconnect); i18n alt `recipes.form.image_preview_alt`; system spec with Selenium.
+- **Dishes (roadmap #50, REQ-MENU-002):** immediate **client-side image preview** on new/edit dish form via Stimulus `dish-image-preview` (`URL.createObjectURL` + revoke on disconnect); i18n alt `dishes.form.image_preview_alt`; system spec with Selenium.
 
 ### Fixed
 

@@ -269,7 +269,7 @@ en:
       public_share_label: "Share in the public menu catalog"
       create_submit: "Create menu"
       edit: "Edit"
-      recipes_link: "Recipes"
+      dishes_link: "Dishes"
     edit:
       title: "Edit menu: %{name}"
       name_label: "Name"
@@ -286,10 +286,9 @@ en:
       cena: "Dinner"
       merienda: "Snack"
     slots:
-      recipe_id_label: "Recipe"
-      recipe_pick_label: "Recipe"
-      recipe_blank: "No recipe"
-      legacy_freeform_hint: "Saved note (recipes-only mode). Pick a recipe or use Clear:"
+      dish_pick_label: "Dish"
+      dish_blank: "No dish"
+      legacy_freeform_hint: "Saved note (dishes-only mode). Pick a dish or use Clear:"
       preview_alt: "Preview (%{meal})"
       freeform_label: "Note"
       save_submit: "Save"
@@ -358,34 +357,31 @@ en:
         other: "<strong>%{count}</strong> week-range assignments will be removed, then the routine. This cannot be undone."
       confirm_submit: "Yes, delete"
       cancel: "Cancel"
-  recipes:
+  dishes:
     index:
-      title: "Recipes — Moonloop"
-      heading: "My recipes"
-      new_recipe: "New recipe"
+      title: "Dishes — Moonloop"
+      heading: "My dishes"
+      new_dish: "New dish"
       menus_link: "Menus"
-      empty: "You have no recipes yet. Create the first one."
+      empty: "You have no dishes yet. Create the first one."
     new:
-      title: "New recipe — Moonloop"
-      heading: "New recipe"
+      title: "New dish — Moonloop"
+      heading: "New dish"
       back: "Back to list"
     edit:
       title: "Edit %{name} — Moonloop"
       heading: "Edit: %{name}"
-      back: "Back to recipe"
+      back: "Back to dish"
     show:
       title: "%{name} — Moonloop"
       public_badge: "Listed in the public catalog"
       instructions_heading: "Instructions"
       no_instructions: "No instructions yet."
       edit: "Edit"
-      back_index: "All recipes"
+      back_index: "All dishes"
       delete: "Delete"
-      delete_confirm: "Delete this recipe? Menu slots that only had this recipe will be cleared."
+      delete_confirm: "Delete this dish? Menu slots that only had this dish will be cleared."
     form:
-      errors_header:
-        one: "1 error prevented this recipe from being saved:"
-        other: "%{count} errors prevented this recipe from being saved:"
       name_label: "Name"
       instructions_label: "Instructions"
       meal_type_label: "Meal type"
@@ -393,12 +389,12 @@ en:
       image_preview_alt: "Preview of selected image"
       remove_image_button: "Delete image"
       public_label: "Share in the public catalog"
-      create_submit: "Create recipe"
+      create_submit: "Create dish"
       update_submit: "Save changes"
     flash:
-      created: "Recipe created."
-      updated: "Recipe updated."
-      destroyed: "Recipe deleted."
+      created: "Dish created."
+      updated: "Dish updated."
+      destroyed: "Dish deleted."
   phases:
     show:
       title: "Phase plan — Moonloop"
@@ -564,6 +560,8 @@ en:
     moderation:
       recipe:
         revoked_public_share: "This recipe is no longer publicly shared."
+      dish:
+        revoked_public_share: "This dish is no longer publicly shared."
       menu:
         revoked_public_share: "This menu is no longer publicly shared."
       exercise_routine:
@@ -708,6 +706,10 @@ en:
       emotional_pet:
         name: "Emotional pet"
   activerecord:
+    models:
+      dish:
+        one: "Dish"
+        other: "Dishes"
     attributes:
       user:
         email: "Email"
@@ -733,6 +735,7 @@ en:
       menu_entry:
         meal_type: "Meal type"
         weekday: "Weekday"
+        dish_id: "Dish"
         freeform_text: "Note"
       exercise_routine:
         name: "Name"
@@ -816,12 +819,12 @@ en:
               invalid: "is not a valid meal type"
             weekday:
               invalid: "must be between 0 (Sunday) and 6 (Saturday)"
-            recipe_id:
-              must_match_menu_owner: "must be a recipe from your account"
+            dish_id:
+              must_match_menu_owner: "must be a dish from your account"
             base:
-              content_required: "choose a recipe or enter a note"
-              recipes_only_require_recipe_or_clear: "choose a recipe or use Clear to empty this slot"
-        recipe:
+              content_required: "choose a dish or enter a note"
+              recipes_only_require_recipe_or_clear: "choose a dish or use Clear to empty this slot"
+        dish:
           attributes:
             image:
               too_large: "is too large (max 25MB)"
@@ -842,7 +845,7 @@ en:
       my_day: "My Day"
       informes: "Reports"
       menus: "Menus"
-      recipes: "Recipes"
+      dishes: "Dishes"
       exercise_routines: "Exercise routines"
       phase_plan: "Phase plan"
       weight_history: "Weight history"

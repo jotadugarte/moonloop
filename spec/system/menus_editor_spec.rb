@@ -43,8 +43,8 @@ RSpec.describe "Menus editor", type: :system do
   # [REQ-MENU-002]
   it "shows a meal-type fallback preview when the slot recipe has no image" do
     menu = create(:menu, user: user, name: "Con receta")
-    recipe = create(:recipe, user: user, name: "Ensalada")
-    create(:menu_entry, menu: menu, recipe: recipe, weekday: 5, meal_type: "cena", freeform_text: nil)
+    dish = create(:dish, user: user, name: "Ensalada")
+    create(:menu_entry, menu: menu, dish: dish, weekday: 5, meal_type: "cena", freeform_text: nil)
 
     visit "/menus/#{menu.id}/edit"
 
@@ -56,13 +56,13 @@ RSpec.describe "Menus editor", type: :system do
   # [REQ-MENU-002]
   it "shows the recipe upload in the slot preview when the recipe has an image" do
     menu = create(:menu, user: user, name: "Menú foto")
-    recipe = create(:recipe, user: user, name: "Tortilla")
-    recipe.image.attach(
+    dish = create(:dish, user: user, name: "Tortilla")
+    dish.image.attach(
       io: StringIO.new(File.read(Rails.root.join("spec/fixtures/files/recipe_test.svg"))),
       filename: "recipe_test.svg",
       content_type: "image/svg+xml"
     )
-    create(:menu_entry, menu: menu, recipe: recipe, weekday: 2, meal_type: "desayuno", freeform_text: nil)
+    create(:menu_entry, menu: menu, dish: dish, weekday: 2, meal_type: "desayuno", freeform_text: nil)
 
     visit edit_menu_path(menu)
 

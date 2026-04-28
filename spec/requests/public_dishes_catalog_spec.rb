@@ -11,9 +11,9 @@ RSpec.describe "Public dishes catalog (index)", type: :request do
   end
 
   # [REQ-MENU-002]
-  it "lists recipes that are publicly shareable" do
-    Recipe.create!(user: author, name: "Pública", publicly_shareable: true)
-    Recipe.create!(user: author, name: "Privada", publicly_shareable: false)
+  it "lists dishes that are publicly shareable" do
+    Dish.create!(user: author, name: "Pública", publicly_shareable: true)
+    Dish.create!(user: author, name: "Privada", publicly_shareable: false)
 
     get public_dishes_path
 

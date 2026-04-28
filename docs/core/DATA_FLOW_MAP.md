@@ -30,7 +30,7 @@
 ### 1.4 Menu grid slot (read + write via Turbo)
 
 1. **Browser** loads `GET /menus/:id/edit`; controller builds a sparse map of `menu_entries` keyed by `(weekday, meal_type)` and renders the grid partials.
-2. **Create/update slot:** `POST /menus/:menu_id/menu_entries` with Turbo; **`Menus::UpsertEntry`** validates ownership, meal type, weekday, user freeform preference, and recipe ownership; creates/updates/destroys **`MenuEntry`** as needed.
+2. **Create/update slot:** `POST /menus/:menu_id/menu_entries` with Turbo; **`Menus::UpsertEntry`** validates ownership, meal type, weekday, user freeform preference, and **dish** ownership (referenced **`Dish`** must belong to the menu owner); creates/updates/destroys **`MenuEntry`** as needed.
 3. **Response:** `turbo_stream.replace` for the slot frame only (partial `menus/slot`).
 4. **Clear slot:** `DELETE .../menu_entries/clear` removes the row if present; same Turbo replace with empty slot.
 
@@ -89,7 +89,7 @@
 | At least one **`HabitCompletion`** exists for a **`UserHabit`** | **`activation_date`** must not change on update | Model validation on `UserHabit` |
 | **`HabitCompletion`** create/update | Habit must be **active** | Model validation on `HabitCompletion` |
 | User marks **inactive** habit | Completion writes rejected | Service + controller flash |
-| **`MenuEntry`** save | Recipe (if present) must belong to same user as menu; freeform gated by **`allow_menu_freeform`** | Model + **`Menus::UpsertEntry`** |
+| **`MenuEntry`** save | **`Dish`** (if present) must belong to same user as menu; freeform gated by **`allow_menu_freeform`** | Model + **`Menus::UpsertEntry`** |
 | **`PhaseAssignment`** save | Week ranges for a user must not overlap | Model validation |
 | **`ExerciseRoutineAssignment`** save | Week ranges for a user must not overlap **among routine assignments** (separate from menu ranges) | Model validation |
 | **`Programs::ApplyBundleToUser`** | Replaces **all** of the user’s **`phase_assignments`** and **`exercise_routine_assignments`** with rows derived from a owned **`PhaseProgram`**’s segments | Service (single transaction) |

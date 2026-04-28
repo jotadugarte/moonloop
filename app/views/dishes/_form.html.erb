@@ -1,0 +1,94 @@
+<% dish_err_id = "dish-form-errors" %>
+<%= form_with model: @dish, class: "space-y-4 max-w-lg" do |f| %>
+  <% if @dish.errors.any? %>
+    <div class="text-red-600">
+      <h2 class="font-bold"><%= t("forms.errors.header", count: @dish.errors.count, model: @dish.model_name.human) %></h2>
+      <ul id="<%= dish_err_id %>" class="list-disc pl-5" role="alert">
+        <% @dish.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, t("dishes.form.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          required: true,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@dish, :name, dish_err_id) %>
+  </div>
+
+  <div>
+    <%= f.label :instructions, t("dishes.form.instructions_label"), class: "block font-medium mb-1" %>
+    <%= f.text_area :instructions,
+          rows: 8,
+          class: "border border-gray-300 rounded p-2 w-full font-mono text-sm",
+          aria: aria_for_field(@dish, :instructions, dish_err_id) %>
+  </div>
+
+  <div>
+    <%= f.label :meal_type, t("dishes.form.meal_type_label"), class: "block font-medium mb-1" %>
+    <%= f.select :meal_type,
+          Menus::MealType::KEYS.map { |key| [ t("menus.meal_types.#{key}"), key ] },
+          {},
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@dish, :meal_type, dish_err_id) %>
+  </div>
+
+  <div data-controller="dish-image-preview">
+    <div>
+      <%= f.label :image, t("dishes.form.image_label"), class: "block font-medium mb-1" %>
+      <%= f.file_field :image,
+            accept: "image/*",
+            class: "block w-full text-sm",
+            aria: aria_for_field(@dish, :image, dish_err_id),
+            data: {
+              dish_image_preview_target: "file",
+              action: "change->dish-image-preview#showPreview"
+            } %>
+    </div>
+    <div
+      class="hidden mt-2"
+      data-dish-image-preview-target="wrapper"
+      data-test="dish-image-preview">
+      <%= image_tag "",
+            alt: t("dishes.form.image_preview_alt"),
+            class: "rounded max-w-xs border border-gray-200",
+            data: { dish_image_preview_target: "image" } %>
+    </div>
+
+    <% if @dish.image.attached? %>
+      <div class="mt-2" data-dish-image-preview-target="currentWrapper">
+        <%= dish_image_tag @dish,
+              resize_to_limit: [ 320, 320 ],
+              class: "rounded max-w-xs border border-gray-200",
+              alt: @dish.name %>
+      </div>
+
+      <div class="mt-2">
+        <%= f.hidden_field :remove_image, value: "0" %>
+        <%= button_tag t("dishes.form.remove_image_button"),
+              type: "submit",
+              name: "dish[remove_image]",
+              value: "1",
+              class: "bg-white text-red-700 border border-red-300 px-3 py-2 rounded hover:bg-red-50",
+              data: { action: "click->dish-image-preview#prepareRemove" } %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex items-start gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "mt-1",
+          aria: aria_for_field(@dish, :publicly_shareable, dish_err_id) %>
+    <%= f.label :publicly_shareable, t("dishes.form.public_label"), class: "text-gray-700" %>
+  </div>
+
+  <div>
+    <%= f.submit(
+          @dish.new_record? ? t("dishes.form.create_submit") : t("dishes.form.update_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700"
+        ) %>
+  </div>
+<% end %>

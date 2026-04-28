@@ -58,7 +58,7 @@ class MenusController < ApplicationController
   def load_menu_editor
     @meal_types = Menus::MealType::KEYS
     @entries_by_slot = @menu.menu_entries
-      .includes(recipe: { image_attachment: :blob })
+      .includes(dish: { image_attachment: :blob })
       .index_by { |e| [ e.weekday, e.meal_type ] }
   end
 
