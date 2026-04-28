@@ -8,8 +8,8 @@ export default class extends Controller {
 
   connect() {
     this.onSubmitEnd = this.onSubmitEnd.bind(this)
-    this.focusAttemptRaf = null
     this.pendingNextFocusSelector = null
+    this.installGlobalFocusScheduler()
 
     const form = this.element.closest("form")
     if (!form) return
@@ -18,11 +18,6 @@ export default class extends Controller {
   }
 
   disconnect() {
-    if (this.focusAttemptRaf) {
-      window.cancelAnimationFrame(this.focusAttemptRaf)
-      this.focusAttemptRaf = null
-    }
-
     const form = this.element.closest("form")
     if (!form) return
 
@@ -66,38 +61,49 @@ export default class extends Controller {
   onSubmitEnd(event) {
     if (!event?.detail?.success) return
 
-    this.attemptPendingFocus()
-  }
-
-  attemptPendingFocus() {
     const selector = this.pendingNextFocusSelector
     if (!selector) return
 
-    if (this.focusAttemptRaf) {
-      window.cancelAnimationFrame(this.focusAttemptRaf)
-      this.focusAttemptRaf = null
-    }
+    window.__moonloopDishPickerNextFocusSelector = selector
+    window.__moonloopDishPickerFocusNextSlot?.()
+  }
 
-    let attemptsLeft = 30
-    const attempt = () => {
-      const el = document.querySelector(selector)
-      if (el) {
-        el.focus?.()
-        this.pendingNextFocusSelector = null
-        this.focusAttemptRaf = null
-        return
+  installGlobalFocusScheduler() {
+    if (window.__moonloopDishPickerFocusSchedulerInstalled) return
+
+    window.__moonloopDishPickerFocusSchedulerInstalled = true
+    window.__moonloopDishPickerFocusAttemptRaf = null
+
+    window.__moonloopDishPickerFocusNextSlot = () => {
+      const selector = window.__moonloopDishPickerNextFocusSelector
+      if (!selector) return
+
+      if (window.__moonloopDishPickerFocusAttemptRaf) {
+        window.cancelAnimationFrame(window.__moonloopDishPickerFocusAttemptRaf)
+        window.__moonloopDishPickerFocusAttemptRaf = null
       }
 
-      attemptsLeft -= 1
-      if (attemptsLeft <= 0) {
-        this.focusAttemptRaf = null
-        return
+      let attemptsLeft = 60
+      const attempt = () => {
+        const el = document.querySelector(selector)
+        if (el) {
+          el.focus?.()
+          window.__moonloopDishPickerNextFocusSelector = null
+          window.__moonloopDishPickerFocusAttemptRaf = null
+          return
+        }
+
+        attemptsLeft -= 1
+        if (attemptsLeft <= 0) {
+          window.__moonloopDishPickerFocusAttemptRaf = null
+          return
+        }
+
+        window.__moonloopDishPickerFocusAttemptRaf = window.requestAnimationFrame(attempt)
       }
 
-      this.focusAttemptRaf = window.requestAnimationFrame(attempt)
+      window.__moonloopDishPickerFocusAttemptRaf = window.requestAnimationFrame(attempt)
     }
-
-    this.focusAttemptRaf = window.requestAnimationFrame(attempt)
   }
 
   nextSlotFilterSelector() {
