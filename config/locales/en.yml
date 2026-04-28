@@ -288,6 +288,9 @@ en:
     slots:
       dish_pick_label: "Dish"
       dish_blank: "No dish"
+      dish_picker_filter_placeholder: "Search dishes…"
+      dish_picker_filter_aria: "Search dishes by name"
+      dish_picker_no_results: "No results."
       legacy_freeform_hint: "Saved note (dishes-only mode). Pick a dish or use Clear:"
       preview_alt: "Preview (%{meal})"
       freeform_label: "Note"

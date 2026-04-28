@@ -57,11 +57,16 @@
             type="text"
             class="border border-gray-300 rounded p-2 w-full"
             autocomplete="off"
-            aria-label="<%= t("menus.slots.dish_pick_label") %>"
+            placeholder="<%= t("menus.slots.dish_picker_filter_placeholder") %>"
+            aria-label="<%= t("menus.slots.dish_picker_filter_aria") %>"
             data-test="dish-picker-filter"
             data-dish-picker-target="filter"
             data-action="input->dish-picker#filter"
           >
+
+          <p class="hidden mt-2 text-sm text-gray-600" data-dish-picker-target="noResults">
+            <%= t("menus.slots.dish_picker_no_results") %>
+          </p>
 
           <div class="mt-2 space-y-2" data-dish-picker-target="groups">
             <% group_order.each do |group_key| %>

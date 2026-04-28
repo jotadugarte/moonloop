@@ -262,6 +262,9 @@ es:
     slots:
       dish_pick_label: "Plato"
       dish_blank: "Sin plato"
+      dish_picker_filter_placeholder: "Buscar plato…"
+      dish_picker_filter_aria: "Buscar plato por nombre"
+      dish_picker_no_results: "No hay resultados."
       legacy_freeform_hint: "Nota guardada (solo platos). Elige un plato o usa Limpiar:"
       preview_alt: "Vista previa (%{meal})"
       freeform_label: "Nota"
