@@ -9,7 +9,6 @@ export default class extends Controller {
   connect() {
     this.onSubmitEnd = this.onSubmitEnd.bind(this)
     this.pendingNextFocusSelector = null
-    this.installGlobalFocusScheduler()
 
     const form = this.element.closest("form")
     if (!form) return
@@ -46,6 +45,7 @@ export default class extends Controller {
     if (!dishId) return
 
     this.pendingNextFocusSelector = this.nextSlotFilterSelector()
+    this.focusNextSlotNow()
 
     const select = document.getElementById(this.selectIdValue)
     if (!select) return
@@ -61,49 +61,17 @@ export default class extends Controller {
   onSubmitEnd(event) {
     if (!event?.detail?.success) return
 
+    this.focusNextSlotNow()
+  }
+
+  focusNextSlotNow() {
     const selector = this.pendingNextFocusSelector
     if (!selector) return
 
-    window.__moonloopDishPickerNextFocusSelector = selector
-    window.__moonloopDishPickerFocusNextSlot?.()
-  }
+    const el = document.querySelector(selector)
+    if (!el) return
 
-  installGlobalFocusScheduler() {
-    if (window.__moonloopDishPickerFocusSchedulerInstalled) return
-
-    window.__moonloopDishPickerFocusSchedulerInstalled = true
-    window.__moonloopDishPickerFocusAttemptRaf = null
-
-    window.__moonloopDishPickerFocusNextSlot = () => {
-      const selector = window.__moonloopDishPickerNextFocusSelector
-      if (!selector) return
-
-      if (window.__moonloopDishPickerFocusAttemptRaf) {
-        window.cancelAnimationFrame(window.__moonloopDishPickerFocusAttemptRaf)
-        window.__moonloopDishPickerFocusAttemptRaf = null
-      }
-
-      let attemptsLeft = 60
-      const attempt = () => {
-        const el = document.querySelector(selector)
-        if (el) {
-          el.focus?.()
-          window.__moonloopDishPickerNextFocusSelector = null
-          window.__moonloopDishPickerFocusAttemptRaf = null
-          return
-        }
-
-        attemptsLeft -= 1
-        if (attemptsLeft <= 0) {
-          window.__moonloopDishPickerFocusAttemptRaf = null
-          return
-        }
-
-        window.__moonloopDishPickerFocusAttemptRaf = window.requestAnimationFrame(attempt)
-      }
-
-      window.__moonloopDishPickerFocusAttemptRaf = window.requestAnimationFrame(attempt)
-    }
+    el.focus?.()
   }
 
   nextSlotFilterSelector() {
