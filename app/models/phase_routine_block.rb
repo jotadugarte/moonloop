@@ -24,4 +24,3 @@ class PhaseRoutineBlock < ApplicationRecord
     errors.add(:exercise_routine_id, :must_match_user)
   end
 end
-

@@ -39,4 +39,3 @@ class Phase < ApplicationRecord
     PhaseBlocks::CoverageValidator.call(phase: self)
   end
 end
-

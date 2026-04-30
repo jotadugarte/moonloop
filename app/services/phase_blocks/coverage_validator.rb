@@ -47,9 +47,8 @@ module PhaseBlocks
     end
 
     def overlaps?(rows)
-      sorted = rows.sort_by { |r| [r.start_week.to_i, r.end_week.to_i] }
+      sorted = rows.sort_by { |r| [ r.start_week.to_i, r.end_week.to_i ] }
       sorted.each_cons(2).any? { |a, b| a.end_week.to_i >= b.start_week.to_i }
     end
   end
 end
-

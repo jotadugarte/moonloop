@@ -35,4 +35,3 @@ class CreatePhases < ActiveRecord::Migration[8.1]
     add_check_constraint :phases, "weeks_total >= 1", name: "phases_weeks_total_gte_one"
   end
 end
-

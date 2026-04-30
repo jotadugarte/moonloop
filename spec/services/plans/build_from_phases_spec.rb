@@ -27,13 +27,13 @@ RSpec.describe Programs::BuildFromPhases do
     PhaseMenuBlock.create!(phase: phase_2, menu: menu_b, start_week: 1, end_week: 2)
     PhaseRoutineBlock.create!(phase: phase_2, exercise_routine: routine_b, start_week: 1, end_week: 2)
 
-    program = described_class.call(user: user, name: "Plan X", phases: [phase_1, phase_2])
+    program = described_class.call(user: user, name: "Plan X", phases: [ phase_1, phase_2 ])
 
     expect(program.user_id).to eq(user.id)
     expect(program.name).to eq("Plan X")
 
     segments = program.phase_program_assignments.order(:start_week, :id)
-    expect(segments.pluck(:start_week, :end_week)).to eq([ [1, 2], [3, 4] ])
+    expect(segments.pluck(:start_week, :end_week)).to eq([ [ 1, 2 ], [ 3, 4 ] ])
     expect(segments.map(&:menu_id).uniq.length).to eq(2)
     expect(segments.map(&:exercise_routine_id).uniq.length).to eq(2)
 
@@ -41,4 +41,3 @@ RSpec.describe Programs::BuildFromPhases do
     expect(segments.map(&:exercise_routine_id)).not_to include(routine_a.id, routine_b.id)
   end
 end
-

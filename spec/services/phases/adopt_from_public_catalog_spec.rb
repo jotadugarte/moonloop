@@ -52,4 +52,3 @@ RSpec.describe Phases::AdoptFromPublicCatalog do
     end.to raise_error(Phases::AdoptFromPublicCatalog::Error)
   end
 end
-

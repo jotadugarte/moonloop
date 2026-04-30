@@ -7,4 +7,3 @@ class PublicPlansController < ApplicationController
   def show
   end
 end
-

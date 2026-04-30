@@ -34,4 +34,3 @@ class CreatePhaseBlocks < ActiveRecord::Migration[8.1]
     add_check_constraint :phase_routine_blocks, "end_week >= start_week", name: "phase_routine_blocks_end_gte_start"
   end
 end
-

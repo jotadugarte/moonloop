@@ -24,4 +24,3 @@ RSpec.describe "Phase adoption source sync", type: :request do
     expect(copy.source_sync_fingerprint).to eq(fp)
   end
 end
-

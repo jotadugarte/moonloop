@@ -74,4 +74,3 @@ RSpec.describe "Public phases adopt", type: :request do
     end
   end
 end
-

@@ -24,4 +24,3 @@ class PhaseMenuBlock < ApplicationRecord
     errors.add(:menu_id, :must_match_user)
   end
 end
-

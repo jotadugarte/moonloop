@@ -19,4 +19,3 @@ class PhasesAdoptionSyncController < ApplicationController
     @phase = Current.user.phases.find(params[:id])
   end
 end
-

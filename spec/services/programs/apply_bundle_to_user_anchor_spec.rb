@@ -43,4 +43,3 @@ RSpec.describe Programs::ApplyBundleToUser do
     expect(user.exercise_routine_assignments.count).to eq(1)
   end
 end
-

@@ -56,4 +56,3 @@ RSpec.describe Phases::ApplyAdoptionSourceSync do
     end.to raise_error(described_class::Error) { |e| expect(e.key).to eq(:source_unavailable) }
   end
 end
-

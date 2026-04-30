@@ -41,4 +41,3 @@ module Phases
     end
   end
 end
-

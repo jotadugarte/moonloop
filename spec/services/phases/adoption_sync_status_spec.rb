@@ -35,4 +35,3 @@ RSpec.describe Phases::AdoptionSyncStatus do
     expect(st.origin_fingerprint).to eq(Phases::ContentFingerprint.for_phase(source.reload))
   end
 end
-

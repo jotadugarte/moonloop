@@ -100,4 +100,3 @@ RSpec.describe "Public phases catalog", type: :request do
     end
   end
 end
-

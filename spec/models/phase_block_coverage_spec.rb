@@ -60,4 +60,3 @@ RSpec.describe "Phase block coverage", type: :model do
     expect(phase).to be_valid
   end
 end
-

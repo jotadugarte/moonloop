@@ -38,4 +38,3 @@ class PublicPhasesController < ApplicationController
     @phase = Phase.find_by!(publicly_shareable: true, id: params[:id])
   end
 end
-
