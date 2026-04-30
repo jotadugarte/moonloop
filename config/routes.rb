@@ -52,12 +52,12 @@ Rails.application.routes.draw do
   end
   resources :phase_assignments, only: %i[new create edit update destroy]
   resources :exercise_routine_assignments, only: %i[new create edit update destroy]
-  resources :phase_programs, only: %i[index create edit update destroy] do
+  resources :plans, only: %i[index create edit update destroy] do
     member do
       post :apply
       post :accept_source_update
     end
-    resources :phase_program_assignments, only: %i[new create edit update destroy]
+    resources :plan_assignments, only: %i[new create edit update destroy]
   end
   resources :phases, only: [] do
     member do
@@ -75,12 +75,11 @@ Rails.application.routes.draw do
       post :adopt
     end
   end
-  resources :public_phase_programs, only: %i[index show] do
+  resources :public_plans, only: %i[index show] do
     member do
       post :adopt
     end
   end
-  resources :public_plans, only: %i[index show]
   resources :public_phases, only: %i[index show] do
     member do
       post :adopt
@@ -107,7 +106,7 @@ Rails.application.routes.draw do
         patch :revoke_public_share
       end
     end
-    resources :phase_programs, only: [] do
+    resources :plans, only: [] do
       member do
         patch :revoke_public_share
       end
