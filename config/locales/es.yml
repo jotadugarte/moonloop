@@ -236,6 +236,16 @@ es:
         cannot_adopt_own: "No puedes adoptar tu propio programa."
         already_adopted: "Ya adoptaste este programa."
         name_blank: "El nombre no puede estar vacío."
+  public_phases:
+    shared:
+      author: "Código de autor %{code}"
+    adopt:
+      success: "Fase adoptada. Ya puedes usarla en tus planes."
+      errors:
+        not_public: "Esta fase no está disponible en el catálogo público."
+        cannot_adopt_own: "No puedes adoptar tu propia fase."
+        already_adopted: "Ya adoptaste esta fase."
+        name_blank: "El nombre no puede estar vacío."
   menus:
     index:
       title: "Menús"
@@ -545,6 +555,8 @@ es:
         revoked_public_share: "Se quitó el estado público de la rutina de ejercicio."
       phase_program:
         revoked_public_share: "Se quitó el estado público del programa."
+      phase:
+        revoked_public_share: "Se quitó el estado público de la fase."
   sessions:
     user_agent:
       browsers:

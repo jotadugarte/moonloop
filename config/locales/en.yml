@@ -262,6 +262,16 @@ en:
         cannot_adopt_own: "You cannot adopt your own program."
         already_adopted: "You already adopted this program."
         name_blank: "Name can't be blank."
+  public_phases:
+    shared:
+      author: "Author code %{code}"
+    adopt:
+      success: "Phase adopted. You can use it in your plans now."
+      errors:
+        not_public: "This phase is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own phase."
+        already_adopted: "You already adopted this phase."
+        name_blank: "Name can't be blank."
   menus:
     index:
       title: "Menus"
@@ -571,6 +581,8 @@ en:
         revoked_public_share: "This exercise routine is no longer publicly shared."
       phase_program:
         revoked_public_share: "This program is no longer publicly shared."
+      phase:
+        revoked_public_share: "This phase is no longer publicly shared."
   sessions:
     user_agent:
       browsers:
