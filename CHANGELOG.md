@@ -14,7 +14,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **Home:** shortcuts for **`/plans`**, **`/fases`** (reusable phase templates), and **`/phase`** (weekly program) use **`home.index.plans`**, **`home.index.phase_templates`**, and **`home.index.weekly_program`**. **`UserPhasesController`** lists and creates **`Phase`** rows (name, weeks, catalog flag); edit includes catalog facet fields; week blocks UI is deferred. **`/phase`** footer links to **`user_phases_path`**.
+- **Home:** the catalog row links **`/menus`**, **`/platos`**, **`/exercise_routines`**, **`/plans`**, **`/fases`**, weight — not **`/phase`** (weekly assignment dashboard), to avoid duplicating the Plan + Phase product model in the main nav. **`UserPhasesController`** “back” targets **`root_path`**. **`/phase`** remains for flows that still redirect there (assignments, Mi Día shortcuts, applying a plan).
 
 - **Menus (roadmap #58, REQ-MENU-001):** the menu editor slot dish picker is now **grouped by meal type** and **searchable by dish name** (accent- and case-insensitive), with an explicit clear action (“Sin plato” / “No dish”) and Turbo autosave preserved on selection.
 

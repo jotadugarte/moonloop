@@ -561,7 +561,7 @@ es:
       public_share_label: "Visible en el catálogo público de fases"
       create_submit: "Crear fase"
       edit: "Editar"
-      back_phase: "Programa por semanas"
+      back_home: "Inicio"
       catalog_link: "Catálogo público de fases"
     edit:
       title: "Fase %{name} — Moonloop"
@@ -575,7 +575,7 @@ es:
       destroy_phase: "Eliminar fase"
       destroy_confirm: "¿Eliminar esta fase? Los menús y rutinas no se borran."
       back_index: "Lista de fases"
-      back_phase: "Programa por semanas"
+      back_home: "Inicio"
     flash:
       created: "Fase creada."
       updated: "Fase actualizada."
@@ -853,7 +853,6 @@ es:
       exercise_routines: "Rutinas de ejercicio"
       plans: "Planes"
       phase_templates: "Fases"
-      weekly_program: "Programa por semanas"
       weight_history: "Historial de peso"
       log_weight: "Registrar peso"
       signed_as: "Sesión iniciada como %{email}"

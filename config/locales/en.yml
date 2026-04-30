@@ -587,7 +587,7 @@ en:
       public_share_label: "Show in the public phase catalog"
       create_submit: "Create phase"
       edit: "Edit"
-      back_phase: "Weekly program"
+      back_home: "Home"
       catalog_link: "Public phase catalog"
     edit:
       title: "Phase %{name} — Moonloop"
@@ -601,7 +601,7 @@ en:
       destroy_phase: "Delete phase"
       destroy_confirm: "Delete this phase? Menus and routines stay in your account."
       back_index: "Phase list"
-      back_phase: "Weekly program"
+      back_home: "Home"
     flash:
       created: "Phase created."
       updated: "Phase updated."
@@ -1019,7 +1019,6 @@ en:
       exercise_routines: "Exercise routines"
       plans: "Plans"
       phase_templates: "Phases"
-      weekly_program: "Weekly program"
       weight_history: "Weight history"
       log_weight: "Log weight"
       signed_as: "Signed as %{email}"
