@@ -502,6 +502,22 @@ es:
       created: "Asignación de rutina creada."
       updated: "Asignación de rutina actualizada."
       destroyed: "Asignación de rutina eliminada."
+  plans:
+    index:
+      title: "Planes — Moonloop"
+      heading: "Planes (menú + rutina)"
+    flash:
+      created: "Plan creado."
+      updated: "Plan actualizado."
+      destroyed: "Plan eliminado."
+      applied: "Plan aplicado: tus asignaciones de menú y rutina ahora coinciden con este plan guardado."
+      apply_failed: "No se pudo aplicar el plan."
+      source_sync_applied: "Se aplicó la plantilla actualizada desde el plan de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Este plan no es una copia adoptada."
+        source_unavailable: "El plan de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "El plan de origen cambió otra vez. Vuelve a revisar antes de aplicar."
   phase_programs:
     index:
       title: "Programas — Moonloop"

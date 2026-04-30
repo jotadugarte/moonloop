@@ -528,6 +528,22 @@ en:
       created: "Routine assignment created."
       updated: "Routine assignment updated."
       destroyed: "Routine assignment removed."
+  plans:
+    index:
+      title: "Plans — Moonloop"
+      heading: "Plans (menu + routine)"
+    flash:
+      created: "Plan created."
+      updated: "Plan updated."
+      destroyed: "Plan removed."
+      applied: "Plan applied: your menu and routine assignments now match this saved plan."
+      apply_failed: "Could not apply the plan."
+      source_sync_applied: "Updated template from the source plan was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This plan is not an adopted copy."
+        source_unavailable: "The source plan is no longer available in the catalog."
+        origin_changed_retry: "The source plan changed again. Review before applying."
   phase_programs:
     index:
       title: "Programs — Moonloop"

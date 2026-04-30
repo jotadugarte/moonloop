@@ -1,5 +1,5 @@
 <phase>start-task: Execution (Iterative TDD)</phase>
-<step>3.1 Admin revoke public share for Plan + moderation spec</step>
+<step>3.1 CORTE TOTAL: drop public_phase_programs; Plans adoption sync services</step>
 
 Context:
 - Active session: `.agenticguild/active_sessions/task_planes-fases-catalogo.md`

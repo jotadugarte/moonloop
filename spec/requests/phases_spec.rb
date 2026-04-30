@@ -10,9 +10,9 @@ RSpec.describe "Phases dashboard", type: :request do
   end
 
   # [REQ-PHS-001]
-  it "links to bundled phase programs from the phase dashboard" do
+  it "links to bundled plans from the phase dashboard" do
     get phase_path
-    expect(response.body).to include(phase_programs_path)
+    expect(response.body).to include(plans_path)
   end
 
   # [REQ-MENU-003]
