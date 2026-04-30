@@ -1,4 +1,16 @@
 <main id="main-content">
-  <h1><%= t("public_phases.index.title", default: "Fases") %></h1>
+  <h1><%= t("public_phases.index.heading", default: "Fases") %></h1>
+
+  <ul role="list">
+    <% @phases.each do |phase| %>
+      <li>
+        <article>
+          <%= link_to phase.name, public_phase_path(phase) %>
+          — <%= t("public_phases.shared.author", code: phase.user.public_catalog_author_code, default: phase.user.public_catalog_author_code) %>
+          <%= render "shared/catalog_index_metrics", record: phase %>
+        </article>
+      </li>
+    <% end %>
+  </ul>
 </main>
 

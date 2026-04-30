@@ -1,4 +1,8 @@
 <main id="main-content">
-  <h1><%= t("public_phases.show.title", default: "Fase") %></h1>
+  <h1><%= @phase.name %></h1>
+
+  <p><%= t("public_phases.shared.author", code: @phase.user.public_catalog_author_code, default: @phase.user.public_catalog_author_code) %></p>
+
+  <p><%= link_to t("public_phases.show.back_to_catalog", default: "Volver"), public_phases_path, class: "text-blue-600 underline" %></p>
 </main>
 
