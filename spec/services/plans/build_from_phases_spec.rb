@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Plans::BuildFromPhases do
+RSpec.describe Programs::BuildFromPhases do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
   def routine_for(u, name)
@@ -12,8 +12,8 @@ RSpec.describe Plans::BuildFromPhases do
     r
   end
 
-  # [REQ-PHS-001] — plans built from phases (REQ-ID finalized in SPEC step S11 of task plan)
-  it "creates a Plan as a snapshot copy of selected phases, ordered sequentially with no gaps" do
+  # [REQ-PHS-001] — phase program built from phases (REQ-ID finalized in SPEC step S11 of task plan)
+  it "creates a phase program as a snapshot copy of selected phases, ordered sequentially with no gaps" do
     menu_a = Menu.create!(user: user, name: "Menú A")
     menu_b = Menu.create!(user: user, name: "Menú B")
     routine_a = routine_for(user, "Rutina A")
@@ -27,19 +27,18 @@ RSpec.describe Plans::BuildFromPhases do
     PhaseMenuBlock.create!(phase: phase_2, menu: menu_b, start_week: 1, end_week: 2)
     PhaseRoutineBlock.create!(phase: phase_2, exercise_routine: routine_b, start_week: 1, end_week: 2)
 
-    plan = described_class.call(user: user, name: "Plan X", phases: [phase_1, phase_2])
+    program = described_class.call(user: user, name: "Plan X", phases: [phase_1, phase_2])
 
-    expect(plan.user_id).to eq(user.id)
-    expect(plan.name).to eq("Plan X")
-    expect(plan.total_weeks).to eq(4)
+    expect(program.user_id).to eq(user.id)
+    expect(program.name).to eq("Plan X")
 
-    copied = plan.plan_phases.order(:position)
-    expect(copied.map(&:position)).to eq([1, 2])
-    expect(copied.map(&:weeks_total)).to eq([2, 2])
-    expect(copied.map(&:source_phase_id)).to eq([phase_1.id, phase_2.id])
+    segments = program.phase_program_assignments.order(:start_week, :id)
+    expect(segments.pluck(:start_week, :end_week)).to eq([ [1, 2], [3, 4] ])
+    expect(segments.map(&:menu_id).uniq.length).to eq(2)
+    expect(segments.map(&:exercise_routine_id).uniq.length).to eq(2)
 
-    expect(plan.menu_assignments.order(:start_week).pluck(:start_week, :end_week)).to eq([ [1, 2], [3, 4] ])
-    expect(plan.routine_assignments.order(:start_week).pluck(:start_week, :end_week)).to eq([ [1, 2], [3, 4] ])
+    expect(segments.map(&:menu_id)).not_to include(menu_a.id, menu_b.id)
+    expect(segments.map(&:exercise_routine_id)).not_to include(routine_a.id, routine_b.id)
   end
 end
 
