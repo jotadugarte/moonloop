@@ -22,7 +22,7 @@ class User < ApplicationRecord
   has_many :dishes, dependent: :destroy
   has_many :phase_assignments, dependent: :destroy
   has_many :phases, dependent: :destroy
-  has_many :phase_programs, dependent: :destroy
+  has_many :plans, dependent: :destroy
   has_many :phase_reminder_events, dependent: :destroy
   has_many :habit_reminder_events, dependent: :destroy
   has_many :web_push_subscriptions, dependent: :destroy
