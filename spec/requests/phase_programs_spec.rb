@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Phase programs (bundles)", type: :request do
+RSpec.describe "Plans (bundles)", type: :request do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
   before do
@@ -18,14 +18,14 @@ RSpec.describe "Phase programs (bundles)", type: :request do
 
   # [REQ-PHS-001]
   it "lists programs and creates one" do
-    get phase_programs_path
+    get plans_path
     expect(response).to have_http_status(:ok)
 
-    post phase_programs_path, params: { phase_program: { name: "  Verano  ", publicly_shareable: "0" } }
+    post plans_path, params: { plan: { name: "  Verano  ", publicly_shareable: "0" } }
 
     expect(response).to have_http_status(:found)
-    program = PhaseProgram.find_by!(user: user, name: "Verano")
-    expect(response).to redirect_to(edit_phase_program_path(program))
+    plan = Plan.find_by!(user: user, name: "Verano")
+    expect(response).to redirect_to(edit_plan_path(plan))
   end
 
   # [REQ-PHS-001]
@@ -34,11 +34,11 @@ RSpec.describe "Phase programs (bundles)", type: :request do
     menu_b = Menu.create!(user: user, name: "Menu B")
     routine_a = routine_for(user, "Routine A")
     routine_b = routine_for(user, "Routine B")
-    program = PhaseProgram.create!(user: user, name: "Bundle")
+    plan = Plan.create!(user: user, name: "Bundle")
 
-    post phase_program_phase_program_assignments_path(program),
+    post plan_plan_assignments_path(plan),
       params: {
-        phase_program_assignment: {
+        plan_assignment: {
           menu_id: menu_a.id,
           exercise_routine_id: routine_a.id,
           start_week: 1,
@@ -47,9 +47,9 @@ RSpec.describe "Phase programs (bundles)", type: :request do
       }
     expect(response).to have_http_status(:found)
 
-    post phase_program_phase_program_assignments_path(program),
+    post plan_plan_assignments_path(plan),
       params: {
-        phase_program_assignment: {
+        plan_assignment: {
           menu_id: menu_b.id,
           exercise_routine_id: routine_b.id,
           start_week: 5,
@@ -61,7 +61,7 @@ RSpec.describe "Phase programs (bundles)", type: :request do
     PhaseAssignment.create!(user: user, menu: menu_a, start_week: 99, end_week: 100)
     ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine_a, start_week: 99, end_week: 100)
 
-    post apply_phase_program_path(program)
+    post apply_plan_path(plan)
 
     expect(response).to have_http_status(:found)
     user.reload
@@ -75,11 +75,11 @@ RSpec.describe "Phase programs (bundles)", type: :request do
 
   # [REQ-CAT-001]
   it "lets the owner save optional catalog listing facet fields from edit" do
-    program = PhaseProgram.create!(user: user, name: "Prog facet", publicly_shareable: true)
+    plan = Plan.create!(user: user, name: "Prog facet", publicly_shareable: true)
 
-    patch phase_program_path(program),
+    patch plan_path(plan),
       params: {
-        phase_program: {
+        plan: {
           name: "Prog facet",
           publicly_shareable: "1",
           catalog_listing_facet_attributes: {
@@ -90,8 +90,8 @@ RSpec.describe "Phase programs (bundles)", type: :request do
         }
       }
 
-    expect(response).to redirect_to(edit_phase_program_path(program))
-    facet = program.reload.catalog_listing_facet
+    expect(response).to redirect_to(edit_plan_path(plan))
+    facet = plan.reload.catalog_listing_facet
     expect(facet).to be_present
     expect(facet.goal_phrase).to eq("recomposición")
     expect(facet.difficulty_level).to eq("advanced")
@@ -101,12 +101,12 @@ RSpec.describe "Phase programs (bundles)", type: :request do
   it "materializes catalog facet duration from program segments (not the facet form)" do
     menu_a = Menu.create!(user: user, name: "Ma")
     routine_a = routine_for(user, "Ra")
-    program = PhaseProgram.create!(user: user, name: "Seg dura", publicly_shareable: true)
-    Catalog::ListingFacet.create!(listable: program, goal_phrase: "plan")
+    plan = Plan.create!(user: user, name: "Seg dura", publicly_shareable: true)
+    Catalog::ListingFacet.create!(listable: plan, goal_phrase: "plan")
 
-    post phase_program_phase_program_assignments_path(program),
+    post plan_plan_assignments_path(plan),
       params: {
-        phase_program_assignment: {
+        plan_assignment: {
           menu_id: menu_a.id,
           exercise_routine_id: routine_a.id,
           start_week: 1,
@@ -115,9 +115,9 @@ RSpec.describe "Phase programs (bundles)", type: :request do
       }
     expect(response).to have_http_status(:found)
 
-    post phase_program_phase_program_assignments_path(program),
+    post plan_plan_assignments_path(plan),
       params: {
-        phase_program_assignment: {
+        plan_assignment: {
           menu_id: menu_a.id,
           exercise_routine_id: routine_a.id,
           start_week: 5,
@@ -126,7 +126,7 @@ RSpec.describe "Phase programs (bundles)", type: :request do
       }
     expect(response).to have_http_status(:found)
 
-    facet = program.reload.catalog_listing_facet
+    facet = plan.reload.catalog_listing_facet
     expect(facet.duration_weeks_min).to eq(1)
     expect(facet.duration_weeks_max).to eq(12)
   end
@@ -134,9 +134,9 @@ RSpec.describe "Phase programs (bundles)", type: :request do
   # [REQ-PHS-001]
   it "returns not found when editing another user's program" do
     other = create(:user, password: "Password123!")
-    foreign = PhaseProgram.create!(user: other, name: "Theirs")
+    foreign = Plan.create!(user: other, name: "Theirs")
 
-    get edit_phase_program_path(foreign)
+    get edit_plan_path(foreign)
 
     expect(response).to have_http_status(:not_found)
   end
