@@ -59,6 +59,11 @@ Rails.application.routes.draw do
     end
     resources :phase_program_assignments, only: %i[new create edit update destroy]
   end
+  resources :phases, only: [] do
+    member do
+      post :accept_source_update, to: "phases_adoption_sync#accept_source_update"
+    end
+  end
   resources :public_dishes, only: %i[index show]
   resources :public_menus, only: %i[index show] do
     member do

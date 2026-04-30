@@ -434,6 +434,12 @@ es:
       repeat_last_assignment_nothing_to_repeat: "No hay una asignación anterior para repetir."
       repeat_last_routine_assignment_created: "Se añadió un rango nuevo a partir del último bloque de rutina."
       repeat_last_routine_assignment_nothing_to_repeat: "No hay una asignación de rutina anterior para repetir."
+      source_sync_applied: "Se aplicó el contenido actualizado desde la fase de origen."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "Esta fase no es una copia adoptada."
+        source_unavailable: "La fase de origen ya no está disponible en el catálogo."
+        origin_changed_retry: "La fase de origen cambió otra vez. Vuelve a revisar antes de aplicar."
   phase_assignments:
     new:
       title: "Nueva asignación — Moonloop"

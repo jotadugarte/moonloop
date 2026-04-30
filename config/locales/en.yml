@@ -460,6 +460,12 @@ en:
       repeat_last_assignment_nothing_to_repeat: "There is no previous assignment to repeat."
       repeat_last_routine_assignment_created: "New week range added from your last routine block."
       repeat_last_routine_assignment_nothing_to_repeat: "There is no previous routine assignment to repeat."
+      source_sync_applied: "Updated content from the source phase was applied."
+    adoption_sync:
+      errors:
+        not_adopted_copy: "This phase is not an adopted copy."
+        source_unavailable: "The source phase is no longer available in the catalog."
+        origin_changed_retry: "The source phase changed again. Review and try applying once more."
   phase_assignments:
     new:
       title: "New assignment — Moonloop"
