@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_212800) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_215200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -212,40 +212,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_212800) do
     t.check_constraint "start_week >= 1", name: "phase_menu_blocks_start_week_gte_one"
   end
 
-  create_table "phase_program_assignments", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "end_week", null: false
-    t.bigint "exercise_routine_id", null: false
-    t.bigint "menu_id", null: false
-    t.bigint "phase_program_id", null: false
-    t.integer "start_week", null: false
-    t.datetime "updated_at", null: false
-    t.index ["exercise_routine_id"], name: "index_phase_program_assignments_on_exercise_routine_id"
-    t.index ["menu_id"], name: "index_phase_program_assignments_on_menu_id"
-    t.index ["phase_program_id", "start_week", "end_week"], name: "index_phase_program_assignments_on_program_and_range"
-    t.index ["phase_program_id"], name: "index_phase_program_assignments_on_phase_program_id"
-    t.check_constraint "end_week >= start_week", name: "phase_program_assignments_end_gte_start"
-    t.check_constraint "start_week >= 1", name: "phase_program_assignments_start_week_gte_one"
-  end
-
-  create_table "phase_programs", force: :cascade do |t|
-    t.integer "adoption_catalog_origin_id"
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.string "name_normalized", null: false
-    t.integer "public_catalog_adoptions_count", default: 0, null: false
-    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
-    t.boolean "publicly_shareable", default: false, null: false
-    t.integer "source_phase_program_id"
-    t.string "source_sync_fingerprint"
-    t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
-    t.index ["source_phase_program_id"], name: "index_phase_programs_on_source_phase_program_id"
-    t.index ["user_id", "name_normalized"], name: "index_phase_programs_on_user_and_name_normalized", unique: true
-    t.index ["user_id", "source_phase_program_id"], name: "index_phase_programs_adoption_unique_per_user_and_source", unique: true, where: "(source_phase_program_id IS NOT NULL)"
-    t.index ["user_id"], name: "index_phase_programs_on_user_id"
-  end
-
   create_table "phase_reminder_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "kind", null: false
@@ -287,6 +253,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_212800) do
     t.index ["user_id", "source_phase_id"], name: "index_phases_adoption_unique_per_user_and_source", unique: true, where: "(source_phase_id IS NOT NULL)"
     t.index ["user_id"], name: "index_phases_on_user_id"
     t.check_constraint "weeks_total >= 1", name: "phases_weeks_total_gte_one"
+  end
+
+  create_table "plan_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.bigint "exercise_routine_id", null: false
+    t.bigint "menu_id", null: false
+    t.bigint "plan_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_routine_id"], name: "index_plan_assignments_on_exercise_routine_id"
+    t.index ["menu_id"], name: "index_plan_assignments_on_menu_id"
+    t.index ["plan_id", "start_week", "end_week"], name: "index_plan_assignments_on_plan_and_range"
+    t.index ["plan_id"], name: "index_plan_assignments_on_plan_id"
+    t.check_constraint "end_week >= start_week", name: "phase_program_assignments_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "phase_program_assignments_start_week_gte_one"
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.integer "adoption_catalog_origin_id"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.integer "source_plan_id"
+    t.string "source_sync_fingerprint"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["source_plan_id"], name: "index_plans_on_source_plan_id"
+    t.index ["user_id", "name_normalized"], name: "index_plans_on_user_and_name_normalized", unique: true
+    t.index ["user_id", "source_plan_id"], name: "index_plans_adoption_unique_per_user_and_source", unique: true, where: "(source_plan_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_plans_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -393,16 +393,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_212800) do
   add_foreign_key "phase_assignments", "users"
   add_foreign_key "phase_menu_blocks", "menus"
   add_foreign_key "phase_menu_blocks", "phases"
-  add_foreign_key "phase_program_assignments", "exercise_routines"
-  add_foreign_key "phase_program_assignments", "menus"
-  add_foreign_key "phase_program_assignments", "phase_programs"
-  add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
-  add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
   add_foreign_key "phase_routine_blocks", "exercise_routines"
   add_foreign_key "phase_routine_blocks", "phases"
   add_foreign_key "phases", "phases", column: "source_phase_id"
   add_foreign_key "phases", "users"
+  add_foreign_key "plan_assignments", "exercise_routines"
+  add_foreign_key "plan_assignments", "menus"
+  add_foreign_key "plan_assignments", "plans"
+  add_foreign_key "plans", "plans", column: "source_plan_id"
+  add_foreign_key "plans", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
