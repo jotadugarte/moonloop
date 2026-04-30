@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Programs
+module Plans
   class BuildFromPhases
     def self.call(user:, name:, phases:)
       new(user: user, name: name, phases: phases).call
@@ -17,15 +17,15 @@ module Programs
       raise ArgumentError, "phases empty" if @phases.empty?
 
       ApplicationRecord.transaction do
-        program = PhaseProgram.create!(user: @user, name: @name, publicly_shareable: false)
-        build_segments!(program: program)
-        program
+        plan = Plan.create!(user: @user, name: @name, publicly_shareable: false)
+        build_segments!(plan: plan)
+        plan
       end
     end
 
     private
 
-    def build_segments!(program:)
+    def build_segments!(plan:)
       cursor_week = 1
       @phases.each do |phase|
         raise ArgumentError, "phase wrong owner" if phase.user_id != @user.id
@@ -47,7 +47,7 @@ module Programs
           span = menu_block.end_week - menu_block.start_week
           start_week = cursor_week
           end_week = cursor_week + span
-          program.phase_program_assignments.create!(
+          plan.plan_assignments.create!(
             menu_id: menu_map.fetch(menu_block.menu_id).id,
             exercise_routine_id: routine_map.fetch(routine_block.exercise_routine_id).id,
             start_week: start_week,

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Programs::BuildFromPhases do
+RSpec.describe Plans::BuildFromPhases do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
   def routine_for(u, name)
@@ -12,8 +12,8 @@ RSpec.describe Programs::BuildFromPhases do
     r
   end
 
-  # [REQ-PHS-001] — phase program built from phases (REQ-ID finalized in SPEC step S11 of task plan)
-  it "creates a phase program as a snapshot copy of selected phases, ordered sequentially with no gaps" do
+  # [REQ-PHS-001] — plan built from phases (REQ-ID finalized in SPEC step S11 of task plan)
+  it "creates a plan as a snapshot copy of selected phases, ordered sequentially with no gaps" do
     menu_a = Menu.create!(user: user, name: "Menú A")
     menu_b = Menu.create!(user: user, name: "Menú B")
     routine_a = routine_for(user, "Rutina A")
@@ -27,12 +27,12 @@ RSpec.describe Programs::BuildFromPhases do
     PhaseMenuBlock.create!(phase: phase_2, menu: menu_b, start_week: 1, end_week: 2)
     PhaseRoutineBlock.create!(phase: phase_2, exercise_routine: routine_b, start_week: 1, end_week: 2)
 
-    program = described_class.call(user: user, name: "Plan X", phases: [ phase_1, phase_2 ])
+    plan = described_class.call(user: user, name: "Plan X", phases: [ phase_1, phase_2 ])
 
-    expect(program.user_id).to eq(user.id)
-    expect(program.name).to eq("Plan X")
+    expect(plan.user_id).to eq(user.id)
+    expect(plan.name).to eq("Plan X")
 
-    segments = program.phase_program_assignments.order(:start_week, :id)
+    segments = plan.plan_assignments.order(:start_week, :id)
     expect(segments.pluck(:start_week, :end_week)).to eq([ [ 1, 2 ], [ 3, 4 ] ])
     expect(segments.map(&:menu_id).uniq.length).to eq(2)
     expect(segments.map(&:exercise_routine_id).uniq.length).to eq(2)
