@@ -21,13 +21,15 @@ module Phases
       name = chosen_name.to_s.strip
       raise Error.new(:name_blank) if name.blank?
 
+      fp = ContentFingerprint.for_phase(source)
+
       ApplicationRecord.transaction do
         copy = Phase.new(
           user: adopter,
           name: name,
           weeks_total: source.weeks_total,
           source_phase_id: source.id,
-          source_sync_fingerprint: source.source_sync_fingerprint,
+          source_sync_fingerprint: fp,
           adoption_catalog_origin_id: source.id,
           publicly_shareable: false
         )
