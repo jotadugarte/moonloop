@@ -75,6 +75,8 @@ Rails.application.routes.draw do
       post :adopt
     end
   end
+  resources :public_plans, only: %i[index show]
+  resources :public_phases, only: %i[index show]
   namespace :admin do
     resources :dishes, only: [] do
       member do
