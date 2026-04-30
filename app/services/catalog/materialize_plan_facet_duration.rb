@@ -5,8 +5,8 @@ module Catalog
     def self.call(plan)
       return if plan.nil?
 
-      facet = plan.catalog_listing_facet
-      assignments = plan.plan_assignments
+      assignments = PlanAssignment.where(plan_id: plan.id)
+      facet = Catalog::ListingFacet.find_by(listable_type: plan.class.name, listable_id: plan.id)
 
       if assignments.empty?
         facet&.update!(duration_weeks_min: nil, duration_weeks_max: nil)
@@ -16,7 +16,7 @@ module Catalog
       min_w = assignments.minimum(:start_week)
       max_w = assignments.maximum(:end_week)
 
-      facet = plan.catalog_listing_facet || plan.build_catalog_listing_facet
+      facet ||= plan.build_catalog_listing_facet
       facet.duration_weeks_min = min_w
       facet.duration_weeks_max = max_w
       facet.save!

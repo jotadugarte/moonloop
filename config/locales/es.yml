@@ -973,6 +973,7 @@ es:
         logged_at: "Fecha y hora del pesaje"
     errors:
       messages:
+        record_invalid: "La validación falló: %{errors}"
         blank: "no puede estar en blanco"
         taken: "ya está en uso"
         greater_than_or_equal_to: "debe ser mayor que o igual a %{count}"

@@ -6,6 +6,10 @@ RSpec.describe Plans::ApplyToUser do
   let(:user) { create(:user, password: "Password123!") }
   let(:other) { create(:user, password: "Password123!") }
 
+  before do
+    user.update!(phase_one_starts_on: Date.new(2026, 1, 1))
+  end
+
   def routine_for(u, name)
     r = ExerciseRoutine.new(user: u, name: name)
     r.exercise_routine_lines.build(weekday: 0, position: 0, label: "Línea")

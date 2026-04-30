@@ -869,6 +869,8 @@ en:
       weight_log:
         logged_at: "Weigh-in date and time"
     errors:
+      messages:
+        record_invalid: "Validation failed: %{errors}"
       models:
         user:
           attributes:
