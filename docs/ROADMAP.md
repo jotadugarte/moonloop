@@ -91,6 +91,12 @@ Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque f
 
 57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
 
+61. [ ] **Planes + Fases reutilizables (catálogo + adopción + sync) + rename real + corte total**. Introducir **Fases** reutilizables con bloques internos por semanas completas (menú y rutina por semana, sin huecos), y un constructor de **Planes** por composición secuencial de fases (snapshot/copia). Agregar catálogos públicos autenticados para **Fases** y **Planes** con adopción “copia todo” y sync con **diff antes de aplicar** (all-or-nothing). **Renombrar** `PhaseProgram`→`Plan` y `Programs::*`→`Plans::*` con **CORTE TOTAL** (sin redirects/aliases) y actualizar docs/SPEC/SCHEMA/DATA_FLOW. — Depends on: Done #33, Done #34 (REQ-PHS-001, REQ-CAT-001)
+
+62. [ ] **Creador intuitivo de plan completo (UX)**. Permitir que el usuario pueda **crear** sus **Planes**, **Fases**, **Menús** y **Rutinas de ejercicio** desde UI, y luego **armar el plan completo** mediante un flujo **intuitivo y sencillo** (composición/orden, revisión, validaciones, y guardado). — Depends on: #61
+
+63. [ ] **Planes precargados (plantillas) en catálogo público**. Crear una colección curada de **Planes listos para usar** (p. ej. **rebajar**, **ganar musculatura**, **mejorar corazón**) compuestos por **fases** con sus **menús** y **rutinas**, para que el usuario pueda **seleccionar un plan existente** y no tenga que empezar desde cero. Disponibles en el **catálogo público** con adopción/copia a la cuenta del usuario. — Depends on: #61
+
 60. [ ] **Rutinas de ejercicio — validaciones i18n (es)**. En `/exercise_routines` con locale `:es`, corregir mensajes mezclados (atributos en inglés) y “Translation missing …” para que los errores se muestren coherentes en español. — Source: `.agenticguild/active_sessions/task_exercise-routines-i18n-validaciones.md`
 
  
