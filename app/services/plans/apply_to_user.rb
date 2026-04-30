@@ -36,9 +36,19 @@ module Plans
 
     def self.resolve_anchor!(user:, phase_one_starts_on:)
       return user.phase_one_starts_on if user.phase_one_starts_on.present?
-      raise Error.new(:anchor_required) unless phase_one_starts_on.is_a?(Date)
+      parsed = parse_anchor_date(phase_one_starts_on)
+      raise Error.new(:anchor_required) if parsed.nil?
 
-      phase_one_starts_on
+      parsed
+    end
+
+    def self.parse_anchor_date(raw)
+      return raw if raw.is_a?(Date)
+      return nil if raw.blank?
+
+      Date.iso8601(raw.to_s)
+    rescue Date::Error, ArgumentError
+      nil
     end
   end
 end
