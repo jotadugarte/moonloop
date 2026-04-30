@@ -61,7 +61,7 @@ RSpec.describe "Plans (bundles)", type: :request do
     PhaseAssignment.create!(user: user, menu: menu_a, start_week: 99, end_week: 100)
     ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine_a, start_week: 99, end_week: 100)
 
-    post apply_plan_path(plan)
+    post apply_plan_path(plan), params: { phase_one_starts_on: Date.new(2026, 1, 15) }
 
     expect(response).to have_http_status(:found)
     user.reload

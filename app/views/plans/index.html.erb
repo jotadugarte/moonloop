@@ -1,0 +1,10 @@
+<% content_for :title, t("plans.index.title", default: "Planes") %>
+
+<h1><%= t("plans.index.heading", default: "Planes") %></h1>
+
+<ul role="list">
+  <% @plans.each do |plan| %>
+    <li><%= link_to plan.name, edit_plan_path(plan) %></li>
+  <% end %>
+</ul>
+
