@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_211500) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_212800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -199,6 +199,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_211500) do
     t.check_constraint "start_week >= 1", name: "phase_assignments_start_week_gte_one"
   end
 
+  create_table "phase_menu_blocks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.bigint "menu_id", null: false
+    t.bigint "phase_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phase_id", "start_week", "end_week"], name: "index_phase_menu_blocks_on_phase_and_range"
+    t.index ["phase_id"], name: "index_phase_menu_blocks_on_phase_id"
+    t.check_constraint "end_week >= start_week", name: "phase_menu_blocks_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "phase_menu_blocks_start_week_gte_one"
+  end
+
   create_table "phase_program_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "end_week", null: false
@@ -241,6 +254,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_211500) do
     t.bigint "user_id", null: false
     t.index ["user_id", "kind", "local_date"], name: "index_phase_reminder_events_uniqueness", unique: true
     t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
+  end
+
+  create_table "phase_routine_blocks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "end_week", null: false
+    t.bigint "exercise_routine_id", null: false
+    t.bigint "phase_id", null: false
+    t.integer "start_week", null: false
+    t.datetime "updated_at", null: false
+    t.index ["phase_id", "start_week", "end_week"], name: "index_phase_routine_blocks_on_phase_and_range"
+    t.index ["phase_id"], name: "index_phase_routine_blocks_on_phase_id"
+    t.check_constraint "end_week >= start_week", name: "phase_routine_blocks_end_gte_start"
+    t.check_constraint "start_week >= 1", name: "phase_routine_blocks_start_week_gte_one"
   end
 
   create_table "phases", force: :cascade do |t|
@@ -365,12 +391,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_211500) do
   add_foreign_key "menus", "users"
   add_foreign_key "phase_assignments", "menus"
   add_foreign_key "phase_assignments", "users"
+  add_foreign_key "phase_menu_blocks", "menus"
+  add_foreign_key "phase_menu_blocks", "phases"
   add_foreign_key "phase_program_assignments", "exercise_routines"
   add_foreign_key "phase_program_assignments", "menus"
   add_foreign_key "phase_program_assignments", "phase_programs"
   add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
   add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
+  add_foreign_key "phase_routine_blocks", "exercise_routines"
+  add_foreign_key "phase_routine_blocks", "phases"
   add_foreign_key "phases", "phases", column: "source_phase_id"
   add_foreign_key "phases", "users"
   add_foreign_key "sessions", "users"
