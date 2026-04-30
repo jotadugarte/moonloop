@@ -1,5 +1,5 @@
 <phase>start-task: Execution (Iterative TDD)</phase>
-<step>3.1 Public plans catalog parity (spec, i18n, adopt copies menus/routines)</step>
+<step>3.1 Request spec: public plan adoption (REQ-PHS-001)</step>
 
 Context:
 - Active session: `.agenticguild/active_sessions/task_planes-fases-catalogo.md`
