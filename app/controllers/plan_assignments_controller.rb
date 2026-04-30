@@ -47,4 +47,3 @@ class PlanAssignmentsController < ApplicationController
     params.require(:plan_assignment).permit(:menu_id, :exercise_routine_id, :start_week, :end_week)
   end
 end
-

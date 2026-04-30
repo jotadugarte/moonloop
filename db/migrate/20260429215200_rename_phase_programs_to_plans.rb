@@ -48,4 +48,3 @@ class RenamePhaseProgramsToPlans < ActiveRecord::Migration[8.1]
     rename_index table, old_name, new_name
   end
 end
-

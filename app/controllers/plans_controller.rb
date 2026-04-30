@@ -80,4 +80,3 @@ class PlansController < ApplicationController
     )
   end
 end
-

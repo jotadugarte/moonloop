@@ -53,4 +53,3 @@ module Plans
     end
   end
 end
-

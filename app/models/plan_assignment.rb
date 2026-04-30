@@ -60,4 +60,3 @@ class PlanAssignment < ApplicationRecord
     a.begin <= b.end && b.begin <= a.end
   end
 end
-

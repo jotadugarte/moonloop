@@ -37,4 +37,3 @@ class Plan < ApplicationRecord
     errors.add(:name, :taken) if scope.exists?
   end
 end
-
