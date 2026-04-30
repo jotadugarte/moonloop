@@ -2,9 +2,9 @@
 
 require "rails_helper"
 
-RSpec.describe PhaseProgramAssignment, type: :model do
+RSpec.describe PlanAssignment, type: :model do
   let(:user) { create(:user, password: "Password123!") }
-  let(:program) { PhaseProgram.create!(user: user, name: "Plan A") }
+  let(:plan) { Plan.create!(user: user, name: "Plan A") }
   let(:menu_a) { Menu.create!(user: user, name: "Menú A") }
   let(:menu_b) { Menu.create!(user: user, name: "Menú B") }
 
@@ -21,7 +21,7 @@ RSpec.describe PhaseProgramAssignment, type: :model do
   # [REQ-PHS-001]
   it "rejects end_week before start_week" do
     row = described_class.new(
-      phase_program: program,
+      plan: plan,
       menu: menu_a,
       exercise_routine: routine_a,
       start_week: 5,
@@ -32,16 +32,16 @@ RSpec.describe PhaseProgramAssignment, type: :model do
   end
 
   # [REQ-PHS-001]
-  it "rejects overlapping week ranges within the same phase program" do
+  it "rejects overlapping week ranges within the same plan" do
     described_class.create!(
-      phase_program: program,
+      plan: plan,
       menu: menu_a,
       exercise_routine: routine_a,
       start_week: 1,
       end_week: 4
     )
     dup = described_class.new(
-      phase_program: program,
+      plan: plan,
       menu: menu_b,
       exercise_routine: routine_b,
       start_week: 3,
@@ -52,16 +52,16 @@ RSpec.describe PhaseProgramAssignment, type: :model do
   end
 
   # [REQ-PHS-001]
-  it "allows adjacent ranges on the same program (no overlap)" do
+  it "allows adjacent ranges on the same plan (no overlap)" do
     described_class.create!(
-      phase_program: program,
+      plan: plan,
       menu: menu_a,
       exercise_routine: routine_a,
       start_week: 1,
       end_week: 4
     )
     ok = described_class.create!(
-      phase_program: program,
+      plan: plan,
       menu: menu_b,
       exercise_routine: routine_b,
       start_week: 5,
@@ -75,7 +75,7 @@ RSpec.describe PhaseProgramAssignment, type: :model do
     other = create(:user, password: "Password123!")
     foreign_menu = Menu.create!(user: other, name: "Ajeno")
     row = described_class.new(
-      phase_program: program,
+      plan: plan,
       menu: foreign_menu,
       exercise_routine: routine_a,
       start_week: 1,
@@ -90,7 +90,7 @@ RSpec.describe PhaseProgramAssignment, type: :model do
     other = create(:user, password: "Password123!")
     foreign_routine = routine_for(other, "Ajena")
     row = described_class.new(
-      phase_program: program,
+      plan: plan,
       menu: menu_a,
       exercise_routine: foreign_routine,
       start_week: 1,
@@ -102,16 +102,16 @@ RSpec.describe PhaseProgramAssignment, type: :model do
 
   # [REQ-PHS-001]
   it "does not treat ranges on different programs as overlapping" do
-    other_program = PhaseProgram.create!(user: user, name: "Plan B")
+    other_plan = Plan.create!(user: user, name: "Plan B")
     described_class.create!(
-      phase_program: program,
+      plan: plan,
       menu: menu_a,
       exercise_routine: routine_a,
       start_week: 1,
       end_week: 4
     )
     ok = described_class.create!(
-      phase_program: other_program,
+      plan: other_plan,
       menu: menu_b,
       exercise_routine: routine_b,
       start_week: 2,
