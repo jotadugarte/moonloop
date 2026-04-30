@@ -14,6 +14,8 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
+- **Home:** the shortcut to **`/phase`** reads **Planes - Fases** (ES) and **Plans - Phases** (EN) via **`home.index.phase_plan`**.
+
 - **Menus (roadmap #58, REQ-MENU-001):** the menu editor slot dish picker is now **grouped by meal type** and **searchable by dish name** (accent- and case-insensitive), with an explicit clear action (“Sin plato” / “No dish”) and Turbo autosave preserved on selection.
 
 - **Documentation (roadmap #52):** `docs/core/SPEC.md` (glossary, entities, REQ-MENU-001/002/006, deep dive), `docs/core/DATA_FLOW_MAP.md` (menu slot / `MenuEntry` invariants), and `docs/ROADMAP.md` (**#52** done, Phase 4 labels) aligned with the **`Dish`** model and **`/platos`** / **`/public_dishes`** routes.

@@ -821,7 +821,7 @@ es:
       menus: "Menús"
       dishes: "Platos"
       exercise_routines: "Rutinas de ejercicio"
-      phase_plan: "Plan de fases"
+      phase_plan: "Planes - Fases"
       weight_history: "Historial de peso"
       log_weight: "Registrar peso"
       signed_as: "Sesión iniciada como %{email}"

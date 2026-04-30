@@ -980,7 +980,7 @@ en:
       menus: "Menus"
       dishes: "Dishes"
       exercise_routines: "Exercise routines"
-      phase_plan: "Phase plan"
+      phase_plan: "Plans - Phases"
       weight_history: "Weight history"
       log_weight: "Log weight"
       signed_as: "Signed as %{email}"
