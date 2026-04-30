@@ -2,6 +2,12 @@
 
 Explorar `docs/ROADMAP.md` con criterio **quick_wins** (bajo esfuerzo / alto valor) y preparar el terreno para pasar a `start-task` por ítem.
 
+---
+
+## Status
+
+Esta sesión queda archivada como “discovery” para quick wins (orden confirmado y criterios). Los ítems priorizados ya están marcados como **Done** en `docs/ROADMAP.md`.
+
 ## Priorización propuesta (quick wins)
 
 ## Orden de ejecución (confirmado)

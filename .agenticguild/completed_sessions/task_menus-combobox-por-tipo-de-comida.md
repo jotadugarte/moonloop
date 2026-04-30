@@ -1,6 +1,6 @@
 # Task
 
-**Roadmap item:** #58 — Menús: combobox por tipo de comida
+**Roadmap item:** #58 — Menús: combobox por tipo de comida — archived 2026-04-29
 
 **Classification:** Feature (UX / a11y improvement on existing Hotwire form)
 
@@ -131,6 +131,12 @@ En el editor de menú (`/menus/:id/edit`), cada slot permite elegir un **plato**
 2. **No results state:** what should we show when the filter yields zero matches? (Suggested: i18n “No hay resultados”.)
 3. **Keyboard focus:** on selection + autosave, should focus return to the slot container, the filter input, or move to next logical field?
 4. **Freeform users:** when `allow_menu_freeform` is enabled, do we keep freeform input as-is (today) and add dish search above it, or fold both into one control?
+
+---
+
+## Status
+
+Este ítem está marcado como **Done** en `docs/ROADMAP.md` (#58). Las preguntas abiertas quedan como historial; no bloquean el cierre de la sesión.
 
 ---
 

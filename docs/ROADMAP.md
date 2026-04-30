@@ -91,6 +91,8 @@ Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque f
 
 57. [ ] **Planificación: ¿plan que abarque fases?** Definir si el producto necesita un **plan o vista** que abarque **varias fases** de un recorrido (más allá de la asignación actual por segmentos y alertas de extensión), y qué alcance tendría frente a **Bundle / PhaseProgram** y a las asignaciones por rango de semanas (REQ-MENU-003, REQ-PHS-001, REQ-MENU-005).
 
+60. [ ] **Rutinas de ejercicio — validaciones i18n (es)**. En `/exercise_routines` con locale `:es`, corregir mensajes mezclados (atributos en inglés) y “Translation missing …” para que los errores se muestren coherentes en español. — Source: `.agenticguild/active_sessions/task_exercise-routines-i18n-validaciones.md`
+
  
 
 ## Backlog

@@ -15,6 +15,12 @@
 
 ---
 
+## Status
+
+Este ítem está marcado como **Done** en `docs/ROADMAP.md` (#43). Esta sesión queda archivada como registro de decisiones (peso opcional + reglas de persistencia + copy propuesto).
+
+---
+
 ## Key decisions to make (before coding)
 
 1. **Persistencia cuando el peso está en blanco**

@@ -2,7 +2,7 @@
 
 **Type:** Bug (regression / incorrect UX vs agreed contract)
 
-**Related roadmap items:** #59 (pending) — Bug: Menús combobox agrupación + filtro; depends on #58 (Done)
+**Related roadmap items:** #59 (Done) — Bug: Menús combobox agrupación + filtro; depends on #58 (Done) — archived 2026-04-29
 
 **Where:** editor de menú (`/menus/:id/edit`) en el picker/combobox para asignar `Dish` en un slot.
 
@@ -63,5 +63,5 @@ Ver captura provista por el usuario: el control se comporta más como una lista 
 
 ## Ready for handoff
 
-Este bug está listo para ejecutarse con `start-task` (especificación suficiente: expected vs actual + orden de grupos + filtrado con grupos).
+Este bug fue completado y está marcado como **Done** en `docs/ROADMAP.md` (#59). Esta sesión queda archivada como referencia de contrato/expected behavior.
 
