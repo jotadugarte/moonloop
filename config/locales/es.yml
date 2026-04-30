@@ -439,6 +439,7 @@ es:
       menus_link: "Menús"
       exercise_routines_link: "Rutinas de ejercicio"
       programs_link: "Programas (menú + rutina)"
+      templates_link: "Fases reutilizables"
       programs_intro_heading: "Programas (menú + rutina)"
       programs_intro_body: "Puedes seguir editando rangos de menú y de rutina por separado abajo, o definir un programa que una ambos y aplicarlo al plan: la semana actual del programa sigue calculándose solo con la fecha de inicio de fase 1 y no se duplica la lógica en otro sitio."
       phase_start_reminder_banner: "Hoy empieza tu fase 1: revisa aquí menús y rutinas de ejercicio por semana."
@@ -550,6 +551,35 @@ es:
         not_adopted_copy: "Este plan no es una copia adoptada."
         source_unavailable: "El plan de origen ya no está disponible en el catálogo."
         origin_changed_retry: "El plan de origen cambió otra vez. Vuelve a revisar antes de aplicar."
+  user_phases:
+    index:
+      title: "Fases — Moonloop"
+      heading: "Fases reutilizables"
+      intro: "Cada fase tiene una duración en semanas; más adelante podrás definir bloques de menú y rutina por semana y componer planes."
+      name_label: "Nombre de la fase"
+      weeks_total_label: "Semanas totales (≥ 1)"
+      public_share_label: "Visible en el catálogo público de fases"
+      create_submit: "Crear fase"
+      edit: "Editar"
+      back_phase: "Programa por semanas"
+      catalog_link: "Catálogo público de fases"
+    edit:
+      title: "Fase %{name} — Moonloop"
+      heading: "Fase: %{name}"
+      name_label: "Nombre"
+      weeks_total_label: "Semanas totales"
+      public_share_label: "Visible en el catálogo público de fases"
+      save_submit: "Guardar"
+      blocks_heading: "Bloques por semana"
+      blocks_hint: "Aquí enlazas menús y rutinas a rangos dentro de la fase. La edición en la web se ampliará en una siguiente entrega."
+      destroy_phase: "Eliminar fase"
+      destroy_confirm: "¿Eliminar esta fase? Los menús y rutinas no se borran."
+      back_index: "Lista de fases"
+      back_phase: "Programa por semanas"
+    flash:
+      created: "Fase creada."
+      updated: "Fase actualizada."
+      destroyed: "Fase eliminada."
   plan_assignments:
     new:
       title: "Nuevo rango — Moonloop"
@@ -821,7 +851,9 @@ es:
       menus: "Menús"
       dishes: "Platos"
       exercise_routines: "Rutinas de ejercicio"
-      phase_plan: "Planes - Fases"
+      plans: "Planes"
+      phase_templates: "Fases"
+      weekly_program: "Programa por semanas"
       weight_history: "Historial de peso"
       log_weight: "Registrar peso"
       signed_as: "Sesión iniciada como %{email}"
@@ -928,6 +960,9 @@ es:
       plan:
         one: "Plan"
         other: "Planes"
+      phase:
+        one: "Fase"
+        other: "Fases"
       plan_assignment:
         one: "Rango del plan"
         other: "Rangos del plan"
@@ -971,6 +1006,10 @@ es:
         notes: "Notas"
       weight_log:
         logged_at: "Fecha y hora del pesaje"
+      phase:
+        name: "Nombre"
+        weeks_total: "Semanas totales"
+        publicly_shareable: "Visible en catálogo público"
     errors:
       messages:
         record_invalid: "La validación falló: %{errors}"

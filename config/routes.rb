@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     end
     resources :plan_assignments, only: %i[new create edit update destroy]
   end
+  resources :user_phases, path: "fases", only: %i[index create edit update destroy]
   resources :phases, only: [] do
     member do
       post :accept_source_update, to: "phases_adoption_sync#accept_source_update"

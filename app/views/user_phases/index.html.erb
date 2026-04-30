@@ -1,0 +1,56 @@
+<% content_for :title, t("user_phases.index.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("user_phases.index.heading") %></h1>
+
+<p class="mb-4 text-gray-700 text-sm max-w-2xl"><%= t("user_phases.index.intro") %></p>
+
+<p class="mb-4 flex flex-wrap gap-x-3 gap-y-1">
+  <%= link_to t("user_phases.index.back_phase"), phase_path, class: "text-blue-600 underline" %>
+  <%= link_to t("user_phases.index.catalog_link"), public_phases_path, class: "text-blue-600 underline" %>
+</p>
+
+<% phs_err_id = "user-phase-new-errors" %>
+<%= form_with model: @phase, url: user_phases_path, class: "space-y-3 max-w-lg mb-8" do |f| %>
+  <% if @phase.errors.any? %>
+    <ul id="<%= phs_err_id %>" class="text-red-600 text-sm list-disc pl-5" role="alert">
+      <% @phase.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <div>
+    <%= f.label :name, t("user_phases.index.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@phase, :name, phs_err_id) %>
+  </div>
+  <div>
+    <%= f.label :weeks_total, t("user_phases.index.weeks_total_label"), class: "block font-medium mb-1" %>
+    <%= f.number_field :weeks_total,
+          min: 1,
+          step: 1,
+          value: @phase.weeks_total.presence || 1,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@phase, :weeks_total, phs_err_id) %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@phase, :publicly_shareable, phs_err_id) %>
+    <%= f.label :publicly_shareable, t("user_phases.index.public_share_label"), class: "text-gray-700" %>
+  </div>
+  <div>
+    <%= f.submit t("user_phases.index.create_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
+  </div>
+<% end %>
+
+<hr class="mb-6">
+
+<% @phases.each do |phase| %>
+  <div id="<%= dom_id(phase) %>" class="mb-2">
+    <strong><%= phase.name %></strong>
+    <span class="text-gray-600 text-sm ml-2">(<%= phase.weeks_total %>)</span>
+    <%= link_to t("user_phases.index.edit"), edit_user_phase_path(phase), class: "text-blue-600 underline ml-2" %>
+  </div>
+<% end %>

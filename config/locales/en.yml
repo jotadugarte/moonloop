@@ -465,6 +465,7 @@ en:
       menus_link: "Menus"
       exercise_routines_link: "Exercise routines"
       programs_link: "Programs (menu + routine)"
+      templates_link: "Reusable phases"
       programs_intro_heading: "Programs (menu + routine)"
       programs_intro_body: "You can keep editing menu and routine week ranges separately below, or define a program that pairs both and apply it to the plan. The current program week still comes only from your Phase 1 start date — week math is not duplicated elsewhere."
       phase_start_reminder_banner: "Today is the first day of your Phase 1 plan — review menus and exercise routines by week below."
@@ -576,6 +577,35 @@ en:
         not_adopted_copy: "This plan is not an adopted copy."
         source_unavailable: "The source plan is no longer available in the catalog."
         origin_changed_retry: "The source plan changed again. Review before applying."
+  user_phases:
+    index:
+      title: "Phases — Moonloop"
+      heading: "Reusable phases"
+      intro: "Each phase has a week count; later you will attach menu and routine blocks per week and compose plans."
+      name_label: "Phase name"
+      weeks_total_label: "Total weeks (≥ 1)"
+      public_share_label: "Show in the public phase catalog"
+      create_submit: "Create phase"
+      edit: "Edit"
+      back_phase: "Weekly program"
+      catalog_link: "Public phase catalog"
+    edit:
+      title: "Phase %{name} — Moonloop"
+      heading: "Phase: %{name}"
+      name_label: "Name"
+      weeks_total_label: "Total weeks"
+      public_share_label: "Show in the public phase catalog"
+      save_submit: "Save"
+      blocks_heading: "Week blocks"
+      blocks_hint: "Menu and routine ranges inside this phase will be editable here in a follow-up."
+      destroy_phase: "Delete phase"
+      destroy_confirm: "Delete this phase? Menus and routines stay in your account."
+      back_index: "Phase list"
+      back_phase: "Weekly program"
+    flash:
+      created: "Phase created."
+      updated: "Phase updated."
+      destroyed: "Phase removed."
   plan_assignments:
     new:
       title: "New range — Moonloop"
@@ -828,6 +858,9 @@ en:
       plan:
         one: "Plan"
         other: "Plans"
+      phase:
+        one: "Phase"
+        other: "Phases"
       plan_assignment:
         one: "Plan range"
         other: "Plan ranges"
@@ -868,6 +901,10 @@ en:
         notes: "Notes"
       weight_log:
         logged_at: "Weigh-in date and time"
+      phase:
+        name: "Name"
+        weeks_total: "Total weeks"
+        publicly_shareable: "Public catalog"
     errors:
       messages:
         record_invalid: "Validation failed: %{errors}"
@@ -980,7 +1017,9 @@ en:
       menus: "Menus"
       dishes: "Dishes"
       exercise_routines: "Exercise routines"
-      phase_plan: "Plans - Phases"
+      plans: "Plans"
+      phase_templates: "Phases"
+      weekly_program: "Weekly program"
       weight_history: "Weight history"
       log_weight: "Log weight"
       signed_as: "Signed as %{email}"

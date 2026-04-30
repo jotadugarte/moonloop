@@ -14,7 +14,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **Home:** the shortcut to **`/phase`** reads **Planes - Fases** (ES) and **Plans - Phases** (EN) via **`home.index.phase_plan`**.
+- **Home:** shortcuts for **`/plans`**, **`/fases`** (reusable phase templates), and **`/phase`** (weekly program) use **`home.index.plans`**, **`home.index.phase_templates`**, and **`home.index.weekly_program`**. **`UserPhasesController`** lists and creates **`Phase`** rows (name, weeks, catalog flag); edit includes catalog facet fields; week blocks UI is deferred. **`/phase`** footer links to **`user_phases_path`**.
 
 - **Menus (roadmap #58, REQ-MENU-001):** the menu editor slot dish picker is now **grouped by meal type** and **searchable by dish name** (accent- and case-insensitive), with an explicit clear action (“Sin plato” / “No dish”) and Turbo autosave preserved on selection.
 
