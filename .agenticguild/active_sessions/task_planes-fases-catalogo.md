@@ -176,7 +176,7 @@ En `docs/core/SPEC.md` ya existe el concepto **Phase program (bundle)**:
 
   <plan>
     <step id="S1" status="complete">Write failing request specs for the new public catalogs endpoints shape: `public_plans`, `public_phases` index/show require authentication and render no PII author fields, mirroring existing catalog behavior (REQ-CAT-001 patterns).</step>
-    <step id="S2">Write failing service specs for adoption of a public Phase: “adopt copies everything” (phase + referenced menus + referenced routines + block structure), and increments catalog counters exactly once per source per adopter (REQ-CAT-001 adoption counters).</step>
+    <step id="S2" status="complete">Write failing service specs for adoption of a public Phase: “adopt copies everything” (phase + referenced menus + referenced routines + block structure), and increments catalog counters exactly once per source per adopter (REQ-CAT-001 adoption counters).</step>
     <step id="S3">Write failing service specs for “apply plan to user” behavior: replaces all existing week-range assignments (menus + routines) and requires explicit anchor date selection (suggest default “today in user TZ” but persist user choice).</step>
     <step id="S4">Introduce new domain models for reusable phases and their internal block assignments (menu blocks and routine blocks) with validations: weeks_total >= 1; blocks sequential, cover exactly weeks_total; no gaps; no overlaps; every week has both menu and routine coverage.</step>
     <step id="S5">Implement Plan composition via “plan phases” that snapshot/copy phase structure into the plan. Enforce sequential ordering and compute total weeks deterministically.</step>
