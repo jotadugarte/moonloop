@@ -1,20 +1,15 @@
-<% content_for :title, t("public_plans.index.title", default: "Planes públicos — Moonloop") %>
+<% content_for :title, t("public_plans.index.title") %>
 
-<h1><%= t("public_plans.index.heading", default: "Planes públicos") %></h1>
+<h1><%= t("public_plans.index.heading") %></h1>
 
 <ul role="list">
   <% @plans.each do |plan| %>
     <li>
       <article>
         <%= link_to plan.name, public_plan_path(plan) %>
-        — <%= t("public_plans.shared.author", code: plan.user.public_catalog_author_code, default: plan.user.public_catalog_author_code) %>
+        — <%= t("public_plans.shared.author", code: plan.user.public_catalog_author_code) %>
         <%= render "shared/catalog_index_metrics", record: plan %>
       </article>
     </li>
   <% end %>
 </ul>
-
-<main id="main-content">
-  <h1><%= t("public_plans.index.title", default: "Planes") %></h1>
-</main>
-

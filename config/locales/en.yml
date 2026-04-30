@@ -262,6 +262,28 @@ en:
         cannot_adopt_own: "You cannot adopt your own program."
         already_adopted: "You already adopted this program."
         name_blank: "Name can't be blank."
+  public_plans:
+    index:
+      title: "Public plans — Moonloop"
+      heading: "Public plans (menu + routine)"
+    show:
+      title: "%{name} — Public plans — Moonloop"
+      back_to_catalog: "Back to plan catalog"
+      segments_heading: "Published ranges"
+      segment_line: "%{menu} + %{routine} — weeks %{start}–%{end}"
+      no_segments: "This plan has no published ranges."
+    shared:
+      author: "Author code %{code}"
+    adopt:
+      section_label: "Adopt this plan into your account"
+      name_label: "Name for your copy"
+      submit: "Adopt plan"
+      success: "Plan adopted. You can edit it and apply it to your plan."
+      errors:
+        not_public: "This plan is not available in the public catalog."
+        cannot_adopt_own: "You cannot adopt your own plan."
+        already_adopted: "You already adopted this plan."
+        name_blank: "Name can't be blank."
   public_phases:
     shared:
       author: "Author code %{code}"

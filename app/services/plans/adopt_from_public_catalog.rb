@@ -34,14 +34,12 @@ module Plans
         )
         copy.save!
 
-        source.plan_assignments.order(:start_week, :id).each do |row|
-          copy.plan_assignments.create!(
-            menu_id: row.menu_id,
-            exercise_routine_id: row.exercise_routine_id,
-            start_week: row.start_week,
-            end_week: row.end_week
-          )
-        end
+        PopulateAssignmentsFromSource.call(
+          plan: copy,
+          source: source,
+          adopter: adopter,
+          name_prefix: name
+        )
 
         Catalog::IncrementTemplateAdoptionMetrics.call(source)
         copy
