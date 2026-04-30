@@ -1,5 +1,5 @@
 <phase>start-task: Execution (Iterative TDD)</phase>
-<step>3.1 Request spec: public plan adoption (REQ-PHS-001)</step>
+<step>3.1 Admin revoke public share for Plan + moderation spec</step>
 
 Context:
 - Active session: `.agenticguild/active_sessions/task_planes-fases-catalogo.md`

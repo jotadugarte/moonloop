@@ -583,6 +583,8 @@ es:
         revoked_public_share: "Se quitó el estado público de la rutina de ejercicio."
       phase_program:
         revoked_public_share: "Se quitó el estado público del programa."
+      plan:
+        revoked_public_share: "Se quitó el estado público del plan."
       phase:
         revoked_public_share: "Se quitó el estado público de la fase."
   sessions:

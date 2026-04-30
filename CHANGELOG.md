@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- **Plans (roadmap #61, REQ-PHS-001 / REQ-CAT-001):** public plan catalog copy under **`public_plans.*`** i18n; adopting a public plan duplicates menus and routines for the adopter via **`Plans::PopulateAssignmentsFromSource`** (parity with program adoption).
+- **Plans (roadmap #61, REQ-PHS-001 / REQ-CAT-001):** public plan catalog copy under **`public_plans.*`** i18n; adopting a public plan duplicates menus and routines for the adopter via **`Plans::PopulateAssignmentsFromSource`** (parity with program adoption). Admins can **`PATCH /admin/plans/:id/revoke_public_share`** to remove a plan from the public catalog (`Admin::PlansController`).
 
 - **CI:** GitHub Actions `test` job (PostgreSQL 16 service, `db:test:prepare`, `bin/rspec`); push triggers include `main` and `master`. Local `bin/ci` runs test DB prepare and RSpec after existing lint/security steps.
 

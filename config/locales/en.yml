@@ -609,6 +609,8 @@ en:
         revoked_public_share: "This exercise routine is no longer publicly shared."
       phase_program:
         revoked_public_share: "This program is no longer publicly shared."
+      plan:
+        revoked_public_share: "This plan is no longer publicly shared."
       phase:
         revoked_public_share: "This phase is no longer publicly shared."
   sessions:
