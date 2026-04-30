@@ -1,5 +1,5 @@
 <phase>start-task: Execution (Iterative TDD)</phase>
-<step>3.1 Write failing test (next pending step)</step>
+<step>3.1 Align public_plans_catalog_spec with public show (real Plan id)</step>
 
 Context:
 - Active session: `.agenticguild/active_sessions/task_planes-fases-catalogo.md`
