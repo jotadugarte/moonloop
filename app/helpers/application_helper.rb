@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def show_user_phases_navigation?
+    Rails.application.config.x.show_user_phases_navigation == true
+  end
+
   def exercise_routine_weekday_options_for_select
     I18n.t("date.day_names").each_with_index.map { |name, i| [ name, i ] }
   end

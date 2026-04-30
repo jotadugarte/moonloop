@@ -15,8 +15,10 @@
   <%= link_to t("home.index.exercise_routines"), exercise_routines_path %>
   <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.plans"), plans_path %>
-  <%= t("ui.inline_sep") %>
-  <%= link_to t("home.index.phase_templates"), user_phases_path %>
+  <% if show_user_phases_navigation? %>
+    <%= t("ui.inline_sep") %>
+    <%= link_to t("home.index.phase_templates"), user_phases_path %>
+  <% end %>
   <%= t("ui.inline_sep") %>
   <%= link_to t("home.index.weight_history"), weight_logs_path %>
   <%= t("ui.inline_sep") %>

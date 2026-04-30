@@ -14,7 +14,8 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 
-- **Home:** the catalog row links **`/menus`**, **`/platos`**, **`/exercise_routines`**, **`/plans`**, **`/fases`**, weight — not **`/phase`** (weekly assignment dashboard), to avoid duplicating the Plan + Phase product model in the main nav. **`UserPhasesController`** “back” targets **`root_path`**. **`/phase`** remains for flows that still redirect there (assignments, Mi Día shortcuts, applying a plan).
+- **Home:** the catalog row links **`/menus`**, **`/platos`**, **`/exercise_routines`**, **`/plans`**, weight — not **`/phase`** (weekly assignment dashboard), to avoid duplicating the Plan + Phase product model in the main nav. **`UserPhasesController`** “back” targets **`root_path`**. **`/phase`** remains for flows that still redirect there (assignments, Mi Día shortcuts, applying a plan).
+- **Fases (nav):** links to **`/fases`** on home and on **`/phase`** footer are **hidden by default** (`config.x.show_user_phases_navigation`, off unless **`MOONLOOP_SHOW_USER_PHASES_NAV=true`**). Routes and **`UserPhasesController`** stay available for direct URLs and tests.
 
 - **Menus (roadmap #58, REQ-MENU-001):** the menu editor slot dish picker is now **grouped by meal type** and **searchable by dish name** (accent- and case-insensitive), with an explicit clear action (“Sin plato” / “No dish”) and Turbo autosave preserved on selection.
 

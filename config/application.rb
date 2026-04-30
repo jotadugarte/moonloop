@@ -41,5 +41,8 @@ module Moonloop
 
     config.i18n.available_locales = %i[en es]
     config.i18n.default_locale = :es
+
+    # Set MOONLOOP_SHOW_USER_PHASES_NAV=true to show links to /fases (reusable phases) in home and /phase footer.
+    config.x.show_user_phases_navigation = ENV.fetch("MOONLOOP_SHOW_USER_PHASES_NAV", "false") == "true"
   end
 end
