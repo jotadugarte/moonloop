@@ -5,7 +5,7 @@ module Catalog
   class ListingFacet < ApplicationRecord
     self.table_name = "catalog_listing_facets"
 
-    LISTABLE_TYPES = %w[Menu ExerciseRoutine PhaseProgram Phase].freeze
+    LISTABLE_TYPES = %w[Menu ExerciseRoutine PhaseProgram Phase Plan].freeze
     DIFFICULTY_LEVELS = %w[beginner intermediate advanced].freeze
     MAX_TAGS = 10
     MAX_TAG_SLUG_LENGTH = 32
