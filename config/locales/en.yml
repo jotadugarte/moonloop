@@ -134,6 +134,7 @@ en:
     duration_min_label: "Min weeks (plan duration)"
     duration_max_label: "Max weeks"
     duration_phase_program_hint: "Catalog duration is filled automatically from program segments (lowest start week and highest end week)."
+    duration_plan_hint: "Catalog duration is filled automatically from plan segments (lowest start week and highest end week)."
 
   habit_completions:
     status:
@@ -532,6 +533,37 @@ en:
     index:
       title: "Plans — Moonloop"
       heading: "Plans (menu + routine)"
+      name_label: "Plan name"
+      public_share_label: "Visible on the public plans catalog"
+      create_submit: "Create plan"
+      edit: "Edit"
+      back_phase: "Back to phase plan"
+      catalog_link: "Public plans catalog"
+    edit:
+      title: "Plan %{name} — Moonloop"
+      heading: "Plan: %{name}"
+      name_label: "Name"
+      public_share_label: "Visible on the public plans catalog"
+      save_submit: "Save"
+      segments_heading: "Week ranges (menu + routine)"
+      segments_hint: "Each range links one menu and one exercise routine for those weeks in this saved plan."
+      segment_line: "%{menu} + %{routine} — weeks %{start}–%{end}"
+      no_segments: "No ranges yet. Add at least one before applying to the phase plan."
+      add_segment: "Add range"
+      edit_segment: "Edit"
+      delete_segment: "Remove"
+      delete_segment_confirm: "Remove this range from the plan?"
+      apply_heading: "Apply to phase plan"
+      apply_warning: "This replaces all of your current menu and routine week assignments with this saved plan."
+      apply_submit: "Apply to plan now"
+      destroy_plan: "Delete plan"
+      destroy_confirm: "Delete this plan and all its ranges? Menus and routines are not deleted."
+      back_index: "Plan list"
+      back_phase: "Phase plan"
+      adoption_sync:
+        pending: "The public source plan has new changes. Applying will rebuild ranges (duplicated menus and routines) from the current template; your copy name stays the same."
+        accept_update: "Apply update from source"
+        unavailable: "The link to the source plan is no longer available (it was removed or is no longer public). Your copy remains in your account."
     flash:
       created: "Plan created."
       updated: "Plan updated."
@@ -544,6 +576,28 @@ en:
         not_adopted_copy: "This plan is not an adopted copy."
         source_unavailable: "The source plan is no longer available in the catalog."
         origin_changed_retry: "The source plan changed again. Review before applying."
+  plan_assignments:
+    new:
+      title: "New range — Moonloop"
+      heading: "New range (menu + routine)"
+      back: "Back to plan"
+    edit:
+      title: "Edit range — Moonloop"
+      heading: "Edit range"
+      back: "Back to plan"
+    form:
+      menu_label: "Menu"
+      menu_blank: "Choose a menu"
+      routine_label: "Exercise routine"
+      routine_blank: "Choose a routine"
+      start_week_label: "Start week (≥ 1)"
+      end_week_label: "End week"
+      create_submit: "Add range"
+      update_submit: "Save range"
+    flash:
+      created: "Range added to the plan."
+      updated: "Range updated."
+      destroyed: "Range removed."
   phase_programs:
     index:
       title: "Programs — Moonloop"
@@ -771,6 +825,12 @@ en:
       dish:
         one: "Dish"
         other: "Dishes"
+      plan:
+        one: "Plan"
+        other: "Plans"
+      plan_assignment:
+        one: "Plan range"
+        other: "Plan ranges"
     attributes:
       user:
         email: "Email"
@@ -869,6 +929,16 @@ en:
               must_match_user: "must be an exercise routine owned by the same user as this program"
             base:
               range_overlap: "that week range overlaps another assignment in this program"
+        plan_assignment:
+          attributes:
+            end_week:
+              before_start_week: "must be greater than or equal to the start week"
+            menu_id:
+              must_match_user: "must be a menu owned by the same user as this plan"
+            exercise_routine_id:
+              must_match_user: "must be an exercise routine owned by the same user as this plan"
+            base:
+              range_overlap: "that week range overlaps another assignment in this plan"
         weight_log:
           attributes:
             logged_at:

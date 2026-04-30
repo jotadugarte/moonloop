@@ -14,7 +14,7 @@ RSpec.describe Catalog::ListingFacet, type: :model do
   end
 
   # [REQ-CAT-001]
-  it "rejects listable_type outside Menu, ExerciseRoutine, and PhaseProgram" do
+  it "rejects listable_type outside allowed catalog listables" do
     facet = described_class.new(listable_type: "User", listable_id: user.id)
     expect(facet).not_to be_valid
     expect(facet.errors.of_kind?(:listable_type, :inclusion)).to eq(true)

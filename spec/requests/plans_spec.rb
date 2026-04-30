@@ -17,7 +17,7 @@ RSpec.describe "Plans (bundles)", type: :request do
   end
 
   # [REQ-PHS-001]
-  it "lists programs and creates one" do
+  it "lists plans and creates one" do
     get plans_path
     expect(response).to have_http_status(:ok)
 
@@ -98,7 +98,7 @@ RSpec.describe "Plans (bundles)", type: :request do
   end
 
   # [REQ-CAT-001]
-  it "materializes catalog facet duration from program segments (not the facet form)" do
+  it "materializes catalog facet duration from plan segments (not the facet form)" do
     menu_a = Menu.create!(user: user, name: "Ma")
     routine_a = routine_for(user, "Ra")
     plan = Plan.create!(user: user, name: "Seg dura", publicly_shareable: true)
@@ -132,7 +132,7 @@ RSpec.describe "Plans (bundles)", type: :request do
   end
 
   # [REQ-PHS-001]
-  it "returns not found when editing another user's program" do
+  it "returns not found when editing another user's plan" do
     other = create(:user, password: "Password123!")
     foreign = Plan.create!(user: other, name: "Theirs")
 

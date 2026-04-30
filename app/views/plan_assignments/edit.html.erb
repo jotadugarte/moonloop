@@ -1,0 +1,9 @@
+<% content_for :title, t("plan_assignments.edit.title") %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("plan_assignments.edit.heading") %></h1>
+
+<%= render "form" %>
+
+<p class="mt-6">
+  <%= link_to t("plan_assignments.edit.back"), edit_plan_path(@plan), class: "text-blue-600 underline" %>
+</p>

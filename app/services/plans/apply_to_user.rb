@@ -18,6 +18,7 @@ module Plans
       anchor = resolve_anchor!(user: user, phase_one_starts_on: phase_one_starts_on)
 
       ApplicationRecord.transaction do
+        user.reload
         user.update!(phase_one_starts_on: anchor) if user.phase_one_starts_on != anchor
 
         user.phase_assignments.delete_all

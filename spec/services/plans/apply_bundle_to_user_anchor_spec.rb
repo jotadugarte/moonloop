@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Programs::ApplyBundleToUser do
+RSpec.describe Plans::ApplyToUser do
   let(:user) { create(:user, password: "Password123!", timezone: "Etc/UTC") }
 
   def routine_for(u, name)
@@ -15,11 +15,11 @@ RSpec.describe Programs::ApplyBundleToUser do
   # [REQ-PHS-001]
   it "requires an explicit anchor date selection when applying" do
     user.update!(phase_one_starts_on: nil)
-    program = PhaseProgram.create!(user: user, name: "Bundle")
+    plan = Plan.create!(user: user, name: "Bundle")
 
     expect do
-      described_class.call(phase_program: program, user: user)
-    end.to raise_error(described_class::Error)
+      described_class.call(plan: plan, user: user)
+    end.to raise_error(described_class::Error) { |e| expect(e.key).to eq(:anchor_required) }
   end
 
   # [REQ-PHS-001]
@@ -27,16 +27,16 @@ RSpec.describe Programs::ApplyBundleToUser do
     user.update!(phase_one_starts_on: nil)
     menu = Menu.create!(user: user, name: "Menú")
     routine = routine_for(user, "Rutina")
-    program = PhaseProgram.create!(user: user, name: "Bundle")
-    PhaseProgramAssignment.create!(
-      phase_program: program,
+    plan = Plan.create!(user: user, name: "Bundle")
+    PlanAssignment.create!(
+      plan: plan,
       menu: menu,
       exercise_routine: routine,
       start_week: 1,
       end_week: 2
     )
 
-    described_class.call(phase_program: program, user: user, phase_one_starts_on: Date.new(2026, 1, 15))
+    described_class.call(plan: plan, user: user, phase_one_starts_on: Date.new(2026, 1, 15))
 
     expect(user.reload.phase_one_starts_on).to eq(Date.new(2026, 1, 15))
     expect(user.phase_assignments.count).to eq(1)

@@ -1,5 +1,5 @@
 <phase>start-task: Execution (Iterative TDD)</phase>
-<step>3.1 Demo seeds + demo_dataset_spec use Plan and Plans::ApplyToUser</step>
+<step>3.1 CORTE TOTAL: remove Programs/PhaseProgram; plans UI + specs</step>
 
 Context:
 - Active session: `.agenticguild/active_sessions/task_planes-fases-catalogo.md`

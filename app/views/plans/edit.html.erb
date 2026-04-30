@@ -1,0 +1,105 @@
+<% content_for :title, t("plans.edit.title", name: @plan.name) %>
+
+<h1 class="text-2xl font-bold mb-4"><%= t("plans.edit.heading", name: @plan.name) %></h1>
+
+<% if @adoption_sync_status.key == :pending %>
+  <div class="mb-4 p-3 border border-amber-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("plans.edit.adoption_sync.pending") %></p>
+    <%= form_with url: accept_source_update_plan_path(@plan), method: :post, local: true do %>
+      <%= hidden_field_tag :expected_origin_fingerprint, @adoption_sync_status.origin_fingerprint %>
+      <%= submit_tag t("plans.edit.adoption_sync.accept_update"),
+            class: "bg-amber-600 text-white px-3 py-1 rounded cursor-pointer border-0" %>
+    <% end %>
+  </div>
+<% elsif @adoption_sync_status.key == :unavailable %>
+  <div class="mb-4 p-3 border border-gray-400 rounded max-w-2xl" role="status" aria-live="polite">
+    <p><%= t("plans.edit.adoption_sync.unavailable") %></p>
+  </div>
+<% end %>
+
+<% prog_attrs_err_id = "plan-attrs-errors" %>
+<%= form_with model: @plan, url: plan_path(@plan), method: :patch, class: "space-y-3 max-w-lg mb-8" do |f| %>
+  <% if @plan.errors.any? %>
+    <ul id="<%= prog_attrs_err_id %>" class="text-red-600 text-sm list-disc pl-5" role="alert">
+      <% @plan.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+      <% @plan.catalog_listing_facet&.errors&.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <div>
+    <%= f.label :name, t("plans.edit.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@plan, :name, prog_attrs_err_id) %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@plan, :publicly_shareable, prog_attrs_err_id) %>
+    <%= f.label :publicly_shareable, t("plans.edit.public_share_label"), class: "text-gray-700" %>
+  </div>
+  <%= f.fields_for(:catalog_listing_facet, @plan.catalog_listing_facet || @plan.build_catalog_listing_facet) do |cf| %>
+    <%= render "shared/catalog_listing_facet_fields", cf: cf %>
+  <% end %>
+  <div>
+    <%= f.submit t("plans.edit.save_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
+  </div>
+<% end %>
+
+<section class="mb-8 max-w-2xl">
+  <h2 class="text-lg font-semibold mb-2"><%= t("plans.edit.segments_heading") %></h2>
+  <p class="text-gray-600 text-sm mb-3"><%= t("plans.edit.segments_hint") %></p>
+  <% if @assignments.any? %>
+    <ul class="list-disc pl-5 space-y-1 mb-4">
+      <% @assignments.each do |a| %>
+        <li>
+          <%= t("plans.edit.segment_line",
+                menu: a.menu.name,
+                routine: a.exercise_routine.name,
+                start: a.start_week,
+                end: a.end_week) %>
+          <%= link_to t("plans.edit.edit_segment"), edit_plan_plan_assignment_path(@plan, a), class: "text-blue-600 underline ml-1" %>
+          <%= button_to t("plans.edit.delete_segment"),
+                plan_plan_assignment_path(@plan, a),
+                method: :delete,
+                form: { data: { turbo_confirm: t("plans.edit.delete_segment_confirm") } },
+                class: "text-sm text-red-700 underline ml-2 bg-transparent border-0 cursor-pointer p-0 inline" %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600 mb-4"><%= t("plans.edit.no_segments") %></p>
+  <% end %>
+  <p>
+    <%= link_to t("plans.edit.add_segment"),
+          new_plan_plan_assignment_path(@plan),
+          class: "text-blue-600 underline" %>
+  </p>
+</section>
+
+<section class="mb-8 max-w-lg rounded border border-amber-200 bg-amber-50 p-4">
+  <h2 class="text-lg font-semibold mb-2"><%= t("plans.edit.apply_heading") %></h2>
+  <p class="text-sm text-gray-800 mb-3"><%= t("plans.edit.apply_warning") %></p>
+  <%= button_to t("plans.edit.apply_submit"),
+        apply_plan_path(@plan),
+        method: :post,
+        class: "bg-amber-700 text-white px-4 py-2 rounded cursor-pointer hover:bg-amber-800 border-0" %>
+</section>
+
+<section class="mb-8">
+  <%= button_to t("plans.edit.destroy_plan"),
+        plan_path(@plan),
+        method: :delete,
+        form: { data: { turbo_confirm: t("plans.edit.destroy_confirm") } },
+        class: "text-sm bg-red-700 text-white px-3 py-2 rounded cursor-pointer hover:bg-red-800 border-0" %>
+</section>
+
+<p>
+  <%= link_to t("plans.edit.back_index"), plans_path, class: "text-blue-600 underline" %>
+  ·
+  <%= link_to t("plans.edit.back_phase"), phase_path, class: "text-blue-600 underline" %>
+</p>

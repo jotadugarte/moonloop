@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Optional public-catalog discovery row (REQ-CAT-001) for Menu, ExerciseRoutine, PhaseProgram.
+# Optional public-catalog discovery row (REQ-CAT-001) for Menu, ExerciseRoutine, Phase, Plan.
 module CatalogListableWithListingFacet
   extend ActiveSupport::Concern
 

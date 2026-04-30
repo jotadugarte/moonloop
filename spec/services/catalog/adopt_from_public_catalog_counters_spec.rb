@@ -68,20 +68,20 @@ RSpec.describe "AdoptFromPublicCatalog increments template counters [REQ-CAT-001
   end
 
   # [REQ-CAT-001]
-  it "increments both counters on the public phase program template after adoption" do
+  it "increments both counters on the public plan template after adoption" do
     menu = Menu.create!(user: author, name: "M")
     MenuEntry.create!(menu: menu, weekday: 0, meal_type: "cena", freeform_text: "soup")
     routine = routine_with_line(author, "R")
-    source = PhaseProgram.create!(user: author, name: "Bundle público", publicly_shareable: true)
-    PhaseProgramAssignment.create!(
-      phase_program: source,
+    source = Plan.create!(user: author, name: "Plan público", publicly_shareable: true)
+    PlanAssignment.create!(
+      plan: source,
       menu: menu,
       exercise_routine: routine,
       start_week: 1,
       end_week: 2
     )
 
-    Programs::AdoptFromPublicCatalog.call(adopter: adopter, source: source, chosen_name: "Copia programa")
+    Plans::AdoptFromPublicCatalog.call(adopter: adopter, source: source, chosen_name: "Copia plan")
 
     source.reload
     expect(source.public_catalog_adoptions_count).to eq(1)

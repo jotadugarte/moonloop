@@ -18,9 +18,9 @@
     <%= cf.label :normalized_tags, t("catalog_listing_facet.tags_label"), class: "block text-sm font-medium mb-1 text-gray-800" %>
     <%= cf.text_field :normalized_tags, class: "border border-gray-300 rounded p-2 w-full" %>
   </div>
-  <% derived_phase_program_duration = cf.object.listable.is_a?(PhaseProgram) || cf.object.listable_type == "PhaseProgram" %>
-  <% if derived_phase_program_duration %>
-    <p class="text-gray-600 text-sm mb-1"><%= t("catalog_listing_facet.duration_phase_program_hint") %></p>
+  <% derived_plan_duration = cf.object.listable.is_a?(Plan) || cf.object.listable_type == "Plan" %>
+  <% if derived_plan_duration %>
+    <p class="text-gray-600 text-sm mb-1"><%= t("catalog_listing_facet.duration_plan_hint") %></p>
   <% else %>
     <div class="flex flex-wrap gap-3 mb-1">
       <div>

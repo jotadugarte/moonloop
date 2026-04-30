@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Programs::ApplyBundleToUser do
+RSpec.describe Plans::ApplyToUser do
   let(:user) { create(:user, password: "Password123!") }
   let(:other) { create(:user, password: "Password123!") }
 
@@ -14,38 +14,38 @@ RSpec.describe Programs::ApplyBundleToUser do
   end
 
   # [REQ-PHS-001]
-  it "raises wrong_owner when the program does not belong to the user" do
-    program = PhaseProgram.create!(user: other, name: "Ajeno")
+  it "raises wrong_owner when the plan does not belong to the user" do
+    plan = Plan.create!(user: other, name: "Ajeno")
     expect do
-      described_class.call(phase_program: program, user: user)
+      described_class.call(plan: plan, user: user)
     end.to raise_error(described_class::Error) do |err|
       expect(err.key).to eq(:wrong_owner)
     end
   end
 
   # [REQ-PHS-001]
-  it "replaces phase_assignments and exercise_routine_assignments from program segments" do
+  it "replaces phase_assignments and exercise_routine_assignments from plan segments" do
     menu_a = Menu.create!(user: user, name: "Menú A")
     menu_b = Menu.create!(user: user, name: "Menú B")
     routine_a = routine_for(user, "Rutina A")
     routine_b = routine_for(user, "Rutina B")
-    program = PhaseProgram.create!(user: user, name: "Bundle")
-    PhaseProgramAssignment.create!(
-      phase_program: program,
+    plan = Plan.create!(user: user, name: "Bundle")
+    PlanAssignment.create!(
+      plan: plan,
       menu: menu_a,
       exercise_routine: routine_a,
       start_week: 1,
       end_week: 4
     )
-    PhaseProgramAssignment.create!(
-      phase_program: program,
+    PlanAssignment.create!(
+      plan: plan,
       menu: menu_b,
       exercise_routine: routine_b,
       start_week: 5,
       end_week: 8
     )
 
-    described_class.call(phase_program: program, user: user)
+    described_class.call(plan: plan, user: user)
 
     user.reload
     expect(user.phase_assignments.order(:start_week).pluck(:menu_id, :start_week, :end_week)).to eq(
@@ -65,16 +65,16 @@ RSpec.describe Programs::ApplyBundleToUser do
     PhaseAssignment.create!(user: user, menu: menu_a, start_week: 10, end_week: 12)
     ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine_a, start_week: 10, end_week: 12)
 
-    program = PhaseProgram.create!(user: user, name: "Bundle")
-    PhaseProgramAssignment.create!(
-      phase_program: program,
+    plan = Plan.create!(user: user, name: "Bundle")
+    PlanAssignment.create!(
+      plan: plan,
       menu: menu_b,
       exercise_routine: routine_b,
       start_week: 1,
       end_week: 2
     )
 
-    described_class.call(phase_program: program, user: user)
+    described_class.call(plan: plan, user: user)
 
     user.reload
     expect(user.phase_assignments.count).to eq(1)
@@ -88,14 +88,14 @@ RSpec.describe Programs::ApplyBundleToUser do
   end
 
   # [REQ-PHS-001]
-  it "clears both assignment tables when the program has no segments" do
+  it "clears both assignment tables when the plan has no segments" do
     menu = Menu.create!(user: user, name: "Solo")
     routine = routine_for(user, "Solo")
     PhaseAssignment.create!(user: user, menu: menu, start_week: 1, end_week: 2)
     ExerciseRoutineAssignment.create!(user: user, exercise_routine: routine, start_week: 1, end_week: 2)
-    program = PhaseProgram.create!(user: user, name: "Vacío")
+    plan = Plan.create!(user: user, name: "Vacío")
 
-    described_class.call(phase_program: program, user: user)
+    described_class.call(plan: plan, user: user)
 
     user.reload
     expect(user.phase_assignments).to be_empty

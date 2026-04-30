@@ -1,10 +1,44 @@
-<% content_for :title, t("plans.index.title", default: "Planes") %>
+<% content_for :title, t("plans.index.title") %>
 
-<h1><%= t("plans.index.heading", default: "Planes") %></h1>
+<h1 class="text-2xl font-bold mb-4"><%= t("plans.index.heading") %></h1>
 
-<ul role="list">
-  <% @plans.each do |plan| %>
-    <li><%= link_to plan.name, edit_plan_path(plan) %></li>
+<p class="mb-4 flex flex-wrap gap-x-3 gap-y-1">
+  <%= link_to t("plans.index.back_phase"), phase_path, class: "text-blue-600 underline" %>
+  <%= link_to t("plans.index.catalog_link"), public_plans_path, class: "text-blue-600 underline" %>
+</p>
+
+<% prog_err_id = "plan-new-errors" %>
+<%= form_with model: @plan, url: plans_path, class: "space-y-3 max-w-lg mb-8" do |f| %>
+  <% if @plan.errors.any? %>
+    <ul id="<%= prog_err_id %>" class="text-red-600 text-sm list-disc pl-5" role="alert">
+      <% @plan.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
   <% end %>
-</ul>
+  <div>
+    <%= f.label :name, t("plans.index.name_label"), class: "block font-medium mb-1" %>
+    <%= f.text_field :name,
+          class: "border border-gray-300 rounded p-2 w-full",
+          aria: aria_for_field(@plan, :name, prog_err_id) %>
+  </div>
+  <div class="flex items-center gap-2">
+    <%= f.check_box :publicly_shareable,
+          class: "rounded border-gray-300",
+          aria: aria_for_field(@plan, :publicly_shareable, prog_err_id) %>
+    <%= f.label :publicly_shareable, t("plans.index.public_share_label"), class: "text-gray-700" %>
+  </div>
+  <div>
+    <%= f.submit t("plans.index.create_submit"),
+          class: "bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 border-0" %>
+  </div>
+<% end %>
 
+<hr class="mb-6">
+
+<% @plans.each do |plan| %>
+  <div id="<%= dom_id(plan) %>" class="mb-2">
+    <strong><%= plan.name %></strong>
+    <%= link_to t("plans.index.edit"), edit_plan_path(plan), class: "text-blue-600 underline ml-2" %>
+  </div>
+<% end %>

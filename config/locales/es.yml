@@ -108,6 +108,7 @@ es:
     duration_min_label: "Semanas mín. (duración del plan)"
     duration_max_label: "Semanas máx."
     duration_phase_program_hint: "La duración para el catálogo se toma automáticamente de los segmentos del programa (semana inicial más baja y semana final más alta)."
+    duration_plan_hint: "La duración para el catálogo se toma automáticamente de los segmentos del plan (semana inicial más baja y semana final más alta)."
 
   habit_completions:
     status:
@@ -506,6 +507,37 @@ es:
     index:
       title: "Planes — Moonloop"
       heading: "Planes (menú + rutina)"
+      name_label: "Nombre del plan"
+      public_share_label: "Visible en el catálogo público de planes"
+      create_submit: "Crear plan"
+      edit: "Editar"
+      back_phase: "Volver al plan de fases"
+      catalog_link: "Catálogo público de planes"
+    edit:
+      title: "Plan %{name} — Moonloop"
+      heading: "Plan: %{name}"
+      name_label: "Nombre"
+      public_share_label: "Visible en el catálogo público de planes"
+      save_submit: "Guardar"
+      segments_heading: "Rangos de semanas (menú + rutina)"
+      segments_hint: "Cada rango enlaza un menú y una rutina de ejercicio para esas semanas del plan guardado."
+      segment_line: "%{menu} + %{routine} — semanas %{start}–%{end}"
+      no_segments: "Aún no hay rangos. Añade al menos uno antes de aplicar al plan de fases."
+      add_segment: "Añadir rango"
+      edit_segment: "Editar"
+      delete_segment: "Eliminar"
+      delete_segment_confirm: "¿Eliminar este rango del plan?"
+      apply_heading: "Aplicar al plan de fases"
+      apply_warning: "Esto sustituye todas tus asignaciones actuales de menú y de rutina por las de este plan guardado."
+      apply_submit: "Aplicar al plan ahora"
+      destroy_plan: "Eliminar plan"
+      destroy_confirm: "¿Eliminar este plan y todos sus rangos? Los menús y rutinas no se borran."
+      back_index: "Lista de planes"
+      back_phase: "Plan de fases"
+      adoption_sync:
+        pending: "El plan público de origen tiene cambios nuevos. Al aplicar se vuelven a generar los rangos (menús y rutinas duplicados) según la plantilla actual; el nombre de tu copia no cambia."
+        accept_update: "Aplicar actualización desde el origen"
+        unavailable: "El vínculo con el plan de origen ya no está disponible (se eliminó o dejó de ser público). Tu copia sigue en tu cuenta."
     flash:
       created: "Plan creado."
       updated: "Plan actualizado."
@@ -518,6 +550,28 @@ es:
         not_adopted_copy: "Este plan no es una copia adoptada."
         source_unavailable: "El plan de origen ya no está disponible en el catálogo."
         origin_changed_retry: "El plan de origen cambió otra vez. Vuelve a revisar antes de aplicar."
+  plan_assignments:
+    new:
+      title: "Nuevo rango — Moonloop"
+      heading: "Nuevo rango (menú + rutina)"
+      back: "Volver al plan"
+    edit:
+      title: "Editar rango — Moonloop"
+      heading: "Editar rango"
+      back: "Volver al plan"
+    form:
+      menu_label: "Menú"
+      menu_blank: "Elige un menú"
+      routine_label: "Rutina de ejercicio"
+      routine_blank: "Elige una rutina"
+      start_week_label: "Semana inicial (≥ 1)"
+      end_week_label: "Semana final"
+      create_submit: "Añadir rango"
+      update_submit: "Guardar rango"
+    flash:
+      created: "Rango añadido al plan."
+      updated: "Rango actualizado."
+      destroyed: "Rango eliminado."
   phase_programs:
     index:
       title: "Programas — Moonloop"
@@ -871,6 +925,12 @@ es:
       exercise_routine_line:
         one: "Línea de rutina"
         other: "Líneas de rutina"
+      plan:
+        one: "Plan"
+        other: "Planes"
+      plan_assignment:
+        one: "Rango del plan"
+        other: "Rangos del plan"
     attributes:
       menu:
         name: "Nombre"
@@ -979,6 +1039,16 @@ es:
               must_match_user: "debe ser una rutina del mismo usuario que el programa"
             base:
               range_overlap: "ese rango de semanas se solapa con otra asignación del programa"
+        plan_assignment:
+          attributes:
+            end_week:
+              before_start_week: "debe ser mayor o igual que la semana inicial"
+            menu_id:
+              must_match_user: "debe ser un menú del mismo usuario que el plan"
+            exercise_routine_id:
+              must_match_user: "debe ser una rutina del mismo usuario que el plan"
+            base:
+              range_overlap: "ese rango de semanas se solapa con otra asignación del plan"
         weight_log:
           attributes:
             logged_at:

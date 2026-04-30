@@ -22,9 +22,9 @@ RSpec.describe "Catalog template adoption counters (REQ-CAT-001)", :aggregate_fa
   end
 
   # [REQ-CAT-001]
-  it "persists PhaseProgram counters defaulting to zero" do
-    program = PhaseProgram.create!(user: user, name: "Bundle A")
-    expect(program.public_catalog_adoptions_count).to eq(0)
-    expect(program.public_catalog_distinct_adopters_count).to eq(0)
+  it "persists Plan counters defaulting to zero" do
+    plan = Plan.create!(user: user, name: "Plan A")
+    expect(plan.public_catalog_adoptions_count).to eq(0)
+    expect(plan.public_catalog_distinct_adopters_count).to eq(0)
   end
 end

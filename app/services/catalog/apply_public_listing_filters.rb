@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Catalog
-  # Applies REQ-CAT-001 discovery filters to a catalog listable relation (Menu / ExerciseRoutine / PhaseProgram).
+  # Applies REQ-CAT-001 discovery filters to a catalog listable relation (Menu / ExerciseRoutine / Phase / Plan).
   class ApplyPublicListingFilters
     MAX_Q_CHARS = 255
 

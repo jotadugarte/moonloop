@@ -101,7 +101,7 @@ RSpec.describe PlanAssignment, type: :model do
   end
 
   # [REQ-PHS-001]
-  it "does not treat ranges on different programs as overlapping" do
+  it "does not treat ranges on different plans as overlapping" do
     other_plan = Plan.create!(user: user, name: "Plan B")
     described_class.create!(
       plan: plan,
