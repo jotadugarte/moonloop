@@ -15,6 +15,7 @@ RSpec.describe "Mi Día shortcut to menus and phase plan", type: :system do
 
   # [REQ-MENU-003] entry point from Mi Día to phase plan / menus area
   it "shows a shortcut below the day content and navigates to the phase plan" do
+    skip "Temporarily hidden per user request"
     visit my_day_path
 
     expect(page).to have_css('[data-test="my-day-phases-shortcut"]')

@@ -51,14 +51,17 @@
           exercise_routines_path,
           class: "text-blue-600 underline font-medium",
           data: { turbo_action: "advance" } %>
+<% if false %>
     <span class="text-gray-400" aria-hidden="true">·</span>
     <%= link_to t("my_day.show.exercise_shortcut_phase_plan"),
           phase_path,
           class: "text-blue-600 underline font-medium",
           data: { turbo_action: "advance" } %>
+<% end %>
   </div>
 </section>
 
+<% if false %>
 <section class="mt-8 pt-6 border-t border-gray-200" data-test="my-day-phases-shortcut">
   <h2 class="text-lg font-semibold mb-2"><%= t("my_day.show.phases_shortcut_heading") %></h2>
   <p class="text-gray-700 text-sm mb-2"><%= t("my_day.show.phases_shortcut_intro") %></p>
@@ -67,5 +70,6 @@
               class: "text-blue-600 underline font-medium",
               data: { turbo_action: "advance" } %>
 </section>
+<% end %>
 
 <p><%= link_to t("my_day.show.back_home"), root_path %></p>

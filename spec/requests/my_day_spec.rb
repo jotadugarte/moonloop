@@ -158,12 +158,11 @@ RSpec.describe "Mi Día (My Day)", type: :request do
   end
 
   # [REQ-EXR-003]
-  it "always exposes global exercise + phase plan shortcuts" do
+  it "always exposes global exercise shortcut" do
     get my_day_path
 
     expect(response.body).to include('data-test="my-day-exercise-shortcut"')
     expect(response.body).to include(exercise_routines_path)
-    expect(response.body).to include(phase_path)
   end
 
   # [REQ-EXR-003]

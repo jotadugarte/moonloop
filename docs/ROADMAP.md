@@ -99,7 +99,7 @@ Estado **2026-04-28**: ítems abiertos con `[ ]` — **#57** (plan que abarque f
 
 60. [ ] **Rutinas de ejercicio — validaciones i18n (es)**. En `/exercise_routines` con locale `:es`, corregir mensajes mezclados (atributos en inglés) y “Translation missing …” para que los errores se muestren coherentes en español. — Source: `.agenticguild/active_sessions/task_exercise-routines-i18n-validaciones.md`
 
- 
+64. [ ] **Fecha de inicio en el plan**. Agregar fecha de inicio al plan para usarla en el plan y luego control de hábitos, menús y rutinas.
 
 ## Backlog
 *(No items currently in backlog.)*

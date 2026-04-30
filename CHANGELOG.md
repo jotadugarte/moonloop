@@ -17,6 +17,8 @@ All notable changes to this project are documented in this file.
 - **Home:** the catalog row links **`/menus`**, **`/platos`**, **`/exercise_routines`**, **`/plans`**, weight — not **`/phase`** (weekly assignment dashboard), to avoid duplicating the Plan + Phase product model in the main nav. **`UserPhasesController`** “back” targets **`root_path`**. **`/phase`** remains for flows that still redirect there (assignments, Mi Día shortcuts, applying a plan).
 - **Fases (nav):** links to **`/fases`** on home and on **`/phase`** footer are **hidden by default** (`config.x.show_user_phases_navigation`, off unless **`MOONLOOP_SHOW_USER_PHASES_NAV=true`**). Routes and **`UserPhasesController`** stay available for direct URLs and tests.
 
+- **Plans (i18n):** plan index/edit links to **`/phase`** and apply copy no longer say “Plan de fases” / “phase plan”; they use **“Semanas del programa”** / **“program weeks”** and **“Aplicar a asignaciones por semana”** / **“Apply to week assignments”** (legacy **`phase_programs.*`** strings aligned).
+
 - **Menus (roadmap #58, REQ-MENU-001):** the menu editor slot dish picker is now **grouped by meal type** and **searchable by dish name** (accent- and case-insensitive), with an explicit clear action (“Sin plato” / “No dish”) and Turbo autosave preserved on selection.
 
 - **Documentation (roadmap #52):** `docs/core/SPEC.md` (glossary, entities, REQ-MENU-001/002/006, deep dive), `docs/core/DATA_FLOW_MAP.md` (menu slot / `MenuEntry` invariants), and `docs/ROADMAP.md` (**#52** done, Phase 4 labels) aligned with the **`Dish`** model and **`/platos`** / **`/public_dishes`** routes.
