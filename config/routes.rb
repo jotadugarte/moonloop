@@ -93,6 +93,11 @@ Rails.application.routes.draw do
         patch :revoke_public_share
       end
     end
+    resources :phases, only: [] do
+      member do
+        patch :revoke_public_share
+      end
+    end
     resources :phase_programs, only: [] do
       member do
         patch :revoke_public_share

@@ -214,4 +214,56 @@ RSpec.describe "Admin moderation of public sharing", type: :request do
     expect(response).to have_http_status(:forbidden)
     expect(program.reload.publicly_shareable).to eq(true)
   end
+
+  # [REQ-CAT-001] — phases public catalog moderation (REQ-ID finalized in SPEC step S11 of task plan)
+  it "allows an admin to revoke public sharing on a phase" do
+    admin = create(:user, email: "admin-phase@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    phase = Phase.create!(user: owner, name: "Fase spam", weeks_total: 4, publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
+    post sign_in_path, params: { email: admin.email, password: "Password123!" }
+
+    patch revoke_public_share_admin_phase_path(phase)
+
+    expect(response).to have_http_status(:found)
+    expect(phase.reload.publicly_shareable).to eq(false)
+  end
+
+  # [REQ-CAT-001] — phases public catalog moderation (REQ-ID finalized in SPEC step S11 of task plan)
+  it "removes a phase from the public catalog index after admin revoke" do
+    admin = create(:user, email: "admin-phase2@example.com", password: "Password123!", timezone: "Etc/UTC")
+    viewer = create(:user, email: "viewer-phase@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    phase = Phase.create!(user: owner, name: "Listado fase revocada", weeks_total: 4, publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = admin.email
+
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+    get public_phases_path
+    expect(response.body).to include("Listado fase revocada")
+
+    post sign_in_path, params: { email: admin.email, password: "Password123!" }
+    patch revoke_public_share_admin_phase_path(phase)
+    expect(response).to have_http_status(:found)
+
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+    get public_phases_path
+    expect(response.body).not_to include("Listado fase revocada")
+  end
+
+  # [REQ-CAT-001] — phases public catalog moderation (REQ-ID finalized in SPEC step S11 of task plan)
+  it "rejects phase moderation for non-admin users" do
+    viewer = create(:user, email: "viewer-phase3@example.com", password: "Password123!", timezone: "Etc/UTC")
+    owner = create(:user, password: "Password123!", timezone: "Etc/UTC")
+    phase = Phase.create!(user: owner, name: "No tocar fase", weeks_total: 4, publicly_shareable: true)
+
+    ENV["MOONLOOP_ADMIN_EMAILS"] = "admin@example.com"
+    post sign_in_path, params: { email: viewer.email, password: "Password123!" }
+
+    patch revoke_public_share_admin_phase_path(phase)
+
+    expect(response).to have_http_status(:forbidden)
+    expect(phase.reload.publicly_shareable).to eq(true)
+  end
 end
