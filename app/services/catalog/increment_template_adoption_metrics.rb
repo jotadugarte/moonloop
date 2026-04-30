@@ -4,8 +4,8 @@ module Catalog
   # Increments template-level catalog counters on successful adoption (REQ-CAT-001).
   module IncrementTemplateAdoptionMetrics
     def self.call(template)
-      unless template.is_a?(Menu) || template.is_a?(ExerciseRoutine) || template.is_a?(PhaseProgram) || template.is_a?(Phase)
-        raise ArgumentError, "expected Menu, ExerciseRoutine, PhaseProgram, or Phase, got #{template.class}"
+      unless template.is_a?(Menu) || template.is_a?(ExerciseRoutine) || template.is_a?(Plan) || template.is_a?(Phase)
+        raise ArgumentError, "expected Menu, ExerciseRoutine, Plan, or Phase, got #{template.class}"
       end
 
       sql = "public_catalog_adoptions_count = public_catalog_adoptions_count + 1, " \

@@ -1,3 +1,51 @@
+<% content_for :title, t("public_plans.show.title", name: @plan.name, default: @plan.name) %>
+
+<h1><%= @plan.name %></h1>
+
+<p><%= t("public_plans.shared.author", code: @plan.user.public_catalog_author_code, default: @plan.user.public_catalog_author_code) %></p>
+
+<% if Current.user && Current.user.id != @plan.user_id %>
+  <section class="mb-4" aria-label="<%= t("public_plans.adopt.section_label", default: "Adoptar este plan") %>">
+    <%= form_with url: adopt_public_plan_path(@plan), method: :post, local: true do |f| %>
+      <p>
+        <%= label_tag "adopt_plan_copy_name", t("public_plans.adopt.name_label", default: "Nombre para tu copia") %>
+        <%= text_field_tag :name, params[:name].presence || @plan.name,
+              id: "adopt_plan_copy_name",
+              required: true,
+              aria: { required: true } %>
+      </p>
+      <p><%= f.submit t("public_plans.adopt.submit", default: "Adoptar plan") %></p>
+    <% end %>
+  </section>
+<% end %>
+
+<section class="mb-6" aria-labelledby="public-plan-assignments-heading">
+  <h2 id="public-plan-assignments-heading" class="text-lg font-semibold mb-2">
+    <%= t("public_plans.show.segments_heading", default: "Rangos publicados") %>
+  </h2>
+
+  <% if @assignments.any? %>
+    <ul class="list-disc pl-5 space-y-1">
+      <% @assignments.each do |a| %>
+        <li>
+          <%= t(
+                "public_plans.show.segment_line",
+                menu: a.menu.name,
+                routine: a.exercise_routine.name,
+                start: a.start_week,
+                end: a.end_week,
+                default: "#{a.menu.name} + #{a.exercise_routine.name} — semanas #{a.start_week}–#{a.end_week}"
+              ) %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600"><%= t("public_plans.show.no_segments", default: "Este plan no tiene rangos publicados.") %></p>
+  <% end %>
+</section>
+
+<p><%= link_to t("public_plans.show.back_to_catalog", default: "Volver al catálogo"), public_plans_path, class: "text-blue-600 underline" %></p>
+
 <main id="main-content">
   <h1><%= t("public_plans.show.title", default: "Plan") %></h1>
 </main>
