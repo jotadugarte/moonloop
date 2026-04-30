@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_29_211500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -243,6 +243,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
     t.index ["user_id"], name: "index_phase_reminder_events_on_user_id"
   end
 
+  create_table "phases", force: :cascade do |t|
+    t.bigint "adoption_catalog_origin_id"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "name_normalized", null: false
+    t.integer "public_catalog_adoptions_count", default: 0, null: false
+    t.integer "public_catalog_distinct_adopters_count", default: 0, null: false
+    t.boolean "publicly_shareable", default: false, null: false
+    t.bigint "source_phase_id"
+    t.string "source_sync_fingerprint"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "weeks_total", null: false
+    t.index ["source_phase_id"], name: "index_phases_on_source_phase_id"
+    t.index ["user_id", "name_normalized"], name: "index_phases_on_user_and_name_normalized", unique: true
+    t.index ["user_id", "source_phase_id"], name: "index_phases_adoption_unique_per_user_and_source", unique: true, where: "(source_phase_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_phases_on_user_id"
+    t.check_constraint "weeks_total >= 1", name: "phases_weeks_total_gte_one"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -351,6 +371,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_120000) do
   add_foreign_key "phase_programs", "phase_programs", column: "source_phase_program_id"
   add_foreign_key "phase_programs", "users"
   add_foreign_key "phase_reminder_events", "users"
+  add_foreign_key "phases", "phases", column: "source_phase_id"
+  add_foreign_key "phases", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "user_habits", "global_habit_templates"
   add_foreign_key "user_habits", "habit_categories"
