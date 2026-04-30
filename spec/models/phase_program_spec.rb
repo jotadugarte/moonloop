@@ -2,39 +2,39 @@
 
 require "rails_helper"
 
-RSpec.describe PhaseProgram, type: :model do
+RSpec.describe Plan, type: :model do
   let(:user) { create(:user) }
 
   # [REQ-PHS-001]
   it "belongs to a user" do
-    program = described_class.new(name: "Plan integrado", user: user)
-    expect(program.user).to eq(user)
+    plan = described_class.new(name: "Plan integrado", user: user)
+    expect(plan.user).to eq(user)
   end
 
   # [REQ-PHS-001]
   it "requires a non-blank name" do
-    program = described_class.new(user: user, name: "   ")
-    expect(program).not_to be_valid
-    expect(program.errors[:name]).to be_present
+    plan = described_class.new(user: user, name: "   ")
+    expect(plan).not_to be_valid
+    expect(plan.errors[:name]).to be_present
   end
 
   # [REQ-PHS-001]
   it "normalizes name by stripping whitespace" do
-    program = described_class.new(user: user, name: "  Verano  ")
-    program.valid?
-    expect(program.name).to eq("Verano")
+    plan = described_class.new(user: user, name: "  Verano  ")
+    plan.valid?
+    expect(plan.name).to eq("Verano")
   end
 
   # [REQ-PHS-001]
   it "persists publicly_shareable defaulting to false" do
-    program = described_class.create!(user: user, name: "Único")
-    expect(program.reload.publicly_shareable).to eq(false)
+    plan = described_class.create!(user: user, name: "Único")
+    expect(plan.reload.publicly_shareable).to eq(false)
   end
 
   # [REQ-PHS-001]
-  it "reflects optional source_phase_program and adopted_copies for catalog adoption parity" do
-    src = described_class.reflect_on_association(:source_phase_program)
-    expect(src.options[:class_name]).to eq("PhaseProgram")
+  it "reflects optional source_plan and adopted_copies for catalog adoption parity" do
+    src = described_class.reflect_on_association(:source_plan)
+    expect(src.options[:class_name]).to eq("Plan")
     expect(src.options[:optional]).to eq(true)
 
     copies = described_class.reflect_on_association(:adopted_copies)
@@ -54,13 +54,13 @@ RSpec.describe PhaseProgram, type: :model do
     copy = described_class.create!(
       user: adopter,
       name: "Copia",
-      source_phase_program: template,
+      source_plan: template,
       adoption_catalog_origin_id: template.id,
       source_sync_fingerprint: "fp-test"
     )
     copy.reload
     expect(copy.adoption_catalog_origin_id).to eq(template.id)
     expect(copy.source_sync_fingerprint).to eq("fp-test")
-    expect(copy.source_phase_program).to eq(template)
+    expect(copy.source_plan).to eq(template)
   end
 end
