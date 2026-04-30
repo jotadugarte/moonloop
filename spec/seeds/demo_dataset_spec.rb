@@ -146,19 +146,20 @@ RSpec.describe "Demo dataset seeds" do
   end
 
   # [REQ-PHS-001]
-  it "seeds a phase program (bundle) and can apply it to a demo user" do
+  it "seeds a plan (bundle) and can apply it to a demo user" do
     Rails.application.load_seed
 
     user = User.find_by!(email: "demo+mx-metric@moonloop.local")
-    expect(user.phase_programs.count).to be >= 1
+    expect(user.plans.count).to be >= 1
 
-    program = user.phase_programs.first
-    expect(program.phase_program_assignments.count).to be > 0
+    plan = user.plans.first
+    expect(plan.plan_assignments.count).to be > 0
 
-    Programs::ApplyBundleToUser.call(phase_program: program, user: user)
+    Plans::ApplyToUser.call(plan: plan, user: user)
 
-    expect(user.phase_assignments.count).to eq(program.phase_program_assignments.count)
-    expect(user.exercise_routine_assignments.count).to eq(program.phase_program_assignments.count)
+    user.reload
+    expect(user.phase_assignments.count).to eq(plan.plan_assignments.count)
+    expect(user.exercise_routine_assignments.count).to eq(plan.plan_assignments.count)
   end
 
   # [REQ-PLAT-001]
@@ -206,8 +207,8 @@ RSpec.describe "Demo dataset seeds" do
           routine_lines: ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count,
           phase_assignments: u.phase_assignments.count,
           routine_assignments: u.exercise_routine_assignments.count,
-          programs: u.phase_programs.count,
-          program_segments: PhaseProgramAssignment.joins(:phase_program).where(phase_programs: { user_id: u.id }).count
+          plans: u.plans.count,
+          plan_segments: PlanAssignment.joins(:plan).where(plans: { user_id: u.id }).count
         }
       end
 
@@ -225,8 +226,8 @@ RSpec.describe "Demo dataset seeds" do
       expect(ExerciseRoutineLine.joins(:exercise_routine).where(exercise_routines: { user_id: u.id }).count).to eq(counts[:routine_lines])
       expect(u.phase_assignments.count).to eq(counts[:phase_assignments])
       expect(u.exercise_routine_assignments.count).to eq(counts[:routine_assignments])
-      expect(u.phase_programs.count).to eq(counts[:programs])
-      expect(PhaseProgramAssignment.joins(:phase_program).where(phase_programs: { user_id: u.id }).count).to eq(counts[:program_segments])
+      expect(u.plans.count).to eq(counts[:plans])
+      expect(PlanAssignment.joins(:plan).where(plans: { user_id: u.id }).count).to eq(counts[:plan_segments])
     end
   end
 end
